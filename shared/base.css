@@ -26,9 +26,12 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 [hidden] { display: none !important; }
 :focus-visible { outline: var(--spacing-2) solid var(--ui-stroke-brand); outline-offset: var(--spacing-2); }
 
-/* 375px frame. In the webview it fills the screen; on a wider preview it stays a centred column. */
+/* Page width. Designed at 375px; on a phone (any width up to 600px) the page fills the whole screen edge to edge,
+   on a computer it stays a centred 375px column. (Media queries cannot read tokens, hence the literal 600px.) */
+:root { --app-width: min(100%, var(--size-frame)); }
+@media (max-width: 600px) { :root { --app-width: 100%; } }
 .app {
-  max-width: var(--size-frame);
+  max-width: var(--app-width);
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0 auto;

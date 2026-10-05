@@ -410,3 +410,7 @@ The programme's unit is now called **coin**. Every on-screen text says coin / co
 
 Code names (file `point-balance.html`, ids, data fields such as `points`) are unchanged, so links and data stay the same.
 
+## 33. Full width on phones (decided 5 Oct 2026)
+
+The layout is designed at 375px but fills the whole screen on any phone (up to 600px wide): no side margins on 390px or 430px phones. On a computer the page stays a centred 375px column.
+

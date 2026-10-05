@@ -179,7 +179,7 @@
 /* ---- Bottom sheet ---- */
 .scrim { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; background: var(--ui-overlay-scrim); }
 .sheet {
-  width: 100%; max-width: var(--size-frame); max-height: var(--size-sheet-max-height); overflow-y: auto;
+  width: 100%; max-width: var(--app-width); max-height: var(--size-sheet-max-height); overflow-y: auto;
   display: flex; flex-direction: column; gap: var(--spacing-12);
   padding: var(--spacing-10) var(--spacing-gutter) calc(env(safe-area-inset-bottom, 0px) + var(--spacing-20));
   border-radius: var(--radius-sheet) var(--radius-sheet) 0 0; background: var(--card-surface);
@@ -192,9 +192,9 @@
 .has-nav .app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--nav-gap) + var(--nav-height) + var(--spacing-24)); }
 .nav {
   /* Starts at the frame's left edge (the screen edge in the webview); keeps the gutter on the right. */
-  position: fixed; z-index: 40; left: calc(50% - min(100%, var(--size-frame)) / 2);
+  position: fixed; z-index: 40; left: calc(50% - var(--app-width) / 2);
   bottom: calc(env(safe-area-inset-bottom, 0px) + var(--nav-gap));
-  width: calc(min(100%, var(--size-frame)) - var(--spacing-gutter)); height: var(--nav-height);
+  width: calc(var(--app-width) - var(--spacing-gutter)); height: var(--nav-height);
   display: flex; align-items: stretch; gap: var(--spacing-12); pointer-events: none;
 }
 .sheet-open .app { position: relative; z-index: 41; }
