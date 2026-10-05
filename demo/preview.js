@@ -7,7 +7,8 @@ const active = new Set((params.get('state') || '').split(',').map((s) => s.trim(
 
 const file = await fetch(`../mock/${page}.json`).then((res) => res.json());
 const states = Object.keys(file.states);
-// States are listed by the part of the page they change (mock file `stateGroups`, with optional display `labels`
+// States are listed by the part of the page they change (mock file `stateGroups`, with optional display `labels`;
+// a group with `exclusive: true` is a single choice, shown as radio buttons with a `defaultLabel` option first
 // and `descriptions` shown in a tooltip on hover or keyboard focus);
 // anything not grouped goes last.
 const grouped = (file.stateGroups || []).flatMap((group) => group.states);
@@ -45,9 +46,12 @@ root.className = 'preview';
 root.innerHTML = `
   <div class="preview__panel" hidden>
     <p class="preview__head">States · ${page}</p>
-    ${stateGroups.map((group) => `
+    ${stateGroups.map((group, index) => `
       <p class="preview__title">${group.title}</p>
-      ${group.states.map((name) => `<label data-desc="${((group.descriptions || {})[name] || '').replace(/"/g, '&quot;')}"><input type="checkbox" name="state" value="${name}" ${active.has(name) ? 'checked' : ''}>${(group.labels || {})[name] || name}</label>`).join('')}`).join('')}
+      ${group.exclusive
+        ? [['', group.defaultLabel || 'Default', group.defaultDescription || ''], ...group.states.map((name) => [name, (group.labels || {})[name] || name, (group.descriptions || {})[name] || ''])]
+          .map(([value, label, desc]) => `<label data-desc="${desc.replace(/"/g, '&quot;')}"><input type="radio" name="state-group-${index}" data-state value="${value}" ${(value ? active.has(value) : !group.states.some((name) => active.has(name))) ? 'checked' : ''}>${label}</label>`).join('')
+        : group.states.map((name) => `<label data-desc="${((group.descriptions || {})[name] || '').replace(/"/g, '&quot;')}"><input type="checkbox" name="state" data-state value="${name}" ${active.has(name) ? 'checked' : ''}>${(group.labels || {})[name] || name}</label>`).join('')}`).join('')}
     <p class="preview__title">Theme</p>
     ${groups.map(groupMarkup).join('')}
     <button class="preview__reset" type="button">Reset to default</button>
@@ -101,7 +105,7 @@ function go(nextStates, choices) {
 }
 
 panel.addEventListener('change', () => {
-  const nextStates = [...panel.querySelectorAll('input[name="state"]:checked')].map((input) => input.value);
+  const nextStates = [...panel.querySelectorAll('input[data-state]:checked')].map((input) => input.value).filter(Boolean);
   const choices = {};
   groups.forEach((group) => {
     const checked = panel.querySelector(`input[name="${group.param}"]:checked`);

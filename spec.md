@@ -413,5 +413,6 @@ Buttons (primary, stroke) and the bottom bar have no drop shadow, matching the f
   - `card-pale-theme`: the pale theme card from the review mockup ("Theme · pale").
   - `card-pale-yellow`: the same pale card in yellow, no blue (new tokens `--surface-yellow-soft`, `--stroke-yellow-soft`).
   - `card-indigo`: the vivid indigo blend.
+  Only one colour at a time: in the switcher this group is a single choice, with "Trading card: Yellow (default)" first.
   Pale cards follow the page theme (light / dark). Config `program.taskCardColour`: yellow | pale-theme | pale-yellow | indigo.
 
