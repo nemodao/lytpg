@@ -1,4 +1,4 @@
-// Point Balance (spec §5, §16, §17): balance card, then three tabs: Available, Expired, History.
+// Coin Balance (spec §5, §16, §17, §36): balance card, then three tabs: Available, Expired, History.
 import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createDateFilter } from '../shared/date-filter.js';
@@ -7,12 +7,16 @@ import { appHeader, badge, balanceBlock, coin, notice } from '../shared/componen
 const { common, page, ui } = await load('point-balance');
 // Preview states can empty one tab (`page.empty.available|expired|history`) without touching the others.
 const empty = page.empty || {};
-// Pending lots only exist while there are pending points (`has-pending` state); they join the other lots here.
-const items = [...page.pendingItems, ...page.items].filter((item) => {
-  if (empty.available && ['earning', 'pending', 'active'].includes(item.status)) return false;
-  if (empty.expired && item.status === 'expired') return false;
-  return true;
-});
+// Pending lots only exist while there are pending coins (`has-pending` state) and fully used lots only with the
+// `has-used` state; both join the other lots here.
+const items = [...page.pendingItems, ...page.usedItems, ...page.items];
+// A lot is past its expiry once its expiry day has started (expiry is at 01:00 WIB).
+const isPastExpiry = (item) => Boolean(item.expiresAt) && ui.daysUntil(item.expiresAt) <= 0;
+// Available: pending, earning, active, plus fully used lots that have not expired yet.
+const inAvailable = (item) => ['pending', 'earning', 'active'].includes(item.status) || (item.status === 'used' && !isPastExpiry(item));
+// Expired: lots past their expiry, whether coins were left (`expired`) or everything was used first (`used`, shows 0).
+const inExpired = (item) => item.status === 'expired' || (item.status === 'used' && isPastExpiry(item));
+const availableLots = empty.available ? [] : items.filter(inAvailable);
 const history = empty.history ? [] : page.history;
 const app = document.getElementById('app');
 
@@ -22,8 +26,7 @@ let tab = TABS.includes(new URLSearchParams(location.search).get('tab')) ? new U
 
 const source = (item) => ui.t(`pb.source.${item.source}`);
 
-// Lots that expired with points still unspent. Fully used lots appear in neither list; only History records them (spec §17).
-const expiredLots = items.filter((item) => item.status === 'expired' && item.remaining > 0);
+const expiredLots = empty.expired ? [] : items.filter(inExpired);
 // Expired and History each keep their own time filter: last 7 days by default, like the Trading Task history.
 const filters = { expired: createDateFilter(ui, common.now, 'expired'), history: createDateFilter(ui, common.now, 'history') };
 if (new URLSearchParams(location.search).get('cal') === '1' && filters[tab]) filters[tab].openCalendar(); // preview aid
@@ -33,15 +36,19 @@ const amount = (label, points, strong) =>
 
 // One lot. Right side: "Earned 2,000" (lighter) over the figure that matters for this row, with the coin.
 function itemRow(item) {
+  // Fully used lots are never highlighted as expiring soon.
   const soon = item.status === 'active' && ui.daysUntil(item.expiresAt) <= common.program.expiryWarningDays;
-  const view = {
+  const used = item.status === 'used';
+  const view = used ? usedView(item) : {
     earning: () => ({ meta: ui.t('pb.item.earning.meta'), badge: badge('blue', ui.t('badge.earning')) }),
     pending: () => ({ meta: ui.t('pb.item.pending.meta', { date: ui.date(item.creditAt) }), badge: badge('yellow', ui.t('badge.pending')) }),
     active: () => ({ meta: ui.t('pb.item.active.meta', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.remain') }),
     expired: () => ({ meta: ui.t('pb.item.expired', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.expiredAmount') }),
   }[item.status]();
+  // A fully used lot still in Available is muted; once past expiry it shows like any expired lot, with 0 expired.
+  const muted = used && !isPastExpiry(item);
   return `
-    <div class="list__row">
+    <div class="list__row ${muted ? 'list__row--muted' : ''}">
       <div class="grow stack stack--tight">
         <p class="t-label num">${source(item)} · ${ui.date(item.earnedOn)}</p>
         <p class="t-caption num ${soon ? 'expiring-soon' : 'c-3'}">${soon ? ui.icon('clock', 'icon--sm') : ''}${view.meta}</p>
@@ -54,18 +61,29 @@ function itemRow(item) {
     </div>`;
 }
 
+// A fully used lot: like an active lot (expiry, Earned over Remain 0) while it lasts, like an expired lot after.
+const usedView = (item) => (isPastExpiry(item)
+  ? { meta: ui.t('pb.item.expired', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.expiredAmount') }
+  : { meta: ui.t('pb.item.active.meta', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.remain') });
+
 function availableTab() {
   // Earning and pending first, then active lots by soonest expiry. Everything is shown: no filter, no paging.
-  const waiting = items.filter((item) => item.status === 'earning' || item.status === 'pending');
-  const active = items.filter((item) => item.status === 'active').sort((a, b) => a.expiresAt.localeCompare(b.expiresAt));
-  const current = [...waiting, ...active];
-  if (!current.length) {
+  // Order: pending, earning, active (soonest expiry first), then the "Fully used" section (soonest expiry first).
+  const bySoonest = (a, b) => a.expiresAt.localeCompare(b.expiresAt);
+  const of = (status) => availableLots.filter((item) => item.status === status);
+  const current = [...of('pending'), ...of('earning'), ...of('active').sort(bySoonest)];
+  const usedUp = of('used').sort(bySoonest);
+  const usedSection = usedUp.length ? `
+    <p class="group-title">${ui.t('pb.fullyUsed')}</p>
+    <section class="card"><div class="list">${usedUp.map(itemRow).join('')}</div></section>` : '';
+  if (!current.length && !usedUp.length) {
     // Nothing available: a plain line, no call to action (spec §27).
     return `<section class="card"><p class="t-body c-3 list-none">${ui.t('pb.noActive')}</p></section>`;
   }
   return `
     ${notice(ui, { icon: 'info', tone: 'neutral', text: ui.t('pb.note') })}
-    <section class="card"><div class="list">${current.map(itemRow).join('')}</div></section>`;
+    ${current.length ? `<section class="card"><div class="list">${current.map(itemRow).join('')}</div></section>` : `<section class="card"><p class="t-body c-3 list-none">${ui.t('pb.noActive')}</p></section>`}
+    ${usedSection}`;
 }
 
 function expiredTab() {

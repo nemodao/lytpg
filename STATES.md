@@ -59,7 +59,8 @@ File: `mock/point-balance.json` · page: `pages/point-balance.html`
 |---|---|---|---|
 | Coin Balance | `empty` · shared | Balance is 0: no available, pending or expiring coins. Tabs still show their lists. | `common.balance.available = 0`<br>`common.balance.pending = 0`<br>`common.balance.expiring = null` |
 | Coin Balance | `has-pending` · shared | 850 coins are waiting to be credited: “+850 pending” under the balance and a Pending lot in Available. May be used when applying the T+1 rule to release coins. | `common.balance.pending = 850`<br>`page.pendingItems = [1 items]` |
-| Coin Balance | `expiring` · shared | 1,200 coins expire within 10 days: red warning under the balance; that lot is highlighted in Available. | `common.balance.expiring.points = 1200`<br>`common.balance.expiring.date = "2026-10-20"`<br>`page.items = [9 items]` |
+| Coin Balance | `expiring` · shared | 1,200 coins expire within 10 days: red warning under the balance; that lot is highlighted in Available. | `common.balance.expiring.points = 1200`<br>`common.balance.expiring.date = "2026-10-20"`<br>`page.items = [8 items]` |
 | Tabs | `available-empty` | The Available tab has no lots: it shows “No available coins.” | `page.empty.available = true` |
 | Tabs | `expired-empty` | The Expired tab has nothing: “No expired coins in this period.” | `page.empty.expired = true` |
 | Tabs | `history-empty` | The History tab has nothing: “No activity in this period.” | `page.empty.history = true` |
+| Tabs | `has-used` | Adds fully used lots: two still before expiry, shown muted in a “Fully used” section at the end of Available (Remain 0), and one used up and then expired, shown in Expired with “Expired 0” (inside Last 7 days). | `page.usedItems = [3 items]` |

@@ -114,6 +114,8 @@
 .list > .list__row:last-child { padding-bottom: 0; }
 .list__row--sub { padding-left: var(--spacing-20); }
 .list__row--muted, .list__row--muted .c-2, .list__row--muted .c-3 { color: var(--ui-text-disabled); }
+/* Coins on muted rows fade and lose their colour, like the text around them. */
+.list__row--muted .coin { filter: grayscale(1); opacity: 0.45; }
 .list__chevron { color: var(--ui-icon-tertiary); }
 .list__end { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-4); text-align: right; }
 .group-title { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); padding-top: var(--spacing-4); }

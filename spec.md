@@ -1,6 +1,6 @@
 # Loyalty Program UI — Phase 1 Spec
 
-> **How to read this spec.** Sections 1–8 are the original brief. Sections 9 onwards are decisions taken during design, in date order; when two sections disagree, **the later one wins**. Main overrides: number format (§2 → comma thousands, dot decimals); "points" are now **coins** in all on-screen text (§32); the `locked`/KYC state is gone (§24, replacing §9, §14, §23 locked parts); Point Balance tabs (§5.2 → §17); the lot detail sheet is out of this phase (§18); no back buttons (§29). Current states: [STATES.md](STATES.md).
+> **How to read this spec.** Sections 1–8 are the original brief. Sections 9 onwards are decisions taken during design, in date order; when two sections disagree, **the later one wins**. Main overrides: number format (§2 → comma thousands, dot decimals); "points" are now **coins** in all on-screen text (§32); the `locked`/KYC state is gone (§24, replacing §9, §14, §23 locked parts); Point Balance tabs (§5.2 → §17); the lot detail sheet is out of this phase (§18); no back buttons (§29); fully used lots now show on Coin Balance (§17 → §36). Current states: [STATES.md](STATES.md).
 
 Goal of this spec: build a good-looking, content-correct mobile UI where every state can be previewed. This is NOT a technical/dev handoff document.
 
@@ -266,7 +266,7 @@ Three tabs side by side, no nested tabs: `Available` | `Expired` | `History`. De
 - Every movement in or out, newest first, grouped by date, with the same time filter (`Last 7 days` by default). Empty: `No activity in this period.`
 
 **Rules**
-- A fully used lot (nothing expired) appears in neither `Available` nor `Expired`; it is only visible through its redemption rows in `History`.
+- A fully used lot (nothing expired) appears in neither `Available` nor `Expired`; it is only visible through its redemption rows in `History`. *(Replaced by §36.)*
 - State `all-expired`: `Available` is empty with the invitation; `Expired` has data.
 
 ## 18. Lot detail bottom sheet (not in this stage)
@@ -415,4 +415,15 @@ Buttons (primary, stroke) and the bottom bar have no drop shadow, matching the f
   - `card-indigo`: the vivid indigo blend.
   Only one colour at a time: in the switcher this group is a single choice, with "Trading card: Yellow (default)" first.
   Pale cards follow the page theme (light / dark). Config `program.taskCardColour`: yellow | pale-theme | pale-yellow | indigo.
+
+## 36. Fully used lots on Coin Balance (decided 5 Oct 2026, replaces the fully used rule in §17)
+
+§17 said "A fully used lot appears in neither Available nor Expired". That rule is replaced:
+
+- **Available:** a fully used lot (status `used`, remaining 0, not yet expired) still shows, at the end of the tab, in its own section titled `Fully used`. Order of the whole tab: pending → earning → active (soonest expiry first) → `Fully used` (soonest expiry first).
+- A `Fully used` row has the same layout as an active row (source · date earned, expiry underneath, `Earned 5,000` over `Remain [coin] 0` on the right), but all text and the coin are muted. It is never highlighted as expiring soon.
+- No fully used lots: no `Fully used` section.
+- **Expired:** a lot used up before its expiry date shows there as usual once it expires, with `Expired [coin] 0`. No special style.
+- **History:** unchanged; there is no "Expired 0" row.
+- Preview state `has-used` (group "Tabs"): adds two fully used lots to Available and one used-then-expired lot to Expired (within Last 7 days). Without it there are no fully used lots.
 

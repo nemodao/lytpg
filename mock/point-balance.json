@@ -18,12 +18,14 @@
       "states": [
         "available-empty",
         "expired-empty",
-        "history-empty"
+        "history-empty",
+        "has-used"
       ],
       "descriptions": {
         "available-empty": "The Available tab has no lots: it shows “No available coins.”",
         "expired-empty": "The Expired tab has nothing: “No expired coins in this period.”",
-        "history-empty": "The History tab has nothing: “No activity in this period.”"
+        "history-empty": "The History tab has nothing: “No activity in this period.”",
+        "has-used": "Adds fully used lots: two still before expiry, shown muted in a “Fully used” section at the end of Available (Remain 0), and one used up and then expired, shown in Expired with “Expired 0” (inside Last 7 days)."
       }
     }
   ],
@@ -73,15 +75,6 @@
         "status": "active",
         "creditAt": null,
         "expiresAt": "2026-11-12"
-      },
-      {
-        "source": "trading",
-        "earnedOn": "2026-09-03",
-        "total": 5000,
-        "remaining": 0,
-        "status": "used",
-        "creditAt": null,
-        "expiresAt": "2026-10-06"
       },
       {
         "source": "trading",
@@ -206,7 +199,8 @@
         "source": null
       }
     ],
-    "pendingItems": []
+    "pendingItems": [],
+    "usedItems": []
   },
   "states": {
     "empty": {
@@ -296,15 +290,6 @@
           },
           {
             "source": "trading",
-            "earnedOn": "2026-09-03",
-            "total": 5000,
-            "remaining": 0,
-            "status": "used",
-            "creditAt": null,
-            "expiresAt": "2026-10-06"
-          },
-          {
-            "source": "trading",
             "earnedOn": "2026-09-01",
             "total": 2000,
             "remaining": 300,
@@ -352,6 +337,39 @@
         "empty": {
           "history": true
         }
+      }
+    },
+    "has-used": {
+      "page": {
+        "usedItems": [
+          {
+            "source": "trading",
+            "earnedOn": "2026-09-20",
+            "total": 5000,
+            "remaining": 0,
+            "status": "used",
+            "creditAt": null,
+            "expiresAt": "2026-10-23"
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-10-02",
+            "total": 1800,
+            "remaining": 0,
+            "status": "used",
+            "creditAt": null,
+            "expiresAt": "2026-11-04"
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-09-07",
+            "total": 900,
+            "remaining": 0,
+            "status": "used",
+            "creditAt": null,
+            "expiresAt": "2026-10-10"
+          }
+        ]
       }
     }
   }

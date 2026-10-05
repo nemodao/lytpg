@@ -129,5 +129,6 @@
   "join.deposit": "Deposit to join",
   "tt.rates.introNoAccount": "Earn coins on every lot you trade. Rates depend on the symbol group:",
   "task.liveFeed": "Trader {client} just earned {points} coins",
-  "task.liveFeed.one": "Trader {client} just earned 1 coin"
+  "task.liveFeed.one": "Trader {client} just earned 1 coin",
+  "pb.fullyUsed": "Fully used"
 }
