@@ -22,6 +22,7 @@
 .blend-vivid { --blend-bg: var(--surface-vivid); --blend-fg: var(--on-brand); --blend-ink: var(--accent-surface-brand); }
 .blend-red { --blend-bg: var(--blend-red-bg); --blend-fg: var(--blend-red-fg); --blend-ink: var(--blend-red-ink); }
 .blend-gold { --blend-bg: var(--blend-gold-bg); --blend-fg: var(--blend-gold-fg); --blend-ink: var(--blend-gold-ink); }
+.blend-dusk { --blend-bg: var(--blend-dusk-bg); --blend-fg: var(--blend-dusk-fg); --blend-ink: var(--blend-dusk-ink); }
 .blend-yellow { --blend-bg: var(--blend-yellow-bg); --blend-fg: var(--blend-yellow-fg); --blend-ink: var(--blend-yellow-ink); }
 .blend-lime { --blend-bg: var(--blend-lime-bg); --blend-fg: var(--blend-lime-fg); --blend-ink: var(--blend-lime-ink); }
 .blend-green { --blend-bg: var(--blend-green-bg); --blend-fg: var(--blend-green-fg); --blend-ink: var(--blend-green-ink); }
@@ -29,7 +30,7 @@
 .blend-pink { --blend-bg: var(--blend-pink-bg); --blend-fg: var(--blend-pink-fg); --blend-ink: var(--blend-pink-ink); }
 .blend-indigo { --blend-bg: var(--blend-indigo-bg); --blend-fg: var(--blend-indigo-fg); --blend-ink: var(--blend-indigo-ink); }
 /* Inner glass panel: dark glass under white text, white glass under dark text. */
-.blend-vivid, .blend-theme, .blend-red, .blend-green, .blend-pink, .blend-indigo { --blend-glass: var(--glass-surface-dark); }
+.blend-vivid, .blend-theme, .blend-dusk, .blend-red, .blend-green, .blend-pink, .blend-indigo { --blend-glass: var(--glass-surface-dark); }
 .blend-yellow, .blend-gold, .blend-lime, .blend-cyan { --blend-glass: var(--glass-surface); }
 /* Secondary text on a blend takes the blend's text colour, dimmed. */
 .card--blend .c-2, .card--blend .c-3 { color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }

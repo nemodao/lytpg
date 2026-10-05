@@ -1,5 +1,5 @@
 /* Loyalty design tokens — generated from tokens.json by build.py. Do not edit by hand.
-   Version 3.10 (2026-10-05). Base values come from Figma (IB Partnership - UI); the Custom sections were added in review. */
+   Version 3.11 (2026-10-05). Base values come from Figma (IB Partnership - UI); the Custom sections were added in review. */
 
 :root, [data-theme="light"] {
   /* Color — primitives */
@@ -294,6 +294,10 @@
   --blend-gold-base-to: #c9a04a;
   --blend-gold-blob-1: #a9772f;
   --blend-gold-blob-2: #ead39a;
+  --blend-dusk-base-from: #14306f;
+  --blend-dusk-base-to: #0b1640;
+  --blend-dusk-blob-1: #e3b24f;
+  --blend-dusk-blob-2: #3d6bff;
 }
 
 /* Color — semantic (dark) */
@@ -410,4 +414,7 @@
   --blend-gold-bg: radial-gradient(85% 70% at 100% 108%, var(--blend-gold-blob-1) 0%, transparent 70%), radial-gradient(70% 60% at 15% 0%, var(--blend-gold-blob-2) 0%, transparent 70%), linear-gradient(170deg, var(--blend-gold-base-from), var(--blend-gold-base-to));
   --blend-gold-fg: #0f0f10;
   --blend-gold-ink: #e6c574;
+  --blend-dusk-bg: radial-gradient(110% 85% at 100% 110%, var(--blend-dusk-blob-1) 0%, transparent 70%), radial-gradient(70% 60% at 15% 0%, var(--blend-dusk-blob-2) 0%, transparent 70%), linear-gradient(170deg, var(--blend-dusk-base-from), var(--blend-dusk-base-to));
+  --blend-dusk-fg: #ffffff;
+  --blend-dusk-ink: #1a3a8f;
 }

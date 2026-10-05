@@ -57,6 +57,21 @@
       "descriptions": {
         "check-in": "Shows the daily check-in card (future feature, not launched)."
       }
+    },
+    {
+      "title": "Trading card colour (review)",
+      "states": [
+        "card-theme",
+        "card-dusk"
+      ],
+      "labels": {
+        "card-theme": "Trading card: theme blue (dark)",
+        "card-dusk": "Trading card: blue to gold"
+      },
+      "descriptions": {
+        "card-theme": "Daily Trading cards use the dark theme-blue blend from the tokens (Blend · vivid, theme) instead of the default muted gold. White text.",
+        "card-dusk": "Daily Trading cards use a deep theme blue that warms into gold at the bottom-right (new --blend-dusk tokens) instead of the default muted gold. White text."
+      }
     }
   ],
   "default": {
@@ -171,6 +186,20 @@
       "common": {
         "program": {
           "joinRequirement": "deposit"
+        }
+      }
+    },
+    "card-theme": {
+      "common": {
+        "program": {
+          "taskCardColour": "theme"
+        }
+      }
+    },
+    "card-dusk": {
+      "common": {
+        "program": {
+          "taskCardColour": "dusk"
         }
       }
     }

@@ -45,6 +45,21 @@
         "single-account": "User has only one trading account: a fixed field instead of the account picker.",
         "ineligible-selected": "The selected trading account belongs to an MT5 group that cannot take part in the programme, for example an A-Book group or any group not listed in the programme config. Shows a warning and “Switch to an eligible account”."
       }
+    },
+    {
+      "title": "Trading card colour (review)",
+      "states": [
+        "card-theme",
+        "card-dusk"
+      ],
+      "labels": {
+        "card-theme": "Trading card: theme blue (dark)",
+        "card-dusk": "Trading card: blue to gold"
+      },
+      "descriptions": {
+        "card-theme": "Daily Trading cards use the dark theme-blue blend from the tokens (Blend · vivid, theme) instead of the default muted gold. White text.",
+        "card-dusk": "Daily Trading cards use a deep theme blue that warms into gold at the bottom-right (new --blend-dusk tokens) instead of the default muted gold. White text."
+      }
     }
   ],
   "default": {
@@ -212,6 +227,20 @@
     "ineligible-selected": {
       "page": {
         "selectedAccountId": "50000871"
+      }
+    },
+    "card-theme": {
+      "common": {
+        "program": {
+          "taskCardColour": "theme"
+        }
+      }
+    },
+    "card-dusk": {
+      "common": {
+        "program": {
+          "taskCardColour": "dusk"
+        }
       }
     }
   }
