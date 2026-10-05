@@ -40,11 +40,13 @@
       "title": "Today trading task",
       "states": [
         "capped",
-        "no-trades-today"
+        "no-trades-today",
+        "market-closed"
       ],
       "descriptions": {
         "capped": "Today's max points reached: the countdown is replaced by the capped message.",
-        "no-trades-today": "No trades yet today: 0 lots and 0 points."
+        "no-trades-today": "No trades yet today: 0 lots and 0 points.",
+        "market-closed": "Weekend (markets closed): the live “Trader … just earned … points” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7)."
       }
     },
     {
@@ -141,6 +143,13 @@
         "task": {
           "lotsToday": 0,
           "pointsToday": 0
+        }
+      }
+    },
+    "market-closed": {
+      "common": {
+        "liveFeed": {
+          "clock": "2026-10-17T10:00:00+07:00"
         }
       }
     },

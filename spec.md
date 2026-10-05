@@ -391,3 +391,16 @@ Buttons that leave these pages are not wired to the app yet. Tapping one shows a
 | `checkin` | Check in (future) |
 | `exit` | Close the webview |
 
+## 31. Live activity line on the Dashboard (decided 5 Oct 2026)
+
+Above `Trade now` on the Dashboard's Daily Trading card, and on the Trading Task under the credit status line (`Pending · will be credited …`) of the yellow Today card: `Trader 95***356 just earned 12 points`, with a green "live" dot.
+
+- Points: random whole numbers from 1 to 700 (step 1), weighted by range: 1–29 → 70% of entries, 30–99 → 23%, 100–200 → 4%, 201–700 → 3% (config `points.bands`).
+- The line sits in a small pill: a dark, translucent fill over the yellow card, so it reads as a slightly deeper yellow.
+- Client ID: first digits fixed (`95`, config `clientIdPrefix`), then `***`, then 3 random digits.
+- A new entry every 1, 2, 3, 4, 5 or 6 seconds, chosen at random each time.
+- Home and Earn show the same feed: at any moment both pages (and every device) show the same entry and change at the same instant, so switching tabs does not change it. In the demo this comes from a generator seeded by the clock; in production the feed comes from one shared server stream.
+- Only while markets are open, Monday to Friday GMT+7. **In UTC: from Sunday 17:00 to Friday 17:00 UTC.** Outside that window the line is hidden (markets closed); it also hides itself when the window ends while the page is open.
+- Config lives in `mock/common.json` → `liveFeed` (`openUtc`, `closeUtc`, `clientIdPrefix`, `points`, `intervalSeconds`). The shared preview state `market-closed` (both pages) sets the clock to a Saturday. Hidden in the Trading Task `ended` state.
+- The entries are made up in the demo; in production they would come from real trades.
+

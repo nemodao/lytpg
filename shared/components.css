@@ -232,3 +232,11 @@
 [data-theme="dark"] .nav__image--on-light { display: none; }
 [data-theme="dark"] .nav__image--on-dark { display: block; }
 .nav__tab[aria-current="page"] { background: var(--ui-nav-tab-active); color: var(--ui-text-brand); }
+
+/* ---- Live activity line on the Daily Trading cards (Dashboard, Trading Task) ---- */
+/* A small dark, translucent box: on the yellow card it reads as a slightly deeper yellow. */
+.live-feed { align-self: center; display: flex; align-items: center; justify-content: center; gap: var(--spacing-6); margin-bottom: calc(var(--spacing-4) * -1); padding: var(--spacing-6) var(--spacing-12); border-radius: var(--radius-pill); background: color-mix(in srgb, var(--vivid-shade) 8%, transparent); color: color-mix(in srgb, var(--blend-fg) 82%, transparent); }
+.live-feed__dot { flex: none; width: var(--spacing-6); height: var(--spacing-6); border-radius: var(--radius-pill); background: var(--ui-icon-green); box-shadow: 0 0 0 var(--spacing-2) color-mix(in srgb, var(--ui-icon-green) 30%, transparent); }
+.live-feed__in { animation: live-feed-in 0.4s ease-out; }
+@keyframes live-feed-in { from { opacity: 0; transform: translateY(var(--spacing-4)); } }
+@media (prefers-reduced-motion: reduce) { .live-feed__in { animation: none; } }

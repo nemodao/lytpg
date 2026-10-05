@@ -1,6 +1,7 @@
 // Dashboard (spec §3 for content and states, §10 for layout): header, balance, Daily Trading card, rewards mosaic.
 import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
+import { createLiveFeed } from '../shared/live-feed.js';
 import { appHeader, balanceBlock, coin, joinIntent, joinLabel } from '../shared/components.js';
 
 const { common, page, ui } = await load('dashboard');
@@ -31,6 +32,8 @@ const todayFoot = () =>
 
 const cupIcon = '<img class="task__icon" src="../assets/images/cups/purple.png" alt="">';
 
+const feed = createLiveFeed(ui, common);
+
 const taskCard = () => `
   <section class="card card--blend blend-yellow task">
     <a class="card-link" href="${taskHref}" aria-label="${ui.t('task.title')}"></a>
@@ -51,6 +54,7 @@ const taskCard = () => `
       </div>
       ${todayFoot()}
     </div>
+    ${feed.html()}
     <button class="btn btn--onblend btn--lg task__cta above" type="button" data-intent="${joinIntent(common) || 'trade'}">${joinLabel(ui, common) || ui.t('task.trade')}</button>
   </section>`;
 
@@ -97,6 +101,8 @@ app.innerHTML = `
     <p class="t-body c-3">${ui.t('rewards.subtitle')}</p>
   </div>
   <div class="mosaic blend-pink">${rewards.map(reward).join('')}</div>`;
+
+feed.start(app);
 
 const timerNodes = app.querySelectorAll('[data-timer]');
 if (timerNodes.length) {

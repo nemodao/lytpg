@@ -128,5 +128,6 @@
   "tt.ended.body": "Pending points will still be credited.",
   "join.kyc": "KYC to join",
   "join.deposit": "Deposit to join",
-  "tt.rates.introNoAccount": "Earn points on every lot you trade. Rates depend on the symbol group:"
+  "tt.rates.introNoAccount": "Earn points on every lot you trade. Rates depend on the symbol group:",
+  "task.liveFeed": "Trader {client} just earned {points} points"
 }

@@ -5,7 +5,7 @@ const params = new URLSearchParams(location.search);
 
 // States that mean the same on several pages. Links between pages carry them along, so a Point Balance state
 // set on the Dashboard is still on when you open Point Balance (and back).
-const SHARED_STATES = ['empty', 'needs-kyc', 'needs-deposit', 'has-pending', 'expiring'];
+const SHARED_STATES = ['empty', 'market-closed', 'needs-kyc', 'needs-deposit', 'has-pending', 'expiring'];
 
 export const activeStates = (params.get('state') || '')
   .split(',')

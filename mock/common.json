@@ -31,5 +31,49 @@
       "id": "50000871",
       "eligible": false
     }
-  ]
+  ],
+  "liveFeed": {
+    "openUtc": {
+      "day": "Sunday",
+      "time": "17:00"
+    },
+    "closeUtc": {
+      "day": "Friday",
+      "time": "17:00"
+    },
+    "clientIdPrefix": "95",
+    "points": {
+      "step": 1,
+      "bands": [
+        {
+          "min": 1,
+          "max": 29,
+          "weight": 70
+        },
+        {
+          "min": 30,
+          "max": 99,
+          "weight": 23
+        },
+        {
+          "min": 100,
+          "max": 200,
+          "weight": 4
+        },
+        {
+          "min": 201,
+          "max": 700,
+          "weight": 3
+        }
+      ]
+    },
+    "intervalSeconds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  }
 }

@@ -1,6 +1,7 @@
 // Trading Task (spec §4, §15): header, today's progress, account + rates + trade button, then rules and history as tabs.
 import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
+import { createLiveFeed } from '../shared/live-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { appHeader, badge, coin, joinIntent, joinLabel, notice } from '../shared/components.js';
 
@@ -55,6 +56,8 @@ const endedCard = () => `
     </div>
   </section>`;
 
+const feed = createLiveFeed(ui, common);
+
 function progressCard() {
   const hasTrades = today.lots > 0;
   // Same Today panel as the Dashboard's task card, laid flat on the blend card (spec §15).
@@ -77,6 +80,7 @@ function progressCard() {
         </div>
         ${footer}
       </div>
+      ${feed.html()}
     </section>`;
 }
 
@@ -222,6 +226,7 @@ function render() {
     ${infoCard()}
     ${sheetOpen ? sheet() : ''}
     ${historyFilter.sheet()}`;
+  feed.start(app);
 }
 
 app.addEventListener('click', (event) => {
