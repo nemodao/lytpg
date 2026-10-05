@@ -29,10 +29,10 @@
         "market-closed"
       ],
       "descriptions": {
-        "in-day": "Points are credited during the day instead of 3 days later; today shows as credited and appears in History as Earning.",
-        "capped": "Today's max points reached: capped message on the Today card, plain “Trade now” button.",
-        "no-trades-today": "No trades yet today: 0 lots and 0 points, with a hint to make the first trade.",
-        "market-closed": "Weekend (markets closed): the live “Trader … just earned … points” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7)."
+        "in-day": "Coins are credited during the day instead of 3 days later; today shows as credited and appears in History as Earning.",
+        "capped": "Today's max coins reached: capped message on the Today card, plain “Trade now” button.",
+        "no-trades-today": "No trades yet today: 0 lots and 0 coins, with a hint to make the first trade.",
+        "market-closed": "Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7)."
       }
     },
     {

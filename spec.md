@@ -404,3 +404,9 @@ Above `Trade now` on the Dashboard's Daily Trading card, and on the Trading Task
 - Config lives in `mock/common.json` → `liveFeed` (`openUtc`, `closeUtc`, `clientIdPrefix`, `points`, `intervalSeconds`). The shared preview state `market-closed` (both pages) sets the clock to a Saturday. Hidden in the Trading Task `ended` state.
 - The entries are made up in the demo; in production they would come from real trades.
 
+## 32. "Point" becomes "Coin" (decided 5 Oct 2026)
+
+The programme's unit is now called **coin**. Every on-screen text says coin / coins instead of point / points: `Coin Balance`, `Coins earned`, `Redeem coins for rewards`, the `Coins` tab, `Reached Max Coins`, `1,200 coins expire within 10 days`, `Trader 95***356 just earned 12 coins` (`1 coin` when it is one), and so on. Examples elsewhere in this spec that still say points read as coins.
+
+Code names (file `point-balance.html`, ids, data fields such as `points`) are unchanged, so links and data stay the same.
+

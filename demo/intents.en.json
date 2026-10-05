@@ -1,8 +1,8 @@
 {
   "intent.redeem.title": "Opens Tada",
-  "intent.redeem.body": "Clicking this button will take you to Tada, the rewards store, where you spend your points on gifts and vouchers.",
+  "intent.redeem.body": "Clicking this button will take you to Tada, the rewards store, where you spend your coins on gifts and vouchers.",
   "intent.reward.title": "Opens this reward in Tada",
-  "intent.reward.body": "Clicking this button will open this reward's page in Tada, where you can redeem it with your points.",
+  "intent.reward.body": "Clicking this button will open this reward's page in Tada, where you can redeem it with your coins.",
   "intent.trade.title": "Opens the market",
   "intent.trade.body": "Clicking this button will open the market screen in the app with your current trading account.",
   "intent.trade-account.title": "Opens the market",
@@ -12,7 +12,7 @@
   "intent.deposit.title": "Opens Deposit",
   "intent.deposit.body": "Clicking this button will open the Deposit screen in the app. After your first deposit, you can join the trading task.",
   "intent.checkin.title": "Checks you in",
-  "intent.checkin.body": "Clicking this button will mark today as checked in and add today's points to your balance.",
+  "intent.checkin.body": "Clicking this button will mark today as checked in and add today's coins to your balance.",
   "intent.exit.title": "Leaves HSB Loyalty",
   "intent.exit.body": "Clicking this button will close these pages and take you back to the app.",
   "intent.label": "Internal Explanation"

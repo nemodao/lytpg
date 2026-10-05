@@ -1,16 +1,16 @@
 {
   "stateGroups": [
     {
-      "title": "Point Balance",
+      "title": "Coin Balance",
       "states": [
         "empty",
         "has-pending",
         "expiring"
       ],
       "descriptions": {
-        "empty": "Balance is 0: no available, pending or expiring points. Tabs still show their lists.",
-        "has-pending": "850 points are waiting to be credited: “+850 pending” under the balance and a Pending lot in Available. May be used when applying the T+1 rule to release points.",
-        "expiring": "1,200 points expire within 10 days: red warning under the balance; that lot is highlighted in Available."
+        "empty": "Balance is 0: no available, pending or expiring coins. Tabs still show their lists.",
+        "has-pending": "850 coins are waiting to be credited: “+850 pending” under the balance and a Pending lot in Available. May be used when applying the T+1 rule to release coins.",
+        "expiring": "1,200 coins expire within 10 days: red warning under the balance; that lot is highlighted in Available."
       }
     },
     {
@@ -21,8 +21,8 @@
         "history-empty"
       ],
       "descriptions": {
-        "available-empty": "The Available tab has no lots: it shows “No available points.”",
-        "expired-empty": "The Expired tab has nothing: “No expired points in this period.”",
+        "available-empty": "The Available tab has no lots: it shows “No available coins.”",
+        "expired-empty": "The Expired tab has nothing: “No expired coins in this period.”",
         "history-empty": "The History tab has nothing: “No activity in this period.”"
       }
     }

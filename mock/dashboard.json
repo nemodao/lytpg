@@ -24,16 +24,16 @@
       }
     },
     {
-      "title": "Point Balance",
+      "title": "Coin Balance",
       "states": [
         "empty",
         "has-pending",
         "expiring"
       ],
       "descriptions": {
-        "empty": "Balance is 0: no available, pending or expiring points.",
-        "has-pending": "850 points are waiting to be credited: “+850 pending” shows under the balance. May be used when applying the T+1 rule to release points.",
-        "expiring": "1,200 points expire within 10 days: red warning under the balance."
+        "empty": "Balance is 0: no available, pending or expiring coins.",
+        "has-pending": "850 coins are waiting to be credited: “+850 pending” shows under the balance. May be used when applying the T+1 rule to release coins.",
+        "expiring": "1,200 coins expire within 10 days: red warning under the balance."
       }
     },
     {
@@ -44,9 +44,9 @@
         "market-closed"
       ],
       "descriptions": {
-        "capped": "Today's max points reached: the countdown is replaced by the capped message.",
-        "no-trades-today": "No trades yet today: 0 lots and 0 points.",
-        "market-closed": "Weekend (markets closed): the live “Trader … just earned … points” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7)."
+        "capped": "Today's max coins reached: the countdown is replaced by the capped message.",
+        "no-trades-today": "No trades yet today: 0 lots and 0 coins.",
+        "market-closed": "Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7)."
       }
     },
     {

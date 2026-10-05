@@ -41,6 +41,7 @@ export function createLiveFeed(ui, common) {
     const steps = Math.round((band.max - band.min) / step);
     const points = Math.round((band.min + Math.floor(rand() * (steps + 1)) * step) * 10) / 10;
     const client = `${config.clientIdPrefix}***${String(Math.floor(rand() * 1000)).padStart(3, '0')}`;
+    if (points === 1) return ui.t('task.liveFeed.one', { client });
     return ui.t('task.liveFeed', { client, points: step >= 1 ? ui.num(points) : ui.lots(points) });
   }
 

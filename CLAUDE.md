@@ -10,6 +10,10 @@ Giao diện mobile cho chương trình loyalty/promotion của đối tác IB. C
 4. **Mỗi trang phải chuyển được giữa các state.** Dùng query string, ví dụ `?state=capped`, để xem nhanh từng state mà không cần sửa code. Liệt kê các state trang hỗ trợ ở đầu file.
 5. **Bám theo `spec.md`.** Chỗ nào spec chưa nói thì hỏi, không tự quyết.
 
+## Thuật ngữ
+
+Đơn vị của chương trình là **coin** (số nhiều: coins), không gọi là point. Chỉ chữ trên giao diện đổi; tên file và tên biến (`point-balance`, `points`) giữ nguyên.
+
 ## Design token
 
 - Nguồn chuẩn: `tokens/tokens.json`. Chỉ sửa file này.
