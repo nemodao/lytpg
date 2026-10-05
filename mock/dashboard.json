@@ -68,15 +68,15 @@
     },
     "rewards": [
       {
-        "image": "../assets/images/rewards/reward-1.png",
+        "image": "../assets/images/rewards/reward-1.webp",
         "alt": "Wireless earbuds and a smartphone"
       },
       {
-        "image": "../assets/images/rewards/reward-2.png",
+        "image": "../assets/images/rewards/reward-2.webp",
         "alt": "Laptops"
       },
       {
-        "image": "../assets/images/rewards/reward-3.png",
+        "image": "../assets/images/rewards/reward-3.webp",
         "alt": "Suitcase and an airplane"
       }
     ],

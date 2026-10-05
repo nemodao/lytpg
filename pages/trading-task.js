@@ -217,7 +217,7 @@ function render() {
       ${heroBg}
       ${appHeader(ui, { title: ui.t('task.title') })}
       <div class="today-cup-wrap">
-        <img class="today-cup" src="../assets/images/cups/purple-chart.png" alt="">
+        <img class="today-cup" src="../assets/images/cups/purple-chart.webp" alt="">
         ${ended ? '' : '<img class="hero-hot" src="../assets/images/hot-badge.png" alt="">'}
       </div>
     </div>

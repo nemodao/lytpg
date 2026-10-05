@@ -30,7 +30,7 @@ const todayFoot = () =>
     ? `<div class="today__foot today__foot--icon">${ui.icon('trophy', 'icon--sm')}<span>${ui.t('task.capped')}</span></div>`
     : `<div class="today__foot"><span>${ui.tHtml('task.countdown', { timer: timer() })}</span></div>`;
 
-const cupIcon = '<img class="task__icon" src="../assets/images/cups/purple.png" alt="">';
+const cupIcon = '<img class="task__icon" src="../assets/images/cups/purple.webp" alt="">';
 
 const feed = createLiveFeed(ui, common);
 

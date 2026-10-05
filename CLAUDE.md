@@ -53,6 +53,7 @@ Heading `--font-heading-h1` tới `h4` là cỡ desktop, không dùng trên mobi
 - `mock/`: dữ liệu mẫu. `common.json` dùng chung; mỗi trang một file gồm `default` và `states` (mỗi state là phần ghi đè).
 - `copy/en.json`: toàn bộ chữ trên UI. Không viết chữ thẳng vào trang.
 - `assets/fonts/`: font woff2 đóng gói sẵn. Không dùng Google Fonts.
+- `assets/images/`: hình đã thu về đúng **3 lần kích thước hiển thị lớn nhất** (đo ở màn hình 430px). Hình lớn (quà, cup) dùng WebP; icon nhỏ dùng PNG. File gốc để ở `Design Elements/`, không đưa vào web.
 - `review/`: mockup review element.
 - `demo/`: chỉ dùng cho bản demo, **không giao cho front-end dev**: `preview.js` (thanh chuyển state) và `intents.js` + `intents.en.json` (pop-up "Internal Explanation" khi bấm nút). Mỗi trang nạp chúng trong khối `<!-- DEMO ONLY: start … end -->` cuối file HTML. Không import code trong `demo/` từ `pages/` hay `shared/`.
 
