@@ -7,7 +7,7 @@ Giao diện mobile cho chương trình loyalty/promotion của đối tác IB. C
 1. **Chỉ dùng giá trị từ `tokens/tokens.css`.** Không hard-code màu, spacing, font, bo góc hay kích thước component. Nếu không có token nào phù hợp, thêm token mới vào `tokens/tokens.json` rồi build lại; không viết giá trị thẳng vào trang.
 2. **Khung 375px, có safe-area, chạy trong webview.** Thiết kế cho chiều rộng 375px. Chừa safe-area trên và dưới bằng `env(safe-area-inset-*)`. Không dựa vào thanh địa chỉ, hover hay tính năng chỉ có trên trình duyệt desktop.
 3. **Dữ liệu chỉ lấy từ `mock/*.json`.** Không viết cứng số liệu, tên, ngày tháng hay trạng thái trong HTML. Trang đọc dữ liệu từ file mock và render ra.
-4. **Mỗi trang phải chuyển được giữa các state.** Dùng query string, ví dụ `?state=capped`, để xem nhanh từng state mà không cần sửa code. Liệt kê các state trang hỗ trợ ở đầu file.
+4. **Mỗi trang phải chuyển được giữa các state.** Dùng query string, ví dụ `?state=capped`, để xem nhanh từng state mà không cần sửa code. Liệt kê các state trang hỗ trợ ở đầu file. Danh mục state đầy đủ nằm ở `STATES.md`, sinh từ `mock/*.json` bằng `python3 tools/build-states.py`: thêm, bớt hay sửa mô tả state thì chạy lại lệnh này.
 5. **Bám theo `spec.md`.** Chỗ nào spec chưa nói thì hỏi, không tự quyết.
 
 ## Thuật ngữ
@@ -46,7 +46,8 @@ Heading `--font-heading-h1` tới `h4` là cỡ desktop, không dùng trên mobi
 
 ## Cấu trúc thư mục
 
-- `spec.md`: đặc tả sản phẩm. Các quyết định bổ sung nằm ở mục 9.
+- `spec.md`: đặc tả sản phẩm. Mục 1–8 là brief gốc; từ mục 9 là các quyết định theo thời gian, mục sau ghi đè mục trước.
+- `STATES.md`: danh mục state của cả 3 trang (sinh tự động, không sửa tay).
 - `tokens/`: design token và script build.
 - `pages/`: mỗi trang gồm `<tên>.html`, `<tên>.js` (render) và `<tên>.css` (style riêng của trang).
 - `shared/`: `base.css` (khung, font, kiểu chữ), `components.css` và `components.js` (component dùng chung), `app.js` (tải mock và copy, áp state, định dạng số và ngày), `theme.js`, `icons.svg`.

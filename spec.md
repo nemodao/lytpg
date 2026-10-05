@@ -1,5 +1,7 @@
 # Loyalty Program UI — Phase 1 Spec
 
+> **How to read this spec.** Sections 1–8 are the original brief. Sections 9 onwards are decisions taken during design, in date order; when two sections disagree, **the later one wins**. Main overrides: number format (§2 → comma thousands, dot decimals); "points" are now **coins** in all on-screen text (§32); the `locked`/KYC state is gone (§24, replacing §9, §14, §23 locked parts); Point Balance tabs (§5.2 → §17); the lot detail sheet is out of this phase (§18); no back buttons (§29). Current states: [STATES.md](STATES.md).
+
 Goal of this spec: build a good-looking, content-correct mobile UI where every state can be previewed. This is NOT a technical/dev handoff document.
 
 ## 1. Context
@@ -304,21 +306,7 @@ Wherever the coin icon stands for points, it comes before the number: `[coin] 2,
 
 States are listed in the switcher by the part of the page they change (`stateGroups` in each mock file). States with the same name mean the same thing on every page and carry over when you move between pages.
 
-| Page | Group | States |
-|---|---|---|
-| Dashboard | Page | `no-task-trading` (shown as "No Task: Trading") |
-| Dashboard | Participation | `needs-kyc`, `needs-deposit` |
-| Dashboard | Point Balance | `empty` (0 points), `has-pending`, `expiring` |
-| Dashboard | Today trading task | `capped`, `no-trades-today` |
-| Dashboard | Daily check-in (future) | `check-in` |
-| Trading Task | Page | `ended` |
-| Trading Task | Participation | `needs-kyc`, `needs-deposit` |
-| Trading Task | Today trading task | `in-day`, `capped`, `no-trades-today` |
-| Trading Task | Trading account | `single-account`, `ineligible-selected` |
-| Point Balance | Point Balance | `empty` (0 points), `has-pending`, `expiring` |
-| Point Balance | Tabs | `available-empty`, `expired-empty`, `history-empty` |
-
-`has-pending` was removed from the Dashboard: pending points are already in the default data.
+**The full, current list of states lives in [STATES.md](STATES.md)**, generated from the mock files by `tools/build-states.py`. Do not keep a second copy here.
 
 ## 23. Trading Task: ended and locked (decided 4 Oct 2026)
 
