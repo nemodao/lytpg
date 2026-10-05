@@ -406,3 +406,8 @@ The layout is designed at 375px but fills the whole screen on any phone (up to 6
 
 Buttons (primary, stroke) and the bottom bar have no drop shadow, matching the flat cards. Effects that stay on purpose: the light rim on blend cards, the glow behind the balance coin, the soft shadow under reward images and the cup, the glow on bright sky streaks, the ring around the live dot.
 
+## 35. No countdown; calmer gold card (decided 5 Oct 2026)
+
+- The countdown to the daily reset on the Dashboard's Today panel is removed. The panel has a footer only when today's max is reached (capped message).
+- The Daily Trading cards (Dashboard task card, Trading Task Today / ended card) move from the bright vivid yellow to a muted, darker gold (`--blend-gold-*`, new tokens) that sits closer to the page background and feels less aggressive. The bright yellow blend stays in the token set for other uses.
+

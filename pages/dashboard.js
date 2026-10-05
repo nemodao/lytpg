@@ -14,28 +14,18 @@ const taskHref = ui.href('trading-task.html', task.capped ? ['capped'] : []);
 
 const detailsLink = (href) => `<a class="details above" href="${href}">${ui.t('common.details')}${ui.icon('right', 'icon--sm')}</a>`;
 
-// Countdown to the daily reset at 00:00 WIB, starting from the mock "now".
-const resetAt = Date.parse(`${ui.dayKey(common.now)}T00:00:00+07:00`) + 86400000;
-const startedAt = Date.now();
-const two = (value) => String(value).padStart(2, '0');
-function timerParts() {
-  const mockNow = Date.parse(common.now) + (Date.now() - startedAt);
-  const seconds = Math.max(0, Math.floor((resetAt - mockNow) / 1000));
-  return [Math.floor(seconds / 3600), Math.floor((seconds % 3600) / 60), seconds % 60].map(two);
-}
-const timer = () => `<span class="timer num" data-timer>${timerParts().map((part) => `<b>${part}</b>`).join(':')}</span>`;
-
+// The panel's footer only appears when today's max is reached.
 const todayFoot = () =>
   task.capped
     ? `<div class="today__foot today__foot--icon">${ui.icon('trophy', 'icon--sm')}<span>${ui.t('task.capped')}</span></div>`
-    : `<div class="today__foot"><span>${ui.tHtml('task.countdown', { timer: timer() })}</span></div>`;
+    : '';
 
 const cupIcon = '<img class="task__icon" src="../assets/images/cups/purple.webp" alt="">';
 
 const feed = createLiveFeed(ui, common);
 
 const taskCard = () => `
-  <section class="card card--blend blend-yellow task">
+  <section class="card card--blend blend-gold task">
     <a class="card-link" href="${taskHref}" aria-label="${ui.t('task.title')}"></a>
     ${cupIcon}
     <div class="task__head">
@@ -104,12 +94,5 @@ app.innerHTML = `
 
 feed.start(app);
 
-const timerNodes = app.querySelectorAll('[data-timer]');
-if (timerNodes.length) {
-  setInterval(() => {
-    const parts = timerParts();
-    timerNodes.forEach((node) => node.querySelectorAll('b').forEach((box, index) => { box.textContent = parts[index]; }));
-  }, 1000);
-}
 
 mountNav(ui, common, 'home');

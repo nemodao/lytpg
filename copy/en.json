@@ -81,7 +81,6 @@
   "task.todayLabel": "Today",
   "task.traded": "You traded",
   "task.earned": "Coins earned",
-  "task.countdown": "{timer} left today. Speed up your trading!",
   "rewards.title": "Redeem coins for rewards",
   "rewards.subtitle": "Unlimited rewards waiting for you",
   "task.updateEvery": "Update every {minutes} mins",

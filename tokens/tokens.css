@@ -1,5 +1,5 @@
 /* Loyalty design tokens — generated from tokens.json by build.py. Do not edit by hand.
-   Version 3.9 (2026-10-02). Base values come from Figma (IB Partnership - UI); the Custom sections were added in review. */
+   Version 3.10 (2026-10-05). Base values come from Figma (IB Partnership - UI); the Custom sections were added in review. */
 
 :root, [data-theme="light"] {
   /* Color — primitives */
@@ -290,6 +290,10 @@
   --blend-indigo-blob-1: #b5d0ff;
   --blend-indigo-blob-1-mid: #4f6dff;
   --blend-indigo-blob-2: #2a30c8;
+  --blend-gold-base-from: #d9b866;
+  --blend-gold-base-to: #c9a04a;
+  --blend-gold-blob-1: #a9772f;
+  --blend-gold-blob-2: #ead39a;
 }
 
 /* Color — semantic (dark) */
@@ -403,4 +407,7 @@
   --blend-indigo-bg: radial-gradient(75% 26% at 78% 80%, var(--blend-indigo-blob-1) 0%, var(--blend-indigo-blob-1-mid) 45%, transparent 100%), radial-gradient(90% 80% at 50% 50%, var(--blend-indigo-blob-2) 0%, transparent 80%), var(--blend-indigo-base);
   --blend-indigo-fg: #ffffff;
   --blend-indigo-ink: #2a30c8;
+  --blend-gold-bg: radial-gradient(85% 70% at 100% 108%, var(--blend-gold-blob-1) 0%, transparent 70%), radial-gradient(70% 60% at 15% 0%, var(--blend-gold-blob-2) 0%, transparent 70%), linear-gradient(170deg, var(--blend-gold-base-from), var(--blend-gold-base-to));
+  --blend-gold-fg: #0f0f10;
+  --blend-gold-ink: #e6c574;
 }

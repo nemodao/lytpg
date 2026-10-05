@@ -44,7 +44,7 @@
         "market-closed"
       ],
       "descriptions": {
-        "capped": "Today's max coins reached: the countdown is replaced by the capped message.",
+        "capped": "Today's max coins reached: the Today panel gets a footer with the capped message.",
         "no-trades-today": "No trades yet today: 0 lots and 0 coins.",
         "market-closed": "Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7)."
       }

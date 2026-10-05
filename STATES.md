@@ -24,7 +24,7 @@ File: `mock/dashboard.json` · page: `pages/dashboard.html`
 | Coin Balance | `empty` · shared | Balance is 0: no available, pending or expiring coins. | `common.balance.available = 0`<br>`common.balance.pending = 0`<br>`common.balance.expiring = null` |
 | Coin Balance | `has-pending` · shared | 850 coins are waiting to be credited: “+850 pending” shows under the balance. May be used when applying the T+1 rule to release coins. | `common.balance.pending = 850` |
 | Coin Balance | `expiring` · shared | 1,200 coins expire within 10 days: red warning under the balance. | `common.balance.expiring.points = 1200`<br>`common.balance.expiring.date = "2026-10-20"` |
-| Today trading task | `capped` | Today's max coins reached: the countdown is replaced by the capped message. | `page.task.capped = true`<br>`page.task.lotsToday = 14.2`<br>`page.task.pointsToday = 10000` |
+| Today trading task | `capped` | Today's max coins reached: the Today panel gets a footer with the capped message. | `page.task.capped = true`<br>`page.task.lotsToday = 14.2`<br>`page.task.pointsToday = 10000` |
 | Today trading task | `no-trades-today` | No trades yet today: 0 lots and 0 coins. | `page.task.lotsToday = 0`<br>`page.task.pointsToday = 0` |
 | Today trading task | `market-closed` · shared | Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7). | `common.liveFeed.clock = "2026-10-17T10:00:00+07:00"` |
 | Daily check-in (future) | `check-in` | Shows the daily check-in card (future feature, not launched). | `page.checkIn.enabled = true` |
