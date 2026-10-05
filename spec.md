@@ -414,3 +414,7 @@ Code names (file `point-balance.html`, ids, data fields such as `points`) are un
 
 The layout is designed at 375px but fills the whole screen on any phone (up to 600px wide): no side margins on 390px or 430px phones. On a computer the page stays a centred 375px column.
 
+## 34. No drop shadows (decided 5 Oct 2026)
+
+Buttons (primary, stroke) and the bottom bar have no drop shadow, matching the flat cards. Effects that stay on purpose: the light rim on blend cards, the glow behind the balance coin, the soft shadow under reward images and the cup, the glow on bright sky streaks, the ring around the live dot.
+

@@ -52,13 +52,14 @@
 .btn--xs { height: var(--size-control-xs); padding: 0 var(--spacing-10); font: var(--font-x-small-medium); }
 .btn--lg { height: var(--size-control-lg); font: var(--font-medium-semibold); }
 .btn--block { width: 100%; }
-.btn--primary { background: var(--accent-surface-brand); color: var(--on-brand); box-shadow: var(--shadow-button-shadow-stroke-primary); }
+/* Buttons are flat: no drop shadows (the Figma button shadows were dropped in review, like card shadows). */
+.btn--primary { background: var(--accent-surface-brand); color: var(--on-brand); }
 .btn--primary:active { background: var(--ui-button-primary-pressed); }
 .btn--mono { background: var(--ui-text-primary); color: var(--ui-text-dark); }
 .btn--mono:active { background: var(--ui-button-dark-pressed); }
 /* Secondary stroke (C4 in the review mockup). */
-.btn--stroke { background: var(--ui-surface-pure); border-color: var(--ui-stroke-soft); color: var(--ui-text-secondary); box-shadow: var(--shadow-regular-shadow-x-small); }
-.btn--stroke:active { background: var(--ui-surface-weak); box-shadow: none; }
+.btn--stroke { background: var(--ui-surface-pure); border-color: var(--ui-stroke-soft); color: var(--ui-text-secondary); }
+.btn--stroke:active { background: var(--ui-surface-weak); }
 /* Glass: translucent, no stroke, no shadow. A quiet button for blend or image backgrounds; text takes the
    blend's text colour. */
 .btn--glass { background: var(--ui-button-glass-surface); color: var(--blend-fg, var(--ui-text-primary)); -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur); }
@@ -201,7 +202,7 @@
 .nav__exit, .nav__tabs {
   pointer-events: auto; border-radius: var(--radius-pill);
   background: var(--ui-nav-surface); border: var(--size-stroke) solid var(--ui-nav-stroke);
-  -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur); box-shadow: var(--shadow);
+  -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur);
 }
 /* Close sits flush against the left screen edge: square on that side, no border there, rounded on the right. */
 .nav__exit { border-left: 0; border-radius: 0 var(--radius-pill) var(--radius-pill) 0; padding-left: var(--spacing-8); }
