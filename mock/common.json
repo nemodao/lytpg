@@ -1,0 +1,35 @@
+{
+  "now": "2026-10-14T14:35:00+07:00",
+  "balance": {
+    "available": 12450,
+    "pending": 0,
+    "expiring": null
+  },
+  "program": {
+    "ended": false,
+    "creditMode": "delayed",
+    "dailyMaxPoints": 10000,
+    "minHoldMinutes": 3,
+    "creditDelayDays": 3,
+    "expiryDays": 30,
+    "refreshMinutes": 30,
+    "resetTime": "00:00",
+    "expiryWarningDays": 10,
+    "tradingTask": true,
+    "joinRequirement": null
+  },
+  "accounts": [
+    {
+      "id": "50000234",
+      "eligible": true
+    },
+    {
+      "id": "50000519",
+      "eligible": true
+    },
+    {
+      "id": "50000871",
+      "eligible": false
+    }
+  ]
+}

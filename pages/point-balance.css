@@ -1,0 +1,9 @@
+/* Point Balance-only styles. */
+
+.amount { display: flex; align-items: center; justify-content: flex-end; gap: var(--spacing-4); }
+.amount-label { font: var(--font-small-regular); }
+
+/* Lots expiring within the warning window. */
+.expiring-soon { display: flex; align-items: center; gap: var(--spacing-4); color: var(--ui-text-red); font: var(--font-x-small-medium); }
+
+.points--plus { color: var(--ui-text-green); }

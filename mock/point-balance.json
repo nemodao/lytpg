@@ -1,0 +1,358 @@
+{
+  "stateGroups": [
+    {
+      "title": "Point Balance",
+      "states": [
+        "empty",
+        "has-pending",
+        "expiring"
+      ],
+      "descriptions": {
+        "empty": "Balance is 0: no available, pending or expiring points. Tabs still show their lists.",
+        "has-pending": "850 points are waiting to be credited: “+850 pending” under the balance and a Pending lot in Available. May be used when applying the T+1 rule to release points.",
+        "expiring": "1,200 points expire within 10 days: red warning under the balance; that lot is highlighted in Available."
+      }
+    },
+    {
+      "title": "Tabs",
+      "states": [
+        "available-empty",
+        "expired-empty",
+        "history-empty"
+      ],
+      "descriptions": {
+        "available-empty": "The Available tab has no lots: it shows “No available points.”",
+        "expired-empty": "The Expired tab has nothing: “No expired points in this period.”",
+        "history-empty": "The History tab has nothing: “No activity in this period.”"
+      }
+    }
+  ],
+  "default": {
+    "items": [
+      {
+        "source": "trading",
+        "earnedOn": "2026-10-14",
+        "total": 2100,
+        "remaining": 2100,
+        "status": "earning",
+        "creditAt": null,
+        "expiresAt": null
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-09-25",
+        "total": 2000,
+        "remaining": 1200,
+        "status": "active",
+        "creditAt": null,
+        "expiresAt": "2026-10-28"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-10-06",
+        "total": 3730,
+        "remaining": 3730,
+        "status": "active",
+        "creditAt": null,
+        "expiresAt": "2026-11-08"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-10-08",
+        "total": 10000,
+        "remaining": 5000,
+        "status": "active",
+        "creditAt": null,
+        "expiresAt": "2026-11-10"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-10-10",
+        "total": 2520,
+        "remaining": 2520,
+        "status": "active",
+        "creditAt": null,
+        "expiresAt": "2026-11-12"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-09-03",
+        "total": 5000,
+        "remaining": 0,
+        "status": "used",
+        "creditAt": null,
+        "expiresAt": "2026-10-06"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-09-01",
+        "total": 2000,
+        "remaining": 300,
+        "status": "expired",
+        "creditAt": null,
+        "expiresAt": "2026-10-04"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-08-10",
+        "total": 1500,
+        "remaining": 450,
+        "status": "expired",
+        "creditAt": null,
+        "expiresAt": "2026-09-12"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-08-20",
+        "total": 800,
+        "remaining": 800,
+        "status": "expired",
+        "creditAt": null,
+        "expiresAt": "2026-09-22"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-09-09",
+        "total": 1200,
+        "remaining": 200,
+        "status": "expired",
+        "creditAt": null,
+        "expiresAt": "2026-10-12"
+      }
+    ],
+    "history": [
+      {
+        "date": "2026-10-14",
+        "type": "earning",
+        "points": 2100,
+        "source": "trading"
+      },
+      {
+        "date": "2026-10-13",
+        "type": "earned",
+        "points": 850,
+        "source": "trading"
+      },
+      {
+        "date": "2026-10-10",
+        "type": "earned",
+        "points": 2520,
+        "source": "trading"
+      },
+      {
+        "date": "2026-10-09",
+        "type": "refunded",
+        "points": 5000,
+        "source": null
+      },
+      {
+        "date": "2026-10-09",
+        "type": "redeemed",
+        "points": -5000,
+        "source": null
+      },
+      {
+        "date": "2026-10-08",
+        "type": "redeemed",
+        "points": -5000,
+        "source": null
+      },
+      {
+        "date": "2026-10-08",
+        "type": "earned",
+        "points": 10000,
+        "source": "trading"
+      },
+      {
+        "date": "2026-10-06",
+        "type": "earned",
+        "points": 3730,
+        "source": "trading"
+      },
+      {
+        "date": "2026-10-04",
+        "type": "expired",
+        "points": -300,
+        "source": null
+      },
+      {
+        "date": "2026-10-02",
+        "type": "adjusted",
+        "points": 100,
+        "source": null
+      },
+      {
+        "date": "2026-09-25",
+        "type": "earned",
+        "points": 2000,
+        "source": "trading"
+      },
+      {
+        "date": "2026-09-22",
+        "type": "expired",
+        "points": -800,
+        "source": null
+      },
+      {
+        "date": "2026-09-12",
+        "type": "expired",
+        "points": -450,
+        "source": null
+      },
+      {
+        "date": "2026-10-12",
+        "type": "expired",
+        "points": -200,
+        "source": null
+      }
+    ],
+    "pendingItems": []
+  },
+  "states": {
+    "empty": {
+      "common": {
+        "balance": {
+          "available": 0,
+          "pending": 0,
+          "expiring": null
+        }
+      }
+    },
+    "has-pending": {
+      "common": {
+        "balance": {
+          "pending": 850
+        }
+      },
+      "page": {
+        "pendingItems": [
+          {
+            "source": "trading",
+            "earnedOn": "2026-10-13",
+            "total": 850,
+            "remaining": 850,
+            "status": "pending",
+            "creditAt": "2026-10-16",
+            "expiresAt": null
+          }
+        ]
+      }
+    },
+    "expiring": {
+      "common": {
+        "balance": {
+          "expiring": {
+            "points": 1200,
+            "date": "2026-10-20"
+          }
+        }
+      },
+      "page": {
+        "items": [
+          {
+            "source": "trading",
+            "earnedOn": "2026-10-14",
+            "total": 2100,
+            "remaining": 2100,
+            "status": "earning",
+            "creditAt": null,
+            "expiresAt": null
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-09-17",
+            "total": 2000,
+            "remaining": 1200,
+            "status": "active",
+            "creditAt": null,
+            "expiresAt": "2026-10-20"
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-10-06",
+            "total": 3730,
+            "remaining": 3730,
+            "status": "active",
+            "creditAt": null,
+            "expiresAt": "2026-11-08"
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-10-08",
+            "total": 10000,
+            "remaining": 5000,
+            "status": "active",
+            "creditAt": null,
+            "expiresAt": "2026-11-10"
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-10-10",
+            "total": 2520,
+            "remaining": 2520,
+            "status": "active",
+            "creditAt": null,
+            "expiresAt": "2026-11-12"
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-09-03",
+            "total": 5000,
+            "remaining": 0,
+            "status": "used",
+            "creditAt": null,
+            "expiresAt": "2026-10-06"
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-09-01",
+            "total": 2000,
+            "remaining": 300,
+            "status": "expired",
+            "creditAt": null,
+            "expiresAt": "2026-10-04"
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-08-10",
+            "total": 1500,
+            "remaining": 450,
+            "status": "expired",
+            "creditAt": null,
+            "expiresAt": "2026-09-12"
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-08-20",
+            "total": 800,
+            "remaining": 800,
+            "status": "expired",
+            "creditAt": null,
+            "expiresAt": "2026-09-22"
+          }
+        ]
+      }
+    },
+    "available-empty": {
+      "page": {
+        "empty": {
+          "available": true
+        }
+      }
+    },
+    "expired-empty": {
+      "page": {
+        "empty": {
+          "expired": true
+        }
+      }
+    },
+    "history-empty": {
+      "page": {
+        "empty": {
+          "history": true
+        }
+      }
+    }
+  }
+}

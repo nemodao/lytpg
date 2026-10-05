@@ -1,0 +1,67 @@
+/* Frame, safe areas, fonts and text helpers. Every value comes from tokens/tokens.css. */
+
+@font-face { font-family: "Inter"; font-weight: 400; font-style: normal; font-display: swap; src: url("../assets/fonts/inter-latin-400.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 500; font-style: normal; font-display: swap; src: url("../assets/fonts/inter-latin-500.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-style: normal; font-display: swap; src: url("../assets/fonts/inter-latin-600.woff2") format("woff2"); }
+@font-face { font-family: "Nunito Sans"; font-weight: 600; font-style: normal; font-display: swap; src: url("../assets/fonts/nunito-sans-latin-600.woff2") format("woff2"); }
+@font-face { font-family: "Nunito Sans"; font-weight: 700; font-style: normal; font-display: swap; src: url("../assets/fonts/nunito-sans-latin-700.woff2") format("woff2"); }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+html[data-theme="dark"] { color-scheme: dark; }
+
+body {
+  margin: 0;
+  background: var(--ui-surface-weak);
+  color: var(--ui-text-primary);
+  font: var(--font-small-regular);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+p, h1, h2, h3 { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; text-align: inherit; }
+[hidden] { display: none !important; }
+:focus-visible { outline: var(--spacing-2) solid var(--ui-stroke-brand); outline-offset: var(--spacing-2); }
+
+/* 375px frame. In the webview it fills the screen; on a wider preview it stays a centred column. */
+.app {
+  max-width: var(--size-frame);
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + var(--spacing-12)) var(--spacing-gutter) calc(env(safe-area-inset-bottom, 0px) + var(--spacing-32));
+  background: var(--surface-page);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-section);
+}
+
+.icon { width: var(--size-icon); height: var(--size-icon); flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.icon--sm { width: var(--size-icon-sm); height: var(--size-icon-sm); }
+.icon--lg { width: var(--size-icon-lg); height: var(--size-icon-lg); }
+
+/* Type roles (mobile scale) */
+.t-display { font: var(--font-display-m); }
+.t-title-l { font: var(--font-title-l); }
+.t-title-m { font: var(--font-title-m); }
+.t-title-s { font: var(--font-large-semibold); }
+.t-body-strong { font: var(--font-medium-semibold); }
+.t-label { font: var(--font-small-medium); }
+.t-body { font: var(--font-small-regular); }
+.t-caption { font: var(--font-x-small-regular); }
+.t-caption-strong { font: var(--font-x-small-medium); }
+
+.c-2 { color: var(--ui-text-secondary); }
+.c-3 { color: var(--ui-text-tertiary); }
+.c-brand { color: var(--ui-text-brand); }
+.c-green { color: var(--ui-text-green); }
+.c-yellow { color: var(--ui-text-yellow); }
+
+.num { font-variant-numeric: tabular-nums; }
+.grow { flex: 1; min-width: 0; }
+.row { display: flex; align-items: center; gap: var(--spacing-12); min-width: 0; }
+.stack { display: flex; flex-direction: column; gap: var(--spacing-stack); }
+.stack--tight { gap: var(--spacing-4); }

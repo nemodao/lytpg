@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Build output: rebuild with tools/build-offline.py or tools/build-handoff.py
+dist/
+
+# Raw design sources (large originals); the project uses the resized copies in assets/
+Design Elements/
+
+# Temporary test pages
+pages/_*

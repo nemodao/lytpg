@@ -1,0 +1,209 @@
+{
+  "stateGroups": [
+    {
+      "title": "Page",
+      "states": [
+        "ended"
+      ],
+      "descriptions": {
+        "ended": "The programme has ended: end message on the yellow card, no HOT badge, no trade button."
+      }
+    },
+    {
+      "title": "Participation",
+      "states": [
+        "needs-kyc",
+        "needs-deposit"
+      ],
+      "descriptions": {
+        "needs-kyc": "User must pass KYC and has no trading account yet: no account picker, only earning rates and “KYC to join”.",
+        "needs-deposit": "User must make a first deposit and has no trading account yet: no account picker, only earning rates and “Deposit to join”."
+      }
+    },
+    {
+      "title": "Today trading task",
+      "states": [
+        "in-day",
+        "capped",
+        "no-trades-today"
+      ],
+      "descriptions": {
+        "in-day": "Points are credited during the day instead of 3 days later; today shows as credited and appears in History as Earning.",
+        "capped": "Today's max points reached: capped message on the Today card, plain “Trade now” button.",
+        "no-trades-today": "No trades yet today: 0 lots and 0 points, with a hint to make the first trade."
+      }
+    },
+    {
+      "title": "Trading account",
+      "states": [
+        "single-account",
+        "ineligible-selected"
+      ],
+      "descriptions": {
+        "single-account": "User has only one trading account: a fixed field instead of the account picker.",
+        "ineligible-selected": "The selected trading account belongs to an MT5 group that cannot take part in the programme, for example an A-Book group or any group not listed in the programme config. Shows a warning and “Switch to an eligible account”."
+      }
+    }
+  ],
+  "default": {
+    "today": {
+      "lots": 3.5,
+      "points": 2100,
+      "status": "pending",
+      "creditAt": "2026-10-17T01:00:00+07:00",
+      "updatedAt": "2026-10-14T14:35:00+07:00",
+      "capped": false
+    },
+    "selectedAccountId": "50000234",
+    "rates": [
+      {
+        "group": "forex",
+        "ptsPerLot": 5
+      },
+      {
+        "group": "metal",
+        "ptsPerLot": 10
+      },
+      {
+        "group": "indices",
+        "ptsPerLot": 3
+      },
+      {
+        "group": "other",
+        "ptsPerLot": 1
+      }
+    ],
+    "history": [
+      {
+        "date": "2026-10-13",
+        "lots": 1.4,
+        "points": 850,
+        "status": "pending",
+        "capped": false
+      },
+      {
+        "date": "2026-10-10",
+        "lots": 4.2,
+        "points": 2520,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-10-08",
+        "lots": 14.6,
+        "points": 10000,
+        "status": "credited",
+        "capped": true
+      },
+      {
+        "date": "2026-10-06",
+        "lots": 6.1,
+        "points": 3730,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-10-02",
+        "lots": 2.8,
+        "points": 1680,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-09-29",
+        "lots": 0.9,
+        "points": 540,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-09-24",
+        "lots": 5.3,
+        "points": 3180,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-09-17",
+        "lots": 15.0,
+        "points": 10000,
+        "status": "credited",
+        "capped": true
+      },
+      {
+        "date": "2026-09-08",
+        "lots": 3.2,
+        "points": 1920,
+        "status": "credited",
+        "capped": false
+      }
+    ]
+  },
+  "states": {
+    "ended": {
+      "common": {
+        "program": {
+          "ended": true
+        }
+      }
+    },
+    "in-day": {
+      "common": {
+        "program": {
+          "creditMode": "in-day"
+        }
+      },
+      "page": {
+        "today": {
+          "status": "credited"
+        }
+      }
+    },
+    "capped": {
+      "page": {
+        "today": {
+          "capped": true,
+          "lots": 14.2,
+          "points": 10000
+        }
+      }
+    },
+    "no-trades-today": {
+      "page": {
+        "today": {
+          "lots": 0,
+          "points": 0
+        }
+      }
+    },
+    "single-account": {
+      "common": {
+        "accounts": [
+          {
+            "id": "50000234",
+            "eligible": true
+          }
+        ]
+      }
+    },
+    "ineligible-selected": {
+      "page": {
+        "selectedAccountId": "50000871"
+      }
+    },
+    "needs-kyc": {
+      "common": {
+        "program": {
+          "joinRequirement": "kyc"
+        }
+      }
+    },
+    "needs-deposit": {
+      "common": {
+        "program": {
+          "joinRequirement": "deposit"
+        }
+      }
+    }
+  }
+}

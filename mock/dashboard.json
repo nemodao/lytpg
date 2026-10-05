@@ -1,0 +1,169 @@
+{
+  "stateGroups": [
+    {
+      "title": "Page",
+      "states": [
+        "no-task-trading"
+      ],
+      "labels": {
+        "no-task-trading": "No Task: Trading"
+      },
+      "descriptions": {
+        "no-task-trading": "The Trading Task is not shown to this user, because: (1) the Trading Task has been turned off; (2) the Trading Task has been blocked for this user (reason set in config, e.g. blacklist, A-Book); or (3) the Trading Task has been hidden from all users. The Daily Trading card and the Earn tab are hidden."
+      }
+    },
+    {
+      "title": "Participation",
+      "states": [
+        "needs-kyc",
+        "needs-deposit"
+      ],
+      "descriptions": {
+        "needs-kyc": "User must pass KYC to take part. Everything shows as usual; the trade button reads “KYC to join”.",
+        "needs-deposit": "User must make a first deposit to take part. Everything shows as usual; the trade button reads “Deposit to join”."
+      }
+    },
+    {
+      "title": "Point Balance",
+      "states": [
+        "empty",
+        "has-pending",
+        "expiring"
+      ],
+      "descriptions": {
+        "empty": "Balance is 0: no available, pending or expiring points.",
+        "has-pending": "850 points are waiting to be credited: “+850 pending” shows under the balance. May be used when applying the T+1 rule to release points.",
+        "expiring": "1,200 points expire within 10 days: red warning under the balance."
+      }
+    },
+    {
+      "title": "Today trading task",
+      "states": [
+        "capped",
+        "no-trades-today"
+      ],
+      "descriptions": {
+        "capped": "Today's max points reached: the countdown is replaced by the capped message.",
+        "no-trades-today": "No trades yet today: 0 lots and 0 points."
+      }
+    },
+    {
+      "title": "Daily check-in (future)",
+      "states": [
+        "check-in"
+      ],
+      "descriptions": {
+        "check-in": "Shows the daily check-in card (future feature, not launched)."
+      }
+    }
+  ],
+  "default": {
+    "task": {
+      "lotsToday": 3.5,
+      "pointsToday": 2100,
+      "updatedAt": "2026-10-14T14:35:00+07:00",
+      "capped": false
+    },
+    "rewards": [
+      {
+        "image": "../assets/images/rewards/reward-1.png",
+        "alt": "Wireless earbuds and a smartphone"
+      },
+      {
+        "image": "../assets/images/rewards/reward-2.png",
+        "alt": "Laptops"
+      },
+      {
+        "image": "../assets/images/rewards/reward-3.png",
+        "alt": "Suitcase and an airplane"
+      }
+    ],
+    "checkIn": {
+      "enabled": false,
+      "rewards": [
+        10,
+        10,
+        20,
+        20,
+        30,
+        50,
+        100
+      ],
+      "checkedDays": 3,
+      "checkedToday": false
+    }
+  },
+  "states": {
+    "empty": {
+      "common": {
+        "balance": {
+          "available": 0,
+          "pending": 0,
+          "expiring": null
+        }
+      }
+    },
+    "has-pending": {
+      "common": {
+        "balance": {
+          "pending": 850
+        }
+      }
+    },
+    "no-task-trading": {
+      "common": {
+        "program": {
+          "tradingTask": false
+        }
+      }
+    },
+    "expiring": {
+      "common": {
+        "balance": {
+          "expiring": {
+            "points": 1200,
+            "date": "2026-10-20"
+          }
+        }
+      }
+    },
+    "capped": {
+      "page": {
+        "task": {
+          "capped": true,
+          "lotsToday": 14.2,
+          "pointsToday": 10000
+        }
+      }
+    },
+    "no-trades-today": {
+      "page": {
+        "task": {
+          "lotsToday": 0,
+          "pointsToday": 0
+        }
+      }
+    },
+    "check-in": {
+      "page": {
+        "checkIn": {
+          "enabled": true
+        }
+      }
+    },
+    "needs-kyc": {
+      "common": {
+        "program": {
+          "joinRequirement": "kyc"
+        }
+      }
+    },
+    "needs-deposit": {
+      "common": {
+        "program": {
+          "joinRequirement": "deposit"
+        }
+      }
+    }
+  }
+}

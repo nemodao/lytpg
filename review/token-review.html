@@ -1,0 +1,1023 @@
+<title>Loyalty Token Review</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Nunito+Sans:wght@600;700&display=swap">
+<style>
+/* Layout: review bench — each screen shown as a light/dark pair side by side, contrast audit below. */
+:root {
+  --pg-bg: #eef0f4; --pg-fg: #14161b; --pg-muted: #5b6272; --pg-line: #d5d9e2; --pg-panel: #ffffff;
+  --pg-ok: #1f7a5f; --pg-warn: #9a6a12; --pg-bad: #c02236;
+  --f-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-head: "Nunito Sans", "Inter", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --pg-bg: #08090c; --pg-fg: #f1f3f7; --pg-muted: #9aa1b2; --pg-line: #2a2e38; --pg-panel: #14161b;
+  --pg-ok: #4fd1a9; --pg-warn: #f1ae40; --pg-bad: #ff6b7d; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --pg-bg: #08090c; --pg-fg: #f1f3f7; --pg-muted: #9aa1b2; --pg-line: #2a2e38; --pg-panel: #14161b;
+  --pg-ok: #4fd1a9; --pg-warn: #f1ae40; --pg-bad: #ff6b7d; color-scheme: dark }
+
+body { background: var(--pg-bg); color: var(--pg-fg); font-family: var(--f-body); }
+.page { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 32px 64px; display: flex; flex-direction: column; gap: 40px; }
+.intro h1 { font: 700 28px/1.2 var(--f-head); margin: 0 0 8px; text-wrap: balance; }
+.intro p { margin: 0; color: var(--pg-muted); font-size: 15px; line-height: 1.55; max-width: 65ch; }
+.block { display: flex; flex-direction: column; gap: 16px; }
+.block > h2 { font: 700 20px/1.3 var(--f-head); margin: 0; }
+.block > p { margin: 0; color: var(--pg-muted); line-height: 1.5; max-width: 65ch; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; justify-items: center; }
+.slot { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 375px; min-width: 0; }
+.slot-label { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--pg-muted); }
+
+/* ---- Phone ---- */
+.phone { border-radius: 32px; border: 1px solid var(--pg-line); overflow: hidden;
+  background: var(--surface-page); color: var(--ui-text-primary);
+  font: 400 14px/20px var(--f-body); display: flex; flex-direction: column; }
+.phone svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.status { display: flex; justify-content: space-between; padding: 12px 24px 4px; font: 600 14px/20px var(--f-body); }
+.screen { padding: var(--spacing-12) var(--spacing-gutter) var(--spacing-20); display: flex; flex-direction: column; gap: var(--spacing-section); }
+.row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.grow { flex: 1; min-width: 0; }
+.t-h5 { font: var(--font-title-l); margin: 0; }
+.t-lg { font: var(--font-large-medium); margin: 0; }
+.t-md { font: var(--font-medium-medium); margin: 0; }
+.t-sm { font: var(--font-small-regular); margin: 0; }
+.t-smm { font: var(--font-small-medium); margin: 0; }
+.t-sms { font: var(--font-small-semibold); margin: 0; }
+.t-xs { font: var(--font-x-small-regular); margin: 0; }
+.t-ts { font: var(--font-large-semibold); margin: 0; }
+.t-mds { font: var(--font-medium-semibold); margin: 0; }
+.t-xsm { font: var(--font-x-small-medium); margin: 0; }
+.c2 { color: var(--ui-text-secondary); } .c3 { color: var(--ui-text-tertiary); } .cd { color: var(--ui-text-disabled); }
+.cb { color: var(--ui-text-brand); } .cg { color: var(--ui-text-green); } .cr { color: var(--ui-text-red); } .cy { color: var(--ui-text-yellow); }
+.num { font-variant-numeric: tabular-nums; }
+.sec { font: 600 12px/18px var(--f-body); color: var(--ui-text-tertiary); letter-spacing: .04em; text-transform: uppercase; margin: 4px 0 -6px; }
+
+.avatar { width: var(--size-avatar); height: var(--size-avatar); border-radius: 360px; background: var(--ui-badge-blue); color: var(--ui-text-brand); display: grid; place-items: center; font: 600 14px/20px var(--f-body); flex: none; }
+.iconbtn { width: var(--size-icon-button); height: var(--size-icon-button); border-radius: var(--radius-control); border: 1px solid var(--ui-stroke-soft); background: var(--ui-surface-pure); color: var(--ui-icon-secondary); display: grid; place-items: center; flex: none; box-shadow: var(--shadow-regular-shadow-x-small); }
+[data-theme="dark"] .iconbtn, [data-theme="dark"] .card, [data-theme="dark"] .btn-stroke { box-shadow: none; }
+[data-theme="dark"] .card.blend { box-shadow: var(--blend-stroke); }
+
+.card { background: var(--card-surface); border: 1px solid var(--card-stroke); border-radius: var(--radius-card); padding: var(--spacing-card); display: flex; flex-direction: column; gap: var(--spacing-stack); box-shadow: var(--card-shadow); min-width: 0; }
+.card-weak { background: var(--ui-surface-weak); }
+.card-soft { background: var(--ui-surface-soft); border-color: transparent; box-shadow: none; }
+.card-sel { border-color: var(--ui-stroke-brand); background: var(--ui-tab-surface-blue); }
+.card-brand { background: var(--accent-surface-brand); border-color: transparent; color: var(--on-brand); }
+.card-brand .dim { opacity: .78; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.progress { height: 6px; border-radius: 360px; background: color-mix(in srgb, var(--on-brand) 20%, transparent); overflow: hidden; }
+.progress i { display: block; height: 100%; width: 62%; background: var(--on-brand); border-radius: 360px; }
+
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: var(--radius-pill); font: 500 12px/18px var(--f-body); white-space: nowrap; }
+.b-green { background: var(--ui-badge-green); color: var(--ui-text-green); }
+.b-yellow { background: var(--ui-badge-yellow); color: var(--ui-text-yellow); }
+.b-red { background: var(--ui-badge-red); color: var(--ui-text-red); }
+.b-blue { background: var(--ui-badge-blue); color: var(--ui-text-brand); }
+.b-teal { background: var(--ui-badge-teal); color: var(--ui-icon-teal); }
+.wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.seg { display: flex; padding: 2px; gap: 2px; background: var(--ui-tab-surface-default); border-radius: var(--radius-control); }
+.seg span { flex: 1; text-align: center; padding: 6px 8px; border-radius: var(--radius-control-inner); font: 500 14px/20px var(--f-body); color: var(--ui-text-tertiary); }
+.seg .on { background: var(--ui-tab-surface-active); color: var(--ui-text-primary); }
+
+.list { display: flex; flex-direction: column; }
+.item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--ui-line-soft); }
+.item:first-child { border-top: 0; padding-top: 0; } .item:last-child { padding-bottom: 0; }
+.tile { width: var(--size-tile); height: var(--size-tile); border-radius: var(--radius-control); background: var(--ui-icon-surface); border: 1px solid var(--ui-stroke-soft); display: grid; place-items: center; flex: none; color: var(--ui-icon-secondary); }
+.end { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+
+.chart { display: flex; align-items: flex-end; gap: 8px; height: 96px; border-bottom: 1px solid var(--ui-line-soft); }
+.chart i { flex: 1; border-radius: 4px 4px 0 0; background: var(--ui-chart-chart); }
+.chart .hi { background: var(--accent-surface-brand); } .chart .ip { background: var(--ui-chart-in-process); }
+.axis { display: flex; gap: 8px; } .axis span { flex: 1; text-align: center; font: 400 12px/18px var(--f-body); color: var(--ui-text-tertiary); }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; } .legend span { display: inline-flex; align-items: center; gap: 6px; font: 400 12px/18px var(--f-body); color: var(--ui-text-secondary); }
+.legend b { width: 8px; height: 8px; border-radius: 2px; }
+
+.tabbar { display: flex; background: var(--ui-surface-pure); border-top: 1px solid var(--ui-line-soft); padding: 8px 8px 20px; margin-top: auto; }
+.tabbar span { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; font: 500 12px/18px var(--f-body); color: var(--ui-text-tertiary); }
+.tabbar .on { color: var(--ui-icon-brand); }
+
+.btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: var(--size-control-md); padding: 0 18px; border-radius: var(--radius-pill); border: 1px solid transparent; font: 500 14px/20px var(--f-body); white-space: nowrap; }
+.btn.sm { height: var(--size-control-sm); padding: 0 12px; border-radius: var(--radius-pill); }
+.btn.block { width: 100%; }
+.btn.md { height: var(--size-control-md); }
+.btn-primary { background: var(--accent-surface-brand); color: var(--on-brand); box-shadow: var(--shadow-button-shadow-stroke-primary); }
+.btn-dark { background: var(--ui-text-primary); color: var(--ui-text-dark); box-shadow: var(--shadow-button-shadow-fancy-important); }
+.btn-stroke { background: var(--ui-surface-pure); border-color: var(--ui-stroke-soft); color: var(--ui-text-secondary); box-shadow: var(--shadow-regular-shadow-x-small); }
+.btn-danger { background: var(--accent-destructive); color: var(--on-destructive); }
+.btn-tint { background: var(--ui-badge-blue); color: var(--ui-text-brand); }
+.btn-text { color: var(--ui-text-brand); padding: 0 8px; }
+.btn-off { background: var(--ui-stroke-disabled); color: var(--ui-text-disabled); border-color: var(--ui-stroke-soft); }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font: 500 14px/20px var(--f-body); color: var(--ui-text-primary); }
+.input { display: flex; align-items: center; gap: 8px; height: var(--size-field); padding: 0 12px; border-radius: var(--radius-control); border: 1px solid var(--ui-stroke-soft); background: var(--ui-field-surface); font: 400 14px/20px var(--f-body); color: var(--ui-text-primary); }
+.input svg { color: var(--ui-icon-tertiary); }
+.input .ph { color: var(--ui-text-tertiary); }
+.input.focus { border-color: var(--ui-stroke-brand); box-shadow: 0 0 0 3px var(--ui-badge-blue); }
+.input.err { border-color: var(--ui-stroke-error); }
+.input.off { background: var(--ui-field-surface-locked); color: var(--ui-text-disabled); }
+.hint { font: 400 12px/18px var(--f-body); color: var(--ui-text-tertiary); } .hint.err { color: var(--ui-text-red); }
+
+.sw { width: 40px; height: 24px; border-radius: 360px; background: var(--ui-surface-soft); position: relative; flex: none; }
+.sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--ui-switch-knob); box-shadow: var(--shadow-switch-knob); }
+.sw.on { background: var(--accent-surface-brand); } .sw.on::after { left: 18px; }
+.cbx { width: 20px; height: 20px; border-radius: var(--radius-sm); border: 1.5px solid var(--ui-text-disabled); background: var(--ui-surface-pure); display: grid; place-items: center; flex: none; color: var(--on-brand); }
+.cbx.on { background: var(--accent-surface-brand); border-color: var(--accent-surface-brand); }
+.cbx svg { width: 14px; height: 14px; stroke-width: 2.4; }
+.rad { box-sizing: border-box; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--ui-text-disabled); background: var(--ui-surface-pure); flex: none; display: grid; place-items: center; }
+.rad.on { border-color: var(--accent-surface-brand); }
+.rad.on::after { content: ""; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-surface-brand); }
+.chip { padding: 6px 12px; border-radius: var(--radius-pill); border: 1px solid var(--ui-stroke-soft); background: var(--ui-surface-pure); font: 500 14px/20px var(--f-body); color: var(--ui-text-secondary); }
+.chip.on { background: var(--ui-chip-surface-selected); border-color: var(--ui-chip-stroke-selected); color: var(--ui-text-brand); }
+
+.alert { display: flex; gap: 10px; padding: 12px; border-radius: var(--radius-card-inner); font: 400 14px/20px var(--f-body); color: var(--ui-text-secondary); }
+.alert b { display: block; font-weight: 600; color: var(--ui-text-primary); }
+.a-info { background: var(--ui-badge-blue); } .a-info svg { color: var(--ui-icon-brand); }
+.a-ok { background: var(--ui-badge-green); } .a-ok svg { color: var(--ui-icon-green); }
+.a-warn { background: var(--ui-badge-yellow); } .a-warn svg { color: var(--ui-icon-yellow); }
+.a-err { background: var(--ui-badge-red); } .a-err svg { color: var(--ui-icon-red); }
+
+/* ---- Screens built from reference layouts (radius 24 is outside the current token set) ---- */
+.big { border-radius: var(--radius-card); }
+.link { font: 500 16px/24px var(--f-body); color: var(--ui-text-brand); }
+.round { width: 44px; height: 44px; border-radius: 50%; background: var(--ui-badge-blue); color: var(--ui-icon-brand); display: grid; place-items: center; flex: none; }
+.hero { position: relative; text-align: center; padding: 8px 8px 0; display: flex; flex-direction: column; gap: 8px; }
+.hero h3 { font: 700 30px/36px var(--f-head); margin: 0; text-wrap: balance; }
+.spark { position: absolute; color: var(--ui-icon-yellow); }
+.phone .spark svg { width: 100%; height: 100%; fill: currentColor; stroke: none; }
+.carousel { display: flex; justify-content: center; align-items: center; gap: 12px; margin-inline: -16px; overflow: hidden; }
+.prize { flex: none; width: 216px; height: 248px; padding: 16px; border-radius: 24px; background: var(--ui-surface-pure); border: 1px solid var(--ui-stroke-soft); display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+.prize.side { height: 216px; }
+.prize .art { margin-top: auto; align-self: center; color: var(--ui-icon-brand); }
+.phone .prize .art svg { width: 132px; height: 132px; stroke-width: 1.1; }
+.prize .numeral { margin-top: auto; font: 700 128px/112px var(--f-head); color: var(--ui-icon-yellow); }
+.center { text-align: center; align-items: center; }
+.phone .inline-ico { width: 24px; height: 24px; color: var(--ui-icon-yellow); vertical-align: -4px; }
+.cats { display: flex; gap: 12px; margin-right: -16px; overflow: hidden; }
+.cat { flex: none; width: 68px; display: flex; flex-direction: column; align-items: center; gap: 6px; font: 400 12px/18px var(--f-body); color: var(--ui-text-secondary); white-space: nowrap; }
+.cat i { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; }
+.phone .cat svg { width: 26px; height: 26px; }
+.k-y { background: var(--ui-badge-yellow); color: var(--ui-icon-yellow); } .k-b { background: var(--ui-badge-blue); color: var(--ui-icon-brand); }
+.k-g { background: var(--ui-badge-green); color: var(--ui-icon-green); } .k-t { background: var(--ui-badge-teal); color: var(--ui-icon-teal); } .k-r { background: var(--ui-badge-red); color: var(--ui-icon-red); }
+.inset { background: var(--ui-surface-weak); border-radius: var(--radius-card-inner); padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; }
+.help { width: 24px; height: 24px; border-radius: 50%; background: var(--ui-surface-soft); color: var(--ui-text-tertiary); display: grid; place-items: center; font: 600 12px/18px var(--f-body); flex: none; }
+
+.pill { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: var(--radius-pill); background: var(--ui-surface-pure); border: 1px solid var(--ui-stroke-soft); font: 500 14px/20px var(--f-body); color: var(--ui-text-primary); }
+.plain { color: var(--ui-icon-primary); display: grid; place-items: center; }
+.phone .plain svg { width: 24px; height: 24px; }
+.coin { width: 16px; height: 16px; border-radius: 50%; background: var(--accent-surface-brand); flex: none; }
+.plus { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-surface-brand); color: var(--on-brand); display: grid; place-items: center; flex: none; }
+.phone .plus svg { width: 16px; height: 16px; stroke-width: 2.2; }
+.profile { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ring { padding: 4px; border-radius: 50%; border: 2px dashed var(--ui-stroke-brand); margin-bottom: 6px; }
+.ring .avatar { width: 76px; height: 76px; font: 600 24px/34px var(--f-head); }
+.stats { display: flex; }
+.stats > div { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; border-left: 1px solid var(--ui-line-soft); }
+.stats > div:first-child { border-left: 0; }
+.stats .v { display: flex; align-items: center; gap: 6px; font: 600 16px/24px var(--f-body); }
+.stats .v svg { color: var(--ui-icon-brand); }
+.week { display: flex; gap: 4px; }
+.day { flex: 1; min-width: 0; padding: 8px 0 10px; border-radius: var(--radius-control); background: var(--ui-surface-pure); border: 1.5px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 4px; font: 400 12px/18px var(--f-body); color: var(--ui-text-tertiary); }
+.day b { font: 500 14px/20px var(--f-body); color: var(--ui-text-primary); }
+.day.on { border-color: var(--ui-stroke-brand); background: var(--ui-tab-surface-blue); }
+.dots { display: flex; gap: 3px; height: 6px; align-items: center; }
+.dots u { width: 5px; height: 5px; border-radius: 50%; background: var(--ui-text-disabled); }
+.dots u.a { background: var(--accent-surface-brand); } .dots u.p { background: var(--ui-text-primary); }
+.duo { display: grid; grid-template-columns: 1fr 1.8fr; gap: 10px; }
+.stack { display: flex; } .stack .avatar { width: 36px; height: 36px; margin-left: -12px; border: 2px solid var(--ui-surface-pure); font-size: 12px; } .stack .avatar:first-child { margin-left: 0; }
+.streak { position: relative; overflow: hidden; background: var(--surface-streak); }
+.streak .trophy { position: absolute; right: -6px; bottom: -10px; color: var(--tint-text, var(--ui-icon-brand)); }
+.phone .streak .trophy svg { width: 84px; height: 84px; stroke-width: 1.2; }
+.steps { display: flex; align-items: center; gap: 5px; }
+.steps u { width: 6px; height: 6px; border-radius: 50%; background: var(--ui-text-disabled); }
+.steps u.a { background: var(--tint-accent, var(--accent-surface-brand)); }
+.steps .now { width: 16px; height: 16px; border-radius: 50%; background: var(--tint-accent, var(--accent-surface-brand)); color: var(--tint-on, var(--on-brand)); display: grid; place-items: center; }
+.phone .steps .now svg { width: 10px; height: 10px; stroke-width: 3; }
+.banner { display: flex; padding: 0; overflow: hidden; flex-direction: row; gap: 0; }
+.banner .gfx { flex: none; width: 104px; background: var(--accent-surface-brand); color: var(--on-brand); display: grid; place-items: center; }
+.phone .banner .gfx svg { width: 56px; height: 56px; stroke-width: 1.3; }
+.banner .txt { padding: 16px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.peek { display: grid; grid-template-columns: 1.9fr 1fr; gap: 10px; height: 36px; overflow: hidden; margin-bottom: -20px; }
+.peek .card { height: 90px; }
+.tabbar.ind span { position: relative; }
+.tabbar.ind .on::before { content: ""; position: absolute; top: -9px; width: 32px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent-surface-brand); }
+
+/* ---- Vivid section + glass card ---- */
+.vivid { border-radius: var(--radius-card); padding: 20px 16px 16px; display: flex; flex-direction: column; gap: 14px; color: var(--on-brand); background: var(--surface-vivid); }
+.vivid .dim { color: color-mix(in srgb, var(--on-brand) 62%, transparent); }
+.glass { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: var(--radius-card-inner);
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.glass s { color: color-mix(in srgb, var(--on-brand) 50%, transparent); font-weight: 400; }
+.tag { padding: 1px 8px; border-radius: var(--radius-tag); background: var(--tag-surface); color: var(--tag-text); font: 600 12px/18px var(--f-body); white-space: nowrap; }
+.tick { width: 24px; height: 24px; border-radius: 50%; background: var(--on-brand); color: var(--accent-surface-brand); display: grid; place-items: center; flex: none; }
+.phone .tick svg { width: 14px; height: 14px; stroke-width: 2.6; }
+.dash { border-top: 1px dashed color-mix(in srgb, var(--on-brand) 30%, transparent); }
+.btn-onbrand { background: var(--on-brand); color: var(--accent-surface-brand); height: var(--size-control-lg); border-radius: var(--radius-pill); font: var(--font-medium-semibold); }
+
+/* ---- Earn rewards list ---- */
+.tile.tint { border-color: transparent; width: 40px; height: 40px; border-radius: 12px; }
+.btn.pillbtn { border-radius: var(--radius-pill); min-width: 72px; height: var(--size-control-sm); flex: none; }
+.pts { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; color: var(--ui-text-brand); font-weight: 600; vertical-align: 1px; }
+.pts .coin { width: 14px; height: 14px; }
+.earn .item { padding: 14px 0; }
+
+/* ---- Pale theme-colour content card ---- */
+.card-brand-soft { background: var(--tint-bg, var(--surface-brand-soft)); border-color: var(--tint-stroke, var(--stroke-brand-soft)); box-shadow: none; }
+/* Tinted card options: theme colour by default, six fixed hues via .tint-* */
+.tint-ico { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--tint-accent, var(--accent-surface-brand)); color: var(--tint-on, var(--on-brand)); }
+.tint-txt { color: var(--tint-text, var(--ui-text-brand)); }
+.tints { display: flex; flex-direction: column; gap: 16px; }
+
+.meter { height: 8px; border-radius: 360px; background: color-mix(in srgb, var(--ui-text-primary) 10%, transparent); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 62%; border-radius: 360px; background: var(--tint-accent, var(--accent-surface-brand)); }
+
+/* ---- Blended cards: saturated base + soft colour blobs. bl-theme follows the theme colour. ---- */
+.blend { background: var(--blend-bg); color: var(--blend-fg); border: 0; padding: calc(var(--spacing-card) + 1px); box-shadow: var(--blend-stroke); }
+.blend .c2, .blend .c3 { color: color-mix(in srgb, var(--blend-fg) 76%, transparent); }
+.blend .tint-txt { color: var(--blend-fg); font-weight: 600; }
+.blend .tint-ico { background: color-mix(in srgb, var(--blend-fg) 16%, transparent); color: var(--blend-fg); }
+.blend .meter { background: color-mix(in srgb, var(--blend-fg) 20%, transparent); }
+.blend .meter i { background: var(--blend-fg); }
+
+/* Vivid section on a blend background: text and button ink follow the blend */
+.vivid.on-blend { background: var(--blend-bg); --on-brand: var(--blend-fg); --accent-surface-brand: var(--blend-ink);
+  box-shadow: var(--blend-stroke); }
+
+.bl-theme { --blend-bg: var(--blend-theme-bg); --blend-fg: var(--blend-theme-fg); --blend-ink: var(--blend-theme-ink); }
+.bl-red { --blend-bg: var(--blend-red-bg); --blend-fg: var(--blend-red-fg); --blend-ink: var(--blend-red-ink); }
+.bl-yellow { --blend-bg: var(--blend-yellow-bg); --blend-fg: var(--blend-yellow-fg); --blend-ink: var(--blend-yellow-ink); }
+.bl-lime { --blend-bg: var(--blend-lime-bg); --blend-fg: var(--blend-lime-fg); --blend-ink: var(--blend-lime-ink); }
+.bl-green { --blend-bg: var(--blend-green-bg); --blend-fg: var(--blend-green-fg); --blend-ink: var(--blend-green-ink); }
+.bl-cyan { --blend-bg: var(--blend-cyan-bg); --blend-fg: var(--blend-cyan-fg); --blend-ink: var(--blend-cyan-ink); }
+.bl-pink { --blend-bg: var(--blend-pink-bg); --blend-fg: var(--blend-pink-fg); --blend-ink: var(--blend-pink-ink); }
+.bl-indigo { --blend-bg: var(--blend-indigo-bg); --blend-fg: var(--blend-indigo-fg); --blend-ink: var(--blend-indigo-ink); }
+/* On blends with dark text, the tag flips to dark with the blend's ink */
+.vivid.bl-yellow .tag, .vivid.bl-lime .tag, .vivid.bl-cyan .tag { background: var(--blend-fg); color: var(--blend-ink); }
+
+.ladder { gap: 6px; }
+.crtag { margin-left: 8px; font: var(--font-caption-2x-small); color: var(--ui-text-tertiary); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.btn-lg { height: var(--size-control-lg); border-radius: var(--radius-pill); font: var(--font-medium-semibold); }
+.btn-redtint { background: var(--ui-badge-red); color: var(--ui-text-red); }
+.btn-primary.is-pressed { background: var(--ui-button-primary-pressed); }
+.btn-dark.is-pressed { background: var(--ui-button-dark-pressed); }
+.btn-tint.is-pressed { background: var(--ui-button-tint-pressed); }
+.btn-stroke.is-pressed { background: var(--ui-surface-weak); box-shadow: none; }
+.btn-danger.is-pressed { background: var(--ui-button-destructive-pressed); }
+.btn-redtint.is-pressed { background: var(--ui-button-destructive-tint-pressed); }
+.btn-text.is-pressed { background: var(--ui-badge-blue); }
+/* Glass button: translucent, no stroke, no shadow; for blend or image backgrounds. */
+.btn-glass { background: var(--ui-button-glass-surface); color: var(--blend-fg); -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur); }
+.btn-glass.is-pressed { background: var(--ui-button-glass-pressed); }
+.btn.xs { height: var(--size-control-xs); padding: 0 var(--spacing-10); font: var(--font-x-small-medium); min-width: 0; }
+.glass-demo { gap: var(--spacing-12); }
+.phone .btn svg { width: 16px; height: 16px; stroke-width: 2; }
+.spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: sp .8s linear infinite; flex: none; }
+@keyframes sp { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+.utabs { display: flex; gap: 20px; border-bottom: 1px solid var(--ui-line-soft); }
+.utabs span { padding: 8px 0; font: 500 14px/20px var(--f-body); color: var(--ui-text-tertiary); }
+.utabs .on { color: var(--ui-text-primary); box-shadow: inset 0 -2px 0 var(--accent-surface-brand); }
+.toast { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--radius-card-inner); background: var(--ui-text-primary); color: var(--ui-text-dark); font: 500 14px/20px var(--f-body); }
+.toast svg { color: var(--accent-success); }
+.toast .act { margin-left: auto; color: var(--ui-text-dark); opacity: .7; }
+.empty { align-items: center; text-align: center; padding: 28px 20px; }
+.empty .round { width: 56px; height: 56px; }
+.stage { position: relative; height: 320px; border-radius: var(--radius-card); overflow: hidden; background: var(--ui-surface-weak); border: 1px solid var(--ui-stroke-soft); }
+.stage .ghost { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.stage .ghost i { display: block; height: 44px; border-radius: 12px; background: var(--ui-surface-pure); border: 1px solid var(--ui-stroke-soft); }
+.scrim { position: absolute; inset: 0; background: var(--ui-overlay-scrim); display: flex; }
+.sheet { margin-top: auto; width: 100%; box-sizing: border-box; background: var(--ui-surface-pure); border-radius: var(--radius-sheet) var(--radius-sheet) 0 0; padding: 10px 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+.grab { width: 36px; height: 4px; border-radius: 4px; background: var(--ui-surface-soft); align-self: center; }
+.dialog { margin: auto; width: calc(100% - 48px); box-sizing: border-box; background: var(--ui-surface-pure); border-radius: var(--radius-sheet); padding: 20px; display: flex; flex-direction: column; gap: 12px; text-align: center; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tier { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-pill); font: 600 12px/18px var(--f-body); background: var(--blend-bg); color: var(--blend-fg); box-shadow: var(--blend-stroke); }
+.phone .tier svg { width: 14px; height: 14px; }
+.btn-onblend { background: var(--blend-fg); color: var(--blend-ink); }
+
+/* ---- Pickers, special inputs, form structure ---- */
+.stage.tall { height: 400px; }
+.opt { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--ui-line-soft); font: 400 14px/20px var(--f-body); }
+.opt.first { border-top: 0; }
+.opt > svg { color: var(--ui-icon-tertiary); }
+.cal-head { display: flex; align-items: center; gap: 8px; }
+.cal-head svg { color: var(--ui-icon-secondary); }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: 4px; text-align: center; font: 400 14px/20px var(--f-body); font-variant-numeric: tabular-nums; }
+.cal span { height: 36px; display: grid; place-items: center; }
+.cal .wd { height: 24px; font-size: 12px; color: var(--ui-text-tertiary); }
+.cal .mut { color: var(--ui-text-disabled); }
+.cal b { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; background: var(--accent-surface-brand); color: var(--on-brand); }
+.cal b.ring { background: none; color: var(--ui-text-brand); box-shadow: inset 0 0 0 1.5px var(--ui-stroke-brand); }
+.cal .in { background: var(--ui-chip-surface-selected); }
+.cal .rs { background: linear-gradient(90deg, transparent 50%, var(--ui-chip-surface-selected) 50%); }
+.cal .re { background: linear-gradient(90deg, var(--ui-chip-surface-selected) 50%, transparent 50%); }
+.wheel { position: relative; display: grid; grid-template-columns: 1fr 1fr 1fr; text-align: center; font-variant-numeric: tabular-nums; }
+.wheel::before { content: ""; position: absolute; left: 0; right: 0; top: 80px; height: 40px; border-radius: 10px; background: var(--ui-field-surface); }
+.wheel div { position: relative; display: flex; flex-direction: column; }
+.wheel span { height: 40px; display: grid; place-items: center; font: 400 16px/24px var(--f-body); color: var(--ui-text-tertiary); }
+.wheel .f { color: var(--ui-text-disabled); font-size: 14px; }
+.wheel .c { color: var(--ui-text-primary); font: 600 18px/24px var(--f-body); }
+.choice { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--radius-card-inner); border: 1px solid var(--card-stroke); background: var(--card-surface); }
+.choice.on { border-color: var(--ui-stroke-brand); background: var(--surface-brand-soft); }
+.slider { position: relative; height: 24px; }
+.slider::before { content: ""; position: absolute; left: 0; right: 0; top: 10px; height: 4px; border-radius: 4px; background: var(--ui-surface-soft); }
+.slider i { position: absolute; top: 10px; height: 4px; border-radius: 4px; background: var(--accent-surface-brand); }
+.slider b { position: absolute; top: 2px; box-sizing: border-box; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: var(--ui-switch-knob); border: 1.5px solid var(--accent-surface-brand); box-shadow: var(--shadow-switch-knob); }
+.input .suffix { color: var(--ui-text-tertiary); }
+.input .act { color: var(--ui-text-brand); font-weight: 600; }
+.input .pre { padding-right: 8px; border-right: 1px solid var(--ui-line-soft); color: var(--ui-text-secondary); }
+.input.ok { border-color: var(--ui-stroke-success); color: var(--ui-text-green); }
+.input.ok svg { color: var(--ui-text-green); }
+.hint.ok { color: var(--ui-text-green); }
+.input.area { height: auto; min-height: 84px; align-items: flex-start; padding: 10px 12px; }
+.hint.end { text-align: right; }
+.req { color: var(--ui-text-red); font-style: normal; }
+.stepbtn { width: var(--size-icon-button); height: var(--size-icon-button); box-sizing: border-box; border-radius: var(--radius-control); border: 1px solid var(--ui-stroke-soft); background: var(--ui-field-surface); color: var(--ui-icon-primary); display: grid; place-items: center; flex: none; }
+.stepbtn.off { color: var(--ui-text-disabled); }
+.otp { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.otp span { height: var(--size-field); border-radius: var(--radius-control); border: 1px solid var(--ui-stroke-soft); background: var(--ui-field-surface); display: grid; place-items: center; font: 600 18px/24px var(--f-body); font-variant-numeric: tabular-nums; }
+.otp .focus { border-color: var(--ui-stroke-brand); box-shadow: 0 0 0 3px var(--ui-badge-blue); }
+.steps-h { display: flex; align-items: center; gap: 8px; }
+.stp { box-sizing: border-box; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 600 12px/18px var(--f-body); flex: none; border: 1.5px solid var(--ui-text-disabled); color: var(--ui-text-tertiary); }
+.stp.done { background: var(--accent-surface-brand); border-color: var(--accent-surface-brand); color: var(--on-brand); }
+.stp.now { border-color: var(--ui-stroke-brand); color: var(--ui-text-brand); }
+.phone .stp svg { width: 12px; height: 12px; stroke-width: 3; }
+.stl { flex: 1; height: 2px; border-radius: 2px; background: var(--ui-surface-soft); }
+.stl.done { background: var(--accent-surface-brand); }
+.sum { display: flex; justify-content: space-between; gap: 12px; font: 400 14px/20px var(--f-body); color: var(--ui-text-secondary); }
+.sum b { color: var(--ui-text-primary); font-weight: 500; font-variant-numeric: tabular-nums; }
+.sum.total { padding-top: 12px; border-top: 1px dashed var(--ui-line-soft); color: var(--ui-text-primary); font-weight: 600; }
+.sum.total b { font-weight: 600; }
+.bar { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 16px 20px; background: var(--card-surface); border-top: 1px solid var(--ui-line-soft); display: flex; align-items: center; gap: 12px; }
+.code { display: flex; align-items: center; gap: 8px; padding: 10px 10px 10px 14px; border-radius: var(--radius-control); border: 1px dashed var(--ui-stroke-brand); background: var(--surface-brand-soft); font: 600 16px/24px var(--f-body); letter-spacing: .08em; }
+.cdown { display: flex; gap: 8px; }
+.cdown div { flex: 1; padding: 10px 0; border-radius: var(--radius-control); background: var(--ui-field-surface); text-align: center; font: 400 12px/18px var(--f-body); color: var(--ui-text-tertiary); }
+.cdown b { display: block; font: 600 20px/28px var(--f-body); color: var(--ui-text-primary); font-variant-numeric: tabular-nums; }
+.blend .cdown div { background: color-mix(in srgb, var(--blend-fg) 16%, transparent); color: color-mix(in srgb, var(--blend-fg) 76%, transparent); }
+.blend .cdown b { color: var(--blend-fg); }
+.drop { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px; border-radius: var(--radius-card-inner); border: 1.5px dashed var(--ui-text-disabled); background: var(--ui-field-surface); text-align: center; }
+.drop svg { color: var(--ui-icon-brand); }
+.sk { height: 12px; border-radius: 6px; background: var(--ui-surface-soft); }
+.sk.circle { width: 40px; height: 40px; border-radius: 50%; flex: none; }
+.pring { width: 64px; height: 64px; border-radius: 50%; background: conic-gradient(var(--accent-surface-brand) 62%, var(--ui-surface-soft) 0); display: grid; place-items: center; flex: none; }
+.pring span { width: 50px; height: 50px; border-radius: 50%; background: var(--card-surface); display: grid; place-items: center; font: 600 14px/20px var(--f-body); font-variant-numeric: tabular-nums; }
+
+/* Promo bottom sheet on a blend background */
+.sheet.promo { background: var(--blend-bg); color: var(--blend-fg); box-shadow: var(--blend-stroke); align-items: center; text-align: center; padding-bottom: 24px; }
+.sheet.promo .c2 { color: color-mix(in srgb, var(--blend-fg) 78%, transparent); }
+.sheet.promo .grab { background: color-mix(in srgb, var(--blend-fg) 30%, transparent); }
+.sheet.promo .btn-text { color: var(--blend-fg); }
+.sheet.promo .tint-ico { width: 56px; height: 56px; background: color-mix(in srgb, var(--blend-fg) 16%, transparent); color: var(--blend-fg); }
+.phone .sheet.promo .tint-ico svg { width: 28px; height: 28px; }
+
+/* ---- Contrast audit ---- */
+.tablewrap { overflow-x: auto; background: var(--pg-panel); border: 1px solid var(--pg-line); border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 13px; }
+th, td { text-align: left; padding: 10px 14px; border-top: 1px solid var(--pg-line); vertical-align: middle; }
+thead th { border-top: 0; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--pg-muted); font-weight: 600; }
+td small { display: block; color: var(--pg-muted); font-size: 12px; }
+.swatch { display: inline-flex; align-items: center; justify-content: center; min-width: 56px; padding: 4px 10px; border-radius: 6px; font: 600 13px/18px var(--f-body); border: 1px solid var(--pg-line); }
+.ratio { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+.ok { color: var(--pg-ok); } .warn { color: var(--pg-warn); } .bad { color: var(--pg-bad); }
+.note { font-size: 13px; color: var(--pg-muted); line-height: 1.5; margin: 0; max-width: 70ch; }
+</style>
+<!-- Colours come from tokens/tokens.css, published next to this page. Loaded after the page styles; it only defines variables. -->
+<link rel="stylesheet" href="tokens.css">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 19a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-3.5 3-5.5 6.5-5.5s6 2 6.500 5.500"/><path d="M16 4.800a3.500 3.500 0 0 1 0 6.400M18.500 14.800c1.700.800 2.700 2.500 3 5.200"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3.500" y="9" width="17" height="11" rx="1.500"/><path d="M3.500 13h17M12 9v11M12 9c-2-4-7-3-5 0M12 9c2-4 7-3 5 0"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20.500c1-4 4-6 8-6s7 2 8 6"/></symbol>
+    <symbol id="i-in" viewBox="0 0 24 24"><path d="M12 4v13M6 12l6 6 6-6"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24"><path d="M12 20V7M6 12l6-6 6 6"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.500l2.600 5.400 5.900.800-4.300 4.100 1.100 5.900L12 16.900l-5.300 2.800 1.100-5.900-4.300-4.100 5.900-.800z"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.500"/><path d="M16 16l4.500 4.500"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.500l4.500 4.500L19 7.500"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.500v.100"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 24 24"><path d="M12 5v.1M12 12v.1M12 19v.1" stroke-width="2.6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.500" height="6.500" rx="2"/><rect x="13.500" y="4" width="6.500" height="6.500" rx="2"/><rect x="4" y="13.500" width="6.500" height="6.500" rx="2"/><rect x="13.500" y="13.500" width="6.500" height="6.500" rx="2"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+    <symbol id="i-shop" viewBox="0 0 24 24"><path d="M4 9l1.500-5h13L20 9M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9M4 9h16M9.500 20v-5h5v5"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4c0 3 1 4.500 3 5M17 6h3c0 3-1 4.500-3 5M12 14v4M8.500 20h7M9.500 18h5"/></symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 8a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a2 2 0 0 0 0 4v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2a2 2 0 0 0 0-4zM14 7v10" /></symbol>
+    <symbol id="i-crown" viewBox="0 0 24 24"><path d="M4 18l-1-10 5 4 4-7 4 7 5-4-1 10z"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-pie" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.500 6"/></symbol>
+    <symbol id="i-watch" viewBox="0 0 24 24"><rect x="7" y="6" width="10" height="12" rx="3"/><path d="M9 6l.700-3h4.600L15 6M9 18l.700 3h4.600l.700-3M12 9.500V12l1.500 1.500M17 11h1"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 1c1 6 4 9 11 11-7 2-10 5-11 11-1-6-4-9-11-11 7-2 10-5 11-11z"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.500 12c2.500-4.500 5.700-6.500 9.500-6.500s7 2 9.500 6.500c-2.500 4.500-5.700 6.500-9.500 6.500S5 16.500 2.500 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM14 3v4h4"/></symbol>
+  </defs>
+</svg>
+
+<template id="tpl-profile">
+  <div class="status num"><span>9:41</span><span>5G · 82%</span></div>
+  <div class="screen">
+    <div class="row"><span class="pill"><svg><use href="#i-x"/></svg>Close</span><span class="grow"></span><span class="pill"><svg><use href="#i-down"/></svg><svg><use href="#i-dots"/></svg></span></div>
+    <div class="row"><span class="plain"><svg><use href="#i-gear"/></svg></span><span class="plain"><svg><use href="#i-bell"/></svg></span><span class="grow"></span><span class="coin"></span><span class="t-sms num">20,710.00</span><span class="plus"><svg><use href="#i-plus"/></svg></span></div>
+
+    <div class="profile">
+      <div class="ring"><div class="avatar">NN</div></div>
+      <p class="t-h5">Nam Nguyen</p>
+      <p class="t-sm c3">@nam.partner</p>
+    </div>
+
+    <div class="stats">
+      <div><span class="v num"><svg><use href="#i-pie"/></svg>70%</span><span class="t-sm c3">Active rate</span></div>
+      <div><span class="v num"><svg><use href="#i-check"/></svg>8</span><span class="t-sm c3">Level</span></div>
+      <div><span class="v num"><svg><use href="#i-cal"/></svg>76</span><span class="t-sm c3">Days</span></div>
+    </div>
+
+    <div class="week num">
+      <div class="day"><span class="dots"><u class="a"></u></span>Mon<b>19</b></div>
+      <div class="day"><span class="dots"><u class="p"></u></span>Tue<b>20</b></div>
+      <div class="day"><span class="dots"><u></u></span>Wed<b>21</b></div>
+      <div class="day on"><span class="dots"><u class="a"></u><u class="p"></u><u></u></span>Thu<b>22</b></div>
+      <div class="day"><span class="dots"><u class="a"></u></span>Fri<b>23</b></div>
+      <div class="day"><span class="dots"><u></u></span>Sat<b>24</b></div>
+      <div class="day"><span class="dots"><u class="p"></u></span>Sun<b>25</b></div>
+    </div>
+
+    <div class="duo">
+      <div class="card big center" style="gap:6px;justify-content:center">
+        <div class="stack"><div class="avatar">AT</div><div class="avatar">LH</div><div class="avatar">MK</div></div>
+        <p class="t-sms">Clients</p><p class="t-xsm cg" style="margin-top:-6px">14 online</p>
+      </div>
+      <div class="card big streak" style="gap:6px">
+        <p class="t-sms">Keep it up!</p>
+        <p class="t-xs c3">35 days in a row<br>you are here</p>
+        <div class="steps"><u class="a"></u><u class="a"></u><u class="a"></u><span class="now"><svg><use href="#i-check"/></svg></span><u></u><u></u><u></u></div>
+        <span class="trophy"><svg><use href="#i-trophy"/></svg></span>
+      </div>
+    </div>
+
+    <div class="card big banner">
+      <div class="gfx"><svg><use href="#i-star"/></svg></div>
+      <div class="txt"><p class="t-sms">Complete new tasks</p><p class="t-xs c3">Get bonus points when your clients hit this week's volume targets.</p></div>
+    </div>
+
+    <div class="vivid">
+      <div><p class="t-h5">Partner Plus</p><p class="t-sm dim">Get the most out of every lot your clients trade.</p></div>
+      <div class="glass">
+        <div class="grow">
+          <div class="row" style="gap:8px"><span class="t-sm">Yearly</span><span class="tag">Save 40%</span></div>
+          <p class="t-mds num"><s>2,000 pts</s> 1,200 pts / year</p>
+        </div>
+        <span class="tick"><svg><use href="#i-check"/></svg></span>
+      </div>
+      <p class="t-xs dim" style="text-align:center">Points are deducted from your reward balance</p>
+      <div class="dash"></div>
+      <p class="t-smm" style="text-align:center">Show more plans</p>
+      <span class="btn btn-onbrand block">Continue</span>
+    </div>
+
+    <div class="vivid on-blend bl-yellow">
+      <div><p class="t-h5">Partner Plus · Yellow</p><p class="t-sm dim">Get the most out of every lot your clients trade.</p></div>
+      <div class="glass">
+        <div class="grow">
+          <div class="row" style="gap:8px"><span class="t-sm">Yearly</span><span class="tag">Save 40%</span></div>
+          <p class="t-mds num"><s>2,000 pts</s> 1,200 pts / year</p>
+        </div>
+        <span class="tick"><svg><use href="#i-check"/></svg></span>
+      </div>
+      <p class="t-xs dim" style="text-align:center">Points are deducted from your reward balance</p>
+      <div class="dash"></div>
+      <p class="t-smm" style="text-align:center">Show more plans</p>
+      <span class="btn btn-onbrand block">Continue</span>
+    </div>
+
+    <div class="vivid on-blend bl-lime">
+      <div><p class="t-h5">Partner Plus · Lime</p><p class="t-sm dim">Get the most out of every lot your clients trade.</p></div>
+      <div class="glass">
+        <div class="grow">
+          <div class="row" style="gap:8px"><span class="t-sm">Yearly</span><span class="tag">Save 40%</span></div>
+          <p class="t-mds num"><s>2,000 pts</s> 1,200 pts / year</p>
+        </div>
+        <span class="tick"><svg><use href="#i-check"/></svg></span>
+      </div>
+      <p class="t-xs dim" style="text-align:center">Points are deducted from your reward balance</p>
+      <div class="dash"></div>
+      <p class="t-smm" style="text-align:center">Show more plans</p>
+      <span class="btn btn-onbrand block">Continue</span>
+    </div>
+
+    <div class="vivid on-blend bl-theme">
+      <div><p class="t-h5">Partner Plus · Theme blend</p><p class="t-sm dim">Get the most out of every lot your clients trade.</p></div>
+      <div class="glass">
+        <div class="grow">
+          <div class="row" style="gap:8px"><span class="t-sm">Yearly</span><span class="tag">Save 40%</span></div>
+          <p class="t-mds num"><s>2,000 pts</s> 1,200 pts / year</p>
+        </div>
+        <span class="tick"><svg><use href="#i-check"/></svg></span>
+      </div>
+      <p class="t-xs dim" style="text-align:center">Points are deducted from your reward balance</p>
+      <div class="dash"></div>
+      <p class="t-smm" style="text-align:center">Show more plans</p>
+      <span class="btn btn-onbrand block">Continue</span>
+    </div>
+
+    <div class="vivid on-blend bl-red">
+      <div><p class="t-h5">Partner Plus · Red</p><p class="t-sm dim">Get the most out of every lot your clients trade.</p></div>
+      <div class="glass">
+        <div class="grow">
+          <div class="row" style="gap:8px"><span class="t-sm">Yearly</span><span class="tag">Save 40%</span></div>
+          <p class="t-mds num"><s>2,000 pts</s> 1,200 pts / year</p>
+        </div>
+        <span class="tick"><svg><use href="#i-check"/></svg></span>
+      </div>
+      <p class="t-xs dim" style="text-align:center">Points are deducted from your reward balance</p>
+      <div class="dash"></div>
+      <p class="t-smm" style="text-align:center">Show more plans</p>
+      <span class="btn btn-onbrand block">Continue</span>
+    </div>
+
+    <div class="vivid on-blend bl-green">
+      <div><p class="t-h5">Partner Plus · Green</p><p class="t-sm dim">Get the most out of every lot your clients trade.</p></div>
+      <div class="glass">
+        <div class="grow">
+          <div class="row" style="gap:8px"><span class="t-sm">Yearly</span><span class="tag">Save 40%</span></div>
+          <p class="t-mds num"><s>2,000 pts</s> 1,200 pts / year</p>
+        </div>
+        <span class="tick"><svg><use href="#i-check"/></svg></span>
+      </div>
+      <p class="t-xs dim" style="text-align:center">Points are deducted from your reward balance</p>
+      <div class="dash"></div>
+      <p class="t-smm" style="text-align:center">Show more plans</p>
+      <span class="btn btn-onbrand block">Continue</span>
+    </div>
+
+    <div class="vivid on-blend bl-cyan">
+      <div><p class="t-h5">Partner Plus · Cyan</p><p class="t-sm dim">Get the most out of every lot your clients trade.</p></div>
+      <div class="glass">
+        <div class="grow">
+          <div class="row" style="gap:8px"><span class="t-sm">Yearly</span><span class="tag">Save 40%</span></div>
+          <p class="t-mds num"><s>2,000 pts</s> 1,200 pts / year</p>
+        </div>
+        <span class="tick"><svg><use href="#i-check"/></svg></span>
+      </div>
+      <p class="t-xs dim" style="text-align:center">Points are deducted from your reward balance</p>
+      <div class="dash"></div>
+      <p class="t-smm" style="text-align:center">Show more plans</p>
+      <span class="btn btn-onbrand block">Continue</span>
+    </div>
+
+    <div class="vivid on-blend bl-pink">
+      <div><p class="t-h5">Partner Plus · Pink</p><p class="t-sm dim">Get the most out of every lot your clients trade.</p></div>
+      <div class="glass">
+        <div class="grow">
+          <div class="row" style="gap:8px"><span class="t-sm">Yearly</span><span class="tag">Save 40%</span></div>
+          <p class="t-mds num"><s>2,000 pts</s> 1,200 pts / year</p>
+        </div>
+        <span class="tick"><svg><use href="#i-check"/></svg></span>
+      </div>
+      <p class="t-xs dim" style="text-align:center">Points are deducted from your reward balance</p>
+      <div class="dash"></div>
+      <p class="t-smm" style="text-align:center">Show more plans</p>
+      <span class="btn btn-onbrand block">Continue</span>
+    </div>
+
+    <div class="vivid on-blend bl-indigo">
+      <div><p class="t-h5">Partner Plus · Indigo</p><p class="t-sm dim">Get the most out of every lot your clients trade.</p></div>
+      <div class="glass">
+        <div class="grow">
+          <div class="row" style="gap:8px"><span class="t-sm">Yearly</span><span class="tag">Save 40%</span></div>
+          <p class="t-mds num"><s>2,000 pts</s> 1,200 pts / year</p>
+        </div>
+        <span class="tick"><svg><use href="#i-check"/></svg></span>
+      </div>
+      <p class="t-xs dim" style="text-align:center">Points are deducted from your reward balance</p>
+      <div class="dash"></div>
+      <p class="t-smm" style="text-align:center">Show more plans</p>
+      <span class="btn btn-onbrand block">Continue</span>
+    </div>
+
+    <div class="card big earn">
+      <p class="t-ts">Earn rewards</p>
+      <div class="list">
+        <div class="item"><div class="tile tint k-b"><svg><use href="#i-star"/></svg></div><div class="grow"><p class="t-smm">Trade 3 lots today<span class="pts num"><span class="coin"></span>20</span></p><p class="t-xs c3">Close 3 lots before midnight</p></div><span class="btn btn-primary pillbtn">Claim</span></div>
+        <div class="item"><div class="tile tint k-r"><svg><use href="#i-gift"/></svg></div><div class="grow"><p class="t-smm">Redeem a reward<span class="pts num"><span class="coin"></span>30</span></p><p class="t-xs c3">Spend points on any reward this week</p></div><span class="btn btn-dark pillbtn">Redeem</span></div>
+        <div class="item"><div class="tile tint k-t"><svg><use href="#i-bell"/></svg></div><div class="grow"><p class="t-smm">Push notifications<span class="pts num"><span class="coin"></span>20</span></p><p class="t-xs c3">Turn on push for real-time updates</p></div><span class="btn btn-tint pillbtn">Go</span></div>
+        <div class="item"><div class="tile tint k-y"><svg><use href="#i-users"/></svg></div><div class="grow"><p class="t-smm">Invite clients (0/9)<span class="pts num"><span class="coin"></span>50</span></p><p class="t-xs c3">Invite more, earn more</p></div><span class="btn btn-stroke pillbtn">Invite</span></div>
+        <div class="item"><div class="tile tint k-g"><svg><use href="#i-cal"/></svg></div><div class="grow"><p class="t-smm">Daily check-in<span class="pts num"><span class="coin"></span>5</span></p><p class="t-xs c3">Come back tomorrow for the next one</p></div><span class="btn btn-off pillbtn">Claimed</span></div>
+      </div>
+    </div>
+
+    <p class="sec">Theme · pale</p>
+    <div class="card big card-brand-soft">
+      <div class="row"><div class="tint-ico"><svg><use href="#i-crown"/></svg></div><div class="grow"><p class="t-xsm tint-txt">Gold partner · Tier 3 of 4</p><p class="t-mds">7,520 pts to Platinum</p></div></div>
+      <p class="t-sm c2">Platinum partners earn 1.5× points on every lot and get rebates paid out weekly instead of monthly.</p>
+      <div class="meter"><i></i></div>
+      <div class="row"><span class="t-xs c3 grow num">12,480 of 20,000 pts</span><span class="t-smm tint-txt">See tier benefits</span></div>
+    </div>
+
+    <p class="sec">Blend · vivid</p>
+    <div class="card big blend bl-theme">
+      <div class="row"><div class="tint-ico"><svg><use href="#i-crown"/></svg></div><div class="grow"><p class="t-xsm tint-txt">Gold partner · Tier 3 of 4</p><p class="t-mds">7,520 pts to Platinum</p></div></div>
+      <p class="t-sm c2">Platinum partners earn 1.5× points on every lot and get rebates paid out weekly instead of monthly.</p>
+      <div class="meter"><i></i></div>
+      <div class="row"><span class="t-xs c3 grow num">12,480 of 20,000 pts</span><span class="t-smm tint-txt">See tier benefits</span></div>
+    </div>
+
+    <div class="tints">
+      <div class="card big blend bl-red">
+        <div class="row"><div class="tint-ico"><svg><use href="#i-trophy"/></svg></div><div class="grow"><p class="t-xsm tint-txt">Daily streak · Day 35</p><p class="t-mds">Claim your streak bonus</p></div></div>
+        <p class="t-sm c2">Check in 7 more days in a row to double this week's streak points.</p>
+        <div class="meter"><i style="width:70%"></i></div>
+        <div class="row"><span class="t-xs c3 grow num">35 of 42 days</span><span class="t-smm tint-txt">Claim 50 pts</span></div>
+      </div>
+      <div class="card big blend bl-lime">
+        <div class="row"><div class="tint-ico"><svg><use href="#i-users"/></svg></div><div class="grow"><p class="t-xsm tint-txt">Referral boost · This month</p><p class="t-mds">2 more clients to go</p></div></div>
+        <p class="t-sm c2">Invite 5 clients this month and each one earns you 1.2× referral points.</p>
+        <div class="meter"><i style="width:60%"></i></div>
+        <div class="row"><span class="t-xs c3 grow num">3 of 5 invited</span><span class="t-smm tint-txt">Invite now</span></div>
+      </div>
+      <div class="card big blend bl-green">
+        <div class="row"><div class="tint-ico"><svg><use href="#i-chart"/></svg></div><div class="grow"><p class="t-xsm tint-txt">Volume target · Week 24</p><p class="t-mds">8 lots to your target</p></div></div>
+        <p class="t-sm c2">Hit 50 lots this week and your rebate rate goes up for the next payout.</p>
+        <div class="meter"><i style="width:84%"></i></div>
+        <div class="row"><span class="t-xs c3 grow num">42 of 50 lots</span><span class="t-smm tint-txt">View progress</span></div>
+      </div>
+      <div class="card big blend bl-cyan">
+        <div class="row"><div class="tint-ico"><svg><use href="#i-gift"/></svg></div><div class="grow"><p class="t-xsm tint-txt">Cashback week · Ends in 2 days</p><p class="t-mds">Double cashback on indices</p></div></div>
+        <p class="t-sm c2">Every index lot your clients trade this week counts twice toward cashback.</p>
+        <div class="meter"><i style="width:35%"></i></div>
+        <div class="row"><span class="t-xs c3 grow num">5 of 14 days</span><span class="t-smm tint-txt">See offers</span></div>
+      </div>
+      <div class="card big blend bl-pink">
+        <div class="row"><div class="tint-ico"><svg><use href="#i-star"/></svg></div><div class="grow"><p class="t-xsm tint-txt">VIP event · 12 seats left</p><p class="t-mds">Partner summit in Da Nang</p></div></div>
+        <p class="t-sm c2">Platinum and Gold partners can reserve a seat with 1,500 pts.</p>
+        <div class="meter"><i style="width:55%"></i></div>
+        <div class="row"><span class="t-xs c3 grow num">18 of 30 seats taken</span><span class="t-smm tint-txt">Reserve a seat</span></div>
+      </div>
+      <div class="card big blend bl-indigo">
+        <div class="row"><div class="tint-ico"><svg><use href="#i-crown"/></svg></div><div class="grow"><p class="t-xsm tint-txt">Level up · Level 8</p><p class="t-mds">550 XP to level 9</p></div></div>
+        <p class="t-sm c2">Each level unlocks a new reward tier and a higher points multiplier.</p>
+        <div class="meter"><i style="width:45%"></i></div>
+        <div class="row"><span class="t-xs c3 grow num">450 of 1,000 XP</span><span class="t-smm tint-txt">See rewards</span></div>
+      </div>
+    </div>
+
+    <div class="peek"><div class="card big"></div><div class="card big"></div></div>
+  </div>
+  <div class="tabbar ind"><span><svg><use href="#i-grid"/></svg>Main</span><span><svg><use href="#i-globe"/></svg>News</span><span><svg><use href="#i-shop"/></svg>Shop</span><span class="on"><svg><use href="#i-user"/></svg>Profile</span></div>
+</template>
+
+<template id="tpl-cards">
+  <div class="status num"><span>9:41</span><span>5G · 82%</span></div>
+  <div class="screen">
+    <p class="t-ts">Default card</p>
+    <p class="sec">Stroke, no shadow</p>
+    <div class="card big"><div class="row"><div class="tile"><svg><use href="#i-in"/></svg></div><div class="grow"><p class="t-smm">Rebate payout</p><p class="t-xs c3">Client #95 · 14 Jun, 10:32</p></div><p class="t-sms num">+$182.40</p></div><div class="row"><div class="grow"><p class="t-xs c3">Active clients</p><p class="t-lg num">128</p></div><p class="t-xsm cg num">+12.4% this month</p></div></div>
+
+    <p class="t-ts" style="margin-top:8px">Text contrast</p>
+    <div class="card big ladder">
+      <p class="t-md" data-cr>Primary text</p>
+      <p class="t-sm c2" data-cr>Secondary text for descriptions</p>
+      <p class="t-sm c3" data-cr>Tertiary text for captions</p>
+      <p class="t-sm cd" data-cr>Disabled text</p>
+      <p class="t-smm cb" data-cr>Brand link text</p>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-buttons">
+  <div class="status num"><span>9:41</span><span>5G · 82%</span></div>
+  <div class="screen">
+    <p class="t-ts">Button states</p>
+    <p class="sec">C1 · Primary</p>
+    <div class="card big"><div class="wrap"><span class="btn btn-primary pillbtn">Default</span><span class="btn btn-primary pillbtn is-pressed">Pressed</span><span class="btn btn-primary pillbtn"><i class="spin"></i>Loading</span><span class="btn btn-primary pillbtn"><svg><use href="#i-gift"/></svg>With icon</span></div><span class="btn btn-primary btn-lg block">Large full width</span></div>
+    <p class="sec">C2 · Black / white</p>
+    <div class="card big"><div class="wrap"><span class="btn btn-dark pillbtn">Default</span><span class="btn btn-dark pillbtn is-pressed">Pressed</span><span class="btn btn-dark pillbtn"><i class="spin"></i>Loading</span><span class="btn btn-dark pillbtn"><svg><use href="#i-gift"/></svg>With icon</span></div><span class="btn btn-dark btn-lg block">Large full width</span></div>
+    <p class="sec">C3 · Secondary tint</p>
+    <div class="card big"><div class="wrap"><span class="btn btn-tint pillbtn">Default</span><span class="btn btn-tint pillbtn is-pressed">Pressed</span><span class="btn btn-tint pillbtn"><i class="spin"></i>Loading</span><span class="btn btn-tint pillbtn"><svg><use href="#i-gift"/></svg>With icon</span></div><span class="btn btn-tint btn-lg block">Large full width</span></div>
+    <p class="sec">C4 · Secondary stroke</p>
+    <div class="card big"><div class="wrap"><span class="btn btn-stroke pillbtn">Default</span><span class="btn btn-stroke pillbtn is-pressed">Pressed</span><span class="btn btn-stroke pillbtn"><i class="spin"></i>Loading</span><span class="btn btn-stroke pillbtn"><svg><use href="#i-gift"/></svg>With icon</span></div><span class="btn btn-stroke btn-lg block">Large full width</span></div>
+    <p class="sec">C5 · Destructive</p>
+    <div class="card big"><div class="wrap"><span class="btn btn-danger pillbtn">Default</span><span class="btn btn-danger pillbtn is-pressed">Pressed</span><span class="btn btn-danger pillbtn"><i class="spin"></i>Loading</span><span class="btn btn-danger pillbtn"><svg><use href="#i-x"/></svg>With icon</span></div><span class="btn btn-danger btn-lg block">Large full width</span></div>
+    <p class="sec">C6 · Destructive tint</p>
+    <div class="card big"><div class="wrap"><span class="btn btn-redtint pillbtn">Default</span><span class="btn btn-redtint pillbtn is-pressed">Pressed</span><span class="btn btn-redtint pillbtn"><i class="spin"></i>Loading</span><span class="btn btn-redtint pillbtn"><svg><use href="#i-x"/></svg>With icon</span></div><span class="btn btn-redtint btn-lg block">Large full width</span></div>
+    <p class="sec">C7 · Text button</p>
+    <div class="card big"><div class="wrap"><span class="btn btn-text pillbtn">Default</span><span class="btn btn-text pillbtn is-pressed">Pressed</span><span class="btn btn-text pillbtn"><i class="spin"></i>Loading</span><span class="btn btn-text pillbtn"><svg><use href="#i-down"/></svg>With icon</span></div><span class="btn btn-text btn-lg block">Large full width</span></div>
+
+    <p class="sec">C8 · Disabled</p>
+    <div class="card big"><div class="wrap"><span class="btn btn-off pillbtn">Disabled</span><span class="btn btn-off pillbtn"><svg><use href="#i-gift"/></svg>With icon</span></div><span class="btn btn-off btn-lg block">Large full width</span></div>
+    <p class="sec">C9 · Glass (on blend or image)</p>
+    <div class="card big blend bl-lime glass-demo"><p class="t-xsm">On a light blend: dark text</p><div class="wrap"><span class="btn btn-glass xs">Redeem</span><span class="btn btn-glass xs is-pressed">Pressed</span><span class="btn btn-glass pillbtn">Small</span><span class="btn btn-glass md">Medium</span></div></div>
+    <div class="card big blend bl-pink glass-demo"><p class="t-xsm">On a dark blend: white text</p><div class="wrap"><span class="btn btn-glass xs">Redeem</span><span class="btn btn-glass xs is-pressed">Pressed</span><span class="btn btn-glass pillbtn">Small</span><span class="btn btn-glass md">Medium</span></div></div>
+    <div class="card big blend bl-theme glass-demo"><p class="t-xsm">On the theme blend</p><div class="wrap"><span class="btn btn-glass xs">Redeem</span><span class="btn btn-glass xs is-pressed">Pressed</span><span class="btn btn-glass pillbtn">Small</span><span class="btn btn-glass md">Medium</span></div></div>
+  </div>
+</template>
+
+<template id="tpl-forms">
+  <div class="status num"><span>9:41</span><span>5G · 82%</span></div>
+  <div class="screen">
+    <p class="t-ts">Forms and controls</p>
+    <p class="sec">D1 · Inputs</p>
+    <div class="card big">
+      <div class="field"><label>Search</label><div class="input"><svg><use href="#i-search"/></svg><span class="ph">Search rewards</span></div></div>
+      <div class="field"><label>Points to redeem</label><div class="input focus num">2,500</div><span class="hint">Balance after redeeming: 9,980 pts</span></div>
+      <div class="field"><label>Delivery email</label><div class="input err">nam@partner</div><span class="hint err">Enter a full email address, like name@domain.com</span></div>
+      <div class="field"><label>Reward type</label><div class="input"><span class="grow">Gift card</span><svg><use href="#i-down"/></svg></div></div>
+      <div class="field"><label>Partner ID</label><div class="input off">IB-00295 (locked)</div></div>
+    </div>
+    <p class="sec">D2 · Toggles, checkboxes, radios</p>
+    <div class="card big">
+      <div class="row"><p class="t-sm grow">Email me when points expire</p><span class="sw on"></span></div>
+      <div class="row"><p class="t-sm grow">Weekly summary</p><span class="sw"></span></div>
+      <div class="row"><span class="cbx on"><svg><use href="#i-check"/></svg></span><p class="t-sm grow">I accept the reward terms</p></div>
+      <div class="row"><span class="cbx"></span><p class="t-sm grow">Save as default reward</p></div>
+      <div class="row"><span class="rad on"></span><p class="t-sm">Bank transfer</p><span class="rad"></span><p class="t-sm">Wallet</p></div>
+    </div>
+    <p class="sec">D3 · Filter chips</p>
+    <div class="card big"><div class="wrap"><span class="chip on">All</span><span class="chip">Gift cards</span><span class="chip">Cashback</span><span class="chip">Events</span></div></div>
+    <p class="sec">D4 · Tabs</p>
+    <div class="card big">
+      <div class="seg"><span class="on">Overview</span><span>History</span><span>Rewards</span></div>
+      <div class="utabs"><span class="on">Overview</span><span>History</span><span>Rewards</span></div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-pick">
+  <div class="status num"><span>9:41</span><span>5G · 82%</span></div>
+  <div class="screen">
+    <p class="t-ts">Pickers</p>
+    <p class="sec">G1 · Dropdown as bottom sheet, single choice</p>
+    <div class="stage tall"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet"><span class="grab"></span><p class="t-ts">Reward type</p><div><div class="opt first"><span class="grow">Gift card</span><span class="rad on"></span></div><div class="opt"><span class="grow">Cashback to wallet</span><span class="rad"></span></div><div class="opt"><span class="grow">Trading credit</span><span class="rad"></span></div><div class="opt"><span class="grow">Event ticket</span><span class="rad"></span></div></div></div></div></div>
+    <p class="sec">G2 · Bottom sheet, multiple choice</p>
+    <div class="stage tall"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet"><span class="grab"></span><div class="row"><p class="t-ts grow">Filter by status</p><span class="t-smm cb">Clear</span></div><div><div class="opt first"><span class="grow">Completed</span><span class="cbx on"><svg><use href="#i-check"/></svg></span></div><div class="opt"><span class="grow">Pending</span><span class="cbx on"><svg><use href="#i-check"/></svg></span></div><div class="opt"><span class="grow">Rejected</span><span class="cbx"></span></div></div><span class="btn btn-primary btn-lg block">Apply 2 filters</span></div></div></div>
+    <p class="sec">G3 · Bottom sheet with search</p>
+    <div class="stage tall"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet"><span class="grab"></span><p class="t-ts">Bank</p><div class="input"><svg><use href="#i-search"/></svg><span class="ph">Search banks</span></div><div><div class="opt first"><span class="grow">Vietcombank</span><span class="rad"></span></div><div class="opt"><span class="grow">Techcombank</span><span class="rad on"></span></div><div class="opt"><span class="grow">ACB</span><span class="rad"></span></div><div class="opt"><span class="grow">MB Bank</span><span class="rad"></span></div></div></div></div></div>
+    <p class="sec">G4 · Calendar, single date</p>
+    <div class="card big"><div class="cal-head"><svg><use href="#i-back"/></svg><p class="t-sms grow" style="text-align:center">June 2026</p><svg><use href="#i-right"/></svg></div><div class="cal"><span class="wd">Mo</span><span class="wd">Tu</span><span class="wd">We</span><span class="wd">Th</span><span class="wd">Fr</span><span class="wd">Sa</span><span class="wd">Su</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span><b class="ring">14</b></span><span>15</span><span>16</span><span>17</span><span><b>18</b></span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span class="mut">1</span><span class="mut">2</span><span class="mut">3</span><span class="mut">4</span><span class="mut">5</span></div></div>
+    <p class="sec">G5 · Calendar, date range</p>
+    <div class="card big"><div class="cal-head"><svg><use href="#i-back"/></svg><p class="t-sms grow" style="text-align:center">June 2026</p><svg><use href="#i-right"/></svg></div><div class="cal"><span class="wd">Mo</span><span class="wd">Tu</span><span class="wd">We</span><span class="wd">Th</span><span class="wd">Fr</span><span class="wd">Sa</span><span class="wd">Su</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span class="rs"><b>10</b></span><span class="in">11</span><span class="in">12</span><span class="in">13</span><span class="in">14</span><span class="in">15</span><span class="re"><b>16</b></span><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span class="mut">1</span><span class="mut">2</span><span class="mut">3</span><span class="mut">4</span><span class="mut">5</span></div><div class="two"><span class="btn btn-stroke md">Cancel</span><span class="btn btn-primary md">Apply</span></div></div>
+    <p class="sec">G6 · Quick ranges</p>
+    <div class="card big"><div class="wrap"><span class="chip">Today</span><span class="chip on">7 days</span><span class="chip">30 days</span><span class="chip">This year</span><span class="chip">Custom</span></div></div>
+    <p class="sec">G7 · Time picker</p>
+    <div class="card big"><div class="wheel"><div><span class="f">07</span><span class="n">08</span><span class="c">09</span><span class="n">10</span><span class="f">11</span></div><div><span class="f">15</span><span class="n">30</span><span class="c">45</span><span class="n">00</span><span class="f">15</span></div><div><span class="f"></span><span class="n"></span><span class="c">AM</span><span class="n">PM</span><span class="f"></span></div></div></div>
+    <p class="sec">G8 · Choice cards</p>
+    <div class="choice on"><div class="grow"><p class="t-smm">Bank transfer</p><p class="t-xs c3">Arrives in 1 to 2 business days</p></div><span class="rad on"></span></div>
+    <div class="choice"><div class="grow"><p class="t-smm">Wallet</p><p class="t-xs c3">Instant, no fee</p></div><span class="rad"></span></div>
+    <p class="sec">G9 · Sliders</p>
+    <div class="card big"><div class="row"><p class="t-sm grow">Points to redeem</p><p class="t-sms num">2,500</p></div><div class="slider"><i style="left:0;width:40%"></i><b style="left:40%"></b></div><div class="row"><p class="t-sm grow">Commission range</p><p class="t-sms num">$200 – $800</p></div><div class="slider"><i style="left:20%;width:55%"></i><b style="left:20%"></b><b style="left:75%"></b></div></div>
+  </div>
+</template>
+
+<template id="tpl-inputs">
+  <div class="status num"><span>9:41</span><span>5G · 82%</span></div>
+  <div class="screen">
+    <p class="t-ts">Special inputs</p>
+    <p class="sec">H1 · Password</p>
+    <div class="card big"><div class="field"><label>Password <i class="req">*</i></label><div class="input"><span class="grow">••••••••••</span><svg><use href="#i-eye"/></svg></div><span class="hint">At least 8 characters with one number</span></div></div>
+    <p class="sec">H2 · Number stepper</p>
+    <div class="card big"><div class="row"><div class="grow"><p class="t-smm">Gift cards</p><p class="t-xs c3">2,500 pts each</p></div><span class="stepbtn"><svg><use href="#i-minus"/></svg></span><p class="t-md num" style="min-width:24px;text-align:center;font-weight:600">2</p><span class="stepbtn"><svg><use href="#i-plus"/></svg></span></div></div>
+    <p class="sec">H3 · Amount with unit and Max</p>
+    <div class="card big"><div class="field"><label>Points to redeem</label><div class="input focus"><span class="grow num">2,500</span><span class="suffix">pts</span><span class="act">Max</span></div><span class="hint num">Available: 12,480 pts</span></div></div>
+    <p class="sec">H4 · One-time code</p>
+    <div class="card big"><p class="t-sm c2">Enter the 6-digit code sent to +84 ••• ••• 471</p><div class="otp"><span>4</span><span>7</span><span>1</span><span class="focus"></span><span></span><span></span></div><div class="row"><span class="t-xs c3 grow num">Resend code in 0:42</span><span class="t-smm cd">Resend</span></div></div>
+    <p class="sec">H5 · Promo code</p>
+    <div class="card big"><div class="field"><label>Promo code <span class="c3" style="font-weight:400">(optional)</span></label><div class="input"><span class="ph grow">Enter code</span><span class="act">Apply</span></div></div><div class="field"><div class="input ok"><span class="grow">RALLY2026</span><svg><use href="#i-check"/></svg></div><span class="hint ok">Code applied. You get 500 bonus pts.</span></div></div>
+    <p class="sec">H6 · Phone number</p>
+    <div class="card big"><div class="field"><label>Phone number</label><div class="input"><span class="pre">+84</span><span class="grow num">912 345 678</span></div></div></div>
+    <p class="sec">H7 · Text area</p>
+    <div class="card big"><div class="field"><label>Note for support</label><div class="input area">My gift card email has not arrived after two days.</div><span class="hint end num">52 / 200</span></div></div>
+  </div>
+</template>
+
+<template id="tpl-struct">
+  <div class="status num"><span>9:41</span><span>5G · 82%</span></div>
+  <div class="screen">
+    <p class="t-ts">Form structure and loyalty elements</p>
+    <p class="sec">I1 · Settings rows</p>
+    <div class="card big"><div><div class="opt first"><span class="grow">Language</span><span class="c3">English</span><svg><use href="#i-right"/></svg></div><div class="opt"><span class="grow">Payout method</span><span class="c3">Bank ···· 4471</span><svg><use href="#i-right"/></svg></div><div class="opt"><span class="grow">Push notifications</span><span class="sw on"></span></div></div></div>
+    <p class="sec">I2 · Step indicator</p>
+    <div class="card big"><div class="steps-h"><span class="stp done"><svg><use href="#i-check"/></svg></span><i class="stl done"></i><span class="stp now">2</span><i class="stl"></i><span class="stp">3</span></div><div class="row"><span class="t-xs c3 grow">Choose reward</span><span class="t-xsm cb grow" style="text-align:center">Confirm details</span><span class="t-xs c3 grow" style="text-align:right">Done</span></div></div>
+    <p class="sec">I3 · Summary and sticky action bar</p>
+    <div class="stage" style="height:300px"><div class="ghost" style="gap:12px"><div class="card big"><div class="sum"><span>Gift card $50 × 2</span><b>5,000 pts</b></div><div class="sum"><span>Promo RALLY2026</span><b class="cg">−500 pts</b></div><div class="sum total"><span>Total</span><b>4,500 pts</b></div></div></div><div class="bar"><div class="grow"><p class="t-xs c3">Balance after</p><p class="t-sms num">7,980 pts</p></div><span class="btn btn-primary btn-lg" style="padding:0 28px">Confirm</span></div></div>
+    <p class="sec">I4 · Referral code with copy</p>
+    <div class="card big"><p class="t-sm c2">Share your code. You both get 200 pts when they trade their first lot.</p><div class="code"><span class="grow">NAM-IB295</span><span class="btn btn-tint sm"><svg><use href="#i-copy"/></svg>Copy</span></div></div>
+    <p class="sec">I5 · Countdown</p>
+    <div class="card big"><div class="row"><p class="t-smm grow">Double cashback ends in</p><svg><use href="#i-clock"/></svg></div><div class="cdown num"><div><b>02</b>days</div><div><b>14</b>hours</div><div><b>36</b>min</div><div><b>08</b>sec</div></div></div>
+    <div class="card big blend bl-red"><p class="t-sms">Flash reward: 2× points on gold</p><div class="cdown num"><div><b>00</b>days</div><div><b>05</b>hours</div><div><b>12</b>min</div><div><b>44</b>sec</div></div></div>
+    <p class="sec">I6 · File upload</p>
+    <div class="card big"><div class="drop"><svg><use href="#i-upload"/></svg><p class="t-smm">Upload your ID</p><p class="t-xs c3">JPG, PNG or PDF, up to 10 MB</p><span class="btn btn-stroke sm">Choose file</span></div>
+      <div class="row"><div class="tile"><svg><use href="#i-file"/></svg></div><div class="grow"><p class="t-smm">passport-front.jpg</p><div class="meter" style="margin-top:6px"><i style="width:64%"></i></div></div><span class="t-xs c3 num">64%</span></div>
+      <div class="row"><div class="tile"><svg><use href="#i-file"/></svg></div><div class="grow"><p class="t-smm">passport-back.jpg</p><p class="t-xs c3">2.1 MB</p></div><span class="badge b-green">Uploaded</span></div>
+      <div class="row"><div class="tile"><svg><use href="#i-file"/></svg></div><div class="grow"><p class="t-smm">statement.pdf</p><p class="t-xs cr">File is larger than 10 MB</p></div><span class="t-smm cb">Retry</span></div></div>
+    <p class="sec">I7 · Loading skeleton</p>
+    <div class="card big"><div class="row"><span class="sk circle"></span><div class="grow" style="display:flex;flex-direction:column;gap:8px"><span class="sk" style="width:60%"></span><span class="sk" style="width:40%"></span></div><span class="sk" style="width:48px"></span></div><div class="row"><span class="sk circle"></span><div class="grow" style="display:flex;flex-direction:column;gap:8px"><span class="sk" style="width:72%"></span><span class="sk" style="width:34%"></span></div><span class="sk" style="width:48px"></span></div></div>
+    <p class="sec">I8 · Progress ring</p>
+    <div class="card big"><div class="row"><span class="pring"><span>62%</span></span><div class="grow"><p class="t-smm">Tier progress</p><p class="t-xs c3 num">12,480 of 20,000 pts to Platinum</p></div></div></div>
+  </div>
+</template>
+
+<template id="tpl-feedback">
+  <div class="status num"><span>9:41</span><span>5G · 82%</span></div>
+  <div class="screen">
+    <p class="t-ts">Feedback and overlays</p>
+    <p class="sec">E1 · Status badges</p>
+    <div class="card big"><div class="wrap"><span class="badge b-green">Completed</span><span class="badge b-yellow">Pending</span><span class="badge b-red">Rejected</span><span class="badge b-blue">New</span><span class="badge b-teal">Verified</span></div></div>
+    <p class="sec">E2 · Alerts</p>
+    <div class="alert a-info"><svg><use href="#i-info"/></svg><div><b>Points expire 30 Sep</b>Redeem 2,000 pts before then to keep them.</div></div>
+    <div class="alert a-ok"><svg><use href="#i-check"/></svg><div><b>Redeemed</b>Your gift card is on its way to your inbox.</div></div>
+    <div class="alert a-warn"><svg><use href="#i-info"/></svg><div><b>Verification needed</b>Upload your ID to withdraw more than $1,000.</div></div>
+    <div class="alert a-err"><svg><use href="#i-info"/></svg><div><b>Redemption failed</b>Not enough points. You need 520 more.</div></div>
+    <p class="sec">E3 · Toast</p>
+    <div class="toast"><svg><use href="#i-check"/></svg>20 pts added to your balance<span class="act">Undo</span></div>
+    <p class="sec">E4 · Empty state</p>
+    <div class="card big empty"><div class="round"><svg><use href="#i-gift"/></svg></div><p class="t-mds">No rewards redeemed yet</p><p class="t-sm c3">Rewards you redeem will show up here with their delivery status.</p><span class="btn btn-primary pillbtn">Browse rewards</span></div>
+    <p class="sec">E5 · Bottom sheet · Default</p>
+    <div class="stage"><div class="ghost"><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet"><span class="grab"></span><p class="t-ts">Redeem 2,500 pts?</p><p class="t-sm c2">You will get a $50 gift card by email. Your balance will be 9,980 pts.</p><span class="btn btn-primary btn-lg block">Redeem</span><span class="btn btn-text block">Not now</span></div></div></div>
+    <p class="sec">E5 · Promo sheet · Theme</p>
+    <div class="stage" style="height:380px"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet promo bl-theme"><span class="grab"></span><div class="tint-ico"><svg><use href="#i-gift"/></svg></div><p class="t-h5">Redeem 2,500 pts?</p><p class="t-sm c2">You will get a $50 gift card by email. Your balance will be 9,980 pts.</p><span class="btn btn-onblend btn-lg block">Redeem</span><span class="btn btn-text block">Not now</span></div></div></div>
+    <p class="sec">E5 · Promo sheet · Red</p>
+    <div class="stage" style="height:380px"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet promo bl-red"><span class="grab"></span><div class="tint-ico"><svg><use href="#i-gift"/></svg></div><p class="t-h5">Redeem 2,500 pts?</p><p class="t-sm c2">You will get a $50 gift card by email. Your balance will be 9,980 pts.</p><span class="btn btn-onblend btn-lg block">Redeem</span><span class="btn btn-text block">Not now</span></div></div></div>
+    <p class="sec">E5 · Promo sheet · Yellow</p>
+    <div class="stage" style="height:380px"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet promo bl-yellow"><span class="grab"></span><div class="tint-ico"><svg><use href="#i-gift"/></svg></div><p class="t-h5">Redeem 2,500 pts?</p><p class="t-sm c2">You will get a $50 gift card by email. Your balance will be 9,980 pts.</p><span class="btn btn-onblend btn-lg block">Redeem</span><span class="btn btn-text block">Not now</span></div></div></div>
+    <p class="sec">E5 · Promo sheet · Lime</p>
+    <div class="stage" style="height:380px"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet promo bl-lime"><span class="grab"></span><div class="tint-ico"><svg><use href="#i-gift"/></svg></div><p class="t-h5">Redeem 2,500 pts?</p><p class="t-sm c2">You will get a $50 gift card by email. Your balance will be 9,980 pts.</p><span class="btn btn-onblend btn-lg block">Redeem</span><span class="btn btn-text block">Not now</span></div></div></div>
+    <p class="sec">E5 · Promo sheet · Green</p>
+    <div class="stage" style="height:380px"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet promo bl-green"><span class="grab"></span><div class="tint-ico"><svg><use href="#i-gift"/></svg></div><p class="t-h5">Redeem 2,500 pts?</p><p class="t-sm c2">You will get a $50 gift card by email. Your balance will be 9,980 pts.</p><span class="btn btn-onblend btn-lg block">Redeem</span><span class="btn btn-text block">Not now</span></div></div></div>
+    <p class="sec">E5 · Promo sheet · Cyan</p>
+    <div class="stage" style="height:380px"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet promo bl-cyan"><span class="grab"></span><div class="tint-ico"><svg><use href="#i-gift"/></svg></div><p class="t-h5">Redeem 2,500 pts?</p><p class="t-sm c2">You will get a $50 gift card by email. Your balance will be 9,980 pts.</p><span class="btn btn-onblend btn-lg block">Redeem</span><span class="btn btn-text block">Not now</span></div></div></div>
+    <p class="sec">E5 · Promo sheet · Pink</p>
+    <div class="stage" style="height:380px"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet promo bl-pink"><span class="grab"></span><div class="tint-ico"><svg><use href="#i-gift"/></svg></div><p class="t-h5">Redeem 2,500 pts?</p><p class="t-sm c2">You will get a $50 gift card by email. Your balance will be 9,980 pts.</p><span class="btn btn-onblend btn-lg block">Redeem</span><span class="btn btn-text block">Not now</span></div></div></div>
+    <p class="sec">E5 · Promo sheet · Indigo</p>
+    <div class="stage" style="height:380px"><div class="ghost"><i></i><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="sheet promo bl-indigo"><span class="grab"></span><div class="tint-ico"><svg><use href="#i-gift"/></svg></div><p class="t-h5">Redeem 2,500 pts?</p><p class="t-sm c2">You will get a $50 gift card by email. Your balance will be 9,980 pts.</p><span class="btn btn-onblend btn-lg block">Redeem</span><span class="btn btn-text block">Not now</span></div></div></div>
+    <p class="sec">E6 · Confirm dialog</p>
+    <div class="stage"><div class="ghost"><i></i><i></i><i></i><i></i></div><div class="scrim"><div class="dialog"><p class="t-ts">Remove this client?</p><p class="t-sm c2">Their trades will stop counting toward your points. You can invite them again later.</p><div class="two"><span class="btn btn-stroke md">Cancel</span><span class="btn btn-danger md">Remove</span></div></div></div></div>
+
+    <p class="t-ts" style="margin-top:8px">Blend on other elements</p>
+    <p class="sec">F1 · Tier badges</p>
+    <div class="card big"><div class="wrap"><span class="tier bl-green"><svg><use href="#i-crown"/></svg>Silver</span><span class="tier bl-yellow"><svg><use href="#i-crown"/></svg>Gold</span><span class="tier bl-indigo"><svg><use href="#i-crown"/></svg>Platinum</span><span class="tier bl-pink"><svg><use href="#i-crown"/></svg>Diamond</span><span class="tier bl-theme"><svg><use href="#i-crown"/></svg>Partner</span></div></div>
+    <p class="sec">F2 · Celebration banner</p>
+    <div class="card big blend bl-pink" style="align-items:center;text-align:center;padding:24px 20px"><div class="tint-ico" style="width:56px;height:56px"><svg><use href="#i-trophy"/></svg></div><p class="t-h5">Level 9 unlocked</p><p class="t-sm c2">You now earn 1.3× points on every lot. Keep the streak going.</p><span class="btn btn-onblend md">See new rewards</span></div>
+  </div>
+</template>
+
+<div class="page">
+  <div class="intro">
+    <h1>Loyalty Token Review</h1>
+    <p>Màn hình Hồ sơ là nơi thử các kiểu element. Light và dark đặt cạnh nhau để bạn soi và comment.</p>
+  </div>
+
+  <div class="block">
+    <h2>Màn hình Hồ sơ</h2>
+    <div class="pair">
+      <div class="slot"><span class="slot-label">Light</span><div class="phone" data-theme="light" data-tpl="tpl-profile"></div></div>
+      <div class="slot"><span class="slot-label">Dark</span><div class="phone" data-theme="dark" data-tpl="tpl-profile"></div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h2>Card thường và chữ</h2>
+    <div class="pair">
+      <div class="slot"><span class="slot-label">Light</span><div class="phone" data-theme="light" data-tpl="tpl-cards"></div></div>
+      <div class="slot"><span class="slot-label">Dark</span><div class="phone" data-theme="dark" data-tpl="tpl-cards"></div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h2>Trạng thái nút</h2>
+    <div class="pair">
+      <div class="slot"><span class="slot-label">Light</span><div class="phone" data-theme="light" data-tpl="tpl-buttons"></div></div>
+      <div class="slot"><span class="slot-label">Dark</span><div class="phone" data-theme="dark" data-tpl="tpl-buttons"></div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h2>Form và điều khiển</h2>
+    <div class="pair">
+      <div class="slot"><span class="slot-label">Light</span><div class="phone" data-theme="light" data-tpl="tpl-forms"></div></div>
+      <div class="slot"><span class="slot-label">Dark</span><div class="phone" data-theme="dark" data-tpl="tpl-forms"></div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h2>Bộ chọn (G)</h2>
+    <div class="pair">
+      <div class="slot"><span class="slot-label">Light</span><div class="phone" data-theme="light" data-tpl="tpl-pick"></div></div>
+      <div class="slot"><span class="slot-label">Dark</span><div class="phone" data-theme="dark" data-tpl="tpl-pick"></div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h2>Ô nhập đặc thù (H)</h2>
+    <div class="pair">
+      <div class="slot"><span class="slot-label">Light</span><div class="phone" data-theme="light" data-tpl="tpl-inputs"></div></div>
+      <div class="slot"><span class="slot-label">Dark</span><div class="phone" data-theme="dark" data-tpl="tpl-inputs"></div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h2>Cấu trúc form và loyalty (I)</h2>
+    <div class="pair">
+      <div class="slot"><span class="slot-label">Light</span><div class="phone" data-theme="light" data-tpl="tpl-struct"></div></div>
+      <div class="slot"><span class="slot-label">Dark</span><div class="phone" data-theme="dark" data-tpl="tpl-struct"></div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h2>Phản hồi, lớp phủ và blend</h2>
+    <div class="pair">
+      <div class="slot"><span class="slot-label">Light</span><div class="phone" data-theme="light" data-tpl="tpl-feedback"></div></div>
+      <div class="slot"><span class="slot-label">Dark</span><div class="phone" data-theme="dark" data-tpl="tpl-feedback"></div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h2>Độ tương phản</h2>
+    <p>Tỉ lệ tính theo WCAG từ chính các token ở trên. Chữ thường cần từ 4.5, viền và ranh giới giữa các bề mặt cần từ 3.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Cặp màu</th><th>Ngưỡng</th><th>Light</th><th>Dark</th></tr></thead>
+        <tbody id="audit"></tbody>
+      </table>
+    </div>
+    <p class="note">Màu badge ở dark có độ trong suốt nên được tính sau khi phủ lên nền card.</p>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('[data-tpl]').forEach(function (el) {
+  el.appendChild(document.getElementById(el.dataset.tpl).content.cloneNode(true));
+});
+
+function rgb(str) { var m = str.match(/[\d.]+/g) || [0, 0, 0]; return [+m[0], +m[1], +m[2], m.length > 3 ? +m[3] : 1]; }
+function lumc(c) { var v = [0, 1, 2].map(function (i) { var x = c[i] / 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; }
+document.querySelectorAll('[data-cr]').forEach(function (el) {
+  var fg = rgb(getComputedStyle(el).color), bg = rgb(getComputedStyle(el.closest('.card')).backgroundColor);
+  var a = lumc(fg), b = lumc(bg), r = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  var t = document.createElement('span'); t.className = 'crtag'; t.textContent = r.toFixed(1) + ' : 1'; el.appendChild(t);
+});
+
+var PAIRS = [
+  ['Chữ chính trên card', '--ui-text-primary', '--ui-surface-pure', 4.5],
+  ['Chữ phụ (secondary) trên card', '--ui-text-secondary', '--ui-surface-pure', 4.5],
+  ['Chữ mờ (tertiary) trên card', '--ui-text-tertiary', '--ui-surface-pure', 4.5],
+  ['Chữ mờ (tertiary) trên nền trang', '--ui-text-tertiary', '--ui-surface-weak', 4.5],
+  ['Chữ disabled trên card', '--ui-text-disabled', '--ui-surface-pure', 4.5],
+  ['Chữ brand / link trên card', '--ui-text-brand', '--ui-surface-pure', 4.5],
+  ['Chữ trên nút primary', '--on-brand', '--accent-surface-brand', 4.5],
+  ['Chữ trên nút dark', '--ui-text-dark', '--ui-text-primary', 4.5],
+  ['Chữ trên nút stroke', '--ui-text-secondary', '--ui-surface-pure', 4.5],
+  ['Chữ trắng trên nút destructive', '#ffffff', '--accent-destructive', 4.5],
+  ['Badge xanh lá', '--ui-text-green', '--ui-badge-green', 4.5],
+  ['Badge vàng', '--ui-text-yellow', '--ui-badge-yellow', 4.5],
+  ['Badge đỏ', '--ui-text-red', '--ui-badge-red', 4.5],
+  ['Badge xanh dương', '--ui-text-brand', '--ui-badge-blue', 4.5],
+  ['Badge teal', '--ui-icon-teal', '--ui-badge-teal', 4.5],
+  ['Tab chưa chọn trên nền tab', '--ui-text-tertiary', '--ui-tab-surface-default', 4.5],
+  ['Viền card so với card', '--ui-stroke-soft', '--ui-surface-pure', 3],
+  ['Viền card so với nền trang', '--ui-stroke-soft', '--ui-surface-weak', 3],
+  ['Card so với nền trang', '--ui-surface-pure', '--ui-surface-weak', 3],
+  ['Cột biểu đồ so với card', '--ui-chart-chart', '--ui-surface-pure', 3]
+];
+
+function parse(hex) {
+  hex = hex.trim().replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
+  return [0, 2, 4].map(function (i) { return parseInt(hex.substr(i, 2), 16); })
+    .concat(hex.length === 8 ? parseInt(hex.substr(6, 2), 16) / 255 : 1);
+}
+function over(top, base) { var a = top[3]; return [0, 1, 2].map(function (i) { return top[i] * a + base[i] * (1 - a); }).concat(1); }
+function lum(c) {
+  var v = [0, 1, 2].map(function (i) { var s = c[i] / 255; return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4); });
+  return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+}
+function toHex(c) { return '#' + [0, 1, 2].map(function (i) { return ('0' + Math.round(c[i]).toString(16)).slice(-2); }).join(''); }
+
+function cell(scope, fgName, bgName, min) {
+  var cs = getComputedStyle(scope);
+  var get = function (n) { return parse(n.charAt(0) === '#' ? n : cs.getPropertyValue(n)); };
+  var card = get('--ui-surface-pure');
+  var bg = over(get(bgName), card), fg = over(get(fgName), bg);
+  var a = lum(fg), b = lum(bg), r = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  var cls = r >= min ? 'ok' : (r >= min * 0.67 ? 'warn' : 'bad');
+  var word = r >= min ? 'Đạt' : (r >= min * 0.67 ? 'Hơi thấp' : 'Thấp');
+  return '<td><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
+    '<span class="swatch" style="background:' + toHex(bg) + ';color:' + toHex(fg) + '">Aa</span>' +
+    '<span class="ratio ' + cls + '">' + r.toFixed(2) + ' · ' + word + '</span></div>' +
+    '<small>' + toHex(fg) + ' / ' + toHex(bg) + '</small></td>';
+}
+
+var L = document.querySelector('.phone[data-theme="light"]'), D = document.querySelector('.phone[data-theme="dark"]');
+document.getElementById('audit').innerHTML = PAIRS.map(function (p) {
+  return '<tr><td>' + p[0] + '</td><td class="ratio">' + p[3] + '</td>' + cell(L, p[1], p[2], p[3]) + cell(D, p[1], p[2], p[3]) + '</tr>';
+}).join('');
+</script>

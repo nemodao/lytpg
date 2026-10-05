@@ -1,0 +1,234 @@
+/* Shared components. Every colour, size, radius, spacing and font comes from tokens/tokens.css. */
+
+.section-title { font: var(--font-large-semibold); }
+
+/* ---- Card ---- */
+.card {
+  position: relative;
+  display: flex; flex-direction: column; gap: var(--spacing-stack);
+  padding: var(--spacing-card);
+  border-radius: var(--radius-card);
+  background: var(--card-surface);
+  border: var(--size-stroke) solid var(--card-stroke);
+  box-shadow: var(--card-shadow);
+  min-width: 0;
+}
+.card--soft { background: var(--surface-brand-soft); border-color: var(--stroke-brand-soft); }
+/* No border on blend cards: the 1px light rim (--blend-stroke) is an inset shadow and must sit at the very
+   edge. With a transparent border the gradient shows outside the rim and the edge looks ragged. */
+.card--blend { background: var(--blend-bg); color: var(--blend-fg); border: 0; padding: calc(var(--spacing-card) + var(--size-stroke)); box-shadow: var(--blend-stroke); }
+.blend-theme { --blend-bg: var(--blend-theme-bg); --blend-fg: var(--blend-theme-fg); --blend-ink: var(--blend-theme-ink); }
+/* Theme-colour vivid surface (the original Partner Plus card). */
+.blend-vivid { --blend-bg: var(--surface-vivid); --blend-fg: var(--on-brand); --blend-ink: var(--accent-surface-brand); }
+.blend-red { --blend-bg: var(--blend-red-bg); --blend-fg: var(--blend-red-fg); --blend-ink: var(--blend-red-ink); }
+.blend-yellow { --blend-bg: var(--blend-yellow-bg); --blend-fg: var(--blend-yellow-fg); --blend-ink: var(--blend-yellow-ink); }
+.blend-lime { --blend-bg: var(--blend-lime-bg); --blend-fg: var(--blend-lime-fg); --blend-ink: var(--blend-lime-ink); }
+.blend-green { --blend-bg: var(--blend-green-bg); --blend-fg: var(--blend-green-fg); --blend-ink: var(--blend-green-ink); }
+.blend-cyan { --blend-bg: var(--blend-cyan-bg); --blend-fg: var(--blend-cyan-fg); --blend-ink: var(--blend-cyan-ink); }
+.blend-pink { --blend-bg: var(--blend-pink-bg); --blend-fg: var(--blend-pink-fg); --blend-ink: var(--blend-pink-ink); }
+.blend-indigo { --blend-bg: var(--blend-indigo-bg); --blend-fg: var(--blend-indigo-fg); --blend-ink: var(--blend-indigo-ink); }
+/* Inner glass panel: dark glass under white text, white glass under dark text. */
+.blend-vivid, .blend-theme, .blend-red, .blend-green, .blend-pink, .blend-indigo { --blend-glass: var(--glass-surface-dark); }
+.blend-yellow, .blend-lime, .blend-cyan { --blend-glass: var(--glass-surface); }
+/* Secondary text on a blend takes the blend's text colour, dimmed. */
+.card--blend .c-2, .card--blend .c-3 { color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
+/* Least prominent text on a blend (notes such as the update interval). */
+.blend-faint { color: color-mix(in srgb, var(--blend-fg) 52%, transparent); }
+.blend-dim { color: color-mix(in srgb, var(--blend-fg) 78%, transparent); }
+/* Whole-card link: covers the card; controls marked .above stay tappable on top of it. */
+.card-link { position: absolute; inset: 0; border-radius: inherit; }
+.above { position: relative; }
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-6);
+  height: var(--size-control-md); padding: 0 var(--spacing-20);
+  border-radius: var(--radius-pill); border: var(--size-stroke) solid transparent;
+  font: var(--font-small-medium); white-space: nowrap;
+}
+/* Small: the size of the row buttons in the review mockup's "Earn rewards" list. */
+.btn--sm { height: var(--size-control-sm); padding: 0 var(--spacing-16); }
+/* Extra small: secondary actions inside cards and tiles. */
+.btn--xs { height: var(--size-control-xs); padding: 0 var(--spacing-10); font: var(--font-x-small-medium); }
+.btn--lg { height: var(--size-control-lg); font: var(--font-medium-semibold); }
+.btn--block { width: 100%; }
+.btn--primary { background: var(--accent-surface-brand); color: var(--on-brand); box-shadow: var(--shadow-button-shadow-stroke-primary); }
+.btn--primary:active { background: var(--ui-button-primary-pressed); }
+.btn--mono { background: var(--ui-text-primary); color: var(--ui-text-dark); }
+.btn--mono:active { background: var(--ui-button-dark-pressed); }
+/* Secondary stroke (C4 in the review mockup). */
+.btn--stroke { background: var(--ui-surface-pure); border-color: var(--ui-stroke-soft); color: var(--ui-text-secondary); box-shadow: var(--shadow-regular-shadow-x-small); }
+.btn--stroke:active { background: var(--ui-surface-weak); box-shadow: none; }
+/* Glass: translucent, no stroke, no shadow. A quiet button for blend or image backgrounds; text takes the
+   blend's text colour. */
+.btn--glass { background: var(--ui-button-glass-surface); color: var(--blend-fg, var(--ui-text-primary)); -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur); }
+.btn--glass:active { background: var(--ui-button-glass-pressed); }
+.btn--tint { background: var(--ui-badge-blue); color: var(--ui-text-brand); }
+.btn--tint:active { background: var(--ui-button-tint-pressed); }
+.btn--onblend { background: var(--blend-fg); color: var(--blend-ink); }
+
+/* ---- Badge ---- */
+.badge { display: inline-flex; align-items: center; padding: var(--spacing-2) var(--spacing-8); border-radius: var(--radius-pill); font: var(--font-x-small-medium); white-space: nowrap; }
+.badge--green { background: var(--ui-badge-green); color: var(--ui-text-green); }
+.badge--yellow { background: var(--ui-badge-yellow); color: var(--ui-text-yellow); }
+.badge--blue { background: var(--ui-badge-blue); color: var(--ui-text-brand); }
+.badge--teal { background: var(--ui-badge-teal); color: var(--ui-icon-teal); }
+.badge--neutral { background: var(--ui-surface-soft); color: var(--ui-text-tertiary); }
+.badges { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--spacing-4); }
+
+/* ---- Notice ---- */
+.notice { display: flex; align-items: flex-start; gap: var(--spacing-8); padding: var(--spacing-8) var(--spacing-12); border-radius: var(--radius-card-inner); font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.notice--neutral { background: var(--ui-field-surface); }
+.notice--neutral .icon { color: var(--ui-icon-secondary); }
+.notice--info { background: var(--ui-badge-blue); }
+.notice--info .icon { color: var(--ui-icon-brand); }
+.notice--success { background: var(--ui-badge-green); }
+.notice--success .icon { color: var(--ui-icon-green); }
+.notice--warning { background: var(--ui-badge-yellow); }
+.notice--warning .icon { color: var(--ui-icon-yellow); }
+.notice--danger { background: var(--ui-badge-red); }
+.notice--danger .icon { color: var(--ui-icon-red); }
+.notice--glass { background: var(--glass-surface); border: var(--size-stroke) solid var(--glass-border); color: var(--blend-fg); }
+
+/* ---- Empty state ---- */
+
+/* ---- Balance summary ---- */
+
+/* ---- Point coin image ---- */
+.coin { display: block; flex: none; object-fit: contain; }
+
+/* ---- Tile (icon in a rounded square) ---- */
+.tile { width: var(--size-tile); height: var(--size-tile); flex: none; display: grid; place-items: center; border-radius: var(--radius-control); background: var(--ui-badge-blue); color: var(--ui-icon-brand); }
+
+/* ---- Lists ---- */
+.list { display: flex; flex-direction: column; }
+.list__row { display: flex; align-items: center; gap: var(--spacing-12); padding: var(--spacing-12) 0; border-top: var(--size-stroke) solid var(--ui-line-soft); min-width: 0; }
+.list > .list__row:first-child, .list > details:first-child > .list__row { border-top: 0; padding-top: 0; }
+.list > .list__row:last-child { padding-bottom: 0; }
+.list__row--sub { padding-left: var(--spacing-20); }
+.list__row--muted, .list__row--muted .c-2, .list__row--muted .c-3 { color: var(--ui-text-disabled); }
+.list__chevron { color: var(--ui-icon-tertiary); }
+.list__end { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-4); text-align: right; }
+.group-title { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); padding-top: var(--spacing-4); }
+
+/* ---- Filter chips (review mockup D3 / G6) ---- */
+.chips { display: flex; flex-wrap: wrap; gap: var(--spacing-8); }
+.chip { min-height: var(--size-control-sm); padding: 0 var(--spacing-12); border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--ui-stroke-soft); background: var(--ui-surface-pure); font: var(--font-small-medium); color: var(--ui-text-secondary); }
+.chip[aria-pressed="true"] { background: var(--ui-chip-surface-selected); border-color: var(--ui-chip-stroke-selected); color: var(--ui-text-brand); }
+
+/* ---- Segmented tabs (review mockup D4, option 1) ---- */
+.tabs { display: flex; gap: var(--spacing-2); padding: var(--spacing-2); border-radius: var(--radius-control); background: var(--ui-tab-surface-default); }
+.tab { flex: 1; min-height: var(--size-control-sm); border-radius: var(--radius-control-inner); font: var(--font-small-medium); color: var(--ui-text-tertiary); text-align: center; }
+.tab[aria-selected="true"] { background: var(--ui-tab-surface-active); color: var(--ui-text-primary); }
+
+/* ---- App header: centred title (no back button) ---- */
+.app-header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--spacing-8); min-height: var(--size-icon-button); }
+.app-header h1 { font: var(--font-large-semibold); text-align: center; }
+
+/* ---- Today panel (Dashboard task card, Trading Task progress card); sits on a blend card ---- */
+.coin--xs { width: var(--size-icon-sm); height: var(--size-icon-sm); }
+.coin--sm { width: var(--size-icon-lg); height: var(--size-icon-lg); align-self: center; }
+/* Today panel: the glass card from Partner Plus. */
+.today {
+  display: flex; flex-direction: column; overflow: hidden;
+  border-radius: var(--radius-card-inner); background: var(--blend-glass); border: var(--size-stroke) solid var(--glass-border);
+  -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur);
+}
+.today__label { display: flex; align-items: baseline; gap: var(--spacing-8); padding: var(--spacing-12) var(--spacing-12) 0; }
+.today__stats { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: var(--spacing-12); padding: var(--spacing-8) var(--spacing-12) var(--spacing-12); }
+.today__value { display: flex; align-items: baseline; gap: var(--spacing-4); font: var(--font-title-l); }
+.today__value small { font: var(--font-small-medium); color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
+.today__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-6); padding: var(--spacing-10) var(--spacing-12); border-top: var(--size-stroke) dashed color-mix(in srgb, var(--blend-fg) 30%, transparent); font: var(--font-x-small-regular); }
+
+.today__foot--icon { flex-wrap: nowrap; align-items: flex-start; }
+.today__foot--icon .icon { margin-top: var(--spacing-2); }
+.timer { display: inline-flex; align-items: center; gap: var(--spacing-2); font: var(--font-x-small-semibold); }
+.timer b { min-width: var(--spacing-24); padding: var(--spacing-2) var(--spacing-4); border-radius: var(--radius-tag); background: var(--blend-fg); color: var(--blend-ink); font: inherit; text-align: center; }
+/* Flat variant: the blend card itself is the panel, so no glass, border or inner padding. */
+.today--flat { overflow: visible; border: 0; border-radius: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.today--flat .today__label { padding: 0; }
+.today--flat .today__stats { padding-inline: 0; }
+.today--flat .today__foot { padding-inline: 0; padding-bottom: 0; }
+
+/* ---- Balance block: bare on the Dashboard, inside a pale theme card on Point Balance ---- */
+.balance { position: relative; display: flex; flex-direction: column; gap: var(--spacing-stack); margin-block: var(--spacing-8); }
+.balance-row { display: flex; align-items: center; gap: var(--spacing-12); }
+/* Balance coin with a soft glow in the theme hue; drop-shadow follows the coin's outline, not its box. */
+.coin--lg { width: var(--size-control-lg); height: var(--size-control-lg); filter: drop-shadow(0 0 var(--spacing-10) color-mix(in srgb, var(--bg-blend) 60%, transparent)); }
+.balance-number { font: var(--font-display-m); }
+.balance-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-8); }
+.balance.card { margin-block: 0; }
+
+/* Empty line under a filtered list. */
+.list-none { padding: var(--spacing-12) 0; text-align: center; }
+
+/* ---- Date-range calendar (review mockup G5), shown in the bottom sheet ---- */
+.cal-head { display: flex; align-items: center; gap: var(--spacing-8); text-align: center; }
+.cal-nav { width: var(--size-control-sm); height: var(--size-control-sm); display: grid; place-items: center; border-radius: var(--radius-pill); color: var(--ui-icon-secondary); }
+.cal-nav:disabled { color: var(--ui-text-disabled); }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: var(--spacing-4); text-align: center; font: var(--font-small-regular); }
+.cal__weekday { font: var(--font-x-small-regular); color: var(--ui-text-tertiary); padding-bottom: var(--spacing-4); }
+.cal__day { height: var(--size-control-sm); display: grid; place-items: center; text-align: center; }
+.cal__day--off { color: var(--ui-text-disabled); }
+.cal__day b { width: var(--size-control-sm); height: var(--size-control-sm); display: grid; place-items: center; border-radius: var(--radius-pill); background: var(--accent-surface-brand); color: var(--on-brand); font: var(--font-small-semibold); }
+.cal__day--in { background: var(--ui-chip-surface-selected); }
+.cal__day--start { background: linear-gradient(90deg, transparent 50%, var(--ui-chip-surface-selected) 50%); }
+.cal__day--end { background: linear-gradient(90deg, var(--ui-chip-surface-selected) 50%, transparent 50%); }
+.sheet__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-12); }
+
+/* ---- Bottom sheet ---- */
+.scrim { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; background: var(--ui-overlay-scrim); }
+.sheet {
+  width: 100%; max-width: var(--size-frame); max-height: var(--size-sheet-max-height); overflow-y: auto;
+  display: flex; flex-direction: column; gap: var(--spacing-12);
+  padding: var(--spacing-10) var(--spacing-gutter) calc(env(safe-area-inset-bottom, 0px) + var(--spacing-20));
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0; background: var(--card-surface);
+}
+.sheet__grab { align-self: center; width: var(--spacing-40); height: var(--spacing-4); border-radius: var(--radius-pill); background: var(--ui-surface-soft); }
+
+/* ---- Floating bottom navigation: [ Exit ]  [ Home | Earn | Points ] ---- */
+:root { --nav-height: calc(var(--size-control-lg) + var(--spacing-8)); --nav-gap: var(--spacing-12); }
+/* Room under the last item so the bar never covers it. */
+.has-nav .app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--nav-gap) + var(--nav-height) + var(--spacing-24)); }
+.nav {
+  /* Starts at the frame's left edge (the screen edge in the webview); keeps the gutter on the right. */
+  position: fixed; z-index: 40; left: calc(50% - min(100%, var(--size-frame)) / 2);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--nav-gap));
+  width: calc(min(100%, var(--size-frame)) - var(--spacing-gutter)); height: var(--nav-height);
+  display: flex; align-items: stretch; gap: var(--spacing-12); pointer-events: none;
+}
+.sheet-open .app { position: relative; z-index: 41; }
+.nav__exit, .nav__tabs {
+  pointer-events: auto; border-radius: var(--radius-pill);
+  background: var(--ui-nav-surface); border: var(--size-stroke) solid var(--ui-nav-stroke);
+  -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur); box-shadow: var(--shadow);
+}
+/* Close sits flush against the left screen edge: square on that side, no border there, rounded on the right. */
+.nav__exit { border-left: 0; border-radius: 0 var(--radius-pill) var(--radius-pill) 0; padding-left: var(--spacing-8); }
+.nav__exit { flex: none; width: calc(var(--nav-height) + var(--spacing-8)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-2); font: var(--font-x-small-medium); color: var(--ui-text-secondary); }
+/* The X is red and a little heavier than other line icons. */
+.nav__exit .icon { color: var(--ui-icon-red); stroke-width: 2.4; }
+.nav__tabs { flex: 1; display: flex; gap: var(--spacing-4); padding: var(--spacing-4); }
+.nav__tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-2); border-radius: var(--radius-pill); font: var(--font-x-small-medium); color: var(--ui-text-tertiary); }
+.nav__tab { color: var(--ui-text-secondary); }
+/* "HOT" badge on a tab's icon, top-right, overlapping the corner, floating up and down. */
+.nav__art { position: relative; display: block; }
+.nav__hot {
+  position: absolute; top: calc(var(--spacing-8) * -1); left: calc(100% - var(--spacing-8));
+  width: auto; height: var(--size-icon-sm); max-width: none;
+  animation: nav-hot-float 2.4s ease-in-out infinite;
+}
+/* Unselected tab that draws attention: every 6.5 s its orange version fades in over the icon while the icon grows,
+   holds for about a second, then both go back. Timing: 0.5 s in, 0.9 s hold, 0.6 s out. */
+.nav__art--flash .nav__image { animation: nav-pop 6.5s ease-in-out infinite; }
+.nav__art--flash .nav__image--flash { position: absolute; inset: 0; opacity: 0; animation-name: nav-flash-pop; }
+@keyframes nav-pop { 0%, 69%, 100% { transform: scale(1); } 77%, 91% { transform: scale(1.25); } }
+@keyframes nav-flash-pop { 0%, 69%, 100% { opacity: 0; transform: scale(1); } 77%, 91% { opacity: 1; transform: scale(1.25); } }
+@keyframes nav-hot-float { 50% { transform: translateY(calc(var(--spacing-4) * -1)) rotate(-4deg); } }
+@media (prefers-reduced-motion: reduce) { .nav__hot, .nav__art--flash .nav__image { animation: none; } }
+/* Glass artwork, one per tab. Unselected tabs carry two versions and show the one that suits the theme. */
+.nav__image { display: block; width: var(--size-icon-lg); height: var(--size-icon-lg); object-fit: contain; }
+.nav__image--on-dark { display: none; }
+[data-theme="dark"] .nav__image--on-light { display: none; }
+[data-theme="dark"] .nav__image--on-dark { display: block; }
+.nav__tab[aria-current="page"] { background: var(--ui-nav-tab-active); color: var(--ui-text-brand); }

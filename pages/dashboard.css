@@ -1,0 +1,53 @@
+/* Dashboard-only styles. Layout follows the wireframe in spec §10. */
+
+.details { display: inline-flex; align-items: center; gap: var(--spacing-2); font: var(--font-small-medium); color: var(--ui-text-tertiary); }
+
+/* Dashed separator between the balance and the task card. */
+.dash-divider { width: 100%; height: 0; margin: 0; border: 0; border-top: var(--size-stroke) dashed color-mix(in srgb, var(--ui-line-dark) 28%, transparent); }
+
+/* ---- Daily check-in (future feature): the "Keep it up" streak card style from the review mockup ---- */
+.checkin { position: relative; overflow: hidden; background: var(--surface-streak); }
+.checkin > * { position: relative; }
+.checkin .checkin__art { position: absolute; right: calc(var(--spacing-6) * -1); top: calc(var(--spacing-10) * -1); color: var(--ui-icon-brand); opacity: 0.18; }
+.checkin__art .icon { width: calc(var(--size-control-lg) * 1.6); height: calc(var(--size-control-lg) * 1.6); stroke-width: 1.2; }
+.checkin__count { font: var(--font-title-l); color: var(--ui-text-brand); }
+.checkin__days { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--spacing-4); margin: 0; padding: 0; list-style: none; }
+.checkin__day {
+  display: flex; flex-direction: column; align-items: center; gap: var(--spacing-2); padding: var(--spacing-8) 0;
+  border-radius: var(--radius-control); border: var(--size-stroke) solid var(--ui-stroke-soft); background: var(--ui-surface-pure);
+  font: var(--font-x-small-regular); color: var(--ui-text-tertiary);
+}
+.checkin__day b { display: flex; align-items: center; gap: var(--spacing-2); font: var(--font-small-semibold); color: var(--ui-text-brand); }
+/* Coin before the number, small enough for seven tiles in a row. */
+.coin--tiny { width: var(--spacing-12); height: var(--spacing-12); }
+.checkin__pts { display: inline-flex; align-items: center; gap: var(--spacing-2); vertical-align: middle; }
+/* Checked days: a deep blue (brand mixed with black) so the bright blue coin stands out on it. */
+.checkin__day--done { --done: color-mix(in srgb, var(--accent-surface-brand) 45%, var(--vivid-shade)); background: var(--done); border-color: var(--done); color: color-mix(in srgb, var(--on-brand) 80%, transparent); }
+.checkin__day--done b { color: var(--on-brand); }
+.checkin__day--today { background: var(--ui-tab-surface-blue); border-color: var(--ui-stroke-brand); }
+.checkin + .task { margin-top: var(--spacing-40); }
+
+/* ---- Daily Trading card: "Partner Plus" style from the review mockup, on a vivid blend ---- */
+.task { margin-top: var(--spacing-32); --cup-size: calc(var(--size-avatar-lg) + var(--spacing-8)); }
+/* Trophy image sticking out of the card's top-left corner. */
+.task__icon { position: absolute; top: calc(var(--spacing-40) * -1); left: var(--spacing-2); width: var(--cup-size); height: var(--cup-size); object-fit: contain; }
+.task__head { display: flex; align-items: center; gap: var(--spacing-8); padding-left: calc(var(--cup-size) - var(--spacing-16)); min-height: var(--size-control-sm); }
+.task .details { color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
+
+.task__cta { align-self: center; min-width: 60%; }
+
+
+/* ---- Rewards mosaic: one tall tile on the left, two stacked on the right ---- */
+.rewards-head { display: flex; flex-direction: column; gap: var(--spacing-2); margin-top: var(--spacing-8); }
+.mosaic { display: grid; grid-template-columns: 1.15fr 1fr; grid-template-rows: 3fr 2fr; gap: var(--spacing-12); height: var(--size-rewards-height); }
+/* Reward tiles on a vivid blend (hue set by the .blend-* class on the mosaic). No border, so the light rim sits on the edge. */
+.reward { position: relative; overflow: hidden; border-radius: var(--radius-card); min-width: 0; background: var(--blend-bg); box-shadow: var(--blend-stroke); }
+.reward:first-child { grid-row: 1 / span 2; }
+/* Small, quiet Redeem button in each tile's bottom corner. */
+.reward__cta { position: absolute; right: var(--spacing-10); bottom: var(--spacing-10); }
+/* Tall tile: the product fills the bottom-right, so its button sits bottom-left on the open background. */
+.reward:first-child .reward__cta { right: auto; left: var(--spacing-10); }
+/* Artwork is cut out on a transparent background and bleeds off the right and bottom edges. */
+.reward img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: right bottom; }
+/* Soft shadow that follows each product's outline, so it lifts off the blend. */
+.reward img { filter: drop-shadow(0 var(--spacing-6) var(--spacing-10) color-mix(in srgb, var(--vivid-shade) 32%, transparent)); }

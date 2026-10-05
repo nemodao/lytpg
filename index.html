@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HSB Loyalty Review</title>
+<style>
+/* Layout: one narrow column, a phone-sized reading width, three screen cards then the review notes. */
+@font-face { font-family: "Inter"; font-weight: 400; src: url("assets/fonts/inter-latin-400.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Inter"; font-weight: 600; src: url("assets/fonts/inter-latin-600.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Nunito Sans"; font-weight: 700; src: url("assets/fonts/nunito-sans-latin-700.woff2") format("woff2"); font-display: swap; }
+:root {
+  --bg: #f4f7fd; --surface: #ffffff; --line: #e1e7f2; --fg: #0f0f10; --muted: #5d6578; --accent: #004eeb; --accent-soft: #e0ebff; --on-accent: #ffffff;
+  --display: "Nunito Sans", "Segoe UI", system-ui, sans-serif; --body: "Inter", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0b0f16; --surface: #161b23; --line: #272e3a; --fg: #ffffff; --muted: #9aa3b5; --accent: #5b8dff; --accent-soft: #1b2b4d; --on-accent: #ffffff; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0b0f16; --surface: #161b23; --line: #272e3a; --fg: #ffffff; --muted: #9aa3b5; --accent: #5b8dff; --accent-soft: #1b2b4d; --on-accent: #ffffff; color-scheme: dark; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 400 15px/1.55 var(--body); }
+.wrap { max-width: 34rem; margin: 0 auto; padding-inline: 16px; padding-block: 32px 48px; display: flex; flex-direction: column; gap: 28px; }
+.eyebrow { font: 600 12px/1.4 var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: 6px 0 8px; font: 700 34px/1.1 var(--display); text-wrap: balance; }
+h2 { margin: 0; font: 700 20px/1.25 var(--display); }
+p { margin: 0; }
+.lead { color: var(--muted); }
+.screens { display: flex; flex-direction: column; gap: 12px; }
+.screen { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 16px; padding: 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); color: inherit; text-decoration: none; }
+.screen:hover { border-color: var(--accent); }
+.screen:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.screen b { font: 700 17px/1.3 var(--display); }
+.screen .tab { justify-self: start; font: 600 11px/1 var(--body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.screen .what { grid-column: 1; color: var(--muted); font-size: 14px; min-width: 0; }
+.screen .go { grid-column: 2; grid-row: 1 / span 3; padding: 10px 16px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font: 600 14px/1 var(--body); white-space: nowrap; }
+.notes { display: flex; flex-direction: column; gap: 12px; }
+.notes ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.notes li { padding: 12px 14px; border-radius: 14px; background: var(--accent-soft); }
+.notes li strong { font-weight: 600; }
+.foot { color: var(--muted); font-size: 13px; }
+</style>
+
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <p class="eyebrow">Bản xem thử thiết kế · Phase 1</p>
+    <h1>HSB Loyalty</h1>
+    <p class="lead">Ba màn hình của chương trình loyalty, chạy trong webview của app với khung 375px. Số liệu là dữ liệu mẫu.</p>
+  </header>
+
+  <section class="screens" aria-label="Màn hình">
+    <a class="screen" href="pages/dashboard.html">
+      <span class="tab">Tab Home</span>
+      <b>Dashboard</b>
+      <span class="what">Số dư điểm, nhiệm vụ Daily Trading và đổi quà.</span>
+      <span class="go">Mở</span>
+    </a>
+    <a class="screen" href="pages/trading-task.html">
+      <span class="tab">Tab Earn</span>
+      <b>Daily Trading</b>
+      <span class="what">Tiến độ hôm nay, tài khoản và earning rate, cách tính điểm, lịch sử.</span>
+      <span class="go">Mở</span>
+    </a>
+    <a class="screen" href="pages/point-balance.html">
+      <span class="tab">Tab Points</span>
+      <b>Point Balance</b>
+      <span class="what">Điểm khả dụng, điểm hết hạn và lịch sử biến động điểm.</span>
+      <span class="go">Mở</span>
+    </a>
+  </section>
+
+  <section class="notes">
+    <h2>Cách xem</h2>
+    <ul>
+      <li><strong>Mở trên điện thoại</strong> để giống app nhất. Trên máy tính, màn hình hiện ở giữa với đúng khung 375px.</li>
+      <li><strong>Nút “States” ở góc dưới bên phải</strong> bật tắt từng tình huống (ví dụ hết điểm, đạt max điểm trong ngày, chương trình kết thúc). State được chia theo từng phần của màn hình và bật kết hợp được. Trên máy tính, rê chuột vào một state để đọc mô tả.</li>
+      <li><strong>Sáng và tối</strong> đi theo cài đặt của máy. Muốn đổi, mở “States” và chọn ở mục Theme.</li>
+      <li><strong>Thanh dưới cùng</strong> chuyển giữa ba màn hình. Nút X (thoát webview) và các nút giao dịch, đổi quà chưa dẫn tới đâu.</li>
+    </ul>
+  </section>
+
+  <p class="foot">Nút “States” chỉ có trong bản xem thử, không thuộc giao diện sản phẩm.</p>
+</main>
+</body>
+</html>

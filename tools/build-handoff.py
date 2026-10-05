@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+"""Build the copy of the code that goes to front-end developers, without any demo-only parts.
+
+Left out: the demo/ folder (state switcher and the "Internal Explanation" button messages) and the
+DEMO ONLY block at the end of each page's HTML. Buttons keep their data-intent attribute: it names where the
+button leads, so developers can attach the matching deeplink (see spec §30).
+
+The build stops with an error if anything demo-only is still referenced in the output.
+
+Output: dist/handoff/ and dist/handoff.zip.  Run from the project root:  python3 tools/build-handoff.py
+"""
+import re
+import shutil
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / 'dist' / 'handoff'
+INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'spec.md', 'CLAUDE.md']
+SKIP = shutil.ignore_patterns('.DS_Store', '_*', 'coin-hex.png', '__pycache__')
+DEMO_BLOCK = re.compile(r'\n[ \t]*<!-- DEMO ONLY: start.*?<!-- DEMO ONLY: end -->[ \t]*', re.S)
+FORBIDDEN = ['demo/', 'intents.en.json', 'Internal Explanation', 'DEMO ONLY']
+
+
+def main():
+    if OUT.exists():
+        shutil.rmtree(OUT)
+    OUT.mkdir(parents=True)
+    for name in INCLUDE:
+        src = ROOT / name
+        if src.is_dir():
+            shutil.copytree(src, OUT / name, ignore=SKIP)
+        else:
+            shutil.copy2(src, OUT / name)
+
+    for html in (OUT / 'pages').glob('*.html'):
+        text = html.read_text(encoding='utf-8')
+        stripped = DEMO_BLOCK.sub('', text)
+        if stripped == text:
+            sys.exit(f'No DEMO ONLY block found in {html.name}; check the page before handing off.')
+        html.write_text(stripped, encoding='utf-8')
+
+    # Docs may mention the demo; code and data must not.
+    leaks = []
+    for path in OUT.rglob('*'):
+        if path.suffix not in {'.html', '.js', '.css', '.json'}:
+            continue
+        text = path.read_text(encoding='utf-8')
+        leaks += [f'{path.relative_to(OUT)}: {word}' for word in FORBIDDEN if word in text]
+    if leaks:
+        shutil.rmtree(OUT)
+        sys.exit('Demo-only code found, handoff not built:\n  ' + '\n  '.join(leaks))
+
+    archive = shutil.make_archive(str(OUT), 'zip', root_dir=OUT.parent, base_dir=OUT.name)
+    print(f'Built {OUT.relative_to(ROOT)} and {Path(archive).relative_to(ROOT)} (no demo-only code)')
+
+
+if __name__ == '__main__':
+    main()

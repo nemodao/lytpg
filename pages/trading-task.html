@@ -1,0 +1,32 @@
+<!doctype html>
+<!--
+  Loyalty · Daily Trading
+  States by part of the page (combine with commas):
+    Page: ended
+    Participation: needs-kyc, needs-deposit
+    Today trading task: in-day, capped, no-trades-today
+    Trading account: single-account, ineligible-selected
+  Example: trading-task.html?state=in-day,capped
+  Shared states (empty, needs-kyc, needs-deposit, has-pending, expiring) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Loyalty · Daily Trading</title>
+  <script src="../shared/theme.js"></script>
+  <link rel="stylesheet" href="../tokens/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="../shared/components.css">
+  <link rel="stylesheet" href="trading-task.css">
+</head>
+<body data-page="trading-task">
+  <main class="app" id="app"></main>
+  <script type="module" src="trading-task.js"></script>
+  <!-- DEMO ONLY: start. Review aids, not part of the product. Strip this block (and the demo/ folder) before handoff:
+       the state switcher and the "Internal Explanation" messages on buttons. -->
+  <script type="module" src="../demo/preview.js"></script>
+  <script type="module" src="../demo/intents.js"></script>
+  <!-- DEMO ONLY: end -->
+</body>
+</html>

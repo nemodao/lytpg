@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.500" rx="2.500"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.500 15l2.300 2.300L15.500 13"/></symbol>
+  <symbol id="back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M5 12.500l4.500 4.500L19 7.500"/></symbol>
+  <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.500v.100"/></symbol>
+  <symbol id="lock" viewBox="0 0 24 24"><rect x="5" y="10.500" width="14" height="10" rx="2"/><path d="M8 10.500V8a4 4 0 0 1 8 0v2.500"/></symbol>
+  <symbol id="chart" viewBox="0 0 24 24"><path d="M4 19l5-6 4 3 7-9"/><path d="M15 7h5v5"/></symbol>
+  <symbol id="trophy" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4c0 3 1 4.500 3 5M17 6h3c0 3-1 4.500-3 5M12 14v4M8.500 20h7M9.500 18h5"/></symbol>
+  <symbol id="gift" viewBox="0 0 24 24"><rect x="3.500" y="9" width="17" height="11" rx="1.500"/><path d="M3.500 13h17M12 9v11M12 9c-2-4-7-3-5 0M12 9c2-4 7-3 5 0"/></symbol>
+  <symbol id="voucher" viewBox="0 0 24 24"><path d="M3 8a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a2 2 0 0 0 0 4v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2a2 2 0 0 0 0-4zM14 7v10"/></symbol>
+  <symbol id="gadget" viewBox="0 0 24 24"><rect x="7" y="6" width="10" height="12" rx="3"/><path d="M9 6l.700-3h4.600L15 6M9 18l.700 3h4.600l.700-3M12 9.500V12l1.500 1.500"/></symbol>
+  <symbol id="ewallet" viewBox="0 0 24 24"><path d="M4 7.500A2.500 2.500 0 0 1 6.500 5H18v3"/><rect x="4" y="8" width="16" height="11" rx="2"/><path d="M16 13.500h.100"/></symbol>
+  <symbol id="star" viewBox="0 0 24 24"><path d="M12 3.500l2.600 5.400 5.900.800-4.300 4.100 1.100 5.900L12 16.900l-5.300 2.800 1.100-5.900-4.300-4.100 5.900-.800z"/></symbol>
+  <symbol id="close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.500l1.400 2.900 3.100.400-2.300 2.200.600 3.100L12 14.600l-2.800 1.500.600-3.100-2.300-2.200 3.100-.400z"/></symbol>
+</svg>

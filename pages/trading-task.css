@@ -1,0 +1,83 @@
+/* Trading Task-only styles: account selector, rules, history, account options. */
+
+/* Night sky behind the header and cup, the same in both themes. It ends in a clean edge halfway down the Today card:
+   .hero-bg covers the header and cup, and the card's ::before continues the plain dark surface down to its middle.
+   Elements carrying data-theme="dark" resolve the surface tokens to their dark values.
+   Hue: the theme blue. --sky-light colours the streaks; the sky is tinted at the top and loses its tint towards the cut. */
+.app { isolation: isolate; --sky-light: color-mix(in srgb, var(--bg-blend) 60%, var(--color-blue-300)); }
+.hero-bg, .hero-card { --sky: color-mix(in srgb, var(--color-blue-500) 20%, var(--ui-surface-weak)); --sky-base: var(--ui-surface-weak); }
+.hero { position: relative; display: flex; flex-direction: column; gap: var(--spacing-section); }
+/* The title sits on the dark sky in both themes. */
+.app-header h1 { color: var(--on-brand); }
+.hero-bg {
+  position: absolute; z-index: -1; overflow: hidden; pointer-events: none;
+  top: calc(-1 * (env(safe-area-inset-top, 0px) + var(--spacing-12))); left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); bottom: calc(-1 * var(--spacing-section));
+  background: linear-gradient(to bottom, var(--sky) 25%, var(--sky-base) 92%);
+}
+.hero-card { position: relative; }
+/* Ended: a message on the yellow card in place of today's progress. */
+.hero-message { flex-direction: row; align-items: flex-start; gap: var(--spacing-12); }
+.hero-message__icon { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--blend-glass); }
+.hero-card::before {
+  content: ""; position: absolute; z-index: -1; top: 0; left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); height: 50%;
+  background: var(--sky-base);
+}
+/* Light streaks: a layer larger than the sky, rotated, holding vertical lines that fade out at both ends.
+   They are strongest around the top centre and dissolve towards the side edges, the corners and the sky's lower
+   edge, so they do not stop dead at the Today card. */
+.streaks-fade { position: absolute; inset: 0; --streak-fade: radial-gradient(ellipse 80% 105% at 50% 15%, black 45%, transparent 100%); -webkit-mask-image: var(--streak-fade); mask-image: var(--streak-fade); }
+.streaks { position: absolute; inset: -70%; transform: rotate(28deg); }
+.streak { position: absolute; background: linear-gradient(to bottom, transparent, var(--sky-light) 50%, transparent); }
+.streak--s { width: var(--size-stroke); }
+.streak--m { width: var(--spacing-2); box-shadow: 0 0 var(--spacing-8) color-mix(in srgb, var(--sky-light) 50%, transparent); }
+.streak--l { width: var(--spacing-8); filter: blur(var(--spacing-4)); }
+
+/* Programme cup, centred above the Today card, outside it. Decorative. A wide dark shadow that follows its outline
+   dims the sky around it so the cup stands out. */
+.today-cup {
+  --cup-size: calc(var(--size-avatar-lg) + var(--spacing-24));
+  align-self: center; width: auto; max-width: 100%; height: var(--cup-size); margin-block: var(--spacing-8); object-fit: contain;
+  filter: drop-shadow(0 var(--spacing-8) var(--spacing-32) color-mix(in srgb, var(--vivid-shade) 65%, transparent));
+}
+/* "HOT" badge floating at the cup's top-right. At the top of its drift it sits clear of the cup; at the bottom it
+   covers the corner of the rim. The drift is kept small (6px) so it does not pull attention away. */
+.today-cup-wrap { position: relative; align-self: center; display: flex; }
+.hero-hot {
+  position: absolute; left: calc(50% + var(--spacing-10)); top: var(--spacing-4); height: var(--spacing-24); width: auto;
+  animation: hero-hot-float 2.4s ease-in-out infinite;
+}
+@keyframes hero-hot-float { 0%, 100% { transform: translateY(calc(var(--spacing-6) * -1)) rotate(2deg); } 50% { transform: translateY(0) rotate(-1deg); } }
+@media (prefers-reduced-motion: reduce) { .hero-hot { animation: none; } }
+
+/* Earning rates sit in their own inner card inside the trading account card. */
+/* Rate value: number, coin, "/ lot" on one line. */
+.rate { display: inline-flex; align-items: center; gap: var(--spacing-4); white-space: nowrap; }
+.rates-frame { padding: var(--spacing-12); border: var(--size-stroke) solid var(--ui-stroke-soft); border-radius: var(--radius-card-inner); background: var(--ui-field-surface); }
+
+/* Account selector: looks like a field, opens the bottom sheet. */
+.select {
+  display: flex; align-items: center; gap: var(--spacing-8); width: 100%;
+  min-height: var(--size-field); padding: 0 var(--spacing-12);
+  border-radius: var(--radius-control); border: var(--size-stroke) solid var(--ui-stroke-soft);
+  background: var(--ui-field-surface); font: var(--font-small-medium);
+}
+.select--static { background: var(--ui-field-surface-locked); }
+.select .icon { color: var(--ui-icon-tertiary); }
+
+.rules { display: flex; flex-direction: column; gap: var(--spacing-12); margin: 0; padding: 0; list-style: none; }
+.rules li { display: flex; align-items: flex-start; gap: var(--spacing-10); font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.rules li::before { content: ""; flex: none; width: var(--spacing-6); height: var(--spacing-6); margin-top: var(--spacing-6); border-radius: var(--radius-pill); background: var(--accent-surface-brand); }
+.rules strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
+
+/* History: one row per day. Lots and points sit in fixed columns so they line up from row to row. */
+.day__head { display: flex; align-items: center; gap: var(--spacing-8); }
+.day__figures { display: grid; grid-template-columns: calc(var(--spacing-40) * 2) 1fr; align-items: center; }
+.day__points { display: flex; align-items: center; gap: var(--spacing-4); white-space: nowrap; }
+.day__capped { margin-left: auto; color: var(--ui-text-brand); font: var(--font-x-small-medium); }
+
+.option { display: flex; align-items: center; gap: var(--spacing-12); width: 100%; min-height: var(--size-control-lg); padding: var(--spacing-8) 0; border-top: var(--size-stroke) solid var(--ui-line-soft); font: var(--font-small-medium); }
+.option:first-child { border-top: 0; }
+.option--muted { color: var(--ui-text-disabled); }
+.radio { width: var(--size-check); height: var(--size-check); flex: none; display: grid; place-items: center; border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--ui-text-disabled); background: var(--card-surface); }
+.radio--on { border-color: var(--accent-surface-brand); }
+.radio--on::after { content: ""; width: 70%; height: 70%; border-radius: var(--radius-pill); background: var(--accent-surface-brand); }

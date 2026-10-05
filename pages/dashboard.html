@@ -1,0 +1,33 @@
+<!doctype html>
+<!--
+  Loyalty · Dashboard
+  States by part of the page (combine with commas):
+    Page: no-task-trading
+    Participation: needs-kyc, needs-deposit
+    Point Balance: empty, has-pending, expiring
+    Today trading task: capped, no-trades-today
+    Daily check-in (future): check-in
+  Example: dashboard.html?state=expiring,capped
+  Shared states (empty, needs-kyc, needs-deposit, has-pending, expiring) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Loyalty · Dashboard</title>
+  <script src="../shared/theme.js"></script>
+  <link rel="stylesheet" href="../tokens/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="../shared/components.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body data-page="dashboard">
+  <main class="app" id="app"></main>
+  <script type="module" src="dashboard.js"></script>
+  <!-- DEMO ONLY: start. Review aids, not part of the product. Strip this block (and the demo/ folder) before handoff:
+       the state switcher and the "Internal Explanation" messages on buttons. -->
+  <script type="module" src="../demo/preview.js"></script>
+  <script type="module" src="../demo/intents.js"></script>
+  <!-- DEMO ONLY: end -->
+</body>
+</html>
