@@ -409,6 +409,9 @@ Buttons (primary, stroke) and the bottom bar have no drop shadow, matching the f
 ## 35. No countdown; calmer gold card (decided 5 Oct 2026)
 
 - The countdown to the daily reset on the Dashboard's Today panel is removed. The panel has a footer only when today's max is reached (capped message).
-- The Daily Trading cards (Dashboard task card, Trading Task Today / ended card) move from the bright vivid yellow to a muted, darker gold (`--blend-gold-*`, new tokens) that sits closer to the page background and feels less aggressive. The bright yellow blend stays in the token set for other uses.
-- Under review: two alternatives to the gold, switchable with the states `card-theme` ("Trading card: theme blue (dark)", the existing dark theme-blue blend) and `card-dusk` ("Trading card: blue to gold", new `--blend-dusk-*` tokens: deep theme blue warming into gold at the bottom-right). Both use white text. Config `program.taskCardColour`: gold | theme | dusk.
+- The Daily Trading cards (Dashboard task card, Trading Task Today / ended card) keep the **vivid yellow** blend by default (the muted gold tried on 5 Oct was dropped). Under review, switchable with the states in "Trading card colour (review)":
+  - `card-pale-theme`: the pale theme card from the review mockup ("Theme · pale").
+  - `card-pale-yellow`: the same pale card in yellow, no blue (new tokens `--surface-yellow-soft`, `--stroke-yellow-soft`).
+  - `card-indigo`: the vivid indigo blend.
+  Pale cards follow the page theme (light / dark). Config `program.taskCardColour`: yellow | pale-theme | pale-yellow | indigo.
 

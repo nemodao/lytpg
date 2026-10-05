@@ -1,7 +1,7 @@
 /* Trading Task-only styles: account selector, rules, history, account options. */
 
 /* Night sky behind the header and cup, the same in both themes. It ends in a clean edge halfway down the Today card:
-   .hero-bg covers the header and cup, and the card's ::before continues the plain dark surface down to its middle.
+   .hero-bg covers the header and cup, and the card's .hero-card__sky continues the plain dark surface down to its middle.
    Elements carrying data-theme="dark" resolve the surface tokens to their dark values.
    Hue: the theme blue. --sky-light colours the streaks; the sky is tinted at the top and loses its tint towards the cut. */
 .app { isolation: isolate; --sky-light: color-mix(in srgb, var(--bg-blend) 60%, var(--color-blue-300)); }
@@ -19,9 +19,11 @@
 /* Ended: a message on the yellow card in place of today's progress. */
 .hero-message { flex-direction: row; align-items: flex-start; gap: var(--spacing-12); }
 .hero-message__icon { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--blend-glass); }
-.hero-card::before {
-  content: ""; position: absolute; z-index: -1; top: 0; left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); height: 50%;
-  background: var(--sky-base);
+/* The dark sky continues behind the top half of the card. It is its own element carrying data-theme="dark", so the
+   card itself can follow the page theme (pale card options). */
+.hero-card__sky {
+  position: absolute; z-index: -1; top: 0; left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); height: 50%;
+  background: var(--ui-surface-weak);
 }
 /* Light streaks: a layer larger than the sky, rotated, holding vertical lines that fade out at both ends.
    They are strongest around the top centre and dissolve towards the side edges, the corners and the sky's lower

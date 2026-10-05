@@ -28,9 +28,10 @@ export const joinLabel = (ui, common) =>
 export const joinIntent = (common) => common.program.joinRequirement || null;
 
 // Colour of the Daily Trading cards (Dashboard task card, Trading Task Today / ended card), as a blend class.
-// `program.taskCardColour`: gold (default) | theme | dusk. TEMP (design review): picked with the card-colour states.
+// `program.taskCardColour`: yellow (default, vivid yellow blend) | pale-theme | pale-yellow | indigo.
+// TEMP (design review): picked with the card-colour states.
 export const taskCardBlend = (common) =>
-  ({ gold: 'blend-gold', theme: 'blend-theme', dusk: 'blend-dusk' })[common.program.taskCardColour] || 'blend-gold';
+  ({ yellow: 'blend-yellow', 'pale-theme': 'blend-pale-theme', 'pale-yellow': 'blend-pale-yellow', indigo: 'blend-indigo' })[common.program.taskCardColour] || 'blend-yellow';
 
 // Balance block: coin, label, number, pending, Redeem button and the expiry warning.
 // Dashboard: bare on the page background, the whole block links to Point Balance (href).

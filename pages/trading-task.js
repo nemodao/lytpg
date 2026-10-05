@@ -48,7 +48,8 @@ const eligibleBadge = (item) =>
 // The hero always keeps the sky and the cup; the yellow card under the cup changes with the page state (spec §23).
 // Ended: the programme is over, so the card carries that message instead of today's progress (no HOT badge).
 const endedCard = () => `
-  <section class="card card--blend ${taskCardBlend(common)} hero-card hero-message" data-theme="dark">
+  <section class="card card--blend ${taskCardBlend(common)} hero-card hero-message">
+    <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
     <span class="hero-message__icon">${ui.icon('info')}</span>
     <div class="stack stack--tight">
       <h2 class="t-body-strong">${ui.t('tt.ended.title')}</h2>
@@ -68,7 +69,8 @@ function progressCard() {
   else if (today.status === 'credited') footer = foot('check', ui.t('tt.status.credited'));
   else footer = foot('clock', ui.t('tt.status.pending', { date: ui.date(today.creditAt), time: ui.time(today.creditAt), tz: ui.t('tz') }));
   return `
-    <section class="card card--blend ${taskCardBlend(common)} hero-card" data-theme="dark">
+    <section class="card card--blend ${taskCardBlend(common)} hero-card">
+      <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
       <div class="today today--flat">
         <div class="today__label">
           <h2 class="t-body-strong grow">${ui.t('task.todayLabel')}</h2>

@@ -17,7 +17,7 @@
     "expiryWarningDays": 10,
     "tradingTask": true,
     "joinRequirement": null,
-    "taskCardColour": "gold"
+    "taskCardColour": "yellow"
   },
   "accounts": [
     {

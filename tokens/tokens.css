@@ -1,5 +1,5 @@
 /* Loyalty design tokens — generated from tokens.json by build.py. Do not edit by hand.
-   Version 3.11 (2026-10-05). Base values come from Figma (IB Partnership - UI); the Custom sections were added in review. */
+   Version 3.12 (2026-10-05). Base values come from Figma (IB Partnership - UI); the Custom sections were added in review. */
 
 :root, [data-theme="light"] {
   /* Color — primitives */
@@ -121,6 +121,8 @@
   --bg-blend: #2970ff;
   --surface-brand-soft: #eff4ff;
   --stroke-brand-soft: #d1e0ff;
+  --surface-yellow-soft: #fff8e1;
+  --stroke-yellow-soft: #f6dd94;
   --glass-tint: #ffffff;
   --vivid-shade: #000000;
   --tag-surface: #f1ae40;
@@ -290,14 +292,6 @@
   --blend-indigo-blob-1: #b5d0ff;
   --blend-indigo-blob-1-mid: #4f6dff;
   --blend-indigo-blob-2: #2a30c8;
-  --blend-gold-base-from: #d9b866;
-  --blend-gold-base-to: #c9a04a;
-  --blend-gold-blob-1: #a9772f;
-  --blend-gold-blob-2: #ead39a;
-  --blend-dusk-base-from: #14306f;
-  --blend-dusk-base-to: #0b1640;
-  --blend-dusk-blob-1: #e3b24f;
-  --blend-dusk-blob-2: #3d6bff;
 }
 
 /* Color — semantic (dark) */
@@ -352,6 +346,8 @@
   --bg-blend: #2970ff;
   --surface-brand-soft: #121b2f;
   --stroke-brand-soft: #223a6b;
+  --surface-yellow-soft: #231d0f;
+  --stroke-yellow-soft: #4d3d17;
   --card-surface: #1d2025;
   --card-stroke: #323741;
   --ui-stroke-error: #f4596b;
@@ -411,10 +407,4 @@
   --blend-indigo-bg: radial-gradient(75% 26% at 78% 80%, var(--blend-indigo-blob-1) 0%, var(--blend-indigo-blob-1-mid) 45%, transparent 100%), radial-gradient(90% 80% at 50% 50%, var(--blend-indigo-blob-2) 0%, transparent 80%), var(--blend-indigo-base);
   --blend-indigo-fg: #ffffff;
   --blend-indigo-ink: #2a30c8;
-  --blend-gold-bg: radial-gradient(85% 70% at 100% 108%, var(--blend-gold-blob-1) 0%, transparent 70%), radial-gradient(70% 60% at 15% 0%, var(--blend-gold-blob-2) 0%, transparent 70%), linear-gradient(170deg, var(--blend-gold-base-from), var(--blend-gold-base-to));
-  --blend-gold-fg: #0f0f10;
-  --blend-gold-ink: #e6c574;
-  --blend-dusk-bg: radial-gradient(110% 85% at 100% 110%, var(--blend-dusk-blob-1) 0%, transparent 70%), radial-gradient(70% 60% at 15% 0%, var(--blend-dusk-blob-2) 0%, transparent 70%), linear-gradient(170deg, var(--blend-dusk-base-from), var(--blend-dusk-base-to));
-  --blend-dusk-fg: #ffffff;
-  --blend-dusk-ink: #1a3a8f;
 }

@@ -21,8 +21,6 @@
 /* Theme-colour vivid surface (the original Partner Plus card). */
 .blend-vivid { --blend-bg: var(--surface-vivid); --blend-fg: var(--on-brand); --blend-ink: var(--accent-surface-brand); }
 .blend-red { --blend-bg: var(--blend-red-bg); --blend-fg: var(--blend-red-fg); --blend-ink: var(--blend-red-ink); }
-.blend-gold { --blend-bg: var(--blend-gold-bg); --blend-fg: var(--blend-gold-fg); --blend-ink: var(--blend-gold-ink); }
-.blend-dusk { --blend-bg: var(--blend-dusk-bg); --blend-fg: var(--blend-dusk-fg); --blend-ink: var(--blend-dusk-ink); }
 .blend-yellow { --blend-bg: var(--blend-yellow-bg); --blend-fg: var(--blend-yellow-fg); --blend-ink: var(--blend-yellow-ink); }
 .blend-lime { --blend-bg: var(--blend-lime-bg); --blend-fg: var(--blend-lime-fg); --blend-ink: var(--blend-lime-ink); }
 .blend-green { --blend-bg: var(--blend-green-bg); --blend-fg: var(--blend-green-fg); --blend-ink: var(--blend-green-ink); }
@@ -30,8 +28,14 @@
 .blend-pink { --blend-bg: var(--blend-pink-bg); --blend-fg: var(--blend-pink-fg); --blend-ink: var(--blend-pink-ink); }
 .blend-indigo { --blend-bg: var(--blend-indigo-bg); --blend-fg: var(--blend-indigo-fg); --blend-ink: var(--blend-indigo-ink); }
 /* Inner glass panel: dark glass under white text, white glass under dark text. */
-.blend-vivid, .blend-theme, .blend-dusk, .blend-red, .blend-green, .blend-pink, .blend-indigo { --blend-glass: var(--glass-surface-dark); }
-.blend-yellow, .blend-gold, .blend-lime, .blend-cyan { --blend-glass: var(--glass-surface); }
+.blend-vivid, .blend-theme, .blend-red, .blend-green, .blend-pink, .blend-indigo { --blend-glass: var(--glass-surface-dark); }
+.blend-yellow, .blend-lime, .blend-cyan { --blend-glass: var(--glass-surface); }
+/* Pale cards (review mockup "Theme · pale", and the same idea in yellow): a soft tint with a soft stroke, page text
+   colours, a mono button and a lighter inner panel. They follow the page theme. */
+.blend-pale-theme { --blend-bg: var(--surface-brand-soft); --blend-rim: var(--stroke-brand-soft); }
+.blend-pale-yellow { --blend-bg: var(--surface-yellow-soft); --blend-rim: var(--stroke-yellow-soft); }
+.blend-pale-theme, .blend-pale-yellow { --blend-fg: var(--ui-text-primary); --blend-ink: var(--card-surface); --blend-glass: color-mix(in srgb, var(--card-surface) 70%, transparent); }
+.card--blend.blend-pale-theme, .card--blend.blend-pale-yellow { box-shadow: inset 0 0 0 var(--size-stroke) var(--blend-rim); }
 /* Secondary text on a blend takes the blend's text colour, dimmed. */
 .card--blend .c-2, .card--blend .c-3 { color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
 /* Least prominent text on a blend (notes such as the update interval). */
