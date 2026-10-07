@@ -23,22 +23,61 @@ const COUNT_MS = 1500;
 const FINGER_AFTER = 4;
 const FINGER_TIP = { x: 0.9, y: 0.03 };
 
+// Carousels: how many items (assets/tour/<name>-<n>.webp) and how long each rests at the front, in seconds.
+const CAROUSELS = {
+  'step-1': { holds: [2, 4, 4, 4] },
+  'step-4': { holds: [2.5, 2.5, 2.5, 2.5, 2.5] },
+};
+const CAROUSEL_MOVE = 1.2; // seconds to change from one item to the next
+const carousel = (name) => `
+  <div class="tour__art" data-carousel="${name}" aria-hidden="true">
+    ${CAROUSELS[name].holds.map((_, index) => `<img src="../assets/tour/${name}-${index + 1}.webp" alt="" ${index ? 'style="opacity:0"' : ''}>`).join('')}
+  </div>`;
+const smooth = (t) => t * t * (3 - 2 * t);
+
+// The items sit on an elliptical path and move right to left. Only the front one is visible: as it moves off to the
+// left it shrinks and fades out, while the next fades in from the right. (Same motion as tools/build-tour-animation.py.)
+function runCarousel(node, reducedMotion) {
+  const { holds } = CAROUSELS[node.dataset.carousel];
+  const images = [...node.querySelectorAll('img')];
+  if (reducedMotion) return; // the first item simply stays
+  const count = holds.length;
+  const total = holds.reduce((sum, hold) => sum + hold + CAROUSEL_MOVE, 0);
+  const started = performance.now();
+  const turnAt = (time) => {
+    for (let step = 0; step < count; step += 1) {
+      if (time < holds[step]) return step;
+      time -= holds[step];
+      if (time < CAROUSEL_MOVE) return step + smooth(time / CAROUSEL_MOVE);
+      time -= CAROUSEL_MOVE;
+    }
+    return 0;
+  };
+  const frame = (now) => {
+    if (!node.isConnected) return; // the step was closed
+    const turn = turnAt(((now - started) / 1000) % total);
+    const width = node.clientWidth;
+    images.forEach((image, place) => {
+      const awaySigned = ((place - turn + count / 2) % count + count) % count - count / 2; // 0 front, +1 right, -1 left
+      const away = Math.abs(awaySigned);
+      if (away >= 1) { image.style.opacity = 0; return; }
+      const depth = Math.cos(awaySigned * Math.PI / 2);
+      const x = width * 0.378 * Math.sin(awaySigned * Math.PI / 2);
+      const y = width * 0.036 * (depth - 1);
+      image.style.opacity = 1 - smooth(away);
+      image.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(0.55 + 0.45 * depth).toFixed(3)})`;
+    });
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+}
+
 // Artwork above a step's title.
 const ART = {
-  // Step 1: a looping animation. Animated WebP with a transparent background (it plays in every webview, iOS
-  // included; transparent WebM does not). With reduced motion, a still coin is shown instead.
-  'step-1': () => `
-    <picture class="tour__art">
-      <source srcset="../assets/images/coin.png" media="(prefers-reduced-motion: reduce)">
-      <img src="../assets/tour/step-1.webp" alt="">
-    </picture>`,
-  // Step 4: the same kind of loop, with rewards (phone, earbuds, laptop, travel, foldable phone). Reduced motion: a
-  // still gift box.
-  'step-4': () => `
-    <picture class="tour__art">
-      <source srcset="../assets/tour/gift.webp" media="(prefers-reduced-motion: reduce)">
-      <img src="../assets/tour/step-4.webp" alt="">
-    </picture>`,
+  // Steps 1 and 4: a looping carousel of still images, animated in code (see `runCarousel`), so it stays sharp on
+  // every screen. Step 1: coin, crown, gift box, cup. Step 4: phone, earbuds, laptop, travel, foldable phone.
+  'step-1': () => carousel('step-1'),
+  'step-4': () => carousel('step-4'),
   // Step 2: trading turns into coins. The candles appear, then the arrow, then the coin with a "+" popping on it,
   // and everything stays still after that (it plays once, so it does not distract from the rules below).
   'step-2': (ui) => `
@@ -214,6 +253,9 @@ export function mountTour(ui, common, page) {
     }
     if (step.effect === 'coins' && rect) coinEffect(rect);
     if (step.effect === 'gifts' && rect) giftEffect(rect);
+    const carouselNode = card.querySelector('[data-carousel]');
+    if (carouselNode) runCarousel(carouselNode, reducedMotion);
+
     // The finger points up at the main button from just below it, its tip just touching the button's lower edge (so it does not cover the label).
     const finger = layer.querySelector('.tour__finger');
     const button = card.querySelector('[data-tour-action="next"]').getBoundingClientRect();

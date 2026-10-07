@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
-"""Render the guided tour's looping item animations (steps 1 and 4): items travelling on an ellipse.
+"""Prepare the artwork for the guided tour's looping item animations (steps 1 and 4).
 
-The items sit evenly spaced on an elliptical path and move right to left. Only the item at the front is visible:
-as it moves away to the left it shrinks and fades out gradually, reaching nothing by the time it gets to the edge,
-while the next one fades in from the right edge. Each item pauses at the front before the path turns again (the
-first one, which opens the loop, for a shorter time). The loop is seamless. (SIDE_OPACITY above 0 would keep the
-two neighbours faintly visible at the edges.)
+The pages animate still images in code (shared/tour.js, `carousel`), which stays sharp on every screen and is far
+lighter than a video. This script exports those stills:
 
-Output per animation (transparent background): assets/tour/<name>.webm (VP9 with alpha, the higher-quality source)
-and assets/tour/<name>.webp (animated WebP, the same frames, used by the pages because iOS cannot show
-transparent WebM).
+    python3 tools/build-tour-animation.py            -> assets/tour/<name>-<n>.webp, one per item, 320px
 
-Needs Pillow and imageio-ffmpeg (which bundles ffmpeg):  pip install pillow imageio-ffmpeg
-Run from the project root:  python3 tools/build-tour-animation.py            (all animations)
-                            python3 tools/build-tour-animation.py step-4     (one of them)
+It can also render the same motion as a video with a transparent background, for use outside the pages:
+
+    python3 tools/build-tour-animation.py --video    -> dist/tour-animation/<name>.webm (VP9 with alpha)
+
+The motion (kept in step with shared/tour.js): the items sit evenly spaced on an elliptical path and move right to
+left. Only the item at the front is visible: as it moves away to the left it shrinks and fades out, while the next
+one fades in from the right edge. Each item pauses at the front before the path turns again.
+
+Needs Pillow; --video also needs imageio-ffmpeg (which bundles ffmpeg):  pip install pillow imageio-ffmpeg
+Run from the project root.
 """
 import math
 import shutil
@@ -22,12 +24,13 @@ import sys
 import tempfile
 from pathlib import Path
 
-import imageio_ffmpeg
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / 'Design Elements' / 'Tutorial' / 'Animation'
 OUT = ROOT / 'assets' / 'tour'
+VIDEO_OUT = ROOT / 'dist' / 'tour-animation'
+STILL_SIZE = 320                # px: 3x the largest size an item is shown at (about 96px)
 # name -> source folder, items in order of appearance at the front, seconds each one rests there.
 ANIMATIONS = {
     'step-1': {
@@ -71,7 +74,18 @@ def turn_at(time, holds):
     return len(holds)
 
 
+def export_stills(name, spec):
+    """One square, trimmed WebP per item: assets/tour/<name>-<n>.webp."""
+    for number, item in enumerate(spec['items'], start=1):
+        image = Image.open(SOURCE / spec['folder'] / item).convert('RGBA')
+        target = OUT / f'{name}-{number}.webp'
+        image.resize((STILL_SIZE, STILL_SIZE), Image.LANCZOS).save(target, 'WEBP', quality=92, method=6)
+        print(f'{target.name}: {target.stat().st_size // 1024} KB')
+
+
 def render(name, spec):
+    import imageio_ffmpeg
+
     items = [Image.open(SOURCE / spec['folder'] / item).convert('RGBA') for item in spec['items']]
     count = len(items)
     total = round((sum(spec['holds']) + count * MOVE) * FPS)
@@ -109,20 +123,18 @@ def render(name, spec):
     ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
     common = [ffmpeg, '-y', '-loglevel', 'error', '-framerate', str(FPS), '-i', str(frames / '%04d.png')]
     subprocess.run(common + ['-c:v', 'libvpx-vp9', '-pix_fmt', 'yuva420p', '-b:v', '0', '-crf', '32', '-row-mt', '1',
-                             '-auto-alt-ref', '0', '-an', str(OUT / f'{name}.webm')], check=True)
-    # The WebP copy is half size and 20 fps to keep it light (animated WebP compresses far less than VP9).
-    subprocess.run(common + ['-vf', f'fps=20,scale={WIDTH // 2}:{HEIGHT // 2}:flags=lanczos', '-c:v', 'libwebp_anim', '-lossless', '0',
-                             '-q:v', '72', '-loop', '0', '-an', str(OUT / f'{name}.webp')], check=True)
+                             '-auto-alt-ref', '0', '-an', str(VIDEO_OUT / f'{name}.webm')], check=True)
     shutil.rmtree(frames)
-    for ext in ('webm', 'webp'):
-        print(f'{name}.{ext}: {(OUT / f"{name}.{ext}").stat().st_size // 1024} KB, {total} frames, {total / FPS:.1f} s loop')
+    print(f'{name}.webm: {(VIDEO_OUT / f"{name}.webm").stat().st_size // 1024} KB, {total} frames, {total / FPS:.1f} s loop')
 
 
 def main():
-    OUT.mkdir(parents=True, exist_ok=True)
-    wanted = sys.argv[1:] or list(ANIMATIONS)
+    args = sys.argv[1:]
+    video = '--video' in args
+    wanted = [arg for arg in args if arg != '--video'] or list(ANIMATIONS)
+    (VIDEO_OUT if video else OUT).mkdir(parents=True, exist_ok=True)
     for name in wanted:
-        render(name, ANIMATIONS[name])
+        (render if video else export_stills)(name, ANIMATIONS[name])
 
 
 if __name__ == '__main__':
