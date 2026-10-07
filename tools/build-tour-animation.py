@@ -43,7 +43,7 @@ ANIMATIONS = {
     'step-4': {
         'folder': 'Step 4',
         'items': ['Frame 29.png', 'Frame 30.png', 'Frame 31.png', 'Frame 32.png', 'Frame 33.png'],  # phone, earbuds, laptop, travel, foldable
-        'holds': [2.0, 4.0, 4.0, 4.0, 4.0],
+        'holds': [2.5, 2.5, 2.5, 2.5, 2.5],
     },
 }
 WIDTH, HEIGHT = 720, 480        # 3x a 240x160 display size
