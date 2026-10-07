@@ -23,14 +23,15 @@ const COUNT_MS = 1500;
 const FINGER_AFTER = 4;
 const FINGER_TIP = { x: 0.9, y: 0.03 };
 
-// Carousels: how many items (assets/tour/<name>-<n>.webp) and how long each rests at the front, in seconds.
+// Carousels: how many items (assets/tour/<name>-<n>.webp), how long each rests at the front (seconds), and the
+// front item's size as a share of the artwork's width.
 const CAROUSELS = {
-  'step-1': { holds: [2, 4, 4, 4] },
-  'step-4': { holds: [2.5, 2.5, 2.5, 2.5, 2.5] },
+  'step-1': { holds: [2, 4, 4, 4], size: 41.7 },
+  'step-4': { holds: [2.5, 2.5, 2.5, 2.5, 2.5], size: 56 }, // rewards are shown larger
 };
 const CAROUSEL_MOVE = 1.2; // seconds to change from one item to the next
 const carousel = (name) => `
-  <div class="tour__art" data-carousel="${name}" aria-hidden="true">
+  <div class="tour__art" data-carousel="${name}" style="--carousel-item:${CAROUSELS[name].size}%" aria-hidden="true">
     ${CAROUSELS[name].holds.map((_, index) => `<img src="../assets/tour/${name}-${index + 1}.webp" alt="" ${index ? 'style="opacity:0"' : ''}>`).join('')}
   </div>`;
 const smooth = (t) => t * t * (3 - 2 * t);

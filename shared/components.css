@@ -266,8 +266,8 @@
 }
 /* Animation above the title: a fixed 3:2 box, so the pop-up's height is known before the file loads. */
 .tour__art { position: relative; align-self: center; width: 100%; max-width: calc(var(--size-reward-width) * 0.96); aspect-ratio: 3 / 2; overflow: hidden; }
-/* Carousel items: stacked in the middle (41.7% of the width, a little below centre); tour.js moves, scales and fades them. */
-.tour__art img { position: absolute; left: 50%; top: 52%; width: 41.7%; aspect-ratio: 1; margin: -20.85% 0 0 -20.85%; object-fit: contain; will-change: transform, opacity; }
+/* Carousel items: stacked in the middle (--carousel-item of the width, a little below centre); tour.js moves, scales and fades them. */
+.tour__art img { position: absolute; left: 50%; top: 52%; width: var(--carousel-item); aspect-ratio: 1; margin: calc(var(--carousel-item) / -2) 0 0 calc(var(--carousel-item) / -2); object-fit: contain; will-change: transform, opacity; }
 /* Step 2 artwork: candles -> coin (+). Each part appears in turn, once, then stays. */
 .tour__flow { align-self: center; display: flex; align-items: center; gap: var(--spacing-8); padding-block: var(--spacing-4); }
 .tour__flow-item { display: block; width: calc(var(--size-avatar-lg) * 0.7); height: calc(var(--size-avatar-lg) * 0.7); object-fit: contain; }

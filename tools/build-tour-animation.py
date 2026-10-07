@@ -4,7 +4,7 @@
 The pages animate still images in code (shared/tour.js, `carousel`), which stays sharp on every screen and is far
 lighter than a video. This script exports those stills:
 
-    python3 tools/build-tour-animation.py            -> assets/tour/<name>-<n>.webp, one per item, 320px
+    python3 tools/build-tour-animation.py            -> assets/tour/<name>-<n>.webp, one per item, 400px
 
 It can also render the same motion as a video with a transparent background, for use outside the pages:
 
@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / 'Design Elements' / 'Tutorial' / 'Animation'
 OUT = ROOT / 'assets' / 'tour'
 VIDEO_OUT = ROOT / 'dist' / 'tour-animation'
-STILL_SIZE = 320                # px: 3x the largest size an item is shown at (about 96px)
+STILL_SIZE = 400                # px: about 3x the largest size an item is shown at (up to 130px)
 # name -> source folder, items in order of appearance at the front, seconds each one rests there.
 ANIMATIONS = {
     'step-1': {
