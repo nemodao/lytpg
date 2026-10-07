@@ -168,7 +168,7 @@ export function mountTour(ui, common, page) {
       <div class="tour__spot ${target ? '' : 'tour__spot--none'}"></div>
       <div class="tour__card" role="dialog" aria-modal="true" aria-labelledby="tour-title" tabindex="-1">
         <div class="tour__top">
-          <span class="tour__count t-caption c-3 num">${ui.t('tour.count', { current: index + 1, total: steps.length })}</span>
+          <span class="tour__count t-caption c-3 num">${index > 0 ? ui.t('tour.count', { current: index + 1, total: steps.length }) : ''}</span>
           ${isLast ? '' : `<button class="tour__skip" type="button" data-tour-action="skip">${ui.t('tour.skip')}</button>`}
         </div>
         ${step.art ? ART[step.art](ui) : ''}
