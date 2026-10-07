@@ -218,13 +218,14 @@ export function mountTour(ui, common, page) {
     // with the first of them, and sits above them.
     if (step.sparkles && !reducedMotion) {
       const reach = 22; // px the sparkles may spread beyond the button's edges
-      const sparkles = Array.from({ length: 10 }, () => {
+      const TOP = 4; // extra sparkles kept above the button, so the top is not left bare
+      const sparkles = Array.from({ length: 10 + TOP }, (_, index) => {
         const size = 6 + Math.random() * 11; // 6–17px
         // A random point in the band around the button: outside its middle, within `reach` of its edges.
         let x; let y;
         do {
           x = -reach + Math.random() * (button.width + reach * 2);
-          y = -reach + Math.random() * (button.height + reach * 2);
+          y = index < TOP ? -reach - 8 + Math.random() * (reach + 4) : -reach + Math.random() * (button.height + reach * 2);
         } while (x > 10 && x < button.width - 10 && y > 6 && y < button.height - 6);
         const delay = 2 + Math.random() * 1.2; // they start with the finger, 2 s in
         return `<img class="tour__sparkle" src="../assets/tour/sparkle.webp" alt="" style="left:${(x - size / 2).toFixed(0)}px;top:${(y - size / 2).toFixed(0)}px;width:${size.toFixed(0)}px;height:${size.toFixed(0)}px;animation-delay:${delay.toFixed(2)}s">`;
