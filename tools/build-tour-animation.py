@@ -5,7 +5,7 @@ The four items sit a quarter turn apart on an elliptical path and move right to 
 visible: as it moves away to the left it shrinks and fades out gradually, reaching nothing by the time it gets to
 the edge, while the next one fades in from the right edge. (SIDE_OPACITY above 0 would keep the two neighbours
 faintly visible at the edges.)
-Each item pauses at the front before the path turns again. The loop is seamless.
+Each item pauses at the front before the path turns again (the coin, which opens the loop, for a shorter time). The loop is seamless.
 
 Output (transparent background): assets/tour/step-1.webm (VP9 with alpha) and assets/tour/step-1.webp
 (animated WebP, the same frames, for browsers that cannot show transparent WebM, e.g. iOS).
@@ -34,7 +34,8 @@ ITEMS = [
 ]
 WIDTH, HEIGHT = 720, 480        # 3x a 240x160 display size
 FPS = 30
-HOLD, MOVE = 3.0, 1.2           # seconds an item rests at the front / takes to move one place
+HOLDS = [2.0, 4.0, 4.0, 4.0]    # seconds each item rests at the front, in ITEMS order (the coin opens the loop, briefly)
+MOVE = 1.2                      # seconds to move one place
 FRONT_SIZE = 300                # px, item size at the front
 SIDE_SCALE = 0.55                # size of the two side items, relative to the front one
 SIDE_OPACITY = 0                # opacity of the two side items (0 = only the front item shows)
@@ -46,15 +47,21 @@ def ease(t):
 
 
 def turn_at(time):
-    """How many places the ring has turned at `time` (seconds): hold, then ease to the next place."""
-    step, within = divmod(time, HOLD + MOVE)
-    return step + (ease((within - HOLD) / MOVE) if within > HOLD else 0)
+    """How many places the ring has turned at `time` (seconds): each item holds, then eases to the next place."""
+    for step, hold in enumerate(HOLDS):
+        if time < hold:
+            return step
+        time -= hold
+        if time < MOVE:
+            return step + ease(time / MOVE)
+        time -= MOVE
+    return len(HOLDS)
 
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     items = [Image.open(SOURCE / name).convert('RGBA') for name in ITEMS]
-    total = round(len(items) * (HOLD + MOVE) * FPS)
+    total = round((sum(HOLDS) + len(items) * MOVE) * FPS)
     frames = Path(tempfile.mkdtemp())
     for index in range(total):
         turn = turn_at(index / FPS)
