@@ -3,13 +3,14 @@
 // While it runs, nothing but the tour pop-up can be tapped.
 //
 // To add, remove or reorder steps, edit STEPS: one entry per step (id, the page it runs on, the element to
-// highlight, and its copy keys tour.<id>.*; `rules: true` adds the shared "How it works" list to the pop-up). Progress travels between pages in the URL (?tour=<id>), so it does not
+// highlight, and its copy keys tour.<id>.*; `rules: true` adds the shared "How it works" list to the pop-up; `art` names an animation in assets/tour/ shown
+// above the title). Progress travels between pages in the URL (?tour=<id>), so it does not
 // depend on storage; "already seen" is remembered on the device (localStorage).
 
 import { rulesList } from './components.js';
 
 const STEPS = [
-  { id: 1, page: 'dashboard', file: 'dashboard.html', target: null },
+  { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1' },
   { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, rules: true, needsTask: true },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]' },
@@ -17,6 +18,14 @@ const STEPS = [
 ];
 const SEEN_KEY = 'hsb-loyalty-tour-seen';
 const COUNT_MS = 1500;
+
+// Looping animation above a step's title. Animated WebP with a transparent background (it plays in every webview,
+// iOS included; transparent WebM does not). With reduced motion, a still coin is shown instead.
+const art = (name) => `
+  <picture class="tour__art">
+    <source srcset="../assets/images/coin.png" media="(prefers-reduced-motion: reduce)">
+    <img src="../assets/tour/${name}.webp" alt="">
+  </picture>`;
 
 const seen = () => { try { return localStorage.getItem(SEEN_KEY) === '1'; } catch (e) { return false; } };
 const markSeen = () => { try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* storage unavailable */ } };
@@ -128,6 +137,7 @@ export function mountTour(ui, common, page) {
           <span class="tour__count t-caption c-3 num">${ui.t('tour.count', { current: index + 1, total: steps.length })}</span>
           ${isLast ? '' : `<button class="tour__skip" type="button" data-tour-action="skip">${ui.t('tour.skip')}</button>`}
         </div>
+        ${step.art ? art(step.art) : ''}
         <h2 class="t-title-s" id="tour-title">${ui.t(`tour.${step.id}.title`)}</h2>
         ${body}
         ${step.rules ? `<div class="tour__rules">${rulesList(ui, common)}</div>` : ''}

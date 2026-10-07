@@ -138,6 +138,8 @@ def main():
     (OUT / 'index.html').write_text(build_index(), encoding='utf-8')
     shutil.copytree(ROOT / 'assets' / 'images', OUT / 'assets' / 'images',
                     ignore=shutil.ignore_patterns('.DS_Store', 'coin-hex.png'))
+    # Tour animations: the WebP copies only (the WebM sources are not used by the pages).
+    shutil.copytree(ROOT / 'assets' / 'tour', OUT / 'assets' / 'tour', ignore=shutil.ignore_patterns('.DS_Store', '*.webm'))
     archive = shutil.make_archive(str(OUT), 'zip', root_dir=OUT.parent, base_dir=OUT.name)
     print(f'Built {OUT.relative_to(ROOT)} and {Path(archive).relative_to(ROOT)}')
 
