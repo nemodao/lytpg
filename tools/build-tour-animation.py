@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Render the guided tour's step 1 animation: coin, crown, gift box and cup travelling on an ellipse.
 
-The four items sit a quarter turn apart on an elliptical path and move right to left. Only the item at the front
-is fully visible; as an item moves round towards the back it shrinks and fades out gradually, and the next one
-fades in from the right. Each item pauses at the front before the path turns again. The loop is seamless.
+The four items sit a quarter turn apart on an elliptical path and move right to left. Three show at a time: the
+front item in the middle, largest and fully visible, and its two neighbours at the left and right edges, smaller and
+dimmed to 20%. The fourth is at the back, hidden. Items shrink and fade gradually as they move away from the front.
+Each item pauses at the front before the path turns again. The loop is seamless.
 
 Output (transparent background): assets/tour/step-1.webm (VP9 with alpha) and assets/tour/step-1.webp
 (animated WebP, the same frames, for browsers that cannot show transparent WebM, e.g. iOS).
@@ -33,9 +34,10 @@ ITEMS = [
 WIDTH, HEIGHT = 720, 480        # 3x a 240x160 display size
 FPS = 30
 HOLD, MOVE = 1.1, 0.9           # seconds an item rests at the front / takes to move one place
-FRONT_SIZE = 360                # px, item size at the front
-RADIUS_X, RADIUS_Y = 190, 40    # ellipse radii: sideways travel, and how much higher the back sits
-FADE_END = 72                   # degrees from the front at which an item has fully faded out
+FRONT_SIZE = 300                # px, item size at the front
+SIDE_SCALE = 0.55                # size of the two side items, relative to the front one
+SIDE_OPACITY = 0.2              # opacity of the two side items
+RADIUS_X, RADIUS_Y = 272, 26    # ellipse radii: sideways travel (sides sit near the edges), and how much higher the sides sit
 
 
 def ease(t):
@@ -60,14 +62,16 @@ def main():
         for place, item in enumerate(items):
             # Angle from the front, in degrees: 0 = front, +90 = right, -90 = left. Items move right to left.
             angle = ((place - turn) * 90 + 180) % 360 - 180
-            if abs(angle) >= FADE_END:
-                continue
+            away = abs(angle) / 90                             # 0 front, 1 at a side, 2 at the back
             rad = math.radians(angle)
-            depth = math.cos(rad)                              # 1 at the front
-            opacity = ease(1 - abs(angle) / FADE_END)
-            size = round(FRONT_SIZE * (0.55 + 0.45 * depth))
+            depth = math.cos(rad)                              # 1 front, 0 at a side, -1 back
+            # Front -> side: full to SIDE_OPACITY. Side -> back: SIDE_OPACITY to nothing.
+            opacity = 1 - (1 - SIDE_OPACITY) * ease(away) if away <= 1 else SIDE_OPACITY * (1 - ease(away - 1))
+            if opacity < 0.004:
+                continue
+            size = round(FRONT_SIZE * (SIDE_SCALE + (1 - SIDE_SCALE) * depth)) if depth >= 0 else round(FRONT_SIZE * SIDE_SCALE * (1 + 0.5 * depth))
             x = WIDTH / 2 + RADIUS_X * math.sin(rad)
-            y = HEIGHT / 2 + 14 - RADIUS_Y * (1 - depth)
+            y = HEIGHT / 2 + 10 - RADIUS_Y * (1 - depth)
             placed.append((depth, item, size, x, y, opacity))
         for depth, item, size, x, y, opacity in sorted(placed, key=lambda entry: entry[0]):  # back to front
             sprite = item.resize((size, size), Image.LANCZOS)

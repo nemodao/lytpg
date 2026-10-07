@@ -265,7 +265,7 @@
   padding: var(--spacing-card); border-radius: var(--radius-card); background: var(--card-surface); border: var(--size-stroke) solid var(--card-stroke);
 }
 /* Animation above the title: a fixed 3:2 box, so the pop-up's height is known before the file loads. */
-.tour__art { align-self: center; display: block; width: 100%; max-width: var(--size-reward-width); aspect-ratio: 3 / 2; }
+.tour__art { align-self: center; display: block; width: 100%; max-width: calc(var(--size-reward-width) * 0.8); aspect-ratio: 3 / 2; }
 .tour__art img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .tour__top { display: flex; align-items: center; justify-content: space-between; min-height: var(--size-control-xs); }
 .tour__skip { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); padding: var(--spacing-4) 0; }
