@@ -11,7 +11,7 @@ import { rulesList } from './components.js';
 
 const STEPS = [
   { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 2, sparkles: true },
-  { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true },
+  { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true, fingerAfter: 7 },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts' },
   { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: 3 },
