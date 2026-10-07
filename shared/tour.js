@@ -25,14 +25,15 @@ const FINGER_AFTER = 4;
 const FINGER_TIP = { x: 0.9, y: 0.03 };
 
 // Carousels: how many items (assets/tour/<name>-<n>.webp), how long each rests at the front (seconds), and the
-// front item's size as a share of the artwork's width.
+// front item's size as a share of the path's width (1.5x the artwork's height). The artwork itself spans the whole
+// pop-up, so items are never cut off at the sides while they move in and out.
 const CAROUSELS = {
-  'step-1': { holds: [2, 4, 4, 4], size: 41.7 },
-  'step-4': { holds: [2.5, 2.5, 2.5, 2.5, 2.5], size: 56 }, // rewards are shown larger
+  'step-1': { holds: [2, 4, 4, 4], size: 0.417 },
+  'step-4': { holds: [2.5, 2.5, 2.5, 2.5, 2.5], size: 0.56 }, // rewards are shown larger
 };
 const CAROUSEL_MOVE = 1.2; // seconds to change from one item to the next
 const carousel = (name) => `
-  <div class="tour__art" data-carousel="${name}" style="--carousel-item:${CAROUSELS[name].size}%" aria-hidden="true">
+  <div class="tour__art" data-carousel="${name}" style="--carousel-item:${CAROUSELS[name].size}" aria-hidden="true">
     ${CAROUSELS[name].holds.map((_, index) => `<img src="../assets/tour/${name}-${index + 1}.webp" alt="" ${index ? 'style="opacity:0"' : ''}>`).join('')}
   </div>`;
 const smooth = (t) => t * t * (3 - 2 * t);
@@ -58,7 +59,7 @@ function runCarousel(node, reducedMotion) {
   const frame = (now) => {
     if (!node.isConnected) return; // the step was closed
     const turn = turnAt(((now - started) / 1000) % total);
-    const width = node.clientWidth;
+    const width = node.clientHeight * 1.5; // the path's width; the node is wider, leaving room at the sides
     images.forEach((image, place) => {
       const awaySigned = ((place - turn + count / 2) % count + count) % count - count / 2; // 0 front, +1 right, -1 left
       const away = Math.abs(awaySigned);
