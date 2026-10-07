@@ -10,7 +10,7 @@
 import { rulesList } from './components.js';
 
 const STEPS = [
-  { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 0.5, sparkles: true },
+  { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 2, sparkles: true },
   { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts' },
@@ -134,13 +134,13 @@ export function mountTour(ui, common, page) {
   }
 
   // Short-lived layer of popping items placed over `rect`.
-  function burst(rect, items) {
+  function burst(rect, items, lifetime = 2600) {
     const node = document.createElement('div');
     node.className = 'tour__burst';
     node.style.cssText = `left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px`;
     node.innerHTML = items.join('');
     layer.appendChild(node);
-    setTimeout(() => node.remove(), 2600);
+    setTimeout(() => node.remove(), lifetime);
   }
 
   function show(step) {
@@ -226,10 +226,10 @@ export function mountTour(ui, common, page) {
           x = -reach + Math.random() * (button.width + reach * 2);
           y = -reach + Math.random() * (button.height + reach * 2);
         } while (x > 10 && x < button.width - 10 && y > 6 && y < button.height - 6);
-        const delay = 0.5 + Math.random() * 1.2;
+        const delay = 2 + Math.random() * 1.2; // they start with the finger, 2 s in
         return `<img class="tour__sparkle" src="../assets/tour/sparkle.webp" alt="" style="left:${(x - size / 2).toFixed(0)}px;top:${(y - size / 2).toFixed(0)}px;width:${size.toFixed(0)}px;height:${size.toFixed(0)}px;animation-delay:${delay.toFixed(2)}s">`;
       });
-      burst(button, sparkles);
+      burst(button, sparkles, 4400);
     }
     card.focus({ preventScroll: true }); // focus the pop-up itself, so no button shows a focus ring on open
   }
