@@ -309,6 +309,9 @@
 @keyframes tour-finger-in { from { opacity: 0; transform: translateY(var(--spacing-12)); } to { opacity: 1; } }
 @keyframes tour-finger-tap { 50% { transform: translateY(calc(var(--spacing-6) * -1)); } }
 @media (prefers-reduced-motion: reduce) { .tour__finger { animation: tour-finger-in 0.01s linear var(--finger-after) forwards; } }
+/* Step 1: gold sparkles pop around the main button, then vanish. */
+.tour__sparkle { position: absolute; width: var(--size-icon); height: var(--size-icon); opacity: 0; animation: tour-sparkle 0.9s ease-out both; }
+@keyframes tour-sparkle { 0% { opacity: 0; transform: scale(0.2) rotate(-30deg); } 35% { opacity: 1; transform: scale(1.15) rotate(0deg); } 70% { opacity: 1; transform: scale(0.95) rotate(10deg); } 100% { opacity: 0; transform: scale(0.4) rotate(25deg); } }
 /* Step 3: plus signs and small coins pop up around the balance. */
 .tour__burst { position: fixed; pointer-events: none; }
 .tour__pop { position: absolute; width: var(--size-icon-sm); height: var(--size-icon-sm); opacity: 0; animation: tour-pop 1.2s ease-out both; }
