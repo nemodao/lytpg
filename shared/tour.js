@@ -33,7 +33,7 @@ const ART = {
   'step-2': (ui) => `
     <div class="tour__flow" aria-hidden="true">
       <img class="tour__flow-item tour__flow-item--1" src="../assets/tour/step-2-candles.webp" alt="">
-      <span class="tour__flow-arrow">${ui.icon('arrow-right', 'icon--lg')}</span>
+      <span class="tour__flow-arrow">${ui.icon('arrow-right')}</span>
       <span class="tour__flow-coin">
         <img class="tour__flow-item tour__flow-item--2" src="../assets/tour/step-2-coin.webp" alt="">
         <b class="tour__flow-plus">+</b>
