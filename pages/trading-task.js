@@ -2,13 +2,13 @@
 import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
-import { mountTour } from '../shared/tour.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { appHeader, badge, coin, joinIntent, joinLabel, notice, rulesList } from '../shared/components.js';
 
 const { common, page, ui } = await load('trading-task');
 const { program, accounts } = common;
-const { today, rates, history } = page;
+const { today, history } = page;
+const { rates } = common; // earning rates are shared data: the guided tour on Home reads them too
 
 const ended = program.ended;
 const inDay = program.creditMode === 'in-day';
@@ -245,5 +245,3 @@ document.addEventListener('keydown', (event) => {
 
 render();
 mountNav(ui, common, 'earn');
-// Guided tour, step 2: the highest earning rate fills "Earn up to {max} coins per lot".
-mountTour(ui, common, 'trading-task', { max: ui.num(Math.max(...rates.map((rate) => rate.ptsPerLot))) });

@@ -79,5 +79,23 @@
   "tour": {
     "firstVisit": false,
     "simulatedBalance": 12890
-  }
+  },
+  "rates": [
+    {
+      "group": "forex",
+      "ptsPerLot": 5
+    },
+    {
+      "group": "metal",
+      "ptsPerLot": 10
+    },
+    {
+      "group": "indices",
+      "ptsPerLot": 3
+    },
+    {
+      "group": "other",
+      "ptsPerLot": 1
+    }
+  ]
 }

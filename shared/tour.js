@@ -1,4 +1,4 @@
-// Guided tour (spec §38): five steps across Home, Earn and Coins that explain how to earn coins and redeem gifts.
+// Guided tour (spec §38): five steps across Home and Coins that explain how to earn coins and redeem gifts.
 // It opens by itself the first time Home is opened on a device, and again from the help button in Home's header.
 // While it runs, nothing but the tour pop-up can be tapped.
 //
@@ -10,7 +10,7 @@ import { rulesList } from './components.js';
 
 const STEPS = [
   { id: 1, page: 'dashboard', file: 'dashboard.html', target: null },
-  { id: 2, page: 'trading-task', file: 'trading-task.html', target: null, rules: true, needsTask: true },
+  { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, rules: true, needsTask: true },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]' },
   { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: 3 },
@@ -21,8 +21,10 @@ const COUNT_MS = 1500;
 const seen = () => { try { return localStorage.getItem(SEEN_KEY) === '1'; } catch (e) { return false; } };
 const markSeen = () => { try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* storage unavailable */ } };
 
-// `page` is this page's id; `vars` fills placeholders in the copy (e.g. { max } on the Earn page).
-export function mountTour(ui, common, page, vars = {}) {
+// `page` is this page's id.
+export function mountTour(ui, common, page) {
+  // Placeholders in the copy: {max} is the highest earning rate ("Earn up to {max} coins per lot").
+  const vars = { max: ui.num(Math.max(...common.rates.map((rate) => rate.ptsPerLot))) };
   const params = new URLSearchParams(location.search);
   const app = document.getElementById('app');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -121,18 +123,18 @@ export function mountTour(ui, common, page, vars = {}) {
     layer.className = 'tour';
     layer.innerHTML = `
       <div class="tour__spot ${target ? '' : 'tour__spot--none'}"></div>
-      <div class="tour__card" role="dialog" aria-modal="true" aria-labelledby="tour-title">
+      <div class="tour__card" role="dialog" aria-modal="true" aria-labelledby="tour-title" tabindex="-1">
         <div class="tour__top">
           <span class="tour__count t-caption c-3 num">${ui.t('tour.count', { current: index + 1, total: steps.length })}</span>
           ${isLast ? '' : `<button class="tour__skip" type="button" data-tour-action="skip">${ui.t('tour.skip')}</button>`}
         </div>
         <h2 class="t-title-s" id="tour-title">${ui.t(`tour.${step.id}.title`)}</h2>
         ${body}
-        ${step.rules ? rulesList(ui, common) : ''}
+        ${step.rules ? `<div class="tour__rules">${rulesList(ui, common)}</div>` : ''}
         ${step.note && simulated ? `<p class="t-caption c-3">${ui.t(`tour.${step.id}.note`)}</p>` : ''}
         <div class="tour__actions">
           ${index > 0 ? `<button class="btn btn--stroke btn--sm" type="button" data-tour-action="back">${ui.t('tour.back')}</button>` : ''}
-          <button class="btn btn--primary btn--sm grow" type="button" data-tour-action="next">${ui.t(`tour.${step.id}.cta`)}</button>
+          <button class="btn btn--primary btn--sm" type="button" data-tour-action="next">${ui.t(`tour.${step.id}.cta`)}</button>
         </div>
       </div>`;
     document.body.appendChild(layer);
@@ -159,7 +161,7 @@ export function mountTour(ui, common, page, vars = {}) {
       card.style.top = `${Math.max(gutter, (window.innerHeight - card.offsetHeight) / 2)}px`;
     }
     if (step.effect === 'coins' && rect) coinEffect(rect);
-    card.querySelector('[data-tour-action="next"]').focus({ preventScroll: true });
+    card.focus({ preventScroll: true }); // focus the pop-up itself, so no button shows a focus ring on open
   }
 
   function close() {

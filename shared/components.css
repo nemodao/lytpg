@@ -269,8 +269,12 @@
 .tour__list { display: flex; flex-direction: column; gap: var(--spacing-6); margin: 0; padding: 0; list-style: none; font: var(--font-small-regular); color: var(--ui-text-secondary); }
 .tour__list strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
 .tour__card p strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
-.tour__actions { display: flex; gap: var(--spacing-8); margin-top: var(--spacing-4); }
-.tour__card .rules { gap: var(--spacing-8); }
+/* Buttons hug their text and sit at the right edge. */
+.tour__actions { display: flex; justify-content: flex-end; gap: var(--spacing-8); margin-top: var(--spacing-4); }
+.tour__card:focus { outline: none; }
+/* The rules sit in a quiet, borderless inner card. */
+.tour__rules { padding: var(--spacing-12); border-radius: var(--radius-card-inner); background: var(--ui-field-surface); }
+.tour__rules .rules { gap: var(--spacing-8); }
 /* Step 3: plus signs and small coins pop up around the balance. */
 .tour__burst { position: fixed; pointer-events: none; }
 .tour__pop { position: absolute; width: var(--size-icon-sm); height: var(--size-icon-sm); opacity: 0; animation: tour-pop 1.2s ease-out both; }

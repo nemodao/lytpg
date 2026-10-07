@@ -57,24 +57,6 @@
       "capped": false
     },
     "selectedAccountId": "50000234",
-    "rates": [
-      {
-        "group": "forex",
-        "ptsPerLot": 5
-      },
-      {
-        "group": "metal",
-        "ptsPerLot": 10
-      },
-      {
-        "group": "indices",
-        "ptsPerLot": 3
-      },
-      {
-        "group": "other",
-        "ptsPerLot": 1
-      }
-    ],
     "history": [
       {
         "date": "2026-10-13",
