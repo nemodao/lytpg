@@ -301,12 +301,14 @@
 /* The rules sit in a quiet, borderless inner card. */
 .tour__rules { padding: var(--spacing-12); border-radius: var(--radius-card-inner); background: var(--ui-field-surface); }
 .tour__rules .rules { gap: var(--spacing-8); }
-/* Finger pointing at the main button: fades in after --finger-after, then taps gently. Never catches taps. */
+/* Finger pointing at the main button: after --finger-after it grows in softly from its fingertip (like the sparkles
+   do), then taps gently. Never catches taps. */
 .tour__finger {
   position: fixed; z-index: 1; width: var(--size-control-lg); height: auto; pointer-events: none; opacity: 0; /* above sparkles and other pops */
-  animation: tour-finger-in 0.4s ease-out var(--finger-after) forwards, tour-finger-tap 1.2s ease-in-out calc(var(--finger-after) + 0.4s) infinite;
+  transform-origin: 90% 3%;
+  animation: tour-finger-in 0.8s ease-out var(--finger-after) forwards, tour-finger-tap 1.2s ease-in-out calc(var(--finger-after) + 0.8s) infinite;
 }
-@keyframes tour-finger-in { from { opacity: 0; transform: translateY(var(--spacing-12)); } to { opacity: 1; } }
+@keyframes tour-finger-in { from { opacity: 0; transform: scale(0.5); } 60% { opacity: 1; } to { opacity: 1; transform: scale(1); } }
 @keyframes tour-finger-tap { 50% { transform: translateY(calc(var(--spacing-6) * -1)); } }
 @media (prefers-reduced-motion: reduce) { .tour__finger { animation: tour-finger-in 0.01s linear var(--finger-after) forwards; } }
 /* Step 1: gold sparkles pop around the main button, then vanish. */

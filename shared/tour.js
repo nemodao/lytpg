@@ -10,7 +10,7 @@
 import { rulesList } from './components.js';
 
 const STEPS = [
-  { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 1.2, sparkles: true },
+  { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 0.5, sparkles: true },
   { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts' },
@@ -215,7 +215,7 @@ export function mountTour(ui, common, page) {
     finger.style.left = `${button.left + button.width / 2 - fingerWidth * FINGER_TIP.x}px`;
     finger.style.top = `${Math.min(button.bottom - 3 - fingerHeight * FINGER_TIP.y, window.innerHeight - fingerHeight - 4)}px`;
     // Step 1 only: gold sparkles, large and small, pop at random spots around the main button; the finger comes in
-    // once about half of them are out, and sits above them.
+    // with the first of them, and sits above them.
     if (step.sparkles && !reducedMotion) {
       const reach = 22; // px the sparkles may spread beyond the button's edges
       const sparkles = Array.from({ length: 10 }, () => {
