@@ -214,11 +214,22 @@ export function mountTour(ui, common, page) {
     const fingerHeight = fingerWidth * 1.21; // the artwork's height / width
     finger.style.left = `${button.left + button.width / 2 - fingerWidth * FINGER_TIP.x}px`;
     finger.style.top = `${Math.min(button.bottom - 3 - fingerHeight * FINGER_TIP.y, window.innerHeight - fingerHeight - 4)}px`;
-    // Step 1 only: gold sparkles pop around the main button first; the finger comes in once half of them are out.
+    // Step 1 only: gold sparkles, large and small, pop at random spots around the main button; the finger comes in
+    // once about half of them are out, and sits above them.
     if (step.sparkles && !reducedMotion) {
-      const spots = [[-10, -12], [button.width * 0.3, -18], [button.width * 0.72, -16], [button.width + 2, -6], [button.width + 4, button.height - 8], [-14, button.height - 10], [button.width * 0.18, button.height + 2]];
-      burst(button, spots.map(([x, y], index) =>
-        `<img class="tour__sparkle" src="../assets/tour/sparkle.webp" alt="" style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;animation-delay:${(0.6 + index * 0.16).toFixed(2)}s">`));
+      const reach = 22; // px the sparkles may spread beyond the button's edges
+      const sparkles = Array.from({ length: 10 }, () => {
+        const size = 8 + Math.random() * 18;
+        // A random point in the band around the button: outside its middle, within `reach` of its edges.
+        let x; let y;
+        do {
+          x = -reach + Math.random() * (button.width + reach * 2);
+          y = -reach + Math.random() * (button.height + reach * 2);
+        } while (x > 10 && x < button.width - 10 && y > 6 && y < button.height - 6);
+        const delay = 0.5 + Math.random() * 1.2;
+        return `<img class="tour__sparkle" src="../assets/tour/sparkle.webp" alt="" style="left:${(x - size / 2).toFixed(0)}px;top:${(y - size / 2).toFixed(0)}px;width:${size.toFixed(0)}px;height:${size.toFixed(0)}px;animation-delay:${delay.toFixed(2)}s">`;
+      });
+      burst(button, sparkles);
     }
     card.focus({ preventScroll: true }); // focus the pop-up itself, so no button shows a focus ring on open
   }

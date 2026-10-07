@@ -303,7 +303,7 @@
 .tour__rules .rules { gap: var(--spacing-8); }
 /* Finger pointing at the main button: fades in after --finger-after, then taps gently. Never catches taps. */
 .tour__finger {
-  position: fixed; width: var(--size-control-lg); height: auto; pointer-events: none; opacity: 0;
+  position: fixed; z-index: 1; width: var(--size-control-lg); height: auto; pointer-events: none; opacity: 0; /* above sparkles and other pops */
   animation: tour-finger-in 0.4s ease-out var(--finger-after) forwards, tour-finger-tap 1.2s ease-in-out calc(var(--finger-after) + 0.4s) infinite;
 }
 @keyframes tour-finger-in { from { opacity: 0; transform: translateY(var(--spacing-12)); } to { opacity: 1; } }
