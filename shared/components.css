@@ -267,6 +267,29 @@
 /* Animation above the title: a fixed 3:2 box, so the pop-up's height is known before the file loads. */
 .tour__art { align-self: center; display: block; width: 100%; max-width: calc(var(--size-reward-width) * 0.96); aspect-ratio: 3 / 2; }
 .tour__art img { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* Step 2 artwork: candles -> coin (+). Each part appears in turn, once, then stays. */
+.tour__flow { align-self: center; display: flex; align-items: center; gap: var(--spacing-12); padding-block: var(--spacing-4); }
+.tour__flow-item { display: block; width: var(--size-avatar-lg); height: var(--size-avatar-lg); object-fit: contain; }
+.tour__flow-item--1 { animation: tour-flow-in 0.45s ease-out 0.15s backwards; }
+.tour__flow-arrow { display: grid; color: var(--ui-icon-tertiary); animation: tour-flow-slide 0.4s ease-out 0.75s backwards; }
+.tour__flow-coin { position: relative; display: block; }
+.tour__flow-item--2 { animation: tour-flow-pop 0.5s cubic-bezier(0.3, 1.5, 0.5, 1) 1.25s backwards; }
+.tour__flow-plus {
+  position: absolute; top: calc(var(--spacing-8) * -1); right: calc(var(--spacing-12) * -1);
+  font: var(--font-title-l); color: var(--ui-text-green); animation: tour-flow-pop 0.45s cubic-bezier(0.3, 1.8, 0.5, 1) 1.75s backwards;
+}
+/* Two small plus signs float up and vanish as the coin lands. */
+.tour__flow-spark { position: absolute; font: var(--font-medium-semibold); font-style: normal; color: var(--ui-text-green); opacity: 0; animation: tour-flow-spark 0.9s ease-out 1.85s both; }
+.tour__flow-spark--1 { top: var(--spacing-4); left: calc(var(--spacing-8) * -1); }
+.tour__flow-spark--2 { top: calc(var(--spacing-16) * -1); left: 40%; animation-delay: 2.05s; }
+@keyframes tour-flow-in { from { opacity: 0; transform: translateY(var(--spacing-8)) scale(0.9); } }
+@keyframes tour-flow-slide { from { opacity: 0; transform: translateX(calc(var(--spacing-12) * -1)); } }
+@keyframes tour-flow-pop { from { opacity: 0; transform: scale(0.4); } }
+@keyframes tour-flow-spark { 0% { opacity: 0; transform: translateY(var(--spacing-6)); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(calc(var(--spacing-16) * -1)); } }
+@media (prefers-reduced-motion: reduce) {
+  .tour__flow-item, .tour__flow-arrow, .tour__flow-plus { animation: none; }
+  .tour__flow-spark { display: none; }
+}
 .tour__top { display: flex; align-items: center; justify-content: space-between; min-height: var(--size-control-xs); }
 .tour__skip { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); padding: var(--spacing-4) 0; }
 .tour__list { display: flex; flex-direction: column; gap: var(--spacing-6); margin: 0; padding: 0; list-style: none; font: var(--font-small-regular); color: var(--ui-text-secondary); }

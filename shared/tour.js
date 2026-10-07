@@ -3,15 +3,15 @@
 // While it runs, nothing but the tour pop-up can be tapped.
 //
 // To add, remove or reorder steps, edit STEPS: one entry per step (id, the page it runs on, the element to
-// highlight, and its copy keys tour.<id>.*; `rules: true` adds the shared "How it works" list to the pop-up; `art` names an animation in assets/tour/ shown
-// above the title). Progress travels between pages in the URL (?tour=<id>), so it does not
+// highlight, and its copy keys tour.<id>.*; `rules: true` adds the shared "How it works" list to the pop-up; `art` names the artwork shown above the
+// title, see ART). Progress travels between pages in the URL (?tour=<id>), so it does not
 // depend on storage; "already seen" is remembered on the device (localStorage).
 
 import { rulesList } from './components.js';
 
 const STEPS = [
   { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1' },
-  { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, rules: true, needsTask: true },
+  { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]' },
   { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: 3 },
@@ -19,13 +19,29 @@ const STEPS = [
 const SEEN_KEY = 'hsb-loyalty-tour-seen';
 const COUNT_MS = 1500;
 
-// Looping animation above a step's title. Animated WebP with a transparent background (it plays in every webview,
-// iOS included; transparent WebM does not). With reduced motion, a still coin is shown instead.
-const art = (name) => `
-  <picture class="tour__art">
-    <source srcset="../assets/images/coin.png" media="(prefers-reduced-motion: reduce)">
-    <img src="../assets/tour/${name}.webp" alt="">
-  </picture>`;
+// Artwork above a step's title.
+const ART = {
+  // Step 1: a looping animation. Animated WebP with a transparent background (it plays in every webview, iOS
+  // included; transparent WebM does not). With reduced motion, a still coin is shown instead.
+  'step-1': () => `
+    <picture class="tour__art">
+      <source srcset="../assets/images/coin.png" media="(prefers-reduced-motion: reduce)">
+      <img src="../assets/tour/step-1.webp" alt="">
+    </picture>`,
+  // Step 2: trading turns into coins. The candles appear, then the arrow, then the coin with a "+" popping on it,
+  // and everything stays still after that (it plays once, so it does not distract from the rules below).
+  'step-2': (ui) => `
+    <div class="tour__flow" aria-hidden="true">
+      <img class="tour__flow-item tour__flow-item--1" src="../assets/tour/step-2-candles.webp" alt="">
+      <span class="tour__flow-arrow">${ui.icon('arrow-right', 'icon--lg')}</span>
+      <span class="tour__flow-coin">
+        <img class="tour__flow-item tour__flow-item--2" src="../assets/tour/step-2-coin.webp" alt="">
+        <b class="tour__flow-plus">+</b>
+        <i class="tour__flow-spark tour__flow-spark--1">+</i>
+        <i class="tour__flow-spark tour__flow-spark--2">+</i>
+      </span>
+    </div>`,
+};
 
 const seen = () => { try { return localStorage.getItem(SEEN_KEY) === '1'; } catch (e) { return false; } };
 const markSeen = () => { try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* storage unavailable */ } };
@@ -137,7 +153,7 @@ export function mountTour(ui, common, page) {
           <span class="tour__count t-caption c-3 num">${ui.t('tour.count', { current: index + 1, total: steps.length })}</span>
           ${isLast ? '' : `<button class="tour__skip" type="button" data-tour-action="skip">${ui.t('tour.skip')}</button>`}
         </div>
-        ${step.art ? art(step.art) : ''}
+        ${step.art ? ART[step.art](ui) : ''}
         <h2 class="t-title-s" id="tour-title">${ui.t(`tour.${step.id}.title`)}</h2>
         ${body}
         ${step.rules ? `<div class="tour__rules">${rulesList(ui, common)}</div>` : ''}
