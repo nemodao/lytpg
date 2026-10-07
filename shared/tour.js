@@ -13,7 +13,7 @@ const STEPS = [
   { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 2, sparkles: true },
   { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true, fingerAfter: 7 },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
-  { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts' },
+  { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts', art: 'step-4' },
   { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: 3 },
 ];
 const SEEN_KEY = 'hsb-loyalty-tour-seen';
@@ -31,6 +31,13 @@ const ART = {
     <picture class="tour__art">
       <source srcset="../assets/images/coin.png" media="(prefers-reduced-motion: reduce)">
       <img src="../assets/tour/step-1.webp" alt="">
+    </picture>`,
+  // Step 4: the same kind of loop, with rewards (phone, earbuds, laptop, travel, foldable phone). Reduced motion: a
+  // still gift box.
+  'step-4': () => `
+    <picture class="tour__art">
+      <source srcset="../assets/tour/gift.webp" media="(prefers-reduced-motion: reduce)">
+      <img src="../assets/tour/step-4.webp" alt="">
     </picture>`,
   // Step 2: trading turns into coins. The candles appear, then the arrow, then the coin with a "+" popping on it,
   // and everything stays still after that (it plays once, so it does not distract from the rules below).
