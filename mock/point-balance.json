@@ -27,24 +27,6 @@
         "history-empty": "The History tab has nothing: “No activity in this period.”",
         "has-used": "Adds fully used lots: two still before expiry, shown muted in a “Fully used” section at the end of Available (Remain 0), and one used up and then expired, shown in Expired with “Expired 0” (inside Last 7 days)."
       }
-    },
-    {
-      "title": "Tour finger (review)",
-      "exclusive": true,
-      "defaultLabel": "Finger: blue glass (default)",
-      "defaultDescription": "The finger that points at the tour's blue button is the blue glass hand.",
-      "states": [
-        "finger-skin",
-        "finger-peach"
-      ],
-      "labels": {
-        "finger-skin": "Finger: 3D hand",
-        "finger-peach": "Finger: peach glass"
-      },
-      "descriptions": {
-        "finger-skin": "The finger that points at the tour's blue button is the skin-tone 3D hand.",
-        "finger-peach": "The finger that points at the tour's blue button is the translucent peach glass hand."
-      }
     }
   ],
   "default": {
@@ -388,20 +370,6 @@
             "expiresAt": "2026-10-10"
           }
         ]
-      }
-    },
-    "finger-skin": {
-      "common": {
-        "tour": {
-          "finger": "skin"
-        }
-      }
-    },
-    "finger-peach": {
-      "common": {
-        "tour": {
-          "finger": "peach"
-        }
       }
     }
   }

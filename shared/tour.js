@@ -21,7 +21,7 @@ const COUNT_MS = 1500;
 // A finger appears under the pop-up's main (blue) button to nudge the user on: after FINGER_AFTER seconds, or the
 // step's own `fingerAfter`. Its tip sits at FINGER_TIP (fractions of the image's width and height).
 const FINGER_AFTER = 4;
-const FINGER_TIP = { x: 0.89, y: 0.03 };
+const FINGER_TIP = { x: 0.9, y: 0.03 };
 
 // Artwork above a step's title.
 const ART = {
@@ -181,7 +181,7 @@ export function mountTour(ui, common, page) {
           <button class="btn btn--primary btn--sm" type="button" data-tour-action="next">${ui.t(`tour.${step.id}.cta`)}</button>
         </div>
       </div>
-      <img class="tour__finger" src="../assets/tour/finger-${common.tour.finger}.webp" alt="" style="--finger-after:${step.fingerAfter || FINGER_AFTER}s">`;
+      <img class="tour__finger" src="../assets/tour/finger.webp" alt="" style="--finger-after:${step.fingerAfter || FINGER_AFTER}s">`;
     document.body.appendChild(layer);
 
     // Place the highlight on the target and the card under it (or above it, or pinned to the bottom, when there is no room);
@@ -211,7 +211,7 @@ export function mountTour(ui, common, page) {
     const finger = layer.querySelector('.tour__finger');
     const button = card.querySelector('[data-tour-action="next"]').getBoundingClientRect();
     const fingerWidth = finger.offsetWidth;
-    const fingerHeight = fingerWidth * 1.19; // the artwork's height / width
+    const fingerHeight = fingerWidth * 1.21; // the artwork's height / width
     finger.style.left = `${button.left + button.width / 2 - fingerWidth * FINGER_TIP.x}px`;
     finger.style.top = `${Math.min(button.bottom - 3 - fingerHeight * FINGER_TIP.y, window.innerHeight - fingerHeight - 4)}px`;
     card.focus({ preventScroll: true }); // focus the pop-up itself, so no button shows a focus ring on open
