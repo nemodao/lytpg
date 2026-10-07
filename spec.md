@@ -437,11 +437,13 @@ A five-step tour that explains how to earn coins and redeem gifts. Steps 1–2 r
 
 | Step | Page | Highlight | Text | Button |
 |---|---|---|---|---|
-| 1 | Home | none (pop-up in the middle) | `Welcome to the HSB Loyalty Program` / `Take a quick tour to see how to earn coins and redeem them for gifts.` | `Start exploring` |
-| 2 | Home | none (pop-up in the middle) | `Earn coins when you trade` / `Earn up to 10 coins per lot. How it works:` (10 = the highest rate in the rates list), then the **same rules list as the How it works tab** (one shared component: change the rules once and both change), inside a quiet borderless inner card | `See my coins` |
-| 3 | Coins | the Coin Balance card | `Coins reach your balance quickly` / `Coins from your trades are added to your balance.` / `The moving number is only a simulation.` | `Redeem gift` |
-| 4 | Coins | the `Redeem` button | `Use your coins to redeem gifts` / `Tap Redeem to exchange coins for gifts. You can explore the rewards after the tour.` | `Continue` |
-| 5 | Coins | the three tabs | `Manage your coins` / Available: coins you can still spend · Expired: coins that have expired · History: every time coins were added to or taken from your balance | `Finish tour` |
+| 1 | Home | none (pop-up in the middle) | `Welcome to HSB Loyalty` / `Take a quick tour to learn how to earn coins and redeem them for gifts.` | `Start tour` |
+| 2 | Home | none (pop-up in the middle) | `Earn coins when you trade` / `Earn up to 10 coins per lot. Here’s how it works:` (10 = the highest rate in the rates list), then the **same rules list as the How it works tab** (one shared component: change the rules once and both change), inside a quiet borderless inner card | `See my coins` |
+| 3 | Coins | the Coin Balance card | `Coins added to your balance` / `Coins you earn from trading are added to your balance.` / `This balance animation is only a simulation.` | `Next` |
+| 4 | Coins | the `Redeem` button | `Redeem gifts with coins` / `Use Redeem to exchange your coins for gifts. You can explore the rewards after the tour.` | `Continue` |
+| 5 | Coins | the three tabs | `Manage your coins` / Available: coins you can spend · Expired: coins that have expired · History: coins added to or taken from your balance | `Finish tour` |
+
+Copy revised on 7 Oct 2026 (final wording from the content review). The "How it works" rules now read: `Hold each position for at least 3 minutes. Shorter trades earn 0 coins.` · `Coins are credited 3 days after the trading day.` (in-day: `Coins are credited throughout the day, every 30 minutes.`) · `Coins expire 30 days after they are credited.` · `A new earning day starts at 00:00 WIB. Coins you’ve already earned are kept.` · `Earn up to 10,000 coins per day.` This replaces the rule wording in §4.5 and §15.
 
 - **When it opens:** by itself the first time Home is opened on a device (remembered on the device), and whenever the user taps the help button (round `?`) at the right of the Home header.
 - **Blocking:** while the tour runs nothing but the pop-up can be tapped; the page does not scroll; the bottom bar is covered. The highlighted part is visible but not tappable (so `Redeem` cannot be pressed in step 4).
