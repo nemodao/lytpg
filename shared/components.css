@@ -294,8 +294,9 @@
 .tour__top { display: flex; align-items: center; justify-content: space-between; min-height: var(--size-control-xs); }
 .tour__skip { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); padding: var(--spacing-4) 0; }
 .tour__list { display: flex; flex-direction: column; gap: var(--spacing-6); margin: 0; padding: 0; list-style: none; font: var(--font-small-regular); color: var(--ui-text-secondary); }
-.tour__list li { display: flex; align-items: flex-start; gap: var(--spacing-8); }
-.tour__list img { flex: none; width: var(--size-icon-lg); height: var(--size-icon-lg); margin-top: calc(var(--spacing-2) * -1); object-fit: contain; }
+/* Each line sits in its own small, quiet card (same surface as the rules card in step 2). */
+.tour__list li { display: flex; align-items: flex-start; gap: var(--spacing-8); padding: var(--spacing-8) var(--spacing-12); border-radius: var(--radius-control); background: var(--ui-field-surface); }
+.tour__list img { flex: none; width: var(--size-icon-sm); height: var(--size-icon-sm); margin-top: var(--spacing-2); object-fit: contain; }
 .tour__list strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
 .tour__card p strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
 /* Buttons hug their text and sit at the right edge. */
