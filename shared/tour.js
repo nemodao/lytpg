@@ -10,7 +10,7 @@
 import { rulesList } from './components.js';
 
 const STEPS = [
-  { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 2, sparkles: true },
+  { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 1.2, sparkles: true },
   { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts' },
@@ -214,7 +214,7 @@ export function mountTour(ui, common, page) {
     const fingerHeight = fingerWidth * 1.21; // the artwork's height / width
     finger.style.left = `${button.left + button.width / 2 - fingerWidth * FINGER_TIP.x}px`;
     finger.style.top = `${Math.min(button.bottom - 3 - fingerHeight * FINGER_TIP.y, window.innerHeight - fingerHeight - 4)}px`;
-    // Step 1 only: gold sparkles pop around the main button first; the finger comes in as the last ones fade.
+    // Step 1 only: gold sparkles pop around the main button first; the finger comes in once half of them are out.
     if (step.sparkles && !reducedMotion) {
       const spots = [[-10, -12], [button.width * 0.3, -18], [button.width * 0.72, -16], [button.width + 2, -6], [button.width + 4, button.height - 8], [-14, button.height - 10], [button.width * 0.18, button.height + 2]];
       burst(button, spots.map(([x, y], index) =>
