@@ -10,7 +10,7 @@
 import { rulesList } from './components.js';
 
 const STEPS = [
-  { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1' },
+  { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 2 },
   { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts' },
@@ -18,6 +18,10 @@ const STEPS = [
 ];
 const SEEN_KEY = 'hsb-loyalty-tour-seen';
 const COUNT_MS = 1500;
+// A finger appears under the pop-up's main (blue) button to nudge the user on: after FINGER_AFTER seconds, or the
+// step's own `fingerAfter`. Its tip sits at FINGER_TIP (fractions of the image's width and height).
+const FINGER_AFTER = 4;
+const FINGER_TIP = { x: 0.89, y: 0.03 };
 
 // Artwork above a step's title.
 const ART = {
@@ -176,7 +180,8 @@ export function mountTour(ui, common, page) {
           ${index > 0 ? `<button class="btn btn--stroke btn--sm" type="button" data-tour-action="back">${ui.t('tour.back')}</button>` : ''}
           <button class="btn btn--primary btn--sm" type="button" data-tour-action="next">${ui.t(`tour.${step.id}.cta`)}</button>
         </div>
-      </div>`;
+      </div>
+      <img class="tour__finger" src="../assets/tour/finger-${common.tour.finger}.webp" alt="" style="--finger-after:${step.fingerAfter || FINGER_AFTER}s">`;
     document.body.appendChild(layer);
 
     // Place the highlight on the target and the card under it (or above it, or pinned to the bottom, when there is no room);
@@ -202,6 +207,13 @@ export function mountTour(ui, common, page) {
     }
     if (step.effect === 'coins' && rect) coinEffect(rect);
     if (step.effect === 'gifts' && rect) giftEffect(rect);
+    // The finger points up at the main button from just below it, its tip just touching the button's lower edge (so it does not cover the label).
+    const finger = layer.querySelector('.tour__finger');
+    const button = card.querySelector('[data-tour-action="next"]').getBoundingClientRect();
+    const fingerWidth = finger.offsetWidth;
+    const fingerHeight = fingerWidth * 1.19; // the artwork's height / width
+    finger.style.left = `${button.left + button.width / 2 - fingerWidth * FINGER_TIP.x}px`;
+    finger.style.top = `${Math.min(button.bottom - 3 - fingerHeight * FINGER_TIP.y, window.innerHeight - fingerHeight - 4)}px`;
     card.focus({ preventScroll: true }); // focus the pop-up itself, so no button shows a focus ring on open
   }
 

@@ -60,6 +60,24 @@
       "descriptions": {
         "check-in": "Shows the daily check-in card (future feature, not launched)."
       }
+    },
+    {
+      "title": "Tour finger (review)",
+      "exclusive": true,
+      "defaultLabel": "Finger: blue glass (default)",
+      "defaultDescription": "The finger that points at the tour's blue button is the blue glass hand.",
+      "states": [
+        "finger-skin",
+        "finger-peach"
+      ],
+      "labels": {
+        "finger-skin": "Finger: 3D hand",
+        "finger-peach": "Finger: peach glass"
+      },
+      "descriptions": {
+        "finger-skin": "The finger that points at the tour's blue button is the skin-tone 3D hand.",
+        "finger-peach": "The finger that points at the tour's blue button is the translucent peach glass hand."
+      }
     }
   ],
   "default": {
@@ -181,6 +199,20 @@
       "page": {
         "checkIn": {
           "enabled": true
+        }
+      }
+    },
+    "finger-skin": {
+      "common": {
+        "tour": {
+          "finger": "skin"
+        }
+      }
+    },
+    "finger-peach": {
+      "common": {
+        "tour": {
+          "finger": "peach"
         }
       }
     }

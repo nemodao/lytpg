@@ -78,7 +78,8 @@
   },
   "tour": {
     "firstVisit": false,
-    "simulatedBalance": 12890
+    "simulatedBalance": 12890,
+    "finger": "blue"
   },
   "rates": [
     {

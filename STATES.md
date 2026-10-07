@@ -7,7 +7,7 @@ A state is a named override of the mock data that shows one situation of a page.
 `mock/common.json` plus its own `mock/<page>.json`; a state merges its `common` and `page` parts over the
 default data (objects merge key by key, arrays and plain values replace).
 
-**Shared states** mean the same thing on every page and carry over through links between pages: `empty`, `market-closed`, `needs-kyc`, `needs-deposit`, `has-pending`, `expiring`.
+**Shared states** mean the same thing on every page and carry over through links between pages: `empty`, `finger-skin`, `finger-peach`, `market-closed`, `needs-kyc`, `needs-deposit`, `has-pending`, `expiring`.
 
 Guided tour: `?tour=<step>` resumes a step, `?tour=off` keeps it closed (use it for screenshots).
 
@@ -31,6 +31,8 @@ File: `mock/dashboard.json` · page: `pages/dashboard.html`
 | Today trading task | `no-trades-today` | No trades yet today: 0 lots and 0 coins. | `page.task.lotsToday = 0`<br>`page.task.pointsToday = 0` |
 | Today trading task | `market-closed` · shared | Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7). | `common.liveFeed.clock = "2026-10-17T10:00:00+07:00"` |
 | Daily check-in (future) | `check-in` | Shows the daily check-in card (future feature, not launched). | `page.checkIn.enabled = true` |
+| Tour finger (review) | `finger-skin` ("Finger: 3D hand") · shared | The finger that points at the tour's blue button is the skin-tone 3D hand. | `common.tour.finger = "skin"` |
+| Tour finger (review) | `finger-peach` ("Finger: peach glass") · shared | The finger that points at the tour's blue button is the translucent peach glass hand. | `common.tour.finger = "peach"` |
 
 ## Daily Trading (Earn tab)
 
@@ -61,3 +63,5 @@ File: `mock/point-balance.json` · page: `pages/point-balance.html`
 | Tabs | `expired-empty` | The Expired tab has nothing: “No expired coins in this period.” | `page.empty.expired = true` |
 | Tabs | `history-empty` | The History tab has nothing: “No activity in this period.” | `page.empty.history = true` |
 | Tabs | `has-used` | Adds fully used lots: two still before expiry, shown muted in a “Fully used” section at the end of Available (Remain 0), and one used up and then expired, shown in Expired with “Expired 0” (inside Last 7 days). | `page.usedItems = [3 items]` |
+| Tour finger (review) | `finger-skin` ("Finger: 3D hand") · shared | The finger that points at the tour's blue button is the skin-tone 3D hand. | `common.tour.finger = "skin"` |
+| Tour finger (review) | `finger-peach` ("Finger: peach glass") · shared | The finger that points at the tour's blue button is the translucent peach glass hand. | `common.tour.finger = "peach"` |
