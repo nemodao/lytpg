@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Render the guided tour's step 1 animation: coin, crown, gift box and cup travelling on an ellipse.
 
-The four items sit a quarter turn apart on an elliptical path and move right to left. Three show at a time: the
-front item in the middle, largest and fully visible, and its two neighbours at the left and right edges, smaller and
-dimmed to 3%. The fourth is at the back, hidden. Items shrink and fade gradually as they move away from the front.
+The four items sit a quarter turn apart on an elliptical path and move right to left. Only the item at the front is
+visible: as it moves away to the left it shrinks and fades out gradually, reaching nothing by the time it gets to
+the edge, while the next one fades in from the right edge. (SIDE_OPACITY above 0 would keep the two neighbours
+faintly visible at the edges.)
 Each item pauses at the front before the path turns again. The loop is seamless.
 
 Output (transparent background): assets/tour/step-1.webm (VP9 with alpha) and assets/tour/step-1.webp
@@ -36,7 +37,7 @@ FPS = 30
 HOLD, MOVE = 1.1, 0.9           # seconds an item rests at the front / takes to move one place
 FRONT_SIZE = 300                # px, item size at the front
 SIDE_SCALE = 0.55                # size of the two side items, relative to the front one
-SIDE_OPACITY = 0.03             # opacity of the two side items
+SIDE_OPACITY = 0                # opacity of the two side items (0 = only the front item shows)
 RADIUS_X, RADIUS_Y = 272, 26    # ellipse radii: sideways travel (sides sit near the edges), and how much higher the sides sit
 
 
