@@ -7,7 +7,7 @@ A state is a named override of the mock data that shows one situation of a page.
 `mock/common.json` plus its own `mock/<page>.json`; a state merges its `common` and `page` parts over the
 default data (objects merge key by key, arrays and plain values replace).
 
-**Shared states** mean the same thing on every page and carry over through links between pages: `empty`, `card-pale-theme`, `card-pale-yellow`, `card-indigo`, `market-closed`, `needs-kyc`, `needs-deposit`, `has-pending`, `expiring`.
+**Shared states** mean the same thing on every page and carry over through links between pages: `empty`, `market-closed`, `needs-kyc`, `needs-deposit`, `has-pending`, `expiring`.
 
 Other URL parameters (demo aids): `?theme=light|dark`; Trading Task `?tab=history`; Coin Balance
 `?tab=available|expired|history`; date filters `?range=30` or `?range=YYYY-MM-DD..YYYY-MM-DD`, `?cal=1` opens the calendar.
@@ -28,9 +28,6 @@ File: `mock/dashboard.json` · page: `pages/dashboard.html`
 | Today trading task | `no-trades-today` | No trades yet today: 0 lots and 0 coins. | `page.task.lotsToday = 0`<br>`page.task.pointsToday = 0` |
 | Today trading task | `market-closed` · shared | Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7). | `common.liveFeed.clock = "2026-10-17T10:00:00+07:00"` |
 | Daily check-in (future) | `check-in` | Shows the daily check-in card (future feature, not launched). | `page.checkIn.enabled = true` |
-| Trading card colour (review) | `card-pale-theme` ("Trading card: Theme · pale") · shared | Daily Trading cards use the pale theme card from the review mockup (“Theme · pale”: soft blue fill, soft blue stroke, page text colours) instead of the default vivid yellow. | `common.program.taskCardColour = "pale-theme"` |
-| Trading card colour (review) | `card-pale-yellow` ("Trading card: Yellow · pale") · shared | Daily Trading cards use the same pale card in yellow (soft yellow fill and stroke, no blue) instead of the default vivid yellow. | `common.program.taskCardColour = "pale-yellow"` |
-| Trading card colour (review) | `card-indigo` ("Trading card: Indigo") · shared | Daily Trading cards use the vivid indigo blend from the tokens (white text) instead of the default vivid yellow. | `common.program.taskCardColour = "indigo"` |
 
 ## Daily Trading (Earn tab)
 
@@ -38,7 +35,7 @@ File: `mock/trading-task.json` · page: `pages/trading-task.html`
 
 | Group | State | What it shows | Data it changes |
 |---|---|---|---|
-| Page | `ended` | The programme has ended: end message on the yellow card, no HOT badge, no trade button. | `common.program.ended = true` |
+| Page | `ended` | The programme has ended: end message on the Today card, no HOT badge, no trade button. | `common.program.ended = true` |
 | Participation | `needs-kyc` · shared | User must pass KYC and has no trading account yet: no account picker, only earning rates and “KYC to join”. | `common.program.joinRequirement = "kyc"` |
 | Participation | `needs-deposit` · shared | User must make a first deposit and has no trading account yet: no account picker, only earning rates and “Deposit to join”. | `common.program.joinRequirement = "deposit"` |
 | Today trading task | `in-day` | Coins are credited during the day instead of 3 days later; today shows as credited and appears in History as Earning. | `common.program.creditMode = "in-day"`<br>`page.today.status = "credited"` |
@@ -47,9 +44,6 @@ File: `mock/trading-task.json` · page: `pages/trading-task.html`
 | Today trading task | `market-closed` · shared | Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7). | `common.liveFeed.clock = "2026-10-17T10:00:00+07:00"` |
 | Trading account | `single-account` | User has only one trading account: a fixed field instead of the account picker. | `common.accounts = [{"id": "50000234", "eligible": true}]` |
 | Trading account | `ineligible-selected` | The selected trading account belongs to an MT5 group that cannot take part in the programme, for example an A-Book group or any group not listed in the programme config. Shows a warning and “Switch to an eligible account”. | `page.selectedAccountId = "50000871"` |
-| Trading card colour (review) | `card-pale-theme` ("Trading card: Theme · pale") · shared | Daily Trading cards use the pale theme card from the review mockup (“Theme · pale”: soft blue fill, soft blue stroke, page text colours) instead of the default vivid yellow. | `common.program.taskCardColour = "pale-theme"` |
-| Trading card colour (review) | `card-pale-yellow` ("Trading card: Yellow · pale") · shared | Daily Trading cards use the same pale card in yellow (soft yellow fill and stroke, no blue) instead of the default vivid yellow. | `common.program.taskCardColour = "pale-yellow"` |
-| Trading card colour (review) | `card-indigo` ("Trading card: Indigo") · shared | Daily Trading cards use the vivid indigo blend from the tokens (white text) instead of the default vivid yellow. | `common.program.taskCardColour = "indigo"` |
 
 ## Coin Balance (Coins tab)
 

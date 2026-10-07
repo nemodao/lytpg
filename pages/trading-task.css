@@ -16,7 +16,7 @@
 }
 .hero-card { position: relative; }
 .hero-card .live-feed { margin-bottom: 0; }
-/* Ended: a message on the yellow card in place of today's progress. */
+/* Ended: a message on the Today card in place of today's progress. */
 .hero-message { flex-direction: row; align-items: flex-start; gap: var(--spacing-12); }
 .hero-message__icon { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--blend-glass); }
 /* The dark sky continues behind the top half of the card. It is its own element carrying data-theme="dark", so the

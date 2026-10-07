@@ -30,12 +30,10 @@
 /* Inner glass panel: dark glass under white text, white glass under dark text. */
 .blend-vivid, .blend-theme, .blend-red, .blend-green, .blend-pink, .blend-indigo { --blend-glass: var(--glass-surface-dark); }
 .blend-yellow, .blend-lime, .blend-cyan { --blend-glass: var(--glass-surface); }
-/* Pale cards (review mockup "Theme · pale", and the same idea in yellow): a soft tint with a soft stroke, page text
-   colours, a mono button and a lighter inner panel. They follow the page theme. */
-.blend-pale-theme { --blend-bg: var(--surface-brand-soft); --blend-rim: var(--stroke-brand-soft); }
-.blend-pale-yellow { --blend-bg: var(--surface-yellow-soft); --blend-rim: var(--stroke-yellow-soft); }
-.blend-pale-theme, .blend-pale-yellow { --blend-fg: var(--ui-text-primary); --blend-ink: var(--card-surface); --blend-glass: color-mix(in srgb, var(--card-surface) 70%, transparent); }
-.card--blend.blend-pale-theme, .card--blend.blend-pale-yellow { box-shadow: inset 0 0 0 var(--size-stroke) var(--blend-rim); }
+/* Pale theme card (review mockup "Theme · pale") used as a blend: soft blue fill and stroke, page text colours, a
+   mono button and a lighter inner panel. It follows the page theme. Used by the Daily Trading cards. */
+.blend-pale-theme { --blend-bg: var(--surface-brand-soft); --blend-fg: var(--ui-text-primary); --blend-ink: var(--card-surface); --blend-glass: color-mix(in srgb, var(--card-surface) 70%, transparent); }
+.card--blend.blend-pale-theme { box-shadow: inset 0 0 0 var(--size-stroke) var(--stroke-brand-soft); }
 /* Secondary text on a blend takes the blend's text colour, dimmed. */
 .card--blend .c-2, .card--blend .c-3 { color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
 /* Least prominent text on a blend (notes such as the update interval). */
@@ -241,8 +239,9 @@
 .nav__tab[aria-current="page"] { background: var(--ui-nav-tab-active); color: var(--ui-text-brand); }
 
 /* ---- Live activity line on the Daily Trading cards (Dashboard, Trading Task) ---- */
-/* A small dark, translucent box: on the yellow card it reads as a slightly deeper yellow. */
-.live-feed { align-self: center; display: flex; align-items: center; justify-content: center; gap: var(--spacing-6); margin-bottom: calc(var(--spacing-4) * -1); padding: var(--spacing-6) var(--spacing-12); border-radius: var(--radius-pill); background: color-mix(in srgb, var(--vivid-shade) 8%, transparent); color: color-mix(in srgb, var(--blend-fg) 82%, transparent); }
+/* A small translucent box tinted with the card's text colour, so it reads as a slightly deeper shade of the card in
+   both themes. */
+.live-feed { align-self: center; display: flex; align-items: center; justify-content: center; gap: var(--spacing-6); margin-bottom: calc(var(--spacing-4) * -1); padding: var(--spacing-6) var(--spacing-12); border-radius: var(--radius-pill); background: color-mix(in srgb, var(--blend-fg) 7%, transparent); color: color-mix(in srgb, var(--blend-fg) 82%, transparent); }
 .live-feed__dot { flex: none; width: var(--spacing-6); height: var(--spacing-6); border-radius: var(--radius-pill); background: var(--ui-icon-green); box-shadow: 0 0 0 var(--spacing-2) color-mix(in srgb, var(--ui-icon-green) 30%, transparent); }
 .live-feed__in { animation: live-feed-in 0.4s ease-out; }
 @keyframes live-feed-in { from { opacity: 0; transform: translateY(var(--spacing-4)); } }

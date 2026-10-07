@@ -2,7 +2,7 @@
 import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
-import { appHeader, balanceBlock, coin, joinIntent, joinLabel, taskCardBlend } from '../shared/components.js';
+import { appHeader, balanceBlock, coin, joinIntent, joinLabel } from '../shared/components.js';
 
 const { common, page, ui } = await load('dashboard');
 // `no-task-trading` state: the programme runs no trading task, so its card (and the Earn tab) are hidden.
@@ -25,7 +25,7 @@ const cupIcon = '<img class="task__icon" src="../assets/images/cups/purple.webp"
 const feed = createLiveFeed(ui, common);
 
 const taskCard = () => `
-  <section class="card card--blend ${taskCardBlend(common)} task">
+  <section class="card card--blend blend-pale-theme task">
     <a class="card-link" href="${taskHref}" aria-label="${ui.t('task.title')}"></a>
     ${cupIcon}
     <div class="task__head">

@@ -1,6 +1,6 @@
 # Loyalty Program UI — Phase 1 Spec
 
-> **How to read this spec.** Sections 1–8 are the original brief. Sections 9 onwards are decisions taken during design, in date order; when two sections disagree, **the later one wins**. Main overrides: number format (§2 → comma thousands, dot decimals); "points" are now **coins** in all on-screen text (§32); the `locked`/KYC state is gone (§24, replacing §9, §14, §23 locked parts); Point Balance tabs (§5.2 → §17); the lot detail sheet is out of this phase (§18); no back buttons (§29); fully used lots now show on Coin Balance (§17 → §36). Current states: [STATES.md](STATES.md).
+> **How to read this spec.** Sections 1–8 are the original brief. Sections 9 onwards are decisions taken during design, in date order; when two sections disagree, **the later one wins**. Main overrides: number format (§2 → comma thousands, dot decimals); "points" are now **coins** in all on-screen text (§32); the `locked`/KYC state is gone (§24, replacing §9, §14, §23 locked parts); Point Balance tabs (§5.2 → §17); the lot detail sheet is out of this phase (§18); no back buttons (§29); the Daily Trading card is the pale theme card, not yellow (§37); fully used lots now show on Coin Balance (§17 → §36). Current states: [STATES.md](STATES.md).
 
 Goal of this spec: build a good-looking, content-correct mobile UI where every state can be previewed. This is NOT a technical/dev handoff document.
 
@@ -426,4 +426,8 @@ Buttons (primary, stroke) and the bottom bar have no drop shadow, matching the f
 - **Expired:** a lot used up before its expiry date shows there as usual once it expires, with `Expired [coin] 0`. No special style.
 - **History:** unchanged; there is no "Expired 0" row.
 - Preview state `has-used` (group "Tabs"): adds two fully used lots to Available and one used-then-expired lot to Expired (within Last 7 days). Without it there are no fully used lots.
+
+## 37. Daily Trading card colour: final (decided 7 Oct 2026)
+
+The Daily Trading cards (Dashboard task card, Trading Task Today / ended card) use the **pale theme card** from the review mockup ("Theme · pale": soft blue fill `--surface-brand-soft`, soft blue stroke `--stroke-brand-soft`, page text colours, mono `Trade now` button). The card follows the page theme (light / dark). This replaces the vivid yellow and closes the colour review in §35: the other options (vivid yellow, pale yellow, indigo) and their preview states are removed. Wherever earlier sections say "yellow card", read "Daily Trading card".
 

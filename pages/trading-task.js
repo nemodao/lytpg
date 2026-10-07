@@ -3,7 +3,7 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
-import { appHeader, badge, coin, joinIntent, joinLabel, notice, taskCardBlend } from '../shared/components.js';
+import { appHeader, badge, coin, joinIntent, joinLabel, notice } from '../shared/components.js';
 
 const { common, page, ui } = await load('trading-task');
 const { program, accounts } = common;
@@ -45,10 +45,10 @@ const accountName = (item) => ui.esc(item.id);
 const eligibleBadge = (item) =>
   item.eligible ? badge('green', ui.t('badge.eligible')) : badge('neutral', ui.t('badge.notEligible'));
 
-// The hero always keeps the sky and the cup; the yellow card under the cup changes with the page state (spec §23).
+// The hero always keeps the sky and the cup; the Today card under the cup changes with the page state (spec §23).
 // Ended: the programme is over, so the card carries that message instead of today's progress (no HOT badge).
 const endedCard = () => `
-  <section class="card card--blend ${taskCardBlend(common)} hero-card hero-message">
+  <section class="card card--blend blend-pale-theme hero-card hero-message">
     <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
     <span class="hero-message__icon">${ui.icon('info')}</span>
     <div class="stack stack--tight">
@@ -69,7 +69,7 @@ function progressCard() {
   else if (today.status === 'credited') footer = foot('check', ui.t('tt.status.credited'));
   else footer = foot('clock', ui.t('tt.status.pending', { date: ui.date(today.creditAt), time: ui.time(today.creditAt), tz: ui.t('tz') }));
   return `
-    <section class="card card--blend ${taskCardBlend(common)} hero-card">
+    <section class="card card--blend blend-pale-theme hero-card">
       <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
       <div class="today today--flat">
         <div class="today__label">

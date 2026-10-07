@@ -27,12 +27,6 @@ export const joinLabel = (ui, common) =>
 // Which step the user must take before joining (`kyc` | `deposit`), or null. Used as the button's data-intent.
 export const joinIntent = (common) => common.program.joinRequirement || null;
 
-// Colour of the Daily Trading cards (Dashboard task card, Trading Task Today / ended card), as a blend class.
-// `program.taskCardColour`: yellow (default, vivid yellow blend) | pale-theme | pale-yellow | indigo.
-// TEMP (design review): picked with the card-colour states.
-export const taskCardBlend = (common) =>
-  ({ yellow: 'blend-yellow', 'pale-theme': 'blend-pale-theme', 'pale-yellow': 'blend-pale-yellow', indigo: 'blend-indigo' })[common.program.taskCardColour] || 'blend-yellow';
-
 // Balance block: coin, label, number, pending, Redeem button and the expiry warning.
 // Dashboard: bare on the page background, the whole block links to Point Balance (href).
 // Point Balance: the same content inside a pale theme card (card: true).

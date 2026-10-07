@@ -16,8 +16,7 @@
     "resetTime": "00:00",
     "expiryWarningDays": 10,
     "tradingTask": true,
-    "joinRequirement": null,
-    "taskCardColour": "yellow"
+    "joinRequirement": null
   },
   "accounts": [
     {

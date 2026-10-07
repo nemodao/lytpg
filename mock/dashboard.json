@@ -57,27 +57,6 @@
       "descriptions": {
         "check-in": "Shows the daily check-in card (future feature, not launched)."
       }
-    },
-    {
-      "title": "Trading card colour (review)",
-      "states": [
-        "card-pale-theme",
-        "card-pale-yellow",
-        "card-indigo"
-      ],
-      "labels": {
-        "card-pale-theme": "Trading card: Theme · pale",
-        "card-pale-yellow": "Trading card: Yellow · pale",
-        "card-indigo": "Trading card: Indigo"
-      },
-      "descriptions": {
-        "card-pale-theme": "Daily Trading cards use the pale theme card from the review mockup (“Theme · pale”: soft blue fill, soft blue stroke, page text colours) instead of the default vivid yellow.",
-        "card-pale-yellow": "Daily Trading cards use the same pale card in yellow (soft yellow fill and stroke, no blue) instead of the default vivid yellow.",
-        "card-indigo": "Daily Trading cards use the vivid indigo blend from the tokens (white text) instead of the default vivid yellow."
-      },
-      "exclusive": true,
-      "defaultLabel": "Trading card: Yellow (default)",
-      "defaultDescription": "Daily Trading cards use the vivid yellow blend (default)."
     }
   ],
   "default": {
@@ -192,27 +171,6 @@
       "common": {
         "program": {
           "joinRequirement": "deposit"
-        }
-      }
-    },
-    "card-pale-theme": {
-      "common": {
-        "program": {
-          "taskCardColour": "pale-theme"
-        }
-      }
-    },
-    "card-pale-yellow": {
-      "common": {
-        "program": {
-          "taskCardColour": "pale-yellow"
-        }
-      }
-    },
-    "card-indigo": {
-      "common": {
-        "program": {
-          "taskCardColour": "indigo"
         }
       }
     }
