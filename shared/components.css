@@ -304,5 +304,6 @@
 /* Step 3: plus signs and small coins pop up around the balance. */
 .tour__burst { position: fixed; pointer-events: none; }
 .tour__pop { position: absolute; width: var(--size-icon-sm); height: var(--size-icon-sm); opacity: 0; animation: tour-pop 1.2s ease-out both; }
+.tour__pop--gift { width: var(--size-icon-lg); height: var(--size-icon-lg); }
 .tour__pop--plus { width: auto; height: auto; font: var(--font-medium-semibold); color: var(--ui-text-green); }
 @keyframes tour-pop { 0% { opacity: 0; transform: translateY(var(--spacing-8)) scale(0.6); } 25% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(calc(var(--spacing-32) * -1)) scale(1); } }

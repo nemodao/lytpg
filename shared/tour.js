@@ -13,7 +13,7 @@ const STEPS = [
   { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1' },
   { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
-  { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]' },
+  { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts' },
   { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: 3 },
 ];
 const SEEN_KEY = 'hsb-loyalty-tour-seen';
@@ -112,17 +112,31 @@ export function mountTour(ui, common, page) {
     };
     requestAnimationFrame(frame);
 
-    const burst = document.createElement('div');
-    burst.className = 'tour__burst';
-    burst.style.cssText = `left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px`;
-    burst.innerHTML = Array.from({ length: 14 }, (_, index) => {
+    burst(rect, Array.from({ length: 14 }, (_, index) => {
       const style = `left:${(8 + Math.random() * 84).toFixed(1)}%;top:${(20 + Math.random() * 60).toFixed(1)}%;animation-delay:${(Math.random() * 1.3).toFixed(2)}s`;
       return index % 2
         ? `<img class="tour__pop" src="../assets/images/coin.png" alt="" style="${style}">`
         : `<span class="tour__pop tour__pop--plus" style="${style}">+</span>`;
-    }).join('');
-    layer.appendChild(burst);
-    setTimeout(() => burst.remove(), 2600);
+    }));
+  }
+
+  // Step 4: small gift boxes pop up around the Redeem button when the step opens. Once, then nothing moves.
+  function giftEffect(rect) {
+    if (reducedMotion) return;
+    // Spots around the button (x, y in px from its top-left corner; it sits near the right edge of the screen).
+    const spots = [[-34, -20], [-6, -30], [rect.width * 0.45, -34], [rect.width - 14, -28], [-40, 6], [rect.width - 2, 10], [-22, rect.height + 2], [rect.width * 0.5, rect.height + 8]];
+    burst(rect, spots.map(([x, y], index) =>
+      `<img class="tour__pop tour__pop--gift" src="../assets/tour/gift.webp" alt="" style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;animation-delay:${(0.15 + index * 0.12).toFixed(2)}s">`));
+  }
+
+  // Short-lived layer of popping items placed over `rect`.
+  function burst(rect, items) {
+    const node = document.createElement('div');
+    node.className = 'tour__burst';
+    node.style.cssText = `left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px`;
+    node.innerHTML = items.join('');
+    layer.appendChild(node);
+    setTimeout(() => node.remove(), 2600);
   }
 
   function show(step) {
@@ -133,7 +147,7 @@ export function mountTour(ui, common, page) {
     const target = step.target ? app.querySelector(step.target) : null;
 
     // Bring the highlighted part near the top, then stop the page from scrolling under the tour.
-    if (target) window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - 24));
+    if (target) window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - 48)); // room above the highlight for effects that pop around it
     else window.scrollTo(0, 0);
     document.documentElement.classList.add('tour-open');
 
@@ -187,6 +201,7 @@ export function mountTour(ui, common, page) {
       card.style.top = `${Math.max(gutter, (window.innerHeight - card.offsetHeight) / 2)}px`;
     }
     if (step.effect === 'coins' && rect) coinEffect(rect);
+    if (step.effect === 'gifts' && rect) giftEffect(rect);
     card.focus({ preventScroll: true }); // focus the pop-up itself, so no button shows a focus ring on open
   }
 
