@@ -34,7 +34,7 @@ ITEMS = [
 ]
 WIDTH, HEIGHT = 720, 480        # 3x a 240x160 display size
 FPS = 30
-HOLD, MOVE = 1.1, 0.9           # seconds an item rests at the front / takes to move one place
+HOLD, MOVE = 3.0, 1.2           # seconds an item rests at the front / takes to move one place
 FRONT_SIZE = 300                # px, item size at the front
 SIDE_SCALE = 0.55                # size of the two side items, relative to the front one
 SIDE_OPACITY = 0                # opacity of the two side items (0 = only the front item shows)
