@@ -3,7 +3,7 @@
 
 The four items sit a quarter turn apart on an elliptical path and move right to left. Three show at a time: the
 front item in the middle, largest and fully visible, and its two neighbours at the left and right edges, smaller and
-dimmed to 20%. The fourth is at the back, hidden. Items shrink and fade gradually as they move away from the front.
+dimmed to 7%. The fourth is at the back, hidden. Items shrink and fade gradually as they move away from the front.
 Each item pauses at the front before the path turns again. The loop is seamless.
 
 Output (transparent background): assets/tour/step-1.webm (VP9 with alpha) and assets/tour/step-1.webp
@@ -36,7 +36,7 @@ FPS = 30
 HOLD, MOVE = 1.1, 0.9           # seconds an item rests at the front / takes to move one place
 FRONT_SIZE = 300                # px, item size at the front
 SIDE_SCALE = 0.55                # size of the two side items, relative to the front one
-SIDE_OPACITY = 0.2              # opacity of the two side items
+SIDE_OPACITY = 0.07             # opacity of the two side items
 RADIUS_X, RADIUS_Y = 272, 26    # ellipse radii: sideways travel (sides sit near the edges), and how much higher the sides sit
 
 
