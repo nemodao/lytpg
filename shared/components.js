@@ -33,6 +33,23 @@ export const joinLabel = (ui, common) =>
 // Which step the user must take before joining (`kyc` | `deposit`), or null. Used as the button's data-intent.
 export const joinIntent = (common) => common.program.joinRequirement || null;
 
+// "How it works" rules. One list, shown in the Trading Task's How it works tab and in the guided tour (step 2):
+// change it here and both change.
+export function rulesList(ui, common) {
+  const { program } = common;
+  const credit = program.creditMode === 'in-day'
+    ? ui.md('rule.credit.inDay', { minutes: program.refreshMinutes })
+    : ui.md('rule.credit.delayed', { days: program.creditDelayDays });
+  return `
+    <ul class="rules">
+      <li><span>${ui.md('rule.hold', { minutes: program.minHoldMinutes })}</span></li>
+      <li><span>${credit}</span></li>
+      <li><span>${ui.md('rule.expire', { days: program.expiryDays })}</span></li>
+      <li><span>${ui.md('rule.reset', { time: program.resetTime, tz: ui.t('tz') })}</span></li>
+      <li><span class="num">${ui.md('rule.max', { points: ui.num(program.dailyMaxPoints) })}</span></li>
+    </ul>`;
+}
+
 // Balance block: coin, label, number, pending, Redeem button and the expiry warning.
 // Dashboard: bare on the page background, the whole block links to Point Balance (href).
 // Point Balance: the same content inside a pale theme card (card: true).

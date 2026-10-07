@@ -3,12 +3,14 @@
 // While it runs, nothing but the tour pop-up can be tapped.
 //
 // To add, remove or reorder steps, edit STEPS: one entry per step (id, the page it runs on, the element to
-// highlight, and its copy keys tour.<id>.*). Progress travels between pages in the URL (?tour=<id>), so it does not
+// highlight, and its copy keys tour.<id>.*; `rules: true` adds the shared "How it works" list to the pop-up). Progress travels between pages in the URL (?tour=<id>), so it does not
 // depend on storage; "already seen" is remembered on the device (localStorage).
+
+import { rulesList } from './components.js';
 
 const STEPS = [
   { id: 1, page: 'dashboard', file: 'dashboard.html', target: null },
-  { id: 2, page: 'trading-task', file: 'trading-task.html', target: '[data-tour="rules"]', needsTask: true },
+  { id: 2, page: 'trading-task', file: 'trading-task.html', target: null, rules: true, needsTask: true },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]' },
   { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: 3 },
@@ -30,6 +32,10 @@ export function mountTour(ui, common, page, vars = {}) {
   const skipped = new Set((params.get('tourskip') || '').split(',').filter(Boolean).map(Number));
   if (common.program.tradingTask === false) STEPS.filter((step) => step.needsTask).forEach((step) => skipped.add(step.id));
   const steps = STEPS.filter((step) => !skipped.has(step.id));
+
+  // Step 3 counts the balance up from the user's real balance to a simulated figure. A user who already has that
+  // many coins or more sees no movement at all.
+  const simulated = common.balance.available < common.tour.simulatedBalance;
 
   let current = null; // the step on screen
   let layer = null;
@@ -66,6 +72,7 @@ export function mountTour(ui, common, page, vars = {}) {
   function coinEffect(rect) {
     const node = balanceNode();
     if (!node) return;
+    if (!simulated) return; // the user already has more coins than the simulated figure: nothing moves
     const from = common.balance.available;
     const to = common.tour.simulatedBalance;
     if (reducedMotion) { node.textContent = ui.num(to); return; }
@@ -105,7 +112,7 @@ export function mountTour(ui, common, page, vars = {}) {
 
     // Simulated balance on the Coins page from the "coins arrive" step onwards.
     const simulate = steps.find((item) => item.effect === 'coins');
-    if (simulate && page === simulate.page && index > steps.indexOf(simulate) && balanceNode()) balanceNode().textContent = ui.num(common.tour.simulatedBalance);
+    if (simulated && simulate && page === simulate.page && index > steps.indexOf(simulate) && balanceNode()) balanceNode().textContent = ui.num(common.tour.simulatedBalance);
 
     const body = step.list
       ? `<ul class="tour__list">${Array.from({ length: step.list }, (_, item) => `<li>${ui.md(`tour.${step.id}.item${item + 1}`, vars)}</li>`).join('')}</ul>`
@@ -121,10 +128,11 @@ export function mountTour(ui, common, page, vars = {}) {
         </div>
         <h2 class="t-title-s" id="tour-title">${ui.t(`tour.${step.id}.title`)}</h2>
         ${body}
-        ${step.note ? `<p class="t-caption c-3">${ui.t(`tour.${step.id}.note`)}</p>` : ''}
+        ${step.rules ? rulesList(ui, common) : ''}
+        ${step.note && simulated ? `<p class="t-caption c-3">${ui.t(`tour.${step.id}.note`)}</p>` : ''}
         <div class="tour__actions">
-          ${index > 0 ? `<button class="btn btn--stroke btn--lg" type="button" data-tour-action="back">${ui.t('tour.back')}</button>` : ''}
-          <button class="btn btn--primary btn--lg grow" type="button" data-tour-action="next">${ui.t(`tour.${step.id}.cta`)}</button>
+          ${index > 0 ? `<button class="btn btn--stroke btn--sm" type="button" data-tour-action="back">${ui.t('tour.back')}</button>` : ''}
+          <button class="btn btn--primary btn--sm grow" type="button" data-tour-action="next">${ui.t(`tour.${step.id}.cta`)}</button>
         </div>
       </div>`;
     document.body.appendChild(layer);

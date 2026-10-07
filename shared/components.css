@@ -248,6 +248,12 @@
 @keyframes live-feed-in { from { opacity: 0; transform: translateY(var(--spacing-4)); } }
 @media (prefers-reduced-motion: reduce) { .live-feed__in { animation: none; } }
 
+/* ---- "How it works" rules list (Trading Task tab and guided tour) ---- */
+.rules { display: flex; flex-direction: column; gap: var(--spacing-12); margin: 0; padding: 0; list-style: none; }
+.rules li { display: flex; align-items: flex-start; gap: var(--spacing-10); font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.rules li::before { content: ""; flex: none; width: var(--spacing-6); height: var(--spacing-6); margin-top: var(--spacing-6); border-radius: var(--radius-pill); background: var(--accent-surface-brand); }
+.rules strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
+
 /* ---- Guided tour: a blocking layer with a highlighted area and one pop-up card ---- */
 .tour-open { overflow: hidden; }
 .tour { position: fixed; inset: 0; z-index: 70; }
@@ -255,7 +261,7 @@
 .tour__spot { position: fixed; box-shadow: 0 0 0 200vmax var(--ui-overlay-scrim); pointer-events: none; }
 .tour__spot--none { left: 50%; top: 50%; width: 0; height: 0; }
 .tour__card {
-  position: fixed; display: flex; flex-direction: column; gap: var(--spacing-8);
+  position: fixed; display: flex; flex-direction: column; gap: var(--spacing-8); max-height: calc(100% - var(--spacing-32)); overflow-y: auto;
   padding: var(--spacing-card); border-radius: var(--radius-card); background: var(--card-surface); border: var(--size-stroke) solid var(--card-stroke);
 }
 .tour__top { display: flex; align-items: center; justify-content: space-between; min-height: var(--size-control-xs); }
@@ -263,7 +269,8 @@
 .tour__list { display: flex; flex-direction: column; gap: var(--spacing-6); margin: 0; padding: 0; list-style: none; font: var(--font-small-regular); color: var(--ui-text-secondary); }
 .tour__list strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
 .tour__card p strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
-.tour__actions { display: flex; gap: var(--spacing-8); margin-top: var(--spacing-8); }
+.tour__actions { display: flex; gap: var(--spacing-8); margin-top: var(--spacing-4); }
+.tour__card .rules { gap: var(--spacing-8); }
 /* Step 3: plus signs and small coins pop up around the balance. */
 .tour__burst { position: fixed; pointer-events: none; }
 .tour__pop { position: absolute; width: var(--size-icon-sm); height: var(--size-icon-sm); opacity: 0; animation: tour-pop 1.2s ease-out both; }

@@ -67,11 +67,6 @@
 .select--static { background: var(--ui-field-surface-locked); }
 .select .icon { color: var(--ui-icon-tertiary); }
 
-.rules { display: flex; flex-direction: column; gap: var(--spacing-12); margin: 0; padding: 0; list-style: none; }
-.rules li { display: flex; align-items: flex-start; gap: var(--spacing-10); font: var(--font-small-regular); color: var(--ui-text-secondary); }
-.rules li::before { content: ""; flex: none; width: var(--spacing-6); height: var(--spacing-6); margin-top: var(--spacing-6); border-radius: var(--radius-pill); background: var(--accent-surface-brand); }
-.rules strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
-
 /* History: one row per day. Lots and points sit in fixed columns so they line up from row to row. */
 .day__head { display: flex; align-items: center; gap: var(--spacing-8); }
 .day__figures { display: grid; grid-template-columns: calc(var(--spacing-40) * 2) 1fr; align-items: center; }

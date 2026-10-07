@@ -55,7 +55,8 @@ def strip_module(code):
     code = re.sub(r'^export ', '', code, flags=re.M)
     imports = re.findall(r"^import \{([^}]+)\} from '([^']+)';\n", code, flags=re.M)
     code = re.sub(r"^import \{[^}]+\} from '[^']+';\n", '', code, flags=re.M)
-    bindings = ''.join(f'const {{{names_}}} = {MODULES[path]};\n' for names_, path in imports)
+    # Shared modules import each other with './x.js'; pages import them with '../shared/x.js'.
+    bindings = ''.join(f'const {{{names_}}} = {MODULES[path.replace("./", "../shared/", 1) if path.startswith("./") else path]};\n' for names_, path in imports)
     return bindings + code, names
 
 

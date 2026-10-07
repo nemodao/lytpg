@@ -4,7 +4,7 @@ import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
 import { mountTour } from '../shared/tour.js';
 import { createDateFilter } from '../shared/date-filter.js';
-import { appHeader, badge, coin, joinIntent, joinLabel, notice } from '../shared/components.js';
+import { appHeader, badge, coin, joinIntent, joinLabel, notice, rulesList } from '../shared/components.js';
 
 const { common, page, ui } = await load('trading-task');
 const { program, accounts } = common;
@@ -146,14 +146,6 @@ function tradeButton() {
   return `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="trade-account" data-account="${ui.esc(selected.id)}">${label}</button>`;
 }
 
-const rulesList = () => `
-    <ul class="rules">
-      <li><span>${ui.md('rule.hold', { minutes: program.minHoldMinutes })}</span></li>
-      <li><span>${inDay ? ui.md('rule.credit.inDay', { minutes: program.refreshMinutes }) : ui.md('rule.credit.delayed', { days: program.creditDelayDays })}</span></li>
-      <li><span>${ui.md('rule.expire', { days: program.expiryDays })}</span></li>
-      <li><span>${ui.md('rule.reset', { time: program.resetTime, tz: ui.t('tz') })}</span></li>
-      <li><span class="num">${ui.md('rule.max', { points: ui.num(program.dailyMaxPoints) })}</span></li>
-    </ul>`;
 
 function historyList() {
   // In-day mode: today appears in the history as "Earning"; past days are all credited (spec §9).
@@ -188,9 +180,9 @@ function infoCard() {
   const tabButton = (id, key) =>
     `<button class="tab" type="button" role="tab" aria-selected="${tab === id}" data-action="tab" data-tab="${id}">${ui.t(key)}</button>`;
   return `
-    <section class="card" data-tour="rules">
+    <section class="card">
       <div class="tabs" role="tablist">${tabButton('rules', 'tt.rules')}${tabButton('history', 'tt.history')}</div>
-      ${tab === 'rules' ? rulesList() : historyList()}
+      ${tab === 'rules' ? rulesList(ui, common) : historyList()}
     </section>`;
 }
 
