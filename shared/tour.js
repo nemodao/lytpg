@@ -3,7 +3,8 @@
 // While it runs, nothing but the tour pop-up can be tapped.
 //
 // To add, remove or reorder steps, edit STEPS: one entry per step (id, the page it runs on, the element to
-// highlight, and its copy keys tour.<id>.*; `rules: true` adds the shared "How it works" list to the pop-up; `art` names the artwork shown above the
+// highlight, and its copy keys tour.<id>.*; `rules: true` adds the shared "How it works" list to the pop-up; `list` names the
+// icon of each bullet (assets/tour/step-<id>-<icon>.webp, text in tour.<id>.item<n>); `art` names the artwork shown above the
 // title, see ART). Progress travels between pages in the URL (?tour=<id>), so it does not
 // depend on storage; "already seen" is remembered on the device (localStorage).
 
@@ -14,7 +15,7 @@ const STEPS = [
   { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true, fingerAfter: 7 },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts', art: 'step-4' },
-  { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: 3 },
+  { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: ['available', 'expired', 'history'] },
 ];
 const SEEN_KEY = 'hsb-loyalty-tour-seen';
 const COUNT_MS = 1500;
@@ -207,7 +208,7 @@ export function mountTour(ui, common, page) {
     if (simulated && simulate && page === simulate.page && index > steps.indexOf(simulate) && balanceNode()) balanceNode().textContent = ui.num(common.tour.simulatedBalance);
 
     const body = step.list
-      ? `<ul class="tour__list">${Array.from({ length: step.list }, (_, item) => `<li>${ui.md(`tour.${step.id}.item${item + 1}`, vars)}</li>`).join('')}</ul>`
+      ? `<ul class="tour__list">${step.list.map((icon, item) => `<li><img src="../assets/tour/step-${step.id}-${icon}.webp" alt=""><span>${ui.md(`tour.${step.id}.item${item + 1}`, vars)}</span></li>`).join('')}</ul>`
       : `<p class="t-body c-2 num">${ui.md(`tour.${step.id}.body`, vars)}</p>`;
     layer = document.createElement('div');
     layer.className = 'tour';
