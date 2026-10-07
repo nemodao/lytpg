@@ -256,6 +256,9 @@
 
 /* ---- Guided tour: a blocking layer with a highlighted area and one pop-up card ---- */
 .tour-open { overflow: hidden; }
+/* While a step's images load, before its layer exists, the page is already blocked. */
+.tour-open body { pointer-events: none; }
+.tour-open .tour { pointer-events: auto; }
 .tour { position: fixed; inset: 0; z-index: 70; }
 /* The highlight is a hole in the scrim: a box whose huge shadow darkens everything around it. */
 .tour__spot { position: fixed; box-shadow: 0 0 0 200vmax var(--ui-overlay-scrim); pointer-events: none; }

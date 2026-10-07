@@ -4,7 +4,7 @@
 The pages animate still images in code (shared/tour.js, `carousel`), which stays sharp on every screen and is far
 lighter than a video. This script exports those stills:
 
-    python3 tools/build-tour-animation.py            -> assets/tour/<name>-<n>.webp, one per item, 400px
+    python3 tools/build-tour-animation.py            -> assets/tour/<name>-<n>.webp, one per item, at 3x its display size
 
 It can also render the same motion as a video with a transparent background, for use outside the pages:
 
@@ -30,7 +30,6 @@ ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / 'Design Elements' / 'Tutorial' / 'Animation'
 OUT = ROOT / 'assets' / 'tour'
 VIDEO_OUT = ROOT / 'dist' / 'tour-animation'
-STILL_SIZE = 400                # px: about 3x the largest size an item is shown at (up to 130px)
 # name -> source folder, items in order of appearance at the front, seconds each one rests there.
 ANIMATIONS = {
     'step-1': {
@@ -42,11 +41,13 @@ ANIMATIONS = {
             'Golden Trophy Overflowing with Blue Gems (1) 2.png',  # cup
         ],
         'holds': [2.0, 4.0, 4.0, 4.0],
+        'still': 300,   # px: 3x the size the front item is shown at (96px)
     },
     'step-4': {
         'folder': 'Step 4',
         'items': ['Frame 29.png', 'Frame 30.png', 'Frame 31.png', 'Frame 32.png', 'Frame 33.png'],  # phone, earbuds, laptop, travel, foldable
         'holds': [2.5, 2.5, 2.5, 2.5, 2.5],
+        'still': 400,   # px: 3x the size the front item is shown at (130px)
     },
 }
 WIDTH, HEIGHT = 720, 480        # 3x a 240x160 display size
@@ -79,7 +80,7 @@ def export_stills(name, spec):
     for number, item in enumerate(spec['items'], start=1):
         image = Image.open(SOURCE / spec['folder'] / item).convert('RGBA')
         target = OUT / f'{name}-{number}.webp'
-        image.resize((STILL_SIZE, STILL_SIZE), Image.LANCZOS).save(target, 'WEBP', quality=92, method=6)
+        image.resize((spec['still'], spec['still']), Image.LANCZOS).save(target, 'WEBP', quality=88, method=6)
         print(f'{target.name}: {target.stat().st_size // 1024} KB')
 
 

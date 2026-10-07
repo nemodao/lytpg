@@ -96,6 +96,34 @@ const ART = {
     </div>`,
 };
 
+// Every image a step shows. They are loaded before the step opens, so the pop-up and its artwork appear
+// together and timed effects always play in order (never a later part before an earlier one that was still loading).
+function assetsFor(step) {
+  const tour = (name) => `../assets/tour/${name}.webp`;
+  const urls = [tour('finger')];
+  if (CAROUSELS[step.art]) CAROUSELS[step.art].holds.forEach((_, index) => urls.push(tour(`${step.art}-${index + 1}`)));
+  if (step.art === 'step-2') urls.push(tour('step-2-candles'), tour('step-2-coin'));
+  if (step.list) step.list.forEach((icon) => urls.push(tour(`step-${step.id}-${icon}`)));
+  if (step.sparkles) urls.push(tour('sparkle'));
+  if (step.effect === 'gifts') urls.push(tour('gift'));
+  if (step.effect === 'coins') urls.push('../assets/images/coin.png');
+  return urls;
+}
+const loaded = new Map(); // url -> promise that settles once the image has loaded (or failed)
+function preload(urls) {
+  return Promise.all(urls.map((url) => {
+    if (!loaded.has(url)) {
+      const image = new Image();
+      // Wait for the load event (decode() can stall for images that are not in the page); keep a reference so the
+      // image stays in memory and paints at once when the step opens.
+      loaded.set(url, new Promise((done) => { image.onload = () => done(image); image.onerror = () => done(null); }));
+      image.src = url;
+    }
+    return loaded.get(url);
+  }));
+}
+const PRELOAD_LIMIT_MS = 2500; // never hold a step back longer than this on a slow connection
+
 const seen = () => { try { return localStorage.getItem(SEEN_KEY) === '1'; } catch (e) { return false; } };
 const markSeen = () => { try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* storage unavailable */ } };
 
@@ -139,7 +167,7 @@ export function mountTour(ui, common, page) {
   function go(step) {
     if (step.page !== page) { location.assign(urlFor(step)); return; }
     history.replaceState(null, '', urlFor(step));
-    show(step);
+    open(step);
   }
 
   function end({ home }) {
@@ -190,6 +218,20 @@ export function mountTour(ui, common, page) {
     node.innerHTML = items.join('');
     layer.appendChild(node);
     setTimeout(() => node.remove(), lifetime);
+  }
+
+  // Open a step once its images are ready, then warm up the next step's images (also when it is on another page:
+  // they are then served from the browser's cache).
+  let opening = 0;
+  function open(step) {
+    const ticket = ++opening;
+    document.documentElement.classList.add('tour-open'); // block the page while the images load
+    Promise.race([preload(assetsFor(step)), new Promise((done) => setTimeout(done, PRELOAD_LIMIT_MS))]).then(() => {
+      if (ticket !== opening) return;
+      show(step);
+      const next = steps[steps.indexOf(step) + 1];
+      if (next) preload(assetsFor(next));
+    });
   }
 
   function show(step) {
@@ -314,7 +356,7 @@ export function mountTour(ui, common, page) {
   // Resume the step named in the URL, or open the tour on the first visit to Home. `?tour=off` never opens it.
   const wanted = params.get('tour');
   const resumed = steps.find((step) => String(step.id) === wanted && step.page === page);
-  if (resumed) show(resumed);
+  if (resumed) open(resumed);
   else if (wanted !== 'off' && !wanted && page === 'dashboard' && (!seen() || common.tour.firstVisit)) start();
 
   return { start };
