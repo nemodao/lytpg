@@ -17,6 +17,8 @@ const STEPS = [
   { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts', art: 'step-4' },
   { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: ['available', 'expired', 'history'] },
 ];
+// API: "tour already seen" is remembered in this browser only. If the app or the API should remember it per user,
+// replace `seen` / `markSeen` below; nothing else depends on localStorage.
 const SEEN_KEY = 'hsb-loyalty-tour-seen';
 const COUNT_MS = 1500;
 // A finger appears under the pop-up's main (blue) button to nudge the user on: after FINGER_AFTER seconds, or the

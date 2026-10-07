@@ -10,7 +10,9 @@ const { common, page, ui } = await load('point-balance');
 const empty = page.empty || {};
 // Pending lots only exist while there are pending coins (`has-pending` state) and fully used lots only with the
 // `has-used` state; both join the other lots here.
-const items = [...page.pendingItems, ...page.usedItems, ...page.items];
+// API: one list of lots is enough. `pendingItems`, `usedItems` and `empty` exist only so preview states can add or
+// remove groups of lots; with a real API send every lot in `items` and leave the other three empty/absent.
+const items = [...(page.pendingItems || []), ...(page.usedItems || []), ...page.items];
 // A lot is past its expiry once its expiry day has started (expiry is at 01:00 WIB).
 const isPastExpiry = (item) => Boolean(item.expiresAt) && ui.daysUntil(item.expiresAt) <= 0;
 // Available: pending, earning, active, plus fully used lots that have not expired yet.

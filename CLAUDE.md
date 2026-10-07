@@ -50,7 +50,7 @@ Heading `--font-heading-h1` tới `h4` là cỡ desktop, không dùng trên mobi
 - `STATES.md`: danh mục state của cả 3 trang (sinh tự động, không sửa tay).
 - `tokens/`: design token và script build.
 - `pages/`: mỗi trang gồm `<tên>.html`, `<tên>.js` (render) và `<tên>.css` (style riêng của trang).
-- `shared/`: `base.css` (khung, font, kiểu chữ), `components.css` và `components.js` (component dùng chung), `app.js` (tải mock và copy, áp state, định dạng số và ngày), `nav.js` (thanh điều hướng dưới), `tour.js` (tour hướng dẫn 5 bước), `live-feed.js`, `date-filter.js`, `theme.js`, `icons.svg`.
+- `shared/`: `base.css` (khung, font, kiểu chữ), `components.css` và `components.js` (component dùng chung), `data-source.js` (chỗ duy nhất lấy dữ liệu: mock hôm nay, API sau này), `app.js` (áp state, định dạng số và ngày), `nav.js` (thanh điều hướng dưới), `tour.js` (tour hướng dẫn 5 bước), `live-feed.js`, `date-filter.js`, `theme.js`, `icons.svg`.
 - `mock/`: dữ liệu mẫu. `common.json` dùng chung; mỗi trang một file gồm `default` và `states` (mỗi state là phần ghi đè).
 - `copy/en.json`: toàn bộ chữ trên UI. Không viết chữ thẳng vào trang.
 - `assets/fonts/`: font woff2 đóng gói sẵn. Không dùng Google Fonts.
@@ -83,8 +83,15 @@ Kết quả nằm ở `dist/hsb-loyalty-review/` và `dist/hsb-loyalty-review.zi
 Không gửi nguyên thư mục project. Chạy:
 
 ```
-python3 tools/build-handoff.py
+python3 tools/build-states.py && python3 tools/build-data-contract.py && python3 tools/build-handoff.py
 ```
 
-Kết quả ở `dist/handoff/` và `dist/handoff.zip`: bỏ thư mục `demo/` và khối DEMO ONLY trong HTML. Lệnh sẽ báo lỗi và không tạo bản bàn giao nếu còn sót code demo. Các nút giữ thuộc tính `data-intent` (redeem, reward, trade, trade-account, kyc, deposit, checkin, exit): dev dựa vào đó để gắn deeplink (spec §30).
+Kết quả ở `dist/handoff/` và `dist/handoff.zip`: bỏ thư mục `demo/` và khối DEMO ONLY trong HTML; lệnh báo lỗi nếu còn sót code demo. Dev đọc `HANDOFF.md` trước.
 
+Quy ước để dev (và AI của họ) convert và nhận bản cập nhật dễ:
+
+- **Dữ liệu chỉ đi qua `shared/data-source.js`.** Không gọi `fetch` ở chỗ khác. Map API về sau là sửa file này cho trả về đúng shape trong `DATA.md`.
+- **`DATA.md`** (hợp đồng dữ liệu) sinh từ mock bằng `tools/build-data-contract.py`. Thêm field vào mock thì phải thêm mô tả trong script, nếu không lệnh sẽ báo lỗi.
+- **Đánh dấu trong code:** `API:` (chỗ sẽ đổi khi nối API), `PREVIEW ONLY` (chỉ phục vụ xem state), `DEMO ONLY` (thư mục `demo/`). Thêm logic giả lập mới thì ghi đúng một trong các nhãn này.
+- **Giữ ổn định giữa các bản:** tên file, tên hàm, tên class CSS, key copy, giá trị `data-intent` và `data-tour`. Đổi tên là làm diff của dev phình ra.
+- **Mỗi lần bàn giao:** tăng số trong `HANDOFF_VERSION`, thêm mục mới ở đầu `CHANGELOG.md` (đổi gì cho user, file nào đổi, `DATA.md`/`STATES.md` có đổi không), build, rồi gắn tag `git tag handoff-<số>`. Từ bản thứ hai, gói bàn giao tự kèm file diff so với tag trước.

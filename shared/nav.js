@@ -7,6 +7,8 @@
 //   hot   — optional; with `flash: true`, the unselected icon turns into this version every few seconds
 // `hot: true` adds the floating "HOT" badge on the icon's top-right corner, to draw attention to that tab
 // (only while the tab is not selected).
+// API: the Exit button and other buttons that leave these pages carry data-intent; the host app attaches the real
+// deeplinks (table in spec.md §30 and HANDOFF.md). No handler is wired here.
 const TABS = [
   { id: 'home', label: 'nav.home', file: 'dashboard.html' },
   { id: 'earn', label: 'nav.earn', file: 'trading-task.html', hot: true, flash: true, needsTask: true },

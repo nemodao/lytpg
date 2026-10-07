@@ -7,6 +7,8 @@
 // blocks. Any page (Home or Earn), opened at the same moment, shows the same trader and points and changes at the same
 // instant, so switching tabs never changes what is on screen.
 
+// API: the entries are invented here (seeded by the clock) so the demo looks alive. In production, replace `entryAt`
+// with entries pushed or polled from the server (one shared stream for all users); keep `isOpen` and the markup.
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const BLOCK_MS = 60000;
 const weekMinutes = ({ day, time }) => { const [h, m] = time.split(':').map(Number); return DAYS.indexOf(day) * 1440 + h * 60 + m; };

@@ -1,6 +1,8 @@
 // Date-range filter shown above a list: "Last 7 days" (default), "Last 30 days", or a custom range picked on a
 // calendar in a bottom sheet (review mockup G5). Used by the Trading Task history and the Point Balance tabs.
 // Days are 'YYYY-MM-DD' keys in WIB; plain string comparison orders them.
+// API: filtering is done here in the browser over the full list the page already has (`includes`). If the API pages
+// or filters by date itself, call it from the page when the range changes and drop `includes`.
 export function createDateFilter(ui, now, id) {
   const todayKey = ui.dayKey(now);
   const addDays = (key, days) => new Date(Date.parse(key) + days * 86400000).toISOString().slice(0, 10);

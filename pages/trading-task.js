@@ -31,6 +31,7 @@ function streakField(count = 90) {
 const heroBg = streakField();
 
 // The only piece of state that changes without a reload: which account is selected.
+// API: `selectedAccountId` is the account the app currently trades with; changing it here is local to this page.
 let selectedId = page.selectedAccountId;
 let sheetOpen = false;
 // Rules and history share one card, switched by tabs; rules show first (spec §15).

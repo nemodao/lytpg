@@ -1,6 +1,8 @@
 // Shared runtime: loads mock data and copy, applies ?state=, and formats values.
 // Pages never hold numbers or text themselves; they render what this module returns.
 
+import { fetchCommon, fetchCopy, fetchPage, fetchPreview } from './data-source.js';
+
 const params = new URLSearchParams(location.search);
 
 // States that mean the same on several pages. Links between pages carry them along, so a Point Balance state
@@ -11,12 +13,6 @@ export const activeStates = (params.get('state') || '')
   .split(',')
   .map((s) => s.trim())
   .filter(Boolean);
-
-const getJSON = (path) =>
-  fetch(path).then((res) => {
-    if (!res.ok) throw new Error(`${path}: ${res.status}`);
-    return res.json();
-  });
 
 // Objects merge key by key; arrays and primitives (including null) replace.
 function merge(target, patch) {
@@ -50,6 +46,8 @@ function makeUi(copy, common) {
   const oneDecimal = new Intl.NumberFormat(NUMBER_LOCALE, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
   const hourMinute = new Intl.DateTimeFormat(copy.locale, { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: WIB });
   const dayKey = (iso) => new Intl.DateTimeFormat('en-CA', { timeZone: WIB }).format(new Date(iso));
+  // API: `common.now` is the server's current time. The mock pins it so the demo always looks the same; with a real
+  // API send the real time (or drop the field and use the device clock here).
   const today = dayKey(common.now);
 
   const ui = {
@@ -90,16 +88,14 @@ function makeUi(copy, common) {
   return ui;
 }
 
+// Loads everything a page needs. Data comes only from data-source.js (mock today, API later).
+// Returns { common, page, ui }: `common` and `page` are plain data (see DATA.md), `ui` is the formatting helper set.
 export async function load(page) {
-  const [common, file, copy] = await Promise.all([
-    getJSON('../mock/common.json'),
-    getJSON(`../mock/${page}.json`),
-    getJSON('../copy/en.json'),
-  ]);
-  const data = { common, page: structuredClone(file.default) };
-  // States apply in the order they are declared in the mock file, so combinations are predictable.
-  for (const name of Object.keys(file.states)) {
-    if (activeStates.includes(name)) merge(data, structuredClone(file.states[name]));
+  const [common, pageData, copy, states] = await Promise.all([fetchCommon(), fetchPage(page), fetchCopy(), fetchPreview(page)]);
+  const data = { common, page: structuredClone(pageData) };
+  // PREVIEW ONLY: ?state=a,b merges named overrides over the data, in the order they are declared in the mock file.
+  for (const name of Object.keys(states)) {
+    if (activeStates.includes(name)) merge(data, structuredClone(states[name]));
   }
   return { ...data, has: (name) => activeStates.includes(name), ui: makeUi(copy, data.common) };
 }
