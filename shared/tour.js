@@ -219,7 +219,7 @@ export function mountTour(ui, common, page) {
     if (step.sparkles && !reducedMotion) {
       const reach = 22; // px the sparkles may spread beyond the button's edges
       const sparkles = Array.from({ length: 10 }, () => {
-        const size = 8 + Math.random() * 18;
+        const size = 6 + Math.random() * 11; // 6–17px
         // A random point in the band around the button: outside its middle, within `reach` of its edges.
         let x; let y;
         do {
