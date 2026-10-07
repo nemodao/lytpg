@@ -2,6 +2,7 @@
 import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
+import { mountTour } from '../shared/tour.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { appHeader, badge, coin, joinIntent, joinLabel, notice } from '../shared/components.js';
 
@@ -187,7 +188,7 @@ function infoCard() {
   const tabButton = (id, key) =>
     `<button class="tab" type="button" role="tab" aria-selected="${tab === id}" data-action="tab" data-tab="${id}">${ui.t(key)}</button>`;
   return `
-    <section class="card">
+    <section class="card" data-tour="rules">
       <div class="tabs" role="tablist">${tabButton('rules', 'tt.rules')}${tabButton('history', 'tt.history')}</div>
       ${tab === 'rules' ? rulesList() : historyList()}
     </section>`;
@@ -252,3 +253,5 @@ document.addEventListener('keydown', (event) => {
 
 render();
 mountNav(ui, common, 'earn');
+// Guided tour, step 2: the highest earning rate fills "Earn up to {max} coins per lot".
+mountTour(ui, common, 'trading-task', { max: ui.num(Math.max(...rates.map((rate) => rate.ptsPerLot))) });

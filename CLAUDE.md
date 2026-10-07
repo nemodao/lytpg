@@ -50,7 +50,7 @@ Heading `--font-heading-h1` tới `h4` là cỡ desktop, không dùng trên mobi
 - `STATES.md`: danh mục state của cả 3 trang (sinh tự động, không sửa tay).
 - `tokens/`: design token và script build.
 - `pages/`: mỗi trang gồm `<tên>.html`, `<tên>.js` (render) và `<tên>.css` (style riêng của trang).
-- `shared/`: `base.css` (khung, font, kiểu chữ), `components.css` và `components.js` (component dùng chung), `app.js` (tải mock và copy, áp state, định dạng số và ngày), `theme.js`, `icons.svg`.
+- `shared/`: `base.css` (khung, font, kiểu chữ), `components.css` và `components.js` (component dùng chung), `app.js` (tải mock và copy, áp state, định dạng số và ngày), `nav.js` (thanh điều hướng dưới), `tour.js` (tour hướng dẫn 5 bước), `live-feed.js`, `date-filter.js`, `theme.js`, `icons.svg`.
 - `mock/`: dữ liệu mẫu. `common.json` dùng chung; mỗi trang một file gồm `default` và `states` (mỗi state là phần ghi đè).
 - `copy/en.json`: toàn bộ chữ trên UI. Không viết chữ thẳng vào trang.
 - `assets/fonts/`: font woff2 đóng gói sẵn. Không dùng Google Fonts.
@@ -66,7 +66,7 @@ Trang tải JSON nên phải chạy qua http, không mở file trực tiếp. D�
 python3 serve.py 8000
 ```
 
-Rồi mở `http://localhost:8000/pages/dashboard.html`. State: `?state=expiring,has-pending`. Theme: `?theme=dark|light`.
+Rồi mở `http://localhost:8000/pages/dashboard.html`. Lần đầu mở Home trên một trình duyệt, tour hướng dẫn sẽ tự hiện; thêm `?tour=off` để tắt khi cần chụp hay kiểm tra trang. State: `?state=expiring,has-pending`. Theme: `?theme=dark|light`.
 
 ## Bản offline để gửi review
 

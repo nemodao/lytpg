@@ -24,6 +24,7 @@ MODULES = {
     '../shared/date-filter.js': '__dateFilter',
     '../shared/nav.js': '__nav',
     '../shared/live-feed.js': '__liveFeed',
+    '../shared/tour.js': '__tour',
 }
 
 

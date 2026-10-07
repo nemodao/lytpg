@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg">
   <symbol id="home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></symbol>
   <symbol id="calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.500" rx="2.500"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.500 15l2.300 2.300L15.500 13"/></symbol>
+  <symbol id="help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.500 9.300a2.600 2.600 0 1 1 3.900 2.200c-.900.500-1.400 1.100-1.400 2.100M12 16.800v.100"/></symbol>
   <symbol id="back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
   <symbol id="right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
   <symbol id="down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>

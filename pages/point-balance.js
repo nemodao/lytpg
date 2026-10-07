@@ -2,6 +2,7 @@
 import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createDateFilter } from '../shared/date-filter.js';
+import { mountTour } from '../shared/tour.js';
 import { appHeader, badge, balanceBlock, coin, notice } from '../shared/components.js';
 
 const { common, page, ui } = await load('point-balance');
@@ -133,7 +134,7 @@ function body() {
   const tabButton = (id, key) =>
     `<button class="tab" type="button" role="tab" aria-selected="${tab === id}" data-action="tab" data-tab="${id}">${ui.t(key)}</button>`;
   return `
-    <div class="tabs" role="tablist">${tabButton('available', 'pb.tab.available')}${tabButton('expired', 'pb.tab.expired')}${tabButton('history', 'pb.tab.history')}</div>
+    <div class="tabs" role="tablist" data-tour="tabs">${tabButton('available', 'pb.tab.available')}${tabButton('expired', 'pb.tab.expired')}${tabButton('history', 'pb.tab.history')}</div>
     ${{ available: availableTab, expired: expiredTab, history: historyTab }[tab]()}`;
 }
 
@@ -162,3 +163,4 @@ document.addEventListener('keydown', (event) => {
 
 render();
 mountNav(ui, common, 'points');
+mountTour(ui, common, 'point-balance');

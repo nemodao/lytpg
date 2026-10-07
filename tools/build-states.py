@@ -55,6 +55,8 @@ def main():
         '',
         f'**Shared states** mean the same thing on every page and carry over through links between pages: {", ".join(f"`{s}`" for s in shared)}.',
         '',
+        'Guided tour: `?tour=<step>` resumes a step, `?tour=off` keeps it closed (use it for screenshots).',
+        '',
         'Other URL parameters (demo aids): `?theme=light|dark`; Trading Task `?tab=history`; Coin Balance',
         '`?tab=available|expired|history`; date filters `?range=30` or `?range=YYYY-MM-DD..YYYY-MM-DD`, `?cal=1` opens the calendar.',
         '',

@@ -13,11 +13,17 @@ export const notice = (ui, { icon = 'info', tone = 'neutral', text }) =>
   `<div class="notice notice--${tone}">${ui.icon(icon)}<p>${text}</p></div>`;
 
 // Header used on every page: centred title. No back button: leaving the webview is the bottom bar's X (spec §29).
-export const appHeader = (ui, { title }) => `
+// `action` is optional markup for the right edge (Home: the help button that reopens the tour).
+export const appHeader = (ui, { title, action = '' }) => `
   <header class="app-header">
     <span></span>
     <h1>${title}</h1>
+    ${action}
   </header>`;
+
+// Round help button for the header: reopens the guided tour.
+export const tourButton = (ui) =>
+  `<button class="header-action" type="button" data-tour-start aria-label="${ui.t('tour.open')}">${ui.icon('help')}</button>`;
 
 // Users who must still pass KYC or make a first deposit (FTD) see everything as usual; only the trade button changes
 // to the step they need ("KYC to join", "Deposit to join"). Returns null when the user can already take part.
@@ -33,7 +39,7 @@ export const joinIntent = (common) => common.program.joinRequirement || null;
 export function balanceBlock(ui, common, { href = '', card = false } = {}) {
   const { available, pending, expiring } = common.balance;
   return `
-  <section class="balance ${card ? 'card card--soft' : ''}">
+  <section class="balance ${card ? 'card card--soft' : ''}" data-tour="balance">
     ${href ? `<a class="card-link" href="${href}" aria-label="${ui.t('balance.title')}"></a>` : ''}
     <div class="balance-row">
       ${coin('coin--lg')}
@@ -43,7 +49,7 @@ export function balanceBlock(ui, common, { href = '', card = false } = {}) {
         ${pending > 0 ? `<p class="t-label c-2 num">${ui.t('balance.pending', { points: ui.num(pending) })}</p>` : ''}
       </div>
       <div class="balance-side">
-        <button class="btn btn--sm btn--mono above" type="button" data-intent="redeem">${ui.t('balance.redeem')}${ui.icon('gift', 'icon--sm')}</button>
+        <button class="btn btn--sm btn--mono above" type="button" data-intent="redeem" data-tour="redeem">${ui.t('balance.redeem')}${ui.icon('gift', 'icon--sm')}</button>
       </div>
     </div>
     ${expiring ? `<div class="notice notice--danger">${ui.icon('clock')}<p class="num">${expiringText(ui, common)}</p></div>` : ''}

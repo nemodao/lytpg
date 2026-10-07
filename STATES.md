@@ -9,6 +9,8 @@ default data (objects merge key by key, arrays and plain values replace).
 
 **Shared states** mean the same thing on every page and carry over through links between pages: `empty`, `market-closed`, `needs-kyc`, `needs-deposit`, `has-pending`, `expiring`.
 
+Guided tour: `?tour=<step>` resumes a step, `?tour=off` keeps it closed (use it for screenshots).
+
 Other URL parameters (demo aids): `?theme=light|dark`; Trading Task `?tab=history`; Coin Balance
 `?tab=available|expired|history`; date filters `?range=30` or `?range=YYYY-MM-DD..YYYY-MM-DD`, `?cal=1` opens the calendar.
 
@@ -18,6 +20,7 @@ File: `mock/dashboard.json` · page: `pages/dashboard.html`
 
 | Group | State | What it shows | Data it changes |
 |---|---|---|---|
+| Page | `first-visit` ("First visit (tour)") | Treats this as the first time Home is opened on the device: the guided tour opens by itself. Without it, the tour opens only once per device, or from the help button in the header. | `common.tour.firstVisit = true` |
 | Page | `no-task-trading` ("No Task: Trading") | The Trading Task is not shown to this user, because: (1) the Trading Task has been turned off; (2) the Trading Task has been blocked for this user (reason set in config, e.g. blacklist, A-Book); or (3) the Trading Task has been hidden from all users. The Daily Trading card and the Earn tab are hidden. | `common.program.tradingTask = false` |
 | Participation | `needs-kyc` · shared | User must pass KYC to take part. Everything shows as usual; the trade button reads “KYC to join”. | `common.program.joinRequirement = "kyc"` |
 | Participation | `needs-deposit` · shared | User must make a first deposit to take part. Everything shows as usual; the trade button reads “Deposit to join”. | `common.program.joinRequirement = "deposit"` |

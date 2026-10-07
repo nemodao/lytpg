@@ -75,5 +75,9 @@
       5,
       6
     ]
+  },
+  "tour": {
+    "firstVisit": false,
+    "simulatedBalance": 12890
   }
 }

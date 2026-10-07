@@ -431,3 +431,22 @@ Buttons (primary, stroke) and the bottom bar have no drop shadow, matching the f
 
 The Daily Trading cards (Dashboard task card, Trading Task Today / ended card) use the **pale theme card** from the review mockup ("Theme · pale": soft blue fill `--surface-brand-soft`, soft blue stroke `--stroke-brand-soft`, page text colours, mono `Trade now` button). The card follows the page theme (light / dark). This replaces the vivid yellow and closes the colour review in §35: the other options (vivid yellow, pale yellow, indigo) and their preview states are removed. Wherever earlier sections say "yellow card", read "Daily Trading card".
 
+## 38. Guided tour (decided 7 Oct 2026)
+
+A five-step tour that explains how to earn coins and redeem gifts. It is a product feature (not demo): code in `shared/tour.js`, copy under `tour.*`.
+
+| Step | Page | Highlight | Text | Button |
+|---|---|---|---|---|
+| 1 | Home | none (pop-up in the middle) | `Welcome to the HSB Loyalty Program` / `Take a quick tour to see how to earn coins and redeem them for gifts.` | `Start exploring` |
+| 2 | Earn | the `How it works` card | `Earn coins when you trade` / `Earn up to 10 coins per lot. The highlighted rules show how it works.` (10 = the highest rate in the rates list) | `See my coins` |
+| 3 | Coins | the Coin Balance card | `Coins reach your balance quickly` / `Coins from your trades are added to your balance.` / `The moving number is only a simulation.` | `Redeem gift` |
+| 4 | Coins | the `Redeem` button | `Use your coins to redeem gifts` / `Tap Redeem to exchange coins for gifts. You can explore the rewards after the tour.` | `Continue` |
+| 5 | Coins | the three tabs | `Manage your coins` / Available: coins you can still spend · Expired: coins that have expired · History: every time coins were added to or taken from your balance | `Finish tour` |
+
+- **When it opens:** by itself the first time Home is opened on a device (remembered on the device), and whenever the user taps the help button (round `?`) at the right of the Home header.
+- **Blocking:** while the tour runs nothing but the pop-up can be tapped; the page does not scroll; the bottom bar is covered. The highlighted part is visible but not tappable (so `Redeem` cannot be pressed in step 4).
+- **Buttons:** every step after the first has `Back` (it goes back across pages too). Every step except the last has `Skip tour`, which closes the tour on the current page. `Finish tour` returns to Home. Skipping or finishing both count as "seen".
+- **Step 3 effect (temporary, simulated):** the balance counts up from the real balance to 12,890 (`tour.simulatedBalance`) in about 1.5 s, with green plus signs and small coins popping around it. The simulated number stays through steps 4 and 5 and is gone when the tour ends. With reduced motion the number just changes.
+- **No trading task:** step 2 is skipped and the tour has four steps.
+- **Progress** travels between pages in the URL (`?tour=<step>`); `?tour=off` never opens the tour. Preview state `first-visit` (Dashboard, group Page) acts as a first visit.
+

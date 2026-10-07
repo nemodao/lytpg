@@ -3,13 +3,16 @@
     {
       "title": "Page",
       "states": [
+        "first-visit",
         "no-task-trading"
       ],
       "labels": {
-        "no-task-trading": "No Task: Trading"
+        "no-task-trading": "No Task: Trading",
+        "first-visit": "First visit (tour)"
       },
       "descriptions": {
-        "no-task-trading": "The Trading Task is not shown to this user, because: (1) the Trading Task has been turned off; (2) the Trading Task has been blocked for this user (reason set in config, e.g. blacklist, A-Book); or (3) the Trading Task has been hidden from all users. The Daily Trading card and the Earn tab are hidden."
+        "no-task-trading": "The Trading Task is not shown to this user, because: (1) the Trading Task has been turned off; (2) the Trading Task has been blocked for this user (reason set in config, e.g. blacklist, A-Book); or (3) the Trading Task has been hidden from all users. The Daily Trading card and the Earn tab are hidden.",
+        "first-visit": "Treats this as the first time Home is opened on the device: the guided tour opens by itself. Without it, the tour opens only once per device, or from the help button in the header."
       }
     },
     {
@@ -96,6 +99,34 @@
     }
   },
   "states": {
+    "first-visit": {
+      "common": {
+        "tour": {
+          "firstVisit": true
+        }
+      }
+    },
+    "no-task-trading": {
+      "common": {
+        "program": {
+          "tradingTask": false
+        }
+      }
+    },
+    "needs-kyc": {
+      "common": {
+        "program": {
+          "joinRequirement": "kyc"
+        }
+      }
+    },
+    "needs-deposit": {
+      "common": {
+        "program": {
+          "joinRequirement": "deposit"
+        }
+      }
+    },
     "empty": {
       "common": {
         "balance": {
@@ -109,13 +140,6 @@
       "common": {
         "balance": {
           "pending": 850
-        }
-      }
-    },
-    "no-task-trading": {
-      "common": {
-        "program": {
-          "tradingTask": false
         }
       }
     },
@@ -157,20 +181,6 @@
       "page": {
         "checkIn": {
           "enabled": true
-        }
-      }
-    },
-    "needs-kyc": {
-      "common": {
-        "program": {
-          "joinRequirement": "kyc"
-        }
-      }
-    },
-    "needs-deposit": {
-      "common": {
-        "program": {
-          "joinRequirement": "deposit"
         }
       }
     }

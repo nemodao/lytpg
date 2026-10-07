@@ -131,6 +131,7 @@
 /* ---- App header: centred title (no back button) ---- */
 .app-header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--spacing-8); min-height: var(--size-icon-button); }
 .app-header h1 { font: var(--font-large-semibold); text-align: center; }
+.header-action { justify-self: end; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--ui-surface-pure); border: var(--size-stroke) solid var(--ui-stroke-soft); color: var(--ui-icon-secondary); }
 
 /* ---- Today panel (Dashboard task card, Trading Task progress card); sits on a blend card ---- */
 .coin--xs { width: var(--size-icon-sm); height: var(--size-icon-sm); }
@@ -246,3 +247,25 @@
 .live-feed__in { animation: live-feed-in 0.4s ease-out; }
 @keyframes live-feed-in { from { opacity: 0; transform: translateY(var(--spacing-4)); } }
 @media (prefers-reduced-motion: reduce) { .live-feed__in { animation: none; } }
+
+/* ---- Guided tour: a blocking layer with a highlighted area and one pop-up card ---- */
+.tour-open { overflow: hidden; }
+.tour { position: fixed; inset: 0; z-index: 70; }
+/* The highlight is a hole in the scrim: a box whose huge shadow darkens everything around it. */
+.tour__spot { position: fixed; box-shadow: 0 0 0 200vmax var(--ui-overlay-scrim); pointer-events: none; }
+.tour__spot--none { left: 50%; top: 50%; width: 0; height: 0; }
+.tour__card {
+  position: fixed; display: flex; flex-direction: column; gap: var(--spacing-8);
+  padding: var(--spacing-card); border-radius: var(--radius-card); background: var(--card-surface); border: var(--size-stroke) solid var(--card-stroke);
+}
+.tour__top { display: flex; align-items: center; justify-content: space-between; min-height: var(--size-control-xs); }
+.tour__skip { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); padding: var(--spacing-4) 0; }
+.tour__list { display: flex; flex-direction: column; gap: var(--spacing-6); margin: 0; padding: 0; list-style: none; font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.tour__list strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
+.tour__card p strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
+.tour__actions { display: flex; gap: var(--spacing-8); margin-top: var(--spacing-8); }
+/* Step 3: plus signs and small coins pop up around the balance. */
+.tour__burst { position: fixed; pointer-events: none; }
+.tour__pop { position: absolute; width: var(--size-icon-sm); height: var(--size-icon-sm); opacity: 0; animation: tour-pop 1.2s ease-out both; }
+.tour__pop--plus { width: auto; height: auto; font: var(--font-medium-semibold); color: var(--ui-text-green); }
+@keyframes tour-pop { 0% { opacity: 0; transform: translateY(var(--spacing-8)) scale(0.6); } 25% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(calc(var(--spacing-32) * -1)) scale(1); } }
