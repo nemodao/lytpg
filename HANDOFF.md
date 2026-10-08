@@ -43,7 +43,7 @@ pages/<page>.js
 ```
 
 - `common` = data shared by all pages; `page` = this page's data. Shapes: `DATA.md`.
-- `ui` = helpers only, no data: `ui.t(key, vars)` text, `ui.md` text with bold, `ui.num` (12,450), `ui.lots` (3.5),
+- `ui` = helpers only, no data: `ui.t(key, vars)` text, `ui.md` text with bold, `ui.num` (3,100), `ui.lots` (3.5),
   `ui.date` (13 Oct), `ui.dateYear`, `ui.time`, `ui.daysUntil`, `ui.icon(name)` (sprite `shared/icons.svg`), `ui.href(file)`.
 - Local UI state is a few `let` variables at the top of each page file (selected tab, open sheet, date range). Convert
   them to component state.

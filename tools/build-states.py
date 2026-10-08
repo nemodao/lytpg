@@ -24,7 +24,7 @@ def shared_states():
 
 
 def patch_summary(patch):
-    """Flatten a state's override into `path = value` lines, e.g. `common.balance.pending = 850`."""
+    """Flatten a state's override into `path = value` lines, e.g. `common.balance.pending = 120`."""
     lines = []
 
     def walk(value, path):

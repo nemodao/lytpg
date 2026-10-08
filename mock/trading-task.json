@@ -50,7 +50,7 @@
   "default": {
     "today": {
       "lots": 3.5,
-      "points": 2100,
+      "points": 310,
       "status": "pending",
       "creditAt": "2026-10-17T01:00:00+07:00",
       "updatedAt": "2026-10-14T14:35:00+07:00",
@@ -61,63 +61,63 @@
       {
         "date": "2026-10-13",
         "lots": 1.4,
-        "points": 850,
+        "points": 120,
         "status": "pending",
         "capped": false
       },
       {
         "date": "2026-10-10",
         "lots": 4.2,
-        "points": 2520,
+        "points": 360,
         "status": "credited",
         "capped": false
       },
       {
         "date": "2026-10-08",
-        "lots": 14.6,
-        "points": 10000,
+        "lots": 24.6,
+        "points": 2000,
         "status": "credited",
         "capped": true
       },
       {
         "date": "2026-10-06",
         "lots": 6.1,
-        "points": 3730,
+        "points": 540,
         "status": "credited",
         "capped": false
       },
       {
         "date": "2026-10-02",
         "lots": 2.8,
-        "points": 1680,
+        "points": 250,
         "status": "credited",
         "capped": false
       },
       {
         "date": "2026-09-29",
         "lots": 0.9,
-        "points": 540,
+        "points": 80,
         "status": "credited",
         "capped": false
       },
       {
         "date": "2026-09-24",
         "lots": 5.3,
-        "points": 3180,
+        "points": 460,
         "status": "credited",
         "capped": false
       },
       {
         "date": "2026-09-17",
-        "lots": 15.0,
-        "points": 10000,
+        "lots": 26.0,
+        "points": 2000,
         "status": "credited",
         "capped": true
       },
       {
         "date": "2026-09-08",
         "lots": 3.2,
-        "points": 1920,
+        "points": 280,
         "status": "credited",
         "capped": false
       }
@@ -161,8 +161,8 @@
       "page": {
         "today": {
           "capped": true,
-          "lots": 14.2,
-          "points": 10000
+          "lots": 23.8,
+          "points": 2000
         }
       }
     },

@@ -28,7 +28,7 @@ function merge(target, patch) {
 }
 
 const WIB = 'Asia/Jakarta';
-const NUMBER_LOCALE = 'en-US'; // spec §2: comma for thousands, dot for decimals, e.g. 12,450 and 3.5
+const NUMBER_LOCALE = 'en-US'; // spec §2: comma for thousands, dot for decimals, e.g. 3,100 and 3.5
 
 const escapeHtml = (value) =>
   String(value).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));

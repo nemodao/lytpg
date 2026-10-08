@@ -483,3 +483,15 @@ While the user still needs KYC or a first deposit (`program.joinRequirement` = `
 Open point (to check later): whether a user who has not passed KYC or made a first deposit should see the full rates table on the Earn page. Today they do.
 
 **Sample rates and daily maximum changed (8 Oct 2026):** the sample data now uses Forex 80, Metal 100, Indices 90 and Other symbols 70 coins per lot, with a daily maximum of 2,000 coins (was 5 / 10 / 3 / 1 and 10,000). Every text that reads these values follows: the rates table, the rule `Earn up to 2,000 coins per day.`, and tour step 2 `Earn up to 100 coins per lot.` Earlier sections that quote 10 coins per lot or 10,000 a day are superseded.
+
+**Sample figures brought in line with the 2,000 daily maximum (8 Oct 2026).** Sample amounts quoted in earlier sections are superseded by these:
+
+| Figure | Now | Was |
+|---|---|---|
+| Available balance | 3,100 | 12,450 |
+| Today | 3.5 lots · 310 coins | 3.5 lots · 2,100 |
+| Pending (state `has-pending`) | +120 pending | +850 |
+| Capped day | 2,000 coins (about 24 lots) | 10,000 |
+| Tour step 3 simulated balance | 3,410 (balance + today's 310) | 12,890 |
+
+Every daily amount is between 70 and 100 coins per lot and never above 2,000. On Coins, the lots and the history use the same amounts as the Earn history; redemptions and the refund are 1,000 coins each. The expiring warning stays at 1,200 coins.

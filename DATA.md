@@ -16,8 +16,8 @@ Example file: `mock/common.json`
 | Field | Type | Example | Meaning |
 |---|---|---|---|
 | `now` | string | `"2026-10-14T14:35:00+07:00"` | Current server time, ISO 8601 with offset. Drives "today", days until expiry, and the live-feed open/closed check. |
-| `balance.available` | number | `12450` | Coins the user can spend now. The big number on Home and Coins. |
-| `balance.pending` | number | `0` | Coins earned but not yet credited. Shown as "+850 pending" when above 0. |
+| `balance.available` | number | `3100` | Coins the user can spend now. The big number on Home and Coins. |
+| `balance.pending` | number | `0` | Coins earned but not yet credited. Shown as "+120 pending" when above 0. |
 | `balance.expiring` | null or object | `null` | Coins about to expire, or null. When set, the red warning shows under the balance. |
 | `balance.expiring.points` |  |  | How many coins expire within the warning window. |
 | `balance.expiring.date` | YYYY-MM-DD |  | Date of the nearest expiry (not displayed; kept for reference). |
@@ -48,7 +48,7 @@ Example file: `mock/common.json`
 | `liveFeed.points.bands[].weight` | number | `70` | DEMO generator: share of entries drawn from this band. |
 | `liveFeed.intervalSeconds[]` | number | `[1, 2, 3, 4, 5, 6]` | DEMO generator: possible waits between two entries, in seconds. |
 | `tour.firstVisit` | boolean | `false` | PREVIEW ONLY. Forces the guided tour to open as on a first visit. |
-| `tour.simulatedBalance` | number | `12890` | Figure the balance counts up to in tour step 3 (a simulation). No effect if the real balance is already higher. |
+| `tour.simulatedBalance` | number | `3410` | Figure the balance counts up to in tour step 3 (a simulation). No effect if the real balance is already higher. |
 
 ## Home — `fetchPage('dashboard')`
 
@@ -57,7 +57,7 @@ Example file: `mock/dashboard.json` (`default`)
 | Field | Type | Example | Meaning |
 |---|---|---|---|
 | `task.lotsToday` | number | `3.5` | Lots traded today. "You traded" on the Daily Trading card. |
-| `task.pointsToday` | number | `2100` | Coins earned today. "Coins earned" on the Daily Trading card. |
+| `task.pointsToday` | number | `310` | Coins earned today. "Coins earned" on the Daily Trading card. |
 | `task.updatedAt` | ISO 8601 | `"2026-10-14T14:35:00+07:00"` | When today's figures were last refreshed (not displayed). |
 | `task.capped` | boolean | `false` | true when today's maximum is reached: the capped message shows in the Today panel. |
 | `rewards[].image` | string | `"../assets/images/rewards/reward-1.webp"` | Image of a reward tile on Home (three tiles). Path or URL. |
@@ -74,7 +74,7 @@ Example file: `mock/trading-task.json` (`default`)
 | Field | Type | Example | Meaning |
 |---|---|---|---|
 | `today.lots` | number | `3.5` | Lots traded today. |
-| `today.points` | number | `2100` | Coins earned today. |
+| `today.points` | number | `310` | Coins earned today. |
 | `today.status` | "pending" | "credited" | `"pending"` | Whether today's coins are still waiting or already in the balance. Picks the status line under the figures. |
 | `today.creditAt` | ISO 8601 | `"2026-10-17T01:00:00+07:00"` | When pending coins will be credited. Shown in the pending status line. |
 | `today.updatedAt` | ISO 8601 | `"2026-10-14T14:35:00+07:00"` | When today's figures were last refreshed (not displayed). |
@@ -82,7 +82,7 @@ Example file: `mock/trading-task.json` (`default`)
 | `selectedAccountId` | string | `"50000234"` | Trading account currently selected; must match one of common.accounts[].id. |
 | `history[].date` | YYYY-MM-DD | `"2026-10-13"` | A past trading day. |
 | `history[].lots` | number | `1.4` | Lots traded that day. |
-| `history[].points` | number | `850` | Coins earned that day. |
+| `history[].points` | number | `120` | Coins earned that day. |
 | `history[].status` | "pending" | "credited" | `"pending"` | Badge of that day. In "in-day" mode every past day shows as credited. |
 | `history[].capped` | boolean | `false` | true when that day reached the maximum ("Reached Max Coins"). |
 
@@ -94,14 +94,14 @@ Example file: `mock/point-balance.json` (`default`)
 |---|---|---|---|
 | `items[].source` | "trading" | `"trading"` | Where the lot came from; its label is copy key pb.source.<source>. |
 | `items[].earnedOn` | YYYY-MM-DD | `"2026-10-14"` | Day the coins were earned. |
-| `items[].total` | number | `2100` | Coins earned in this lot ("Earned"). |
-| `items[].remaining` | number | `2100` | Coins of this lot not yet spent ("Remain"); for an expired lot, the coins that expired unspent. |
+| `items[].total` | number | `310` | Coins earned in this lot ("Earned"). |
+| `items[].remaining` | number | `310` | Coins of this lot not yet spent ("Remain"); for an expired lot, the coins that expired unspent. |
 | `items[].status` | "earning" | "pending" | "active" | "used" | "expired" | `"earning"` | State of the lot. earning/pending/active/used-before-expiry show in Available; expired and used-then-expired show in Expired. |
 | `items[].creditAt` | YYYY-MM-DD or null | `null` | When a pending lot will be credited. Null for other statuses. |
 | `items[].expiresAt` | YYYY-MM-DD or null | `"2026-10-28"` | Expiry date of the lot. Null while earning or pending. |
 | `history[].date` | YYYY-MM-DD | `"2026-10-14"` | Day of a balance movement. Rows are grouped by day, newest first. |
 | `history[].type` | "earning" | "earned" | "redeemed" | "refunded" | "expired" | "adjusted" | `"earning"` | Kind of movement; its label is copy key hist.<type>. |
-| `history[].points` | number | `2100` | Signed amount: positive added, negative taken. |
+| `history[].points` | number | `310` | Signed amount: positive added, negative taken. |
 | `history[].source` | "trading" or null | `"trading"` | Source of an earned movement, else null. |
 | `pendingItems[]` | same shape as items[] | `[]` | PREVIEW ONLY. Lots added by the has-pending state. With a real API put every lot in items and send [] or omit. |
 | `usedItems[]` | same shape as items[] | `[]` | PREVIEW ONLY. Lots added by the has-used state. Same remark. |

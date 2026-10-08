@@ -35,7 +35,7 @@
       ],
       "descriptions": {
         "empty": "Balance is 0: no available, pending or expiring coins.",
-        "has-pending": "850 coins are waiting to be credited: “+850 pending” shows under the balance. May be used when applying the T+1 rule to release coins.",
+        "has-pending": "120 coins are waiting to be credited: “+120 pending” shows under the balance. May be used when applying the T+1 rule to release coins.",
         "expiring": "1,200 coins expire within 10 days: red warning under the balance."
       }
     },
@@ -65,7 +65,7 @@
   "default": {
     "task": {
       "lotsToday": 3.5,
-      "pointsToday": 2100,
+      "pointsToday": 310,
       "updatedAt": "2026-10-14T14:35:00+07:00",
       "capped": false
     },
@@ -139,7 +139,7 @@
     "has-pending": {
       "common": {
         "balance": {
-          "pending": 850
+          "pending": 120
         }
       }
     },
@@ -157,8 +157,8 @@
       "page": {
         "task": {
           "capped": true,
-          "lotsToday": 14.2,
-          "pointsToday": 10000
+          "lotsToday": 23.8,
+          "pointsToday": 2000
         }
       }
     },

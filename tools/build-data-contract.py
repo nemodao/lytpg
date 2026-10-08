@@ -18,7 +18,7 @@ FIELDS = {
     'common': {
         'now': ('Current server time, ISO 8601 with offset. Drives "today", days until expiry, and the live-feed open/closed check.', ''),
         'balance.available': ('Coins the user can spend now. The big number on Home and Coins.', ''),
-        'balance.pending': ('Coins earned but not yet credited. Shown as "+850 pending" when above 0.', ''),
+        'balance.pending': ('Coins earned but not yet credited. Shown as "+120 pending" when above 0.', ''),
         'balance.expiring': ('Coins about to expire, or null. When set, the red warning shows under the balance.', 'null or object'),
         'balance.expiring.points': ('How many coins expire within the warning window.', ''),
         'balance.expiring.date': ('Date of the nearest expiry (not displayed; kept for reference).', 'YYYY-MM-DD'),

@@ -1,7 +1,7 @@
 {
   "now": "2026-10-14T14:35:00+07:00",
   "balance": {
-    "available": 12450,
+    "available": 3100,
     "pending": 0,
     "expiring": null
   },
@@ -78,7 +78,7 @@
   },
   "tour": {
     "firstVisit": false,
-    "simulatedBalance": 12890
+    "simulatedBalance": 3410
   },
   "rates": [
     {
