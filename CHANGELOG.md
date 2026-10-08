@@ -19,7 +19,21 @@ Phase 2: small UI fixes, then API mapping. Entries are added here as each change
 
 ### API mapping
 
-_None yet._
+Not mapped yet. These are the points the UI changes above need from the API; each is marked `API:` in the code and listed in `HANDOFF.md` §5.
+
+| # | Value | Field | Where it shows | Status |
+|---|---|---|---|---|
+| 1 | Has the user passed KYC / made a first deposit | `program.joinRequirement`: `"kyc"`, `"deposit"` or `null` | Picks "How to start" or today's figures on Home and Earn; picks the step to do and the button (`shared/components.js` `joinPanel`) | Existing field; must now reflect the real user status |
+| 2 | Lowest and highest earning rate | `rates[].ptsPerLot` | `70–100 coins per lot` on the "How to start" card; also the rates table and tour step 2 | Existing field |
+| 3 | Daily maximum | `program.dailyMaxPoints` | `up to 2,000 a day` on the "How to start" card; also the rules | Existing field |
+| 4 | KYC and Deposit screens | `data-intent="kyc"` / `"deposit"` on the button | `Verify my account` / `Deposit now` | Deeplinks from the host app, not API data |
+| 5 | Terms & Conditions document | `program.termsUrl`: URL or `null` | Text button under the rules on Earn, and the sheet it opens (`pages/trading-task.js` `termsButton`, `termsSheet`) | **New field.** Format open: web page recommended; PDF likely not readable inside the sheet on phones |
+| 6 | Accounts of a user who cannot earn yet | `accounts`, `selectedAccountId` | Not read on Earn while `joinRequirement` is set | May be empty / missing for these users |
+
+Open question for product: should a user who has not passed KYC or made a first deposit see the full rates table on Earn (today: yes)? If not, the API can omit `rates` detail and the card would need another source for the range.
+
+Not API values (fixed in the UI): the three step texts, the 3 s delay and tap rhythm of the finger, button wording.
+
 
 ## Handoff 1 — 7 Oct 2026
 

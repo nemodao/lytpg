@@ -40,6 +40,12 @@ export const joinIntent = (common) => common.program.joinRequirement || null;
 // Nudge: JOIN_NUDGE_AFTER seconds after the card appears, a finger (the tour's hand) comes in under the button and
 // keeps tapping it; the button answers each tap as if pressed. `nudged` = the finger already came in (the page
 // re-rendered): it is simply there and goes on tapping.
+// API: three values feed this block.
+//   1. `program.joinRequirement` ("kyc" | "deposit" | null) picks the step to do now and the button. The API must send
+//      the user's real status: "kyc" until identity is verified, then "deposit" until the first deposit, then null.
+//   2. `rates[].ptsPerLot` gives the "70–100 coins per lot" range (lowest and highest rate above 0).
+//   3. `program.dailyMaxPoints` gives "up to 2,000 a day".
+// The button carries data-intent "kyc" or "deposit": the host app attaches the KYC / Deposit deeplink.
 const JOIN_NUDGE_AFTER = 3;
 export function joinPanel(ui, common, { ratesHref, flat = false, nudged = false }) {
   const { program, rates } = common;

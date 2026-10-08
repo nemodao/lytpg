@@ -118,6 +118,9 @@ function accountsCard() {
       <div class="stack stack--tight"><h3 class="t-label">${ui.t('tt.rates')}</h3><p class="t-body c-3">${intro}</p></div>
       <div class="rates-frame">${ratesList()}</div>
       <p class="t-caption c-3">${ui.t('tt.rates.note')}</p>`;
+  // API: for these users `accounts` may be empty and `selectedAccountId` missing; neither is read in this branch.
+  // `rates` must still be sent (the table below and the range on the Today card read it). Open point (spec §39):
+  // whether these users should see the full rates table at all.
   // Users who still need KYC or a first deposit have no trading account yet: rates only (spec §26). Their button
   // sits on the Today card, next to the step it belongs to (spec §39).
   if (program.joinRequirement) {
@@ -196,7 +199,9 @@ function infoCard() {
 }
 
 // Terms & Conditions (spec §40): a text button after the rules opens the document in a bottom sheet.
-// API: `program.termsUrl` is the document's address, served by the backend; without it the button is not shown.
+// API: `program.termsUrl` (new field) is the document's address, served by the backend; null or missing hides the
+// button. The document format is still open: a PDF will likely not display in an in-app webview frame, a web page
+// will. If the API sends the terms as text instead, render that text in `.doc` in place of the iframe.
 const termsButton = () =>
   program.termsUrl
     ? `<button class="text-btn" type="button" data-action="open-terms" aria-haspopup="dialog">${ui.t('tt.terms')}${ui.icon('right', 'icon--sm')}</button>`
