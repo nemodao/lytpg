@@ -505,3 +505,13 @@ Every daily amount is between 70 and 100 coins per lot and never above 2,000. On
 - during the 4-second wait only the finger floats gently: it drifts 4px away from the button and back, twice. The button stands still while waiting.
 
 This replaces the single pop of the first version. The finger never blocks taps. It reaches a little below the card and overlaps the top of what follows. On Earn, switching the `How it works` / `History` tab does not replay the entrance: the finger stays and goes on tapping. With reduced motion the finger just appears; nothing taps or flashes.
+
+## 40. Terms & Conditions (decided 8 Oct 2026, phase 2)
+
+- **Where:** on Earn, in the `How it works` tab, after the last rule: a text button `Terms & Conditions ›` (brand colour, no background). It is not shown in the guided tour, which reuses the same rules list.
+- **Tap:** opens a bottom sheet titled `Terms & Conditions` with a round close button. The sheet closes with that button, a tap outside it, or Escape.
+- **Content:** the sheet shows the document found at the address the backend sends (`program.termsUrl`), inside a frame that scrolls by itself. `Loading…` shows until the document appears. The document keeps its own look (white page) in both light and dark mode.
+- **No address:** if the backend sends none, the button is not shown.
+- **Sample:** the mock points at a placeholder page (`assets/docs/terms-sample.html`); its wording is not the real terms.
+
+Open point: the format of the document. A PDF address is being considered. Android's in-app webview cannot display a PDF inside a page, and iOS shows only a limited preview, so a PDF will most likely not be readable in this sheet on phones. A web page (HTML) at that address, or the terms sent as text in the API response, works everywhere. To be decided with the backend team before the API is mapped.

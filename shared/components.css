@@ -192,6 +192,16 @@
 }
 .sheet__grab { align-self: center; width: var(--spacing-40); height: var(--spacing-4); border-radius: var(--radius-pill); background: var(--ui-surface-soft); }
 
+/* Document sheet (Terms & Conditions): fixed height, title row with a close button, and the document in a frame that
+   scrolls by itself. The document is served by the backend and keeps its own (light) look in both themes. */
+.sheet--doc { height: var(--size-sheet-max-height); overflow: hidden; }
+.sheet__head { display: flex; align-items: center; gap: var(--spacing-12); }
+.doc { position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: var(--radius-card-inner); border: var(--size-stroke) solid var(--card-stroke); background: var(--color-neutral-0); }
+.doc__loading { position: absolute; inset: 0; display: grid; place-items: center; }
+.doc__frame { position: relative; display: block; width: 100%; height: 100%; border: 0; }
+/* Text button: a quiet link-style button, e.g. "Terms & Conditions" under the rules. */
+.text-btn { align-self: flex-start; display: inline-flex; align-items: center; gap: var(--spacing-2); min-height: var(--size-control-sm); padding: 0; border: 0; background: none; font: var(--font-small-semibold); color: var(--ui-text-brand); cursor: pointer; }
+
 /* ---- Floating bottom navigation: [ Exit ]  [ Home | Earn | Points ] ---- */
 :root { --nav-height: calc(var(--size-control-lg) + var(--spacing-8)); --nav-gap: var(--spacing-12); }
 /* Room under the last item so the bar never covers it. */

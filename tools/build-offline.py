@@ -141,6 +141,8 @@ def main():
                     ignore=shutil.ignore_patterns('.DS_Store', 'coin-hex.png'))
     # Tour animations: the WebP copies only (the WebM sources are not used by the pages).
     shutil.copytree(ROOT / 'assets' / 'tour', OUT / 'assets' / 'tour', ignore=shutil.ignore_patterns('.DS_Store', '*.webm'))
+    # Sample Terms & Conditions document shown in the Earn page's sheet.
+    shutil.copytree(ROOT / 'assets' / 'docs', OUT / 'assets' / 'docs', ignore=shutil.ignore_patterns('.DS_Store'))
     archive = shutil.make_archive(str(OUT), 'zip', root_dir=OUT.parent, base_dir=OUT.name)
     print(f'Built {OUT.relative_to(ROOT)} and {Path(archive).relative_to(ROOT)}')
 

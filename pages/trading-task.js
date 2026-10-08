@@ -34,6 +34,7 @@ const heroBg = streakField();
 // API: `selectedAccountId` is the account the app currently trades with; changing it here is local to this page.
 let selectedId = page.selectedAccountId;
 let sheetOpen = false;
+let termsOpen = false; // Terms & Conditions sheet
 let nudged = false; // the join button's nudge plays on the first render only
 // Rules and history share one card, switched by tabs; rules show first (spec §15).
 
@@ -190,8 +191,32 @@ function infoCard() {
   return `
     <section class="card">
       <div class="tabs" role="tablist">${tabButton('rules', 'tt.rules')}${tabButton('history', 'tt.history')}</div>
-      ${tab === 'rules' ? rulesList(ui, common) : historyList()}
+      ${tab === 'rules' ? rulesList(ui, common) + termsButton() : historyList()}
     </section>`;
+}
+
+// Terms & Conditions (spec §40): a text button after the rules opens the document in a bottom sheet.
+// API: `program.termsUrl` is the document's address, served by the backend; without it the button is not shown.
+const termsButton = () =>
+  program.termsUrl
+    ? `<button class="text-btn" type="button" data-action="open-terms" aria-haspopup="dialog">${ui.t('tt.terms')}${ui.icon('right', 'icon--sm')}</button>`
+    : '';
+
+function termsSheet() {
+  return `
+    <div class="scrim" data-action="close-sheet">
+      <div class="sheet sheet--doc" role="dialog" aria-modal="true" aria-label="${ui.t('tt.terms')}">
+        <span class="sheet__grab"></span>
+        <div class="sheet__head">
+          <h2 class="t-title-s grow">${ui.t('tt.terms')}</h2>
+          <button class="header-action" type="button" data-action="close-terms" aria-label="${ui.t('common.close')}">${ui.icon('close')}</button>
+        </div>
+        <div class="doc" data-theme="light">
+          <p class="doc__loading t-body c-3">${ui.t('tt.terms.loading')}</p>
+          <iframe class="doc__frame" src="${ui.esc(program.termsUrl)}" title="${ui.t('tt.terms')}"></iframe>
+        </div>
+      </div>
+    </div>`;
 }
 
 function sheet() {
@@ -228,6 +253,7 @@ function render() {
     ${accountsCard()}
     ${infoCard()}
     ${sheetOpen ? sheet() : ''}
+    ${termsOpen ? termsSheet() : ''}
     ${historyFilter.sheet()}`;
   feed.start(app);
   nudged = true;
@@ -239,17 +265,20 @@ app.addEventListener('click', (event) => {
   const action = target.dataset.action;
   if (historyFilter.handle(target, event)) { render(); return; }
   if (action === 'open-sheet') sheetOpen = true;
+  else if (action === 'open-terms') termsOpen = true;
+  else if (action === 'close-terms') termsOpen = false;
   else if (action === 'tab') tab = target.dataset.tab;
   else if (action === 'select-account') { selectedId = target.dataset.id; sheetOpen = false; }
   else if (action === 'close-sheet') {
     if (event.target !== target) return; // taps inside the sheet do not close it
     sheetOpen = false;
+    termsOpen = false;
   } else return;
   render();
 });
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && (sheetOpen || historyFilter.isOpen())) { sheetOpen = false; historyFilter.close(); render(); }
+  if (event.key === 'Escape' && (sheetOpen || termsOpen || historyFilter.isOpen())) { sheetOpen = false; termsOpen = false; historyFilter.close(); render(); }
 });
 
 render();

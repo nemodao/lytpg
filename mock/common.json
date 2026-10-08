@@ -16,7 +16,8 @@
     "resetTime": "00:00",
     "expiryWarningDays": 10,
     "tradingTask": true,
-    "joinRequirement": null
+    "joinRequirement": null,
+    "termsUrl": "../assets/docs/terms-sample.html"
   },
   "accounts": [
     {
