@@ -3,7 +3,7 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
-import { appHeader, badge, coin, joinIntent, joinLabel, notice, rulesList } from '../shared/components.js';
+import { appHeader, badge, coin, joinPanel, notice, rulesList } from '../shared/components.js';
 
 const { common, page, ui } = await load('trading-task');
 const { program, accounts } = common;
@@ -61,7 +61,15 @@ const endedCard = () => `
 
 const feed = createLiveFeed(ui, common);
 
+// Not yet allowed to take part (KYC or first deposit missing): "How to start" in place of today's progress (spec §39).
+const joinCard = () => `
+  <section class="card card--blend blend-pale-theme hero-card">
+    <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
+    ${joinPanel(ui, common, { ratesHref: '#rates', flat: true })}
+  </section>`;
+
 function progressCard() {
+  if (program.joinRequirement) return joinCard();
   const hasTrades = today.lots > 0;
   // Same Today panel as the Dashboard's task card, laid flat on the blend card (spec §15).
   const foot = (icon, text) => `<div class="today__foot today__foot--icon num">${ui.icon(icon, 'icon--sm')}<span>${text}</span></div>`;
@@ -108,9 +116,10 @@ function accountsCard() {
       <div class="stack stack--tight"><h3 class="t-label">${ui.t('tt.rates')}</h3><p class="t-body c-3">${intro}</p></div>
       <div class="rates-frame">${ratesList()}</div>
       <p class="t-caption c-3">${ui.t('tt.rates.note')}</p>`;
-  // Users who still need KYC or a first deposit have no trading account yet: rates and the join button only (spec §26).
-  if (joinLabel(ui, common)) {
-    return `<section class="card">${rates(ui.t('tt.rates.introNoAccount'))}${tradeButton()}</section>`;
+  // Users who still need KYC or a first deposit have no trading account yet: rates only (spec §26). Their button
+  // sits on the Today card, next to the step it belongs to (spec §39).
+  if (program.joinRequirement) {
+    return `<section class="card" id="rates">${rates(ui.t('tt.rates.introNoAccount'))}</section>`;
   }
   const selected = account(selectedId);
   const single = accounts.length === 1;
@@ -135,9 +144,6 @@ function accountsCard() {
 
 function tradeButton() {
   if (ended) return '';
-  // Not yet allowed to take part: the button names the missing step instead (spec §25).
-  const join = joinLabel(ui, common);
-  if (join) return `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="${joinIntent(common)}">${join}</button>`;
   const selected = account(selectedId);
   if (!selected.eligible) {
     return `<button class="btn btn--primary btn--lg btn--block" type="button" data-action="open-sheet">${ui.t('tt.trade.switch')}</button>`;

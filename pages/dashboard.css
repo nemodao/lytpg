@@ -1,7 +1,5 @@
 /* Dashboard-only styles. Layout follows the wireframe in spec §10. */
 
-.details { display: inline-flex; align-items: center; gap: var(--spacing-2); font: var(--font-small-medium); color: var(--ui-text-tertiary); }
-
 /* Dashed separator between the balance and the task card. */
 .dash-divider { width: 100%; height: 0; margin: 0; border: 0; border-top: var(--size-stroke) dashed color-mix(in srgb, var(--ui-line-dark) 28%, transparent); }
 

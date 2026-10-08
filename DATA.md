@@ -31,7 +31,7 @@ Example file: `mock/common.json`
 | `program.resetTime` | HH:MM | `"00:00"` | Local time (WIB) at which a new earning day starts. Shown in the rules. |
 | `program.expiryWarningDays` | number | `10` | Size of the "expiring soon" window in days: the balance warning text and the red highlight on lots. |
 | `program.tradingTask` | boolean | `true` | false when the trading task is off or hidden for this user: Home hides the Daily Trading card and the bottom bar drops the Earn tab. |
-| `program.joinRequirement` | null | "kyc" | "deposit" | `null` | What the user must still do before joining the trading task. Changes the trade button text and hides the account picker on Earn. |
+| `program.joinRequirement` | null | "kyc" | "deposit" | `null` | What the user must still do before joining the trading task. When set, the Today card on Home and Earn shows "How to start" (three steps and the button for the current step) instead of today's figures, and Earn hides the account picker. |
 | `accounts[].id` | string | `"50000234"` | Trading account number, shown as is. |
 | `accounts[].eligible` | boolean | `true` | Whether this account takes part in the programme (false e.g. for an MT5 group that is excluded). |
 | `rates[].group` | "forex" | "metal" | "indices" | "other" | `"forex"` | Symbol group of an earning rate; its label is copy key rate.<group>. |

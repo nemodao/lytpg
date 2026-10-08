@@ -248,6 +248,27 @@
 @keyframes live-feed-in { from { opacity: 0; transform: translateY(var(--spacing-4)); } }
 @media (prefers-reduced-motion: reduce) { .live-feed__in { animation: none; } }
 
+/* Small "Details ›" style link. */
+.details { display: inline-flex; align-items: center; gap: var(--spacing-2); font: var(--font-small-medium); color: var(--ui-text-tertiary); }
+
+/* ---- "How to start" (users who still need KYC or a first deposit): steps in the Today panel, rates line, button ---- */
+.join { gap: var(--spacing-12); padding: var(--spacing-16); }
+.join.today--flat { padding: 0; }
+.join__title { font: var(--font-x-small-semibold); letter-spacing: var(--letter-spacing-subheading-2x-small); text-transform: uppercase; color: var(--ui-text-tertiary); }
+.join__steps { display: flex; flex-direction: column; gap: var(--spacing-10); margin: 0; padding: 0; list-style: none; }
+.join__step { display: flex; align-items: flex-start; gap: var(--spacing-10); font: var(--font-small-regular); color: var(--ui-text-tertiary); }
+.join__step > span:last-child { padding-top: var(--spacing-2); }
+.join__mark { flex: none; display: grid; place-items: center; width: var(--size-icon-lg); height: var(--size-icon-lg); border-radius: var(--radius-pill); background: color-mix(in srgb, var(--blend-fg) 10%, transparent); font: var(--font-x-small-semibold); }
+/* The step to do now: solid mark, bold text. */
+.join__step--current { font: var(--font-small-semibold); color: var(--ui-text-primary); }
+.join__step--current .join__mark { background: var(--blend-fg); color: var(--blend-ink); }
+/* Finished step: green check. */
+.join__step--done { color: var(--ui-text-secondary); }
+.join__step--done .join__mark { background: var(--accent-success); color: var(--on-brand); }
+.join__rates { display: flex; align-items: baseline; gap: var(--spacing-8); font: var(--font-x-small-regular); color: var(--ui-text-tertiary); }
+.join__rates strong { font: var(--font-x-small-semibold); color: var(--ui-text-primary); }
+.join__rates .details { flex: none; font: var(--font-x-small-medium); color: var(--ui-text-secondary); }
+
 /* ---- "How it works" rules list (Trading Task tab and guided tour) ---- */
 .rules { display: flex; flex-direction: column; gap: var(--spacing-12); margin: 0; padding: 0; list-style: none; }
 .rules li { display: flex; align-items: flex-start; gap: var(--spacing-10); font: var(--font-small-regular); color: var(--ui-text-secondary); }

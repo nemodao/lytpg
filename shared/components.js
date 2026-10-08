@@ -25,13 +25,42 @@ export const appHeader = (ui, { title, action = '' }) => `
 export const tourButton = (ui) =>
   `<button class="header-action" type="button" data-tour-start aria-label="${ui.t('tour.open')}">${ui.icon('help')}</button>`;
 
-// Users who must still pass KYC or make a first deposit (FTD) see everything as usual; only the trade button changes
-// to the step they need ("KYC to join", "Deposit to join"). Returns null when the user can already take part.
+// Users who must still pass KYC or make a first deposit (FTD) cannot earn yet. The Today card shows "How to start"
+// instead of today's progress (joinPanel below), and the main button names the step they need.
+// Returns null when the user can already take part.
 export const joinLabel = (ui, common) =>
   ({ kyc: ui.t('join.kyc'), deposit: ui.t('join.deposit') })[common.program.joinRequirement] || null;
 
 // Which step the user must take before joining (`kyc` | `deposit`), or null. Used as the button's data-intent.
 export const joinIntent = (common) => common.program.joinRequirement || null;
+
+// "How to start" (spec §39): what the Today card shows on Home and Earn while the user still needs KYC or a first
+// deposit. Three steps (the one to do now is bold, finished ones get a green check), a one-line summary of the earning
+// rates with a link to the full rates, and the button for the current step. `flat` lays the steps straight on the card.
+export function joinPanel(ui, common, { ratesHref, flat = false }) {
+  const { program, rates } = common;
+  const current = ['kyc', 'deposit'].indexOf(program.joinRequirement);
+  const steps = ['kyc', 'deposit', 'trade'].map((id, index) => {
+    const state = index < current ? 'done' : index === current ? 'current' : 'later';
+    const mark = state === 'done' ? ui.icon('check', 'icon--sm') : index + 1;
+    return `<li class="join__step join__step--${state}"${state === 'current' ? ' aria-current="step"' : ''}><span class="join__mark num">${mark}</span><span>${ui.t(`join.step.${id}${state === 'done' ? '.done' : ''}`)}</span></li>`;
+  });
+  // Lowest and highest rate across the symbol groups that earn.
+  const perLot = rates.map((rate) => rate.ptsPerLot).filter((pts) => pts > 0);
+  const min = Math.min(...perLot);
+  const max = Math.max(...perLot);
+  const range = min === max ? ui.t('join.rates.single', { max: ui.num(max) }) : ui.t('join.rates', { min: ui.num(min), max: ui.num(max) });
+  return `
+    <div class="today join${flat ? ' today--flat' : ''}">
+      <h3 class="join__title">${ui.t('join.title')}</h3>
+      <ol class="join__steps">${steps.join('')}</ol>
+    </div>
+    <div class="join__rates num">
+      <p class="grow"><strong>${range}</strong> · ${ui.t('join.rates.cap', { max: ui.num(program.dailyMaxPoints) })}</p>
+      <a class="details above" href="${ratesHref}">${ui.t('join.seeRates')}${ui.icon('right', 'icon--sm')}</a>
+    </div>
+    <button class="btn btn--primary btn--lg btn--block above" type="button" data-intent="${joinIntent(common)}">${joinLabel(ui, common)}</button>`;
+}
 
 // "How it works" rules. One list, shown in the Trading Task's How it works tab and in the guided tour (step 2):
 // change it here and both change.

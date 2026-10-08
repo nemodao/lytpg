@@ -461,3 +461,23 @@ Copy revised on 7 Oct 2026 (final wording from the content review). The "How it 
 - **No trading task:** step 2 is skipped and the tour has four steps.
 - **Progress** travels between pages in the URL (`?tour=<step>`); `?tour=off` never opens the tour. Preview state `first-visit` (Dashboard, group Page) acts as a first visit.
 
+
+## 39. "How to start" for users who cannot earn yet (decided 8 Oct 2026, phase 2)
+
+Replaces the rule in §25 that only the button text changes, and moves the Earn button described in §26.
+
+While the user still needs KYC or a first deposit (`program.joinRequirement` = `kyc` or `deposit`), the Today card shows how to start instead of today's figures. This applies to the Daily Trading card on Home and the Today card on Earn; both use one shared component.
+
+- **Panel `HOW TO START`** with three steps:
+  1. `Verify your account`
+  2. `Make your first deposit`
+  3. `Trade — coins are credited automatically`
+- **Not yet KYC:** step 1 is the step to do now (solid number, bold text); steps 2 and 3 are muted.
+- **KYC done, no first deposit:** step 1 shows a green check and reads `Account verified`; step 2 is the step to do now; step 3 is muted.
+- **Rates line** under the panel: `1–10 coins per lot · up to 10,000 a day`. The range is the lowest and highest rate of the symbol groups that earn; the cap is the daily maximum. If all groups share one rate it reads `10 coins per lot`.
+- **`See rates`** at the right of that line: on Home it opens the Earn page; on Earn it scrolls to the Earning rates card.
+- **Button** (full width, blue): `Verify my account` opens KYC; `Deposit now` opens Deposit. These replace `KYC to join` and `Deposit to join` everywhere.
+- Today's figures, the "Update every 30 mins" note and the live activity line are not shown in these two cases.
+- On Earn, the button now sits on the Today card; the Earning rates card below keeps the rates and has no button.
+
+Open point (to check later): whether a user who has not passed KYC or made a first deposit should see the full rates table on the Earn page. Today they do.

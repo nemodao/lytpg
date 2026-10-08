@@ -16,8 +16,8 @@
         "needs-deposit"
       ],
       "descriptions": {
-        "needs-kyc": "User must pass KYC and has no trading account yet: no account picker, only earning rates and “KYC to join”.",
-        "needs-deposit": "User must make a first deposit and has no trading account yet: no account picker, only earning rates and “Deposit to join”."
+        "needs-kyc": "User has not passed KYC and has no trading account yet. The Today card shows “How to start” (step 1 is the one to do) with “Verify my account”; below it only the earning rates, no account picker.",
+        "needs-deposit": "User passed KYC but has not made a first deposit and has no trading account yet. The Today card shows “How to start” (step 1 checked, step 2 is the one to do) with “Deposit now”; below it only the earning rates, no account picker."
       }
     },
     {

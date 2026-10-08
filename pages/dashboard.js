@@ -3,7 +3,7 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
 import { mountTour } from '../shared/tour.js';
-import { appHeader, balanceBlock, coin, joinIntent, joinLabel, tourButton } from '../shared/components.js';
+import { appHeader, balanceBlock, coin, joinPanel, tourButton } from '../shared/components.js';
 
 const { common, page, ui } = await load('dashboard');
 // `no-task-trading` state: the programme runs no trading task, so its card (and the Earn tab) are hidden.
@@ -25,15 +25,8 @@ const cupIcon = '<img class="task__icon" src="../assets/images/cups/purple.webp"
 
 const feed = createLiveFeed(ui, common);
 
-const taskCard = () => `
-  <section class="card card--blend blend-pale-theme task">
-    <a class="card-link" href="${taskHref}" aria-label="${ui.t('task.title')}"></a>
-    ${cupIcon}
-    <div class="task__head">
-      <h2 class="t-title-s grow">${ui.t('task.title')}</h2>
-      ${detailsLink(taskHref)}
-    </div>
-    <p class="t-body c-2">${ui.t('task.desc')}</p>
+// Today's progress, the live activity line and the trade button.
+const taskProgress = () => `
     <div class="today">
       <div class="today__label">
         <p class="t-body-strong grow">${ui.t('task.todayLabel')}</p>
@@ -46,7 +39,19 @@ const taskCard = () => `
       ${todayFoot()}
     </div>
     ${feed.html()}
-    <button class="btn btn--onblend btn--lg task__cta above" type="button" data-intent="${joinIntent(common) || 'trade'}">${joinLabel(ui, common) || ui.t('task.trade')}</button>
+    <button class="btn btn--onblend btn--lg task__cta above" type="button" data-intent="trade">${ui.t('task.trade')}</button>`;
+
+// Users who still need KYC or a first deposit see "How to start" in place of today's progress (spec §39).
+const taskCard = () => `
+  <section class="card card--blend blend-pale-theme task">
+    <a class="card-link" href="${taskHref}" aria-label="${ui.t('task.title')}"></a>
+    ${cupIcon}
+    <div class="task__head">
+      <h2 class="t-title-s grow">${ui.t('task.title')}</h2>
+      ${detailsLink(taskHref)}
+    </div>
+    <p class="t-body c-2">${ui.t('task.desc')}</p>
+    ${common.program.joinRequirement ? joinPanel(ui, common, { ratesHref: taskHref }) : taskProgress()}
   </section>`;
 
 // Daily check-in (future feature, spec §20): hidden unless the `check-in` state is on. Style follows the review

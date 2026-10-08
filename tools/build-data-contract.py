@@ -32,7 +32,7 @@ FIELDS = {
         'program.resetTime': ('Local time (WIB) at which a new earning day starts. Shown in the rules.', 'HH:MM'),
         'program.expiryWarningDays': ('Size of the "expiring soon" window in days: the balance warning text and the red highlight on lots.', ''),
         'program.tradingTask': ('false when the trading task is off or hidden for this user: Home hides the Daily Trading card and the bottom bar drops the Earn tab.', ''),
-        'program.joinRequirement': ('What the user must still do before joining the trading task. Changes the trade button text and hides the account picker on Earn.', 'null | "kyc" | "deposit"'),
+        'program.joinRequirement': ('What the user must still do before joining the trading task. When set, the Today card on Home and Earn shows "How to start" (three steps and the button for the current step) instead of today\'s figures, and Earn hides the account picker.', 'null | "kyc" | "deposit"'),
         'accounts[].id': ('Trading account number, shown as is.', ''),
         'accounts[].eligible': ('Whether this account takes part in the programme (false e.g. for an MT5 group that is excluded).', ''),
         'rates[].group': ('Symbol group of an earning rate; its label is copy key rate.<group>.', '"forex" | "metal" | "indices" | "other"'),

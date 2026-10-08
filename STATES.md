@@ -22,8 +22,8 @@ File: `mock/dashboard.json` · page: `pages/dashboard.html`
 |---|---|---|---|
 | Page | `first-visit` ("First visit (tour)") | Treats this as the first time Home is opened on the device: the guided tour opens by itself. Without it, the tour opens only once per device, or from the help button in the header. | `common.tour.firstVisit = true` |
 | Page | `no-task-trading` ("No Task: Trading") | The Trading Task is not shown to this user, because: (1) the Trading Task has been turned off; (2) the Trading Task has been blocked for this user (reason set in config, e.g. blacklist, A-Book); or (3) the Trading Task has been hidden from all users. The Daily Trading card and the Earn tab are hidden. | `common.program.tradingTask = false` |
-| Participation | `needs-kyc` · shared | User must pass KYC to take part. Everything shows as usual; the trade button reads “KYC to join”. | `common.program.joinRequirement = "kyc"` |
-| Participation | `needs-deposit` · shared | User must make a first deposit to take part. Everything shows as usual; the trade button reads “Deposit to join”. | `common.program.joinRequirement = "deposit"` |
+| Participation | `needs-kyc` · shared | User has not passed KYC yet. The Daily Trading card shows “How to start” (step 1 is the one to do) instead of today’s figures; the button reads “Verify my account”. | `common.program.joinRequirement = "kyc"` |
+| Participation | `needs-deposit` · shared | User passed KYC but has not made a first deposit. The Daily Trading card shows “How to start” (step 1 checked, step 2 is the one to do) instead of today’s figures; the button reads “Deposit now”. | `common.program.joinRequirement = "deposit"` |
 | Coin Balance | `empty` · shared | Balance is 0: no available, pending or expiring coins. | `common.balance.available = 0`<br>`common.balance.pending = 0`<br>`common.balance.expiring = null` |
 | Coin Balance | `has-pending` · shared | 850 coins are waiting to be credited: “+850 pending” shows under the balance. May be used when applying the T+1 rule to release coins. | `common.balance.pending = 850` |
 | Coin Balance | `expiring` · shared | 1,200 coins expire within 10 days: red warning under the balance. | `common.balance.expiring.points = 1200`<br>`common.balance.expiring.date = "2026-10-20"` |
@@ -39,8 +39,8 @@ File: `mock/trading-task.json` · page: `pages/trading-task.html`
 | Group | State | What it shows | Data it changes |
 |---|---|---|---|
 | Page | `ended` | The programme has ended: end message on the Today card, no HOT badge, no trade button. | `common.program.ended = true` |
-| Participation | `needs-kyc` · shared | User must pass KYC and has no trading account yet: no account picker, only earning rates and “KYC to join”. | `common.program.joinRequirement = "kyc"` |
-| Participation | `needs-deposit` · shared | User must make a first deposit and has no trading account yet: no account picker, only earning rates and “Deposit to join”. | `common.program.joinRequirement = "deposit"` |
+| Participation | `needs-kyc` · shared | User has not passed KYC and has no trading account yet. The Today card shows “How to start” (step 1 is the one to do) with “Verify my account”; below it only the earning rates, no account picker. | `common.program.joinRequirement = "kyc"` |
+| Participation | `needs-deposit` · shared | User passed KYC but has not made a first deposit and has no trading account yet. The Today card shows “How to start” (step 1 checked, step 2 is the one to do) with “Deposit now”; below it only the earning rates, no account picker. | `common.program.joinRequirement = "deposit"` |
 | Today trading task | `in-day` | Coins are credited during the day instead of 3 days later; today shows as credited and appears in History as Earning. | `common.program.creditMode = "in-day"`<br>`page.today.status = "credited"` |
 | Today trading task | `capped` | Today's max coins reached: capped message on the Today card, plain “Trade now” button. | `page.today.capped = true`<br>`page.today.lots = 14.2`<br>`page.today.points = 10000` |
 | Today trading task | `no-trades-today` | No trades yet today: 0 lots and 0 coins, with a hint to make the first trade. | `page.today.lots = 0`<br>`page.today.points = 0` |

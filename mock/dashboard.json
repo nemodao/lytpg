@@ -22,8 +22,8 @@
         "needs-deposit"
       ],
       "descriptions": {
-        "needs-kyc": "User must pass KYC to take part. Everything shows as usual; the trade button reads “KYC to join”.",
-        "needs-deposit": "User must make a first deposit to take part. Everything shows as usual; the trade button reads “Deposit to join”."
+        "needs-kyc": "User has not passed KYC yet. The Daily Trading card shows “How to start” (step 1 is the one to do) instead of today’s figures; the button reads “Verify my account”.",
+        "needs-deposit": "User passed KYC but has not made a first deposit. The Daily Trading card shows “How to start” (step 1 checked, step 2 is the one to do) instead of today’s figures; the button reads “Deposit now”."
       }
     },
     {

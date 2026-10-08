@@ -9,7 +9,9 @@ Phase 2: small UI fixes, then API mapping. Entries are added here as each change
 
 ### UI changes
 
-_None yet._
+- **"How to start" for users who cannot earn yet** (spec §39). When `program.joinRequirement` is `kyc` or `deposit`, the Daily Trading card on Home and the Today card on Earn show three steps, a one-line rates summary with `See rates`, and the button for the current step, instead of today's figures and the live activity line. Button text is now `Verify my account` / `Deposit now` (was `KYC to join` / `Deposit to join`); its `data-intent` is unchanged (`kyc`, `deposit`). On Earn the button moved from the rates card to the Today card.
+  - Files: `shared/components.js` (new `joinPanel`), `shared/components.css` (new `.join*` classes; `.details` moved here from `pages/dashboard.css`), `pages/dashboard.js`, `pages/trading-task.js`, `copy/en.json` (new `join.title`, `join.step.*`, `join.rates*`, `join.seeRates`; changed `join.kyc`, `join.deposit`), state descriptions in `mock/dashboard.json` and `mock/trading-task.json`.
+  - `DATA.md`: no new field; the meaning of `program.joinRequirement` is reworded. `STATES.md`: descriptions of `needs-kyc` and `needs-deposit` updated.
 
 ### API mapping
 
