@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'dist' / 'handoff'
-INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'HANDOFF.md', 'CHANGELOG.md', 'DATA.md', 'STATES.md', 'spec.md']
+INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'HANDOFF.md', 'HANDOFF-2.md', 'CHANGELOG.md', 'DATA.md', 'STATES.md', 'spec.md']
 SKIP = shutil.ignore_patterns('.DS_Store', '_*', 'coin-hex.png', '__pycache__')
 DEMO_BLOCK = re.compile(r'\n[ \t]*<!-- DEMO ONLY: start.*?<!-- DEMO ONLY: end -->[ \t]*', re.S)
 FORBIDDEN = ['demo/', 'intents.en.json', 'Internal Explanation', 'DEMO ONLY']
@@ -56,7 +56,9 @@ def main():
     # Version stamp, and from the second handoff on the exact changes since the previous one (git tag handoff-<N-1>).
     version = int((ROOT / 'HANDOFF_VERSION').read_text().strip())
     commit = subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], cwd=ROOT, capture_output=True, text=True).stdout.strip()
-    (OUT / 'VERSION.txt').write_text(f'Handoff {version}\nBuilt {datetime.date.today().isoformat()} from commit {commit}\nStart with HANDOFF.md\n', encoding='utf-8')
+    update = f'HANDOFF-{version}.md'
+    start = f'Already converted handoff {version - 1}? Read {update} only. First conversion? Start with HANDOFF.md.' if (ROOT / update).exists() else 'Start with HANDOFF.md'
+    (OUT / 'VERSION.txt').write_text(f'Handoff {version}\nBuilt {datetime.date.today().isoformat()} from commit {commit}\n{start}\n', encoding='utf-8')
     previous = f'handoff-{version - 1}'
     if version > 1 and subprocess.run(['git', 'rev-parse', '-q', '--verify', previous], cwd=ROOT, capture_output=True).returncode == 0:
         diff = subprocess.run(['git', 'diff', previous, 'HEAD', '--', *INCLUDE, ':(exclude)assets'], cwd=ROOT, capture_output=True, text=True).stdout

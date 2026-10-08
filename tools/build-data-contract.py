@@ -33,7 +33,7 @@ FIELDS = {
         'program.expiryWarningDays': ('Size of the "expiring soon" window in days: the balance warning text and the red highlight on lots.', ''),
         'program.tradingTask': ('false when the trading task is off or hidden for this user: Home hides the Daily Trading card and the bottom bar drops the Earn tab.', ''),
         'program.joinRequirement': ('What the user must still do before joining the trading task. When set, the Today card on Home and Earn shows "How to start" (three steps and the button for the current step) instead of today\'s figures, and Earn hides the account picker.', 'null | "kyc" | "deposit"'),
-        'program.termsUrl': ('Address of the Terms & Conditions document. Earn shows a `Terms & Conditions` text button under the How it works rules; it opens this address inside a bottom sheet. Null or missing hides the button. The mock points at a sample page.', 'URL or null'),
+        'program.termsUrl': ('Address of the Terms & Conditions document. Earn shows a `Terms & Conditions` text button under the How it works rules; it opens this address inside a bottom sheet. The document is a PDF. Null or missing hides the button. The mock points at a sample PDF.', 'URL of a PDF, or null'),
         'accounts[].id': ('Trading account number, shown as is.', ''),
         'accounts[].eligible': ('Whether this account takes part in the programme (false e.g. for an MT5 group that is excluded).', ''),
         'rates[].group': ('Symbol group of an earning rate; its label is copy key rate.<group>.', '"forex" | "metal" | "indices" | "other"'),

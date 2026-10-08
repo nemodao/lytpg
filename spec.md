@@ -480,7 +480,7 @@ While the user still needs KYC or a first deposit (`program.joinRequirement` = `
 - Today's figures, the "Update every 30 mins" note and the live activity line are not shown in these two cases.
 - On Earn, the button now sits on the Today card; the Earning rates card below keeps the rates and has no button.
 
-Open point (to check later): whether a user who has not passed KYC or made a first deposit should see the full rates table on the Earn page. Today they do.
+Decided 8 Oct 2026: a user who has not passed KYC or made a first deposit **does see** the full Earning rates table on the Earn page (unchanged).
 
 **Sample rates and daily maximum changed (8 Oct 2026):** the sample data now uses Forex 80, Metal 100, Indices 90 and Other symbols 70 coins per lot, with a daily maximum of 2,000 coins (was 5 / 10 / 3 / 1 and 10,000). Every text that reads these values follows: the rates table, the rule `Earn up to 2,000 coins per day.`, and tour step 2 `Earn up to 100 coins per lot.` Earlier sections that quote 10 coins per lot or 10,000 a day are superseded.
 
@@ -512,6 +512,6 @@ This replaces the single pop of the first version. The finger never blocks taps.
 - **Tap:** opens a bottom sheet titled `Terms & Conditions` with a round close button. The sheet closes with that button, a tap outside it, or Escape.
 - **Content:** the sheet shows the document found at the address the backend sends (`program.termsUrl`), inside a frame that scrolls by itself. `Loading…` shows until the document appears. The document keeps its own look (white page) in both light and dark mode.
 - **No address:** if the backend sends none, the button is not shown.
-- **Sample:** the mock points at a placeholder page (`assets/docs/terms-sample.html`); its wording is not the real terms.
+- **Sample:** the mock points at a placeholder PDF (`assets/docs/terms-sample.pdf`); its wording is not the real terms.
 
-Open point: the format of the document. A PDF address is being considered. Android's in-app webview cannot display a PDF inside a page, and iOS shows only a limited preview, so a PDF will most likely not be readable in this sheet on phones. A web page (HTML) at that address, or the terms sent as text in the API response, works everywhere. To be decided with the backend team before the API is mapped.
+Decided 8 Oct 2026: the document is a **PDF**; the backend sends its address. Known risk, accepted for speed: an in-app webview may not display a PDF inside a page (Android shows nothing, iOS may show only the first page). The developer must check this in the real app; if the PDF does not display, the fallback is to draw it with a PDF viewer library or to have the app open the PDF in its own viewer when `Terms & Conditions` is tapped.

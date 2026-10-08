@@ -93,8 +93,8 @@ Other places marked `API:`:
 | `pages/point-balance.js` — `items` | Lots split over `items`, `pendingItems`, `usedItems` for preview states | One `items` list from the API |
 | `pages/trading-task.js` — `selectedAccountId` | Account switch is local to the page | Tell the app which account to trade with |
 | `shared/components.js` — `joinPanel` (handoff 2) | Preview states `needs-kyc` / `needs-deposit` set `program.joinRequirement` | Send the user's real status: `"kyc"`, then `"deposit"`, then `null`. The rates line reads `rates[].ptsPerLot` and `program.dailyMaxPoints` |
-| `pages/trading-task.js` — `accountsCard`, join branch (handoff 2) | Mock still lists accounts for these users | `accounts` may be empty and `selectedAccountId` missing while `joinRequirement` is set; `rates` is still needed |
-| `pages/trading-task.js` — `termsButton` / `termsSheet` (handoff 2) | `program.termsUrl` points at a sample page | Send the address of the real document, or null to hide the button. Format to be agreed (web page recommended over PDF) |
+| `pages/trading-task.js` — `accountsCard`, join branch (handoff 2) | Mock still lists accounts for these users | `accounts` may be empty and `selectedAccountId` missing while `joinRequirement` is set; `rates` is still needed (these users do see the rates table) |
+| `pages/trading-task.js` — `termsButton` / `termsSheet` (handoff 2) | `program.termsUrl` points at a sample PDF | Send the address of the real PDF, or null to hide the button. Check that the app webview displays a PDF in the frame (see `HANDOFF-2.md`) |
 
 Rules that are computed in the page from data (not sent by the API): which tab a lot belongs to and "expiring soon"
 (`pages/point-balance.js`, top of file; spec §17, §36), the highest rate for the tour, in-day history rows
@@ -114,6 +114,8 @@ Rules that are computed in the page from data (not sent by the API): which tab a
 | `exit` | Close the webview |
 
 ## 7. Receiving the next drop
+
+**Already converted handoff 1? Read `HANDOFF-2.md` instead of this file:** it lists only what changed since then.
 
 Each drop is a complete copy of this folder with a higher number in `VERSION.txt`.
 
