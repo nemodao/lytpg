@@ -272,7 +272,9 @@
 /* Nudge towards the button: after --nudge-after the finger (the guided tour's hand) grows in from its fingertip under
    the button, then double-taps it (about 0.65 s), waits 4 s, and repeats. On each tap the button answers as if pressed: it sinks slightly and takes
    its pressed colour. Both loops share one duration and start time, so they stay in step. The finger never catches taps. */
-.join__cta { z-index: 1; --tap-start: calc(var(--nudge-after) + 0.8s); }
+/* Between double taps the button and the finger drift up and down together (two slow bobs), so nothing stands still. */
+.join__cta { z-index: 1; --tap-start: calc(var(--nudge-after) + 0.8s); animation: join-float 4.65s ease-in-out var(--tap-start) infinite; }
+@keyframes join-float { 0%, 14%, 57%, 100% { transform: translateY(0); } 35%, 78% { transform: translateY(calc(var(--spacing-4) * -1)); } }
 .join__cta .btn { animation: join-press 4.65s ease-in-out var(--tap-start) infinite; }
 .join__finger {
   position: absolute; left: calc(50% - var(--size-control-lg) * 0.9); top: calc(100% + var(--spacing-2)); width: var(--size-control-lg); height: auto;
@@ -285,7 +287,7 @@
 .join__cta--nudged { --tap-start: 0s; }
 .join__cta--nudged .join__finger { opacity: 1; animation: join-tap 4.65s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
-  .join__cta .btn { animation: none; }
+  .join__cta, .join__cta .btn { animation: none; }
   .join__finger, .join__cta--nudged .join__finger { animation: tour-finger-in 0.01s linear var(--nudge-after) forwards; }
 }
 
