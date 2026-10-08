@@ -37,8 +37,9 @@ export const joinIntent = (common) => common.program.joinRequirement || null;
 // "How to start" (spec §39): what the Today card shows on Home and Earn while the user still needs KYC or a first
 // deposit. Three steps (the one to do now is bold, finished ones get a green check), a one-line summary of the earning
 // rates with a link to the full rates, and the button for the current step. `flat` lays the steps straight on the card.
-// Nudge: JOIN_NUDGE_AFTER seconds after the card appears, a finger (the tour's hand) comes in under the button and the
-// button pops once. `nudged` = the nudge already played (the page re-rendered): the finger is simply there, no replay.
+// Nudge: JOIN_NUDGE_AFTER seconds after the card appears, a finger (the tour's hand) comes in under the button and
+// keeps tapping it; the button answers each tap as if pressed. `nudged` = the finger already came in (the page
+// re-rendered): it is simply there and goes on tapping.
 const JOIN_NUDGE_AFTER = 3;
 export function joinPanel(ui, common, { ratesHref, flat = false, nudged = false }) {
   const { program, rates } = common;
