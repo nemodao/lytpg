@@ -474,10 +474,12 @@ While the user still needs KYC or a first deposit (`program.joinRequirement` = `
   3. `Trade — coins are credited automatically`
 - **Not yet KYC:** step 1 is the step to do now (solid number, bold text); steps 2 and 3 are muted.
 - **KYC done, no first deposit:** step 1 shows a green check and reads `Account verified`; step 2 is the step to do now; step 3 is muted.
-- **Rates line** under the panel: `1–10 coins per lot · up to 10,000 a day`. The range is the lowest and highest rate of the symbol groups that earn; the cap is the daily maximum. If all groups share one rate it reads `10 coins per lot`.
+- **Rates line** under the panel: `70–100 coins per lot · up to 2,000 a day`. The range is the lowest and highest rate of the symbol groups that earn; the cap is the daily maximum. If all groups share one rate it reads `100 coins per lot`.
 - **`See rates`** at the right of that line: on Home it opens the Earn page; on Earn it scrolls to the Earning rates card.
 - **Button** (full width, blue): `Verify my account` opens KYC; `Deposit now` opens Deposit. These replace `KYC to join` and `Deposit to join` everywhere.
 - Today's figures, the "Update every 30 mins" note and the live activity line are not shown in these two cases.
 - On Earn, the button now sits on the Today card; the Earning rates card below keeps the rates and has no button.
 
 Open point (to check later): whether a user who has not passed KYC or made a first deposit should see the full rates table on the Earn page. Today they do.
+
+**Sample rates and daily maximum changed (8 Oct 2026):** the sample data now uses Forex 80, Metal 100, Indices 90 and Other symbols 70 coins per lot, with a daily maximum of 2,000 coins (was 5 / 10 / 3 / 1 and 10,000). Every text that reads these values follows: the rates table, the rule `Earn up to 2,000 coins per day.`, and tour step 2 `Earn up to 100 coins per lot.` Earlier sections that quote 10 coins per lot or 10,000 a day are superseded.

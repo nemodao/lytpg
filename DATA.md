@@ -23,7 +23,7 @@ Example file: `mock/common.json`
 | `balance.expiring.date` | YYYY-MM-DD |  | Date of the nearest expiry (not displayed; kept for reference). |
 | `program.ended` | boolean | `false` | true when the programme is over: Earn shows the end message, no trade button. |
 | `program.creditMode` | "delayed" | "in-day" | `"delayed"` | When earned coins are credited: "delayed" (after creditDelayDays) or "in-day" (through the day). |
-| `program.dailyMaxPoints` | number | `10000` | Most coins a user can earn per day. Shown in the rules. |
+| `program.dailyMaxPoints` | number | `2000` | Most coins a user can earn per day. Shown in the rules. |
 | `program.minHoldMinutes` | number | `3` | Minimum time a position must be held to earn. Shown in the rules. |
 | `program.creditDelayDays` | number | `3` | Days between the trading day and crediting, in "delayed" mode. Shown in the rules. |
 | `program.expiryDays` | number | `30` | Days after crediting until coins expire. Shown in the rules. |
@@ -35,7 +35,7 @@ Example file: `mock/common.json`
 | `accounts[].id` | string | `"50000234"` | Trading account number, shown as is. |
 | `accounts[].eligible` | boolean | `true` | Whether this account takes part in the programme (false e.g. for an MT5 group that is excluded). |
 | `rates[].group` | "forex" | "metal" | "indices" | "other" | `"forex"` | Symbol group of an earning rate; its label is copy key rate.<group>. |
-| `rates[].ptsPerLot` | number | `5` | Coins earned per lot in that group. Rows with 0 are hidden. The highest value fills "Earn up to {max} coins per lot" in the tour. |
+| `rates[].ptsPerLot` | number | `80` | Coins earned per lot in that group. Rows with 0 are hidden. The highest value fills "Earn up to {max} coins per lot" in the tour. |
 | `liveFeed.openUtc.day` | weekday name | `"Sunday"` | Start of the weekly window in which the live activity line shows (UTC). |
 | `liveFeed.openUtc.time` | HH:MM | `"17:00"` | Start time of that window (UTC). |
 | `liveFeed.closeUtc.day` | weekday name | `"Friday"` | End of the weekly window (UTC). |

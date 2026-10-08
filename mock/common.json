@@ -8,7 +8,7 @@
   "program": {
     "ended": false,
     "creditMode": "delayed",
-    "dailyMaxPoints": 10000,
+    "dailyMaxPoints": 2000,
     "minHoldMinutes": 3,
     "creditDelayDays": 3,
     "expiryDays": 30,
@@ -83,19 +83,19 @@
   "rates": [
     {
       "group": "forex",
-      "ptsPerLot": 5
+      "ptsPerLot": 80
     },
     {
       "group": "metal",
-      "ptsPerLot": 10
+      "ptsPerLot": 100
     },
     {
       "group": "indices",
-      "ptsPerLot": 3
+      "ptsPerLot": 90
     },
     {
       "group": "other",
-      "ptsPerLot": 1
+      "ptsPerLot": 70
     }
   ]
 }
