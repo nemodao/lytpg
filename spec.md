@@ -502,6 +502,6 @@ Every daily amount is between 70 and 100 coins per lot and never above 2,000. On
 - it then double-taps the button, waits 4 seconds, and double-taps again, for as long as the card is on screen (4 s gap set on 8 Oct 2026; the first version repeated every 1.8 s, which felt too busy);
 - on each tap the button answers as if it were pressed: it sinks slightly (to 97%) and takes its pressed colour, then springs back. Finger and button move in step.
 
-- during the 4-second wait the button and the finger float gently together: they drift up 4px and back, twice, so the button never stands still.
+- during the 4-second wait only the finger floats gently: it drifts 4px away from the button and back, twice. The button stands still while waiting.
 
 This replaces the single pop of the first version. The finger never blocks taps. It reaches a little below the card and overlaps the top of what follows. On Earn, switching the `How it works` / `History` tab does not replay the entrance: the finger stays and goes on tapping. With reduced motion the finger just appears; nothing taps or flashes.
