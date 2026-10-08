@@ -270,20 +270,20 @@
 .join__rates .details { flex: none; font: var(--font-x-small-medium); color: var(--ui-text-secondary); }
 
 /* Nudge towards the button: after --nudge-after the finger (the guided tour's hand) grows in from its fingertip under
-   the button, then taps it twice every 1.8 s. On each tap the button answers as if pressed: it sinks slightly and takes
+   the button, then double-taps it (about 0.65 s), waits 4 s, and repeats. On each tap the button answers as if pressed: it sinks slightly and takes
    its pressed colour. Both loops share one duration and start time, so they stay in step. The finger never catches taps. */
 .join__cta { z-index: 1; --tap-start: calc(var(--nudge-after) + 0.8s); }
-.join__cta .btn { animation: join-press 1.8s ease-in-out var(--tap-start) infinite; }
+.join__cta .btn { animation: join-press 4.65s ease-in-out var(--tap-start) infinite; }
 .join__finger {
   position: absolute; left: calc(50% - var(--size-control-lg) * 0.9); top: calc(100% + var(--spacing-2)); width: var(--size-control-lg); height: auto;
   pointer-events: none; opacity: 0; transform-origin: 90% 3%;
-  animation: tour-finger-in 0.8s ease-out var(--nudge-after) forwards, join-tap 1.8s ease-in-out var(--tap-start) infinite;
+  animation: tour-finger-in 0.8s ease-out var(--nudge-after) forwards, join-tap 4.65s ease-in-out var(--tap-start) infinite;
 }
-@keyframes join-tap { 0%, 18%, 36%, 100% { transform: translateY(0); } 8%, 26% { transform: translateY(calc(var(--spacing-8) * -1)); } }
-@keyframes join-press { 0%, 18%, 36%, 100% { transform: scale(1); background: var(--accent-surface-brand); } 8%, 26% { transform: scale(0.97); background: var(--ui-button-primary-pressed); } }
+@keyframes join-tap { 0%, 7%, 14%, 100% { transform: translateY(0); } 3.5%, 10.5% { transform: translateY(calc(var(--spacing-8) * -1)); } }
+@keyframes join-press { 0%, 7%, 14%, 100% { transform: scale(1); background: var(--accent-surface-brand); } 3.5%, 10.5% { transform: scale(0.97); background: var(--ui-button-primary-pressed); } }
 /* Already nudged (page re-rendered): no entrance, the tapping simply goes on. */
 .join__cta--nudged { --tap-start: 0s; }
-.join__cta--nudged .join__finger { opacity: 1; animation: join-tap 1.8s ease-in-out infinite; }
+.join__cta--nudged .join__finger { opacity: 1; animation: join-tap 4.65s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
   .join__cta .btn { animation: none; }
   .join__finger, .join__cta--nudged .join__finger { animation: tour-finger-in 0.01s linear var(--nudge-after) forwards; }
