@@ -37,7 +37,10 @@ export const joinIntent = (common) => common.program.joinRequirement || null;
 // "How to start" (spec §39): what the Today card shows on Home and Earn while the user still needs KYC or a first
 // deposit. Three steps (the one to do now is bold, finished ones get a green check), a one-line summary of the earning
 // rates with a link to the full rates, and the button for the current step. `flat` lays the steps straight on the card.
-export function joinPanel(ui, common, { ratesHref, flat = false }) {
+// Nudge: JOIN_NUDGE_AFTER seconds after the card appears, a finger (the tour's hand) comes in under the button and the
+// button pops once. `nudged` = the nudge already played (the page re-rendered): the finger is simply there, no replay.
+const JOIN_NUDGE_AFTER = 3;
+export function joinPanel(ui, common, { ratesHref, flat = false, nudged = false }) {
   const { program, rates } = common;
   const current = ['kyc', 'deposit'].indexOf(program.joinRequirement);
   const steps = ['kyc', 'deposit', 'trade'].map((id, index) => {
@@ -59,7 +62,10 @@ export function joinPanel(ui, common, { ratesHref, flat = false }) {
       <p class="grow"><strong>${range}</strong> · ${ui.t('join.rates.cap', { max: ui.num(program.dailyMaxPoints) })}</p>
       <a class="details above" href="${ratesHref}">${ui.t('join.seeRates')}${ui.icon('right', 'icon--sm')}</a>
     </div>
-    <button class="btn btn--primary btn--lg btn--block above" type="button" data-intent="${joinIntent(common)}">${joinLabel(ui, common)}</button>`;
+    <div class="join__cta above${nudged ? ' join__cta--nudged' : ''}" style="--nudge-after:${JOIN_NUDGE_AFTER}s">
+      <button class="btn btn--primary btn--lg btn--block" type="button" data-intent="${joinIntent(common)}">${joinLabel(ui, common)}</button>
+      <img class="join__finger" src="../assets/tour/finger.webp" alt="">
+    </div>`;
 }
 
 // "How it works" rules. One list, shown in the Trading Task's How it works tab and in the guided tour (step 2):

@@ -34,6 +34,7 @@ const heroBg = streakField();
 // API: `selectedAccountId` is the account the app currently trades with; changing it here is local to this page.
 let selectedId = page.selectedAccountId;
 let sheetOpen = false;
+let nudged = false; // the join button's nudge plays on the first render only
 // Rules and history share one card, switched by tabs; rules show first (spec §15).
 
 // History filter (spec §15): last 7 days by default, last 30 days, or a custom range picked on a calendar.
@@ -65,7 +66,7 @@ const feed = createLiveFeed(ui, common);
 const joinCard = () => `
   <section class="card card--blend blend-pale-theme hero-card">
     <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
-    ${joinPanel(ui, common, { ratesHref: '#rates', flat: true })}
+    ${joinPanel(ui, common, { ratesHref: '#rates', flat: true, nudged })}
   </section>`;
 
 function progressCard() {
@@ -229,6 +230,7 @@ function render() {
     ${sheetOpen ? sheet() : ''}
     ${historyFilter.sheet()}`;
   feed.start(app);
+  nudged = true;
 }
 
 app.addEventListener('click', (event) => {

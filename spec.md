@@ -495,3 +495,10 @@ Open point (to check later): whether a user who has not passed KYC or made a fir
 | Tour step 3 simulated balance | 3,410 (balance + today's 310) | 12,890 |
 
 Every daily amount is between 70 and 100 coins per lot and never above 2,000. On Coins, the lots and the history use the same amounts as the Earn history; redemptions and the refund are 1,000 coins each. The expiring warning stays at 1,200 coins.
+
+**Nudge on the button (8 Oct 2026).** In both cases (`Verify my account`, `Deposit now`), on Home and on Earn, 3 seconds after the page shows:
+
+- the finger from the guided tour (the 3D hand) grows in just under the button, pointing up at it, and then keeps tapping gently;
+- at the same moment the button pops once: it grows slightly (6%) and returns to its size, in 0.6 s.
+
+The finger never blocks taps. It reaches a little below the card and overlaps the top of what follows. On Earn, switching the `How it works` / `History` tab does not replay the nudge: the finger simply stays. With reduced motion the finger just appears and the button does not pop.

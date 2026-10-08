@@ -14,6 +14,7 @@ Phase 2: small UI fixes, then API mapping. Entries are added here as each change
   - `DATA.md`: no new field; the meaning of `program.joinRequirement` is reworded. `STATES.md`: descriptions of `needs-kyc` and `needs-deposit` updated.
 - **Sample rates and daily maximum** in `mock/common.json`: rates are now Forex 80, Metal 100, Indices 90, Other 70 coins per lot (were 5 / 10 / 3 / 1) and `program.dailyMaxPoints` is 2000 (was 10000). Data only, no code change; the rates table, the daily-maximum rule and tour step 2 read these values. `DATA.md` examples regenerated.
 - **Sample amounts rescaled** to fit the new rates and daily maximum, in `mock/common.json` (`balance.available` 3100, `tour.simulatedBalance` 3410), `mock/dashboard.json`, `mock/trading-task.json` and `mock/point-balance.json`. Data only: no field added, removed or renamed. `DATA.md` and `STATES.md` regenerated (examples and state values only).
+- **Nudge on the "How to start" button** (spec §39): after 3 s the tour's finger appears under `Verify my account` / `Deposit now` and the button pops once. Files: `shared/components.js` (`joinPanel`: button wrapped in `.join__cta` with `.join__finger`; new option `nudged`), `shared/components.css` (`.join__cta`, `.join__finger`, `@keyframes join-pop`), `pages/trading-task.js` (plays the nudge on the first render only). Image reused: `assets/tour/finger.webp`.
 
 ### API mapping
 
