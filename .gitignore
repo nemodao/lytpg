@@ -9,3 +9,10 @@ Design Elements/
 
 # Temporary test pages
 pages/_*
+
+# Internal API documents and the review sent to backend: kept on this machine only (the repository is public)
+API/
+API-REVIEW-FOR-BACKEND.md
+
+# QA reports received from the developer (large screenshot sets)
+QA Document/
