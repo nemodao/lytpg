@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "message": "",
+  "code": 200,
+  "result": {
+    "available": 3100,
+    "pending": 0,
+    "expiring": 0
+  },
+  "extraData": null,
+  "timestamp": 1791963300000
+}

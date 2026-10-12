@@ -1,0 +1,87 @@
+{
+  "success": true,
+  "message": "",
+  "code": 200,
+  "result": {
+    "tradingTask": true,
+    "range": {
+      "from": "2026-10-08",
+      "to": "2026-10-14",
+      "tzMinutes": 420
+    },
+    "days": [
+      {
+        "date": "2026-10-14",
+        "lots": 3.5,
+        "points": 310,
+        "status": "earning",
+        "capped": false
+      },
+      {
+        "date": "2026-10-13",
+        "lots": 1.4,
+        "points": 120,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-10-10",
+        "lots": 4.2,
+        "points": 360,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-10-08",
+        "lots": 24.6,
+        "points": 2000,
+        "status": "credited",
+        "capped": true
+      },
+      {
+        "date": "2026-10-06",
+        "lots": 6.1,
+        "points": 540,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-10-02",
+        "lots": 2.8,
+        "points": 250,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-09-29",
+        "lots": 0.9,
+        "points": 80,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-09-24",
+        "lots": 5.3,
+        "points": 460,
+        "status": "credited",
+        "capped": false
+      },
+      {
+        "date": "2026-09-17",
+        "lots": 26.0,
+        "points": 2000,
+        "status": "credited",
+        "capped": true
+      },
+      {
+        "date": "2026-09-08",
+        "lots": 3.2,
+        "points": 280,
+        "status": "credited",
+        "capped": false
+      }
+    ]
+  },
+  "extraData": null,
+  "timestamp": 1791963300000
+}

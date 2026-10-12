@@ -1,0 +1,201 @@
+{
+  "success": true,
+  "message": "",
+  "code": 200,
+  "result": {
+    "range": {
+      "from": "2026-09-15",
+      "to": "2026-10-14",
+      "tzMinutes": 420
+    },
+    "items": [
+      {
+        "happenedAt": "2026-10-14T14:12:00+07:00",
+        "date": "2026-10-14",
+        "type": "earn",
+        "source": "trading",
+        "points": 80
+      },
+      {
+        "happenedAt": "2026-10-14T11:47:00+07:00",
+        "date": "2026-10-14",
+        "type": "earn",
+        "source": "trading",
+        "points": 60
+      },
+      {
+        "happenedAt": "2026-10-14T10:05:00+07:00",
+        "date": "2026-10-14",
+        "type": "earn",
+        "source": "trading",
+        "points": 90
+      },
+      {
+        "happenedAt": "2026-10-14T09:21:00+07:00",
+        "date": "2026-10-14",
+        "type": "earn",
+        "source": "trading",
+        "points": 80
+      },
+      {
+        "happenedAt": "2026-10-13T16:40:00+07:00",
+        "date": "2026-10-13",
+        "type": "earn",
+        "source": "trading",
+        "points": 70
+      },
+      {
+        "happenedAt": "2026-10-13T10:18:00+07:00",
+        "date": "2026-10-13",
+        "type": "earn",
+        "source": "trading",
+        "points": 50
+      },
+      {
+        "happenedAt": "2026-10-12T23:59:00+07:00",
+        "date": "2026-10-12",
+        "type": "expire",
+        "source": "trading",
+        "points": -200
+      },
+      {
+        "happenedAt": "2026-10-10T15:02:00+07:00",
+        "date": "2026-10-10",
+        "type": "earn",
+        "source": "trading",
+        "points": 150
+      },
+      {
+        "happenedAt": "2026-10-10T13:26:00+07:00",
+        "date": "2026-10-10",
+        "type": "earn",
+        "source": "trading",
+        "points": 120
+      },
+      {
+        "happenedAt": "2026-10-10T09:48:00+07:00",
+        "date": "2026-10-10",
+        "type": "earn",
+        "source": "trading",
+        "points": 90
+      },
+      {
+        "happenedAt": "2026-10-09T11:30:00+07:00",
+        "date": "2026-10-09",
+        "type": "refund",
+        "source": "redeem",
+        "points": 1000
+      },
+      {
+        "happenedAt": "2026-10-09T10:15:00+07:00",
+        "date": "2026-10-09",
+        "type": "consume",
+        "source": "redeem",
+        "points": -1000
+      },
+      {
+        "happenedAt": "2026-10-08T20:44:00+07:00",
+        "date": "2026-10-08",
+        "type": "consume",
+        "source": "redeem",
+        "points": -1000
+      },
+      {
+        "happenedAt": "2026-10-08T17:31:00+07:00",
+        "date": "2026-10-08",
+        "type": "earn",
+        "source": "trading",
+        "points": 300
+      },
+      {
+        "happenedAt": "2026-10-08T15:09:00+07:00",
+        "date": "2026-10-08",
+        "type": "earn",
+        "source": "trading",
+        "points": 450
+      },
+      {
+        "happenedAt": "2026-10-08T13:52:00+07:00",
+        "date": "2026-10-08",
+        "type": "earn",
+        "source": "trading",
+        "points": 500
+      },
+      {
+        "happenedAt": "2026-10-08T11:20:00+07:00",
+        "date": "2026-10-08",
+        "type": "earn",
+        "source": "trading",
+        "points": 400
+      },
+      {
+        "happenedAt": "2026-10-08T09:36:00+07:00",
+        "date": "2026-10-08",
+        "type": "earn",
+        "source": "trading",
+        "points": 350
+      },
+      {
+        "happenedAt": "2026-10-06T14:55:00+07:00",
+        "date": "2026-10-06",
+        "type": "earn",
+        "source": "trading",
+        "points": 240
+      },
+      {
+        "happenedAt": "2026-10-06T10:41:00+07:00",
+        "date": "2026-10-06",
+        "type": "earn",
+        "source": "trading",
+        "points": 300
+      },
+      {
+        "happenedAt": "2026-10-04T23:59:00+07:00",
+        "date": "2026-10-04",
+        "type": "expire",
+        "source": "trading",
+        "points": -300
+      },
+      {
+        "happenedAt": "2026-10-02T09:00:00+07:00",
+        "date": "2026-10-02",
+        "type": "adjust_positive",
+        "source": "adjust",
+        "points": 100
+      },
+      {
+        "happenedAt": "2026-09-25T16:12:00+07:00",
+        "date": "2026-09-25",
+        "type": "earn",
+        "source": "trading",
+        "points": 900
+      },
+      {
+        "happenedAt": "2026-09-25T11:03:00+07:00",
+        "date": "2026-09-25",
+        "type": "earn",
+        "source": "trading",
+        "points": 1100
+      },
+      {
+        "happenedAt": "2026-09-22T23:59:00+07:00",
+        "date": "2026-09-22",
+        "type": "expire",
+        "source": "trading",
+        "points": -800
+      },
+      {
+        "happenedAt": "2026-09-12T23:59:00+07:00",
+        "date": "2026-09-12",
+        "type": "expire",
+        "source": "trading",
+        "points": -450
+      }
+    ],
+    "pageNo": 1,
+    "pageSize": 50,
+    "total": 26
+  },
+  "extraData": null,
+  "timestamp": 1791963300000
+}

@@ -1,0 +1,47 @@
+{
+  "success": true,
+  "message": "",
+  "code": 200,
+  "result": {
+    "range": {
+      "from": "2026-08-01",
+      "to": "2026-10-14",
+      "tzMinutes": 420
+    },
+    "items": [
+      {
+        "source": "trading",
+        "earnedOn": "2026-09-09",
+        "total": 1200,
+        "expired": 200,
+        "expiredAt": "2026-10-12T16:59:59Z"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-09-01",
+        "total": 2000,
+        "expired": 300,
+        "expiredAt": "2026-10-04T16:59:59Z"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-08-20",
+        "total": 800,
+        "expired": 800,
+        "expiredAt": "2026-09-22T16:59:59Z"
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-08-10",
+        "total": 1500,
+        "expired": 450,
+        "expiredAt": "2026-09-12T16:59:59Z"
+      }
+    ],
+    "pageNo": 1,
+    "pageSize": 15,
+    "total": 4
+  },
+  "extraData": null,
+  "timestamp": 1791963300000
+}

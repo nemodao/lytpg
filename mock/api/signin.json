@@ -1,0 +1,7 @@
+{
+  "_note": "Only the two fields the loyalty pages read from the app sign-in answer (/app/signin -> result). Times in milliseconds; 0 = not yet.",
+  "result": {
+    "kycApproveTime": 1788220800000,
+    "firstDepositTime": 1788307200000
+  }
+}
