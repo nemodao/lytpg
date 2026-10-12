@@ -1,8 +1,11 @@
 // Date-range filter shown above a list: "Last 7 days" (default), "Last 30 days", or a custom range picked on a
 // calendar in a bottom sheet (review mockup G5). Used by the Trading Task history and the Point Balance tabs.
 // Days are 'YYYY-MM-DD' keys in WIB; plain string comparison orders them.
-// API: filtering is done here in the browser over the full list the page already has (`includes`). If the API pages
-// or filters by date itself, call it from the page when the range changes and drop `includes`.
+// API: the three list APIs (trading history, expired coins, coin history) take `from` / `to` and refuse a range longer
+// than MAX_DAYS, a start in the future, or a start after the end; the calendar cannot produce any of those. In this
+// demo the filtering is done in the browser over the full list (`includes`). With the API, call it from the page when
+// the range changes (always send both `from` and `to`) and drop `includes`.
+const MAX_DAYS = 30;
 export function createDateFilter(ui, now, id) {
   const todayKey = ui.dayKey(now);
   const addDays = (key, days) => new Date(Date.parse(key) + days * 86400000).toISOString().slice(0, 10);
@@ -33,7 +36,8 @@ export function createDateFilter(ui, now, id) {
     return `<div class="chips num">${chip('7', ui.t('filter.7'))}${chip('30', ui.t('filter.30'))}${chip('custom', customLabel)}</div>`;
   }
 
-  // First tap sets the start, second the end. Future days cannot be picked.
+  // First tap sets the start, second the end. Future days cannot be picked, and once a start is chosen neither can a
+  // day more than MAX_DAYS - 1 days after it.
   function sheet() {
     if (!open) return '';
     const [year, monthNumber] = month.split('-').map(Number);
@@ -41,9 +45,10 @@ export function createDateFilter(ui, now, id) {
     const lead = (new Date(Date.UTC(year, monthNumber - 1, 1)).getUTCDay() + 6) % 7; // Monday first
     const { from, to } = pick;
     const end = to || from;
+    const lastAllowed = from && !to ? addDays(from, MAX_DAYS - 1) : null;
     const cells = Array.from({ length: daysInMonth }, (_, index) => {
       const key = `${month}-${String(index + 1).padStart(2, '0')}`;
-      if (key > todayKey) return `<span class="cal__day cal__day--off">${index + 1}</span>`;
+      if (key > todayKey || (lastAllowed && key > lastAllowed)) return `<span class="cal__day cal__day--off">${index + 1}</span>`;
       const edge = key === from || key === end;
       const cls = [
         'cal__day',
@@ -69,6 +74,7 @@ export function createDateFilter(ui, now, id) {
             ${'<span></span>'.repeat(lead)}
             ${cells.join('')}
           </div>
+          <p class="t-caption c-3 cal-hint num">${ui.t('filter.max', { days: MAX_DAYS })}</p>
           <div class="sheet__actions">
             <button class="btn btn--stroke btn--lg" type="button" data-action="cal-cancel">${ui.t('common.cancel')}</button>
             <button class="btn btn--primary btn--lg" type="button" data-action="cal-apply" ${from ? '' : 'disabled'}>${ui.t('common.apply')}</button>
@@ -94,7 +100,7 @@ export function createDateFilter(ui, now, id) {
       const day = target.dataset.day;
       // No start yet, a finished range, or a day before the start: begin a new range. Otherwise it closes the range.
       if (!pick.from || pick.to || day < pick.from) pick = { from: day, to: null };
-      else pick = { from: pick.from, to: day };
+      else pick = { from: pick.from, to: day <= addDays(pick.from, MAX_DAYS - 1) ? day : addDays(pick.from, MAX_DAYS - 1) };
     } else if (action === 'cal-apply') {
       range = { mode: 'custom', from: pick.from, to: pick.to || pick.from };
       open = false;

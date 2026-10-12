@@ -27,7 +27,8 @@ const app = document.getElementById('app');
 const TABS = ['available', 'expired', 'history'];
 let tab = TABS.includes(new URLSearchParams(location.search).get('tab')) ? new URLSearchParams(location.search).get('tab') : 'available';
 
-const source = (item) => ui.t(`pb.source.${item.source}`);
+// `earnedOn` is the day the coins reached the balance (spec §43).
+const source = (item) => (['trading', 'daily_checkin', 'adjust'].includes(item.source) ? ui.t(`pb.source.${item.source}`) : ui.esc(item.source));
 
 const expiredLots = empty.expired ? [] : items.filter(inExpired);
 // Expired and History each keep their own time filter: last 7 days by default, like the Trading Task history.
@@ -96,27 +97,28 @@ function expiredTab() {
     </section>`;
 }
 
+// One movement of the balance (spec §43). Every credit is its own row with its time: coins from trading arrive several
+// times a day and are not merged.
+// API: `coin/ledger` items = { happenedAt, date, type, source, points }. type: earn | consume | refund | expire |
+// adjust_positive | adjust_negative. For `earn` the label is the source (trading, daily_checkin, adjust).
+const SOURCES = ['trading', 'daily_checkin', 'adjust'];
+function historyLabel(entry) {
+  if (entry.type === 'earn') return SOURCES.includes(entry.source) ? ui.t(`pb.source.${entry.source}`) : ui.esc(entry.source);
+  if (entry.type.startsWith('adjust')) return ui.t('hist.adjust');
+  return ui.t(`hist.${entry.type}`); // consume, refund, expire
+}
 function historyRow(entry) {
-  const label = {
-    earned: () => ui.t('hist.earned', { date: ui.date(entry.date) }),
-    redeemed: () => ui.t('hist.redeemed'), // reward name: TODO in spec §8
-    refunded: () => ui.t('hist.refunded'),
-    expired: () => ui.t('hist.expired'),
-    adjusted: () => ui.t('hist.adjusted'), // reason: TODO in spec §8
-  }[entry.type]();
   return `
     <div class="list__row">
-      <p class="t-label grow">${label}</p>
-      <div class="list__end">
-        <p class="t-label num ${entry.points > 0 ? 'points--plus' : ''}">${ui.signed(entry.points)}</p>
-      </div>
+      <p class="t-label grow">${historyLabel(entry)}<span class="hist-time num">${ui.time(entry.happenedAt)}</span></p>
+      <p class="t-label num ${entry.points > 0 ? 'points--plus' : ''}">${ui.signed(entry.points)}</p>
     </div>`;
 }
 
 function historyTab() {
-  // Group by date, newest first.
+  // Grouped by day (`date` is the local day of `happenedAt`), newest first, rows inside a day newest first.
   const groups = new Map();
-  history.filter((entry) => filters.history.includes(entry.date)).sort((a, b) => b.date.localeCompare(a.date)).forEach((entry) => {
+  history.filter((entry) => filters.history.includes(entry.date)).sort((a, b) => b.happenedAt.localeCompare(a.happenedAt)).forEach((entry) => {
     if (!groups.has(entry.date)) groups.set(entry.date, []);
     groups.get(entry.date).push(entry);
   });
@@ -124,7 +126,7 @@ function historyTab() {
     ${filters.history.chips()}
     ${groups.size ? [...groups].map(([date, entries]) => `
       <p class="group-title">${ui.isToday(date) ? ui.t('hist.today') : ui.date(date)}</p>
-      <section class="card"><div class="list">${entries.map(historyRow).join('')}</div></section>`).join('')
+      <section class="card"><div class="list list--compact">${entries.map(historyRow).join('')}</div></section>`).join('')
       : `<section class="card"><p class="t-body c-3 list-none">${ui.t('pb.history.none')}</p></section>`}`;
 }
 

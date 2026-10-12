@@ -547,3 +547,12 @@ In the real system a rate is attached to a trading account, not to the programme
 - **Who is "not yet KYC" / "no first deposit":** taken from the app's sign-in data, not from the loyalty system: KYC approval time = 0 → not yet KYC; KYC approved and first deposit time = 0 → no first deposit.
 
 New preview state on Earn: `no-account`.
+
+## 43. Coins history shows every credit; date ranges are limited to 30 days (decided 12 Oct 2026, phase 2)
+
+Replaces the History rules in §17 and the filter rules in §15.
+
+- **Coins, History tab:** every movement of the balance is its own row, with its time after the label: `Trading 14:12 … +80`. Coins from trading arrive several times a day and are **not merged** into one row per day. Rows are grouped under their day (`Today`, `13 Oct`, …), newest first; the rows are tighter than before because there are more of them.
+- **Row labels:** coins received show where they came from (`Trading`, `Daily check-in`, `Adjustment`); `Redeemed reward`; `Refund`; `Expired`; `Adjustment` (added or removed by hand).
+- **Date on a lot** (Available and Expired tabs, `Trading · 6 Oct`): the day the coins reached the balance, not the trading day. At launch both are the same day.
+- **Custom date range** (Earn history, Coins Expired and History): at most 30 days. After the first day is picked, days more than 29 days later cannot be chosen; the calendar says `You can select up to 30 days.`

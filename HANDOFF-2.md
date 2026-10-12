@@ -98,6 +98,26 @@ Files: `shared/components.js` (`balanceBlock`, `rulesList`), `shared/app.js` (`S
 
 ---
 
+### 1.6 Coins history row by row; 30-day limit on custom ranges (spec §43)
+
+- **Coins, History tab:** one row per movement, never merged. Row = label, time of `happenedAt` (small, after the
+  label), signed amount. Rows are grouped by `date`, newest first, in a tighter list (`.list--compact`). The mock
+  history is now in the API's own shape: `{ happenedAt, date, type, source, points }` with `type` =
+  `earn | consume | refund | expire | adjust_positive | adjust_negative`. Label: for `earn` the source
+  (`pb.source.<source>`), otherwise `hist.consume`, `hist.refund`, `hist.expire`, `hist.adjust`.
+- **Lot date** (`items[].earnedOn`): now means the day the coins reached the balance. No visual change.
+- **Calendar:** a custom range is at most 30 days (`MAX_DAYS` in `shared/date-filter.js`): days later than start + 29
+  are disabled, and a hint line reads `You can select up to 30 days.` The real list APIs refuse longer ranges.
+
+Files: `pages/point-balance.js` (`historyLabel`, `historyRow`, `historyTab`, `source`), `shared/date-filter.js`,
+`shared/components.css` (`.list--compact`, `.hist-time`, `.cal-hint`), `copy/en.json` (new `pb.source.daily_checkin`,
+`pb.source.adjust`, `filter.max`; renamed `hist.redeemed` → `hist.consume`, `hist.refunded` → `hist.refund`,
+`hist.expired` → `hist.expire`, `hist.adjusted` → `hist.adjust`; removed `hist.earned`), `mock/point-balance.json`.
+
+`DATA.md`: `history[]` on Coins has a new field `happenedAt`, and new values for `type` and `source`.
+
+---
+
 ## 2. Files to update
 
 | File | Change |
@@ -115,7 +135,7 @@ Files: `shared/components.js` (`balanceBlock`, `rulesList`), `shared/app.js` (`S
 | `assets/docs/terms-sample.pdf` | New sample file. |
 | `pages/*.html` | Comments only (list of states). |
 
-Not changed: `shared/data-source.js`, `shared/nav.js`, `shared/live-feed.js`, `shared/date-filter.js`, `tokens/*`, every `data-intent` and `data-tour` value that existed in handoff 1 (one new intent: `open-account`), every file
+Not changed: `shared/data-source.js`, `shared/nav.js`, `shared/live-feed.js`, `tokens/*`, every `data-intent` and `data-tour` value that existed in handoff 1 (one new intent: `open-account`), every file
 name. Function and class names that existed in handoff 1 are unchanged, except `rateRow` / `ratesList` in
 `pages/trading-task.js`, which now take a rate / an account.
 

@@ -97,17 +97,18 @@ Example file: `mock/point-balance.json` (`default`)
 
 | Field | Type | Example | Meaning |
 |---|---|---|---|
-| `items[].source` | "trading" | `"trading"` | Where the lot came from; its label is copy key pb.source.<source>. |
-| `items[].earnedOn` | YYYY-MM-DD | `"2026-10-14"` | Day the coins were earned. |
+| `items[].source` | "trading" | "daily_checkin" | "adjust" | `"trading"` | Where the lot came from; its label is copy key pb.source.<source>. |
+| `items[].earnedOn` | YYYY-MM-DD | `"2026-10-14"` | Day the coins reached the balance (not the trading day). |
 | `items[].total` | number | `310` | Coins earned in this lot ("Earned"). |
 | `items[].remaining` | number | `310` | Coins of this lot not yet spent ("Remain"); for an expired lot, the coins that expired unspent. |
 | `items[].status` | "earning" | "active" | "used" | "expired" | `"earning"` | State of the lot. earning/active/used-before-expiry show in Available; expired and used-then-expired show in Expired. |
 | `items[].creditAt` | YYYY-MM-DD or null | `null` | Not displayed. |
 | `items[].expiresAt` | YYYY-MM-DD or null | `"2026-10-28"` | Expiry date of the lot. Null while earning. |
-| `history[].date` | YYYY-MM-DD | `"2026-10-13"` | Day of a balance movement. Rows are grouped by day, newest first. |
-| `history[].type` | "earning" | "earned" | "redeemed" | "refunded" | "expired" | "adjusted" | `"earned"` | Kind of movement; its label is copy key hist.<type>. |
-| `history[].points` | number | `120` | Signed amount: positive added, negative taken. |
-| `history[].source` | "trading" or null | `"trading"` | Source of an earned movement, else null. |
+| `history[].happenedAt` | ISO 8601 | `"2026-10-14T14:12:00+07:00"` | When the movement happened. Its time is shown after the label; rows are ordered by it, newest first. |
+| `history[].date` | YYYY-MM-DD | `"2026-10-14"` | Local day of happenedAt. Rows are grouped under it. |
+| `history[].type` | "earn" | "consume" | "refund" | "expire" | "adjust_positive" | "adjust_negative" | `"earn"` | Kind of movement. earn shows the source as its label; consume = "Redeemed reward"; refund = "Refund"; expire = "Expired"; adjust_* = "Adjustment". |
+| `history[].source` | "trading" | "daily_checkin" | "adjust" | "redeem" | `"trading"` | Where the coins came from or went to; label of an earn row (copy key pb.source.<source>). |
+| `history[].points` | number | `80` | Signed amount: positive added, negative taken. One row per credit: several earn rows a day are normal and are not merged. |
 | `usedItems[]` | same shape as items[] | `[]` | PREVIEW ONLY. Lots added by the has-used state. Same remark. |
 | `empty.available` | optional |  | PREVIEW ONLY. Empties the Available tab. |
 | `empty.expired` | optional |  | PREVIEW ONLY. Empties the Expired tab. |
