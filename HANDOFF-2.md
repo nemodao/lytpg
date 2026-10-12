@@ -168,9 +168,12 @@ name. Function and class names that existed in handoff 1 are unchanged, except `
 
 | Change | Field |
 |---|---|
-| New | `program.termsUrl`, `program.rateRange.min` / `.max`, `program.creditWithinMinutes` (fixed in the UI), `accounts[].rates[].type` / `.value` / `.ptsPerLot` |
-| Removed | top-level `rates[]`, `balance.pending`, `program.refreshMinutes`, `pendingItems[]` (Coins) |
-| Same name, wider meaning | `program.joinRequirement` (decides what the Today card and the Earn page show), `program.dailyMaxPoints` (may be null), `today.status` and `history[].status` (also `"earning"`), `selectedAccountId` (may be null), `accounts` (may be empty) |
+| New, shared data | `program.termsUrl`, `program.rateRange.min`, `program.rateRange.max`, `program.minHoldSeconds`, `program.tzMinutes`, `program.creditWithinMinutes` (fixed in the UI), `accounts[].rates[].type`, `accounts[].rates[].value`, `accounts[].rates[].ptsPerLot`, `view` (PREVIEW ONLY) |
+| New, Coins | `items[].list`, `items[].expiringSoon`, `history[].happenedAt`, `loadMoreError` (PREVIEW ONLY) |
+| Removed, shared data | `rates[].group`, `rates[].ptsPerLot` (the top-level `rates` list), `balance.pending`, `balance.expiring.date`, `program.refreshMinutes` |
+| Removed, pages | Home `task.updatedAt`; Earn `today.creditAt`, `today.updatedAt`; Coins `items[].creditAt`, `pendingItems[]` |
+| Same name, different values | Earn `today.status` (`not_started`, `earning`, `credited`, `pending`), Earn `history[].status` (`earning`, `credited`, `pending`), Earn `history[]` (now includes today), Coins `items[].status` (no `pending`), Coins `history[].type` and `history[].source` (the API's own values), `items[].expiresAt` (a date or a full timestamp) |
+| Same name, wider meaning | `program.joinRequirement` (decides what the Today card and the Earn page show), `program.dailyMaxPoints` (may be null), `selectedAccountId` (may be null), `accounts` (may be empty), `today.lots` (lots already counted for coins) |
 
 Preview states: removed `has-pending` (all pages) and `in-day` (Earn); added `first-trade`, `credited`, `delayed`, `no-account` (Earn),
 `loading` and `error` (all pages), `more-error` (Coins).
