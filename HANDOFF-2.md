@@ -45,8 +45,9 @@ The hand never catches taps. With reduced motion the hand just appears and nothi
 - A text button `Terms & Conditions ›` after the last rule in the `How it works` tab. Not shown in the guided tour.
 - Tapping it opens a bottom sheet: title, round close button, and the document in a frame that scrolls by itself.
   `Loading…` shows behind the frame until the document paints. Closes with the button, a tap outside, or Escape.
-- The document is a **PDF** whose address comes from the new field `program.termsUrl`. If the field is null or
-  missing, the button is not rendered.
+- The document is a **PDF** whose address comes from the new field `program.termsUrl`. If the field is null,
+  missing or an empty string `""`, the button is not rendered: test "has content", not "is not null". For now the
+  file is in Indonesian while the interface is in English.
 - **Check this in the real app.** An in-app webview may not display a PDF inside an iframe (Android WebView shows
   nothing; iOS may show only the first page). If it does not display, keep the button and the sheet and either draw
   the PDF with a viewer library inside `.doc`, or have the app open the PDF in its own viewer when the button is
@@ -167,7 +168,7 @@ Files: `shared/tracking.js` (new), `shared/components.js`, `shared/nav.js`, `sha
 
 | File | Change |
 |---|---|
-| `shared/components.js` | **New export `joinPanel(ui, common, { flat, nudged })`**: returns the steps panel, the rate range line and the button with its finger. `flat: true` lays the steps straight on the card (Earn). `nudged: true` skips the finger's entrance after a re-render. **New export `rateRangeLine(ui, common)`**: the `70–100 coins per lot · up to 2,000 a day` line, also used by the no-account card. `rulesList` hides the daily-maximum rule when `program.dailyMaxPoints` is null; `balanceBlock` no longer shows pending coins. `joinLabel` and `joinIntent` are unchanged in signature; only the comment and the texts they return changed. |
+| `shared/components.js` | **New export `joinPanel(ui, common, { flat, nudged })`**: returns the steps panel, the rate range line and the button with its finger. `flat: true` lays the steps straight on the card (Earn). `nudged: true` skips the finger's entrance after a re-render. **New export `rateRangeLine(ui, common)`**: the `70–100 coins per lot · up to 2,000 a day` line, also used by the no-account card. `rulesList` hides the daily-maximum rule when `program.dailyMaxPoints` is null and the holding-time rule when `program.minHoldSeconds` is 0; `balanceBlock` no longer shows pending coins. `joinLabel` and `joinIntent` are unchanged in signature; only the comment and the texts they return changed. |
 | `shared/components.css` | New classes: `.join`, `.join__title`, `.join__steps`, `.join__step` (+ `--current`, `--done`, `--later`), `.join__mark`, `.join__rates`, `.join__cta` (+ `--nudged`), `.join__finger`; keyframes `join-tap`, `join-press`. New: `.sheet--doc`, `.sheet__head`, `.doc`, `.doc__loading`, `.doc__frame`, `.text-btn`. Moved here from `pages/dashboard.css` without change: `.details`. |
 | `pages/dashboard.js` | The Today panel, live feed and trade button moved into a new local function `taskProgress()`. `taskCard()` now renders `joinPanel(...)` when `common.program.joinRequirement` is set, else `taskProgress()`. Imports: `joinPanel` added, `joinIntent` / `joinLabel` removed. |
 | `pages/dashboard.css` | `.details` removed (moved to `shared/components.css`). |
@@ -228,9 +229,9 @@ function to replace, `request()`.
 | `balance.expiring.points` | `coin/summary` → `expiring` | 0 → `expiring: null` (warning hidden). `pending` is not used |
 | `program.tradingTask` | `tradingTask/get` → `tradingTask` | `false` (the only field then) hides every trading part |
 | `program.ended`, `creditMode`, `creditDelayDays`, `expiryDays`, `dailyMaxPoints`, `tzMinutes` | `tradingTask/get` → `program.*` | `dailyMaxPoints` may be null |
-| `program.minHoldMinutes`, `minHoldSeconds` | `program.minHoldSeconds`, else `minHoldMinutes` × 60 | **`minHoldSeconds` not on UAT yet** |
-| `program.rateRange` | `program.rateRange` | **Not on UAT yet**; missing → null |
-| `program.termsUrl` | `program.termsUrl` | **Not on UAT yet**; missing → null |
+| `program.minHoldMinutes`, `minHoldSeconds` | `program.minHoldSeconds`, else `minHoldMinutes` × 60 | On UAT. Can be `0` (no minimum): the holding-time rule is then not shown. Not a whole number of minutes (e.g. 90): the rule reads `at least 90 seconds` |
+| `program.rateRange` | `program.rateRange` | On UAT. `{ min, max }`, may be decimals; null → no rate range line and no figure in tour step 2 |
+| `program.termsUrl` | `program.termsUrl` | On UAT. null, missing or `""` → null (button hidden) |
 | `program.joinRequirement` | App sign-in (`/app/signin`), **not** the loyalty API | `kycApproveTime` = 0 → `"kyc"`; `kycApproveTime` > 0 and `firstDepositTime` = 0 → `"deposit"`; else `null` |
 | `program.creditWithinMinutes`, `expiryWarningDays`, `resetTime` | none | `UI_CONSTANTS` |
 | `accounts[]` | `tradingTask/get` → `accounts[]` | `id` number → text. May be empty |

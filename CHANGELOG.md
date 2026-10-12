@@ -3,13 +3,7 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
-## Handoff 3 — in progress (started 12 Oct 2026)
-
-**Full description for developers: `HANDOFF-3.md`.**
-
-- The three new programme fields are on UAT. Two empty values handled: `termsUrl` as an empty string hides the Terms & Conditions button; `minHoldSeconds` = 0 hides the holding-time rule. Files: `shared/api-adapter.js`, `shared/components.js`, `mock/api/check.mjs`.
-
-## Handoff 2 — UI changes and API mapping (12 Oct 2026)
+## Handoff 2 — UI changes, API mapping and event tracking (12 Oct 2026)
 
 **Full description for developers: `HANDOFF-2.md`** (what changed since handoff 1, file by file, and the values to map from the API).
 
@@ -25,6 +19,7 @@ Summary:
 - No pending coins anywhere; same-day crediting is the default; `Updates within 15 mins`. Spec §41. Preview states `has-pending` and `in-day` removed, `credited` and `delayed` added.
 - Sample data: rates 70–100 coins per lot, daily maximum 2,000, all sample amounts rescaled.
 - `DATA.md` and `STATES.md` changed: see `HANDOFF-2.md` §3 for the full list of fields and states added and removed.
+- The programme fields `rateRange`, `termsUrl`, `minHoldSeconds` are on UAT (12 Oct 2026). Empty values are handled: `termsUrl` null, missing or `""` hides the Terms & Conditions button; `minHoldSeconds` = 0 hides the holding-time rule; `rateRange` null hides the rate range.
 - **API mapping done:** `shared/api-adapter.js` (converter), `shared/data-source.js` (two sources; replace `request()` to go live), sample answers and a self-check in `mock/api/`. `?source=api` runs the pages on the samples. See `HANDOFF.md` §5 and `HANDOFF-2.md` §4.
 
 ## Handoff 1 — 7 Oct 2026
