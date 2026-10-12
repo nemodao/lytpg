@@ -3,11 +3,14 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
+import { initTracking, trackView } from '../shared/tracking.js';
 import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('trading-task');
 const { program, accounts } = common;
 const { today, history } = page;
+
+initTracking('earn', common);
 
 const ended = program.ended;
 const app = document.getElementById('app');
@@ -76,7 +79,7 @@ function progressCard() {
   // API: `today.status` decides the line. Lots and coins only rise once coins have arrived, so right after the first
   // trade of the day the card can read 0 lots and 0 coins while the status is already "earning".
   let footer;
-  if (today.capped) footer = foot('trophy', ui.t('task.capped'));
+  if (today.capped) { footer = foot('trophy', ui.t('task.capped')); trackView('loyalty_daily_cap_view'); }
   else if (today.status === 'earning') footer = foot('clock', ui.t('tt.status.earning'));
   else if (!hasTrades) footer = foot('chart', ui.t('tt.empty.body'));
   else if (today.status === 'credited') footer = foot('check', ui.t('tt.status.credited'));
@@ -137,7 +140,7 @@ function accountsCard() {
         <p class="t-body c-3">${ui.t('tt.noAccount.body')}</p>
       </div>
       ${rateRangeLine(ui, common)}
-      ${ended ? '' : `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="open-account">${ui.t('tt.noAccount.cta')}</button>`}
+      ${ended ? '' : `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="open-account" data-track="loyalty_open_account_click">${ui.t('tt.noAccount.cta')}</button>`}
     </section>`;
   }
   const selected = account(selectedId);
@@ -169,7 +172,7 @@ function tradeButton() {
   }
   // Capped: plain wording, nothing about earning points (spec §4 states).
   const label = today.capped ? ui.t('task.trade') : ui.t('tt.trade.account', { account: ui.esc(selected.id) });
-  return `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="trade-account" data-account="${ui.esc(selected.id)}">${label}</button>`;
+  return `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="trade-account" data-account="${ui.esc(selected.id)}" data-track="loyalty_trade_click" data-track-capped="${today.capped}">${label}</button>`;
 }
 
 
@@ -202,7 +205,7 @@ function historyList() {
 
 function infoCard() {
   const tabButton = (id, key) =>
-    `<button class="tab" type="button" role="tab" aria-selected="${tab === id}" data-action="tab" data-tab="${id}">${ui.t(key)}</button>`;
+    `<button class="tab" type="button" role="tab" aria-selected="${tab === id}" data-action="tab" data-tab="${id}" data-track="loyalty_tab_click" data-track-tab="${id}">${ui.t(key)}</button>`;
   return `
     <section class="card">
       <div class="tabs" role="tablist">${tabButton('rules', 'tt.rules')}${tabButton('history', 'tt.history')}</div>
@@ -217,7 +220,7 @@ function infoCard() {
 // open the PDF in its own viewer when the button is tapped.
 const termsButton = () =>
   program.termsUrl
-    ? `<button class="text-btn" type="button" data-action="open-terms" aria-haspopup="dialog">${ui.t('tt.terms')}${ui.icon('right', 'icon--sm')}</button>`
+    ? `<button class="text-btn" type="button" data-action="open-terms" aria-haspopup="dialog" data-track="loyalty_terms_open">${ui.t('tt.terms')}${ui.icon('right', 'icon--sm')}</button>`
     : '';
 
 function termsSheet() {
@@ -247,7 +250,7 @@ function sheet() {
         <h2 class="t-title-s">${ui.t('tt.accounts.sheet')}</h2>
         <div>
           ${sorted.map((item) => `
-            <button class="option ${item.eligible ? '' : 'option--muted'}" type="button" data-action="select-account" data-id="${ui.esc(item.id)}">
+            <button class="option ${item.eligible ? '' : 'option--muted'}" type="button" data-action="select-account" data-id="${ui.esc(item.id)}" data-track="loyalty_account_select" data-track-eligible="${item.eligible}">
               <span class="grow">${accountName(item)}</span>
               ${eligibleBadge(item)}
               <span class="radio ${item.id === selectedId ? 'radio--on' : ''}"></span>

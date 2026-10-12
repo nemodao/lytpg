@@ -141,6 +141,28 @@ Files: `shared/components.js`, `shared/components.css` (`.skeleton*`, `.page-err
 
 ---
 
+### 1.8 Event tracking (spec §46; full list in `TRACKING.md`)
+
+- **New file `shared/tracking.js`:** `track(name, params)` pushes `{ event, ...params }` onto `window.dataLayer` (GTM →
+  GA4); `trackView` sends a view once per page load; `initTracking(page, common)` sets the parameters sent with every
+  event, sends `loyalty_page_view` and installs the one click listener. Each page calls `initTracking` right after
+  loading its data.
+- **Clicks are tracked from attributes:** `data-track="<event>"` and `data-track-<param>="<value>"` on the element.
+  **Keep these attributes on the converted markup** (or call `track` in the click handler instead). They sit on: the
+  `Redeem` button and the balance link (`balanceBlock`), the "How to start" button (`joinPanel`), the retry button
+  (`showStatus`), the bottom bar tabs and exit (`shared/nav.js`), on Home the task card link, `Details`, `Trade now`
+  and the reward buttons, on Earn the trade, open-account, tab, Terms and account-option buttons, on Coins the tabs.
+- **Tracked from code:** views (`joinPanel`, `balanceBlock`, `showStatus`, daily maximum on Home and Earn), date
+  ranges (`shared/date-filter.js`), the tour (`shared/tour.js`: start, step view, skip, finish).
+- The GTM container snippet is not included: the host page adds it. The pages work without it (events just queue in
+  `dataLayer`).
+- `tour.start` now takes the click event (help button) or nothing (opened by itself) to tell the two apart.
+
+Files: `shared/tracking.js` (new), `shared/components.js`, `shared/nav.js`, `shared/tour.js`,
+`shared/date-filter.js`, `pages/dashboard.js`, `pages/trading-task.js`, `pages/point-balance.js`, `TRACKING.md` (new).
+
+---
+
 ## 2. Files to update
 
 | File | Change |
@@ -158,7 +180,7 @@ Files: `shared/components.js`, `shared/components.css` (`.skeleton*`, `.page-err
 | `assets/docs/terms-sample.pdf` | New sample file. |
 | `pages/*.html` | Comments only (list of states). |
 
-Not changed: `shared/nav.js`, `shared/live-feed.js`, `tokens/*`, every `data-intent` and `data-tour` value that existed in handoff 1 (one new intent: `open-account`), every file
+Not changed: `shared/live-feed.js`, `tokens/*`, every `data-intent` and `data-tour` value that existed in handoff 1 (one new intent: `open-account`), every file
 name. Function and class names that existed in handoff 1 are unchanged, except `rateRow` / `ratesList` in
 `pages/trading-task.js`, which now take a rate / an account.
 

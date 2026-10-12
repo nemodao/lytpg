@@ -579,3 +579,12 @@ For reference; the full mapping is in `HANDOFF-2.md` §4.
 - Fixed in the pages, not sent by any endpoint: "within 15 minutes", the 10-day expiry warning, the 00:00 start of the earning day, the live activity line (simulated), the tour's simulated balance, the reward tiles on Home.
 - Still to arrive from backend: the programme's rate range, the Terms & Conditions address, and the holding time in seconds. Until then users without a trading account see no rate figure, the Terms & Conditions button is hidden, and the holding time is shown in whole minutes.
 - Today's lots are the lots already counted for coins, so they match the history; on a day that reached the maximum they are lower than the lots actually traded.
+
+## 46. Event tracking (decided 12 Oct 2026, phase 2)
+
+The pages send analytics events to Google Tag Manager, which forwards them to GA4. The full list, with when each event is sent and its parameters, is in `TRACKING.md` (22 events, all named `loyalty_<thing>_<action>`).
+
+- They answer five questions: how users move from "How to start" to KYC, deposit and trading; how much interest there is in rewards; which pages and tabs are used; whether the tour is finished; how often a page fails to load.
+- Every event carries the page, the colour mode, whether the user has a trading task, the step still to take (KYC / deposit / none), the crediting mode, and the balance as a range.
+- Never sent: account numbers, the exact balance, names or other personal data. The client id is attached by GTM at sign-in, not by the pages.
+- In the demo, a floating `Events` button (bottom left) lists the events as they are sent, so tracking can be checked without GTM. It is not part of the product.

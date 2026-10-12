@@ -3,11 +3,13 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { mountTour } from '../shared/tour.js';
+import { initTracking } from '../shared/tracking.js';
 import { appHeader, badge, balanceBlock, coin, loadMoreRow, notice, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('point-balance');
 // Preview states can empty one tab (`page.empty.available|expired|history`) without touching the others.
 const empty = page.empty || {};
+initTracking('coins', common);
 // Fully used lots only exist with the `has-used` state; they join the other lots here. Coins that are not credited
 // yet have no lot and are never shown (spec §41).
 // API: one list of lots is enough. `usedItems` and `empty` exist only so preview states can add or remove groups of
@@ -147,7 +149,7 @@ function historyTab() {
 
 function body() {
   const tabButton = (id, key) =>
-    `<button class="tab" type="button" role="tab" aria-selected="${tab === id}" data-action="tab" data-tab="${id}">${ui.t(key)}</button>`;
+    `<button class="tab" type="button" role="tab" aria-selected="${tab === id}" data-action="tab" data-tab="${id}" data-track="loyalty_tab_click" data-track-tab="${id}">${ui.t(key)}</button>`;
   return `
     <div class="tabs" role="tablist" data-tour="tabs">${tabButton('available', 'pb.tab.available')}${tabButton('expired', 'pb.tab.expired')}${tabButton('history', 'pb.tab.history')}</div>
     ${{ available: availableTab, expired: expiredTab, history: historyTab }[tab]()}`;

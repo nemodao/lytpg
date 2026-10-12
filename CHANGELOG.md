@@ -13,6 +13,7 @@ Summary:
 - `Terms & Conditions` text button under the rules on Earn; opens a PDF in a bottom sheet. Spec §40.
 - Button wording: `Verify my account` / `Deposit now` (were `KYC to join` / `Deposit to join`).
 - Rates belong to the selected trading account; users without an account see only `70–100 coins per lot` (no rates table, no `See rates`); new no-account card with `Open a trading account` (`data-intent="open-account"`). Spec §42. New preview state `no-account`.
+- **Event tracking** (GTM → GA4): 22 events through `shared/tracking.js`; clicks tracked from `data-track` attributes. List in `TRACKING.md`. Spec §46.
 - Loading placeholder, failed-to-load card with `Try again`, and 15-row pages with load-on-scroll on the Coins lists. Spec §44. New preview states `loading`, `error`, `more-error`.
 - Coins history: one row per credit with its time, not merged; source labels; custom date ranges limited to 30 days. Spec §43.
 - No pending coins anywhere; same-day crediting is the default; `Updates within 15 mins`. Spec §41. Preview states `has-pending` and `in-day` removed, `credited` and `delayed` added.

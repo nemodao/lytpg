@@ -5,6 +5,8 @@
 // than MAX_DAYS, a start in the future, or a start after the end; the calendar cannot produce any of those. In this
 // demo the filtering is done in the browser over the full list (`includes`). With the API, call it from the page when
 // the range changes (always send both `from` and `to`) and drop `includes`.
+import { track } from './tracking.js';
+
 const MAX_DAYS = 30;
 export function createDateFilter(ui, now, id) {
   const todayKey = ui.dayKey(now);
@@ -89,7 +91,7 @@ export function createDateFilter(ui, now, id) {
     if (action === 'range') {
       if (target.dataset.filter !== id) return false;
       if (target.dataset.mode === 'custom') openCalendar();
-      else range = preset(Number(target.dataset.mode));
+      else { range = preset(Number(target.dataset.mode)); track('loyalty_date_filter_apply', { tab: id, range: range.mode }); }
       return true;
     }
     if (!open) return false;
@@ -104,6 +106,7 @@ export function createDateFilter(ui, now, id) {
     } else if (action === 'cal-apply') {
       range = { mode: 'custom', from: pick.from, to: pick.to || pick.from };
       open = false;
+      track('loyalty_date_filter_apply', { tab: id, range: 'custom' });
     } else if (action === 'cal-cancel') open = false;
     else if (action === 'close-sheet') {
       if (event.target !== target) return false; // taps inside the sheet do not close it

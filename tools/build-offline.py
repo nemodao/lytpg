@@ -19,6 +19,7 @@ OUT = ROOT / 'dist' / 'hsb-loyalty-review'
 PAGES = ['dashboard', 'trading-task', 'point-balance']
 # Shared modules in dependency order, with the variable each one is bound to in the bundle.
 MODULES = {
+    '../shared/tracking.js': '__tracking',
     '../shared/api-adapter.js': '__apiAdapter',
     '../shared/data-source.js': '__dataSource',
     '../shared/app.js': '__app',
@@ -70,7 +71,7 @@ def script_bundle(page):
     page_code, _ = strip_module(read(f'pages/{page}.js'))
     out.append(f'await (async () => {{\n{page_code}\n}})();')
     # Demo-only review aids (state switcher, button explanations) are part of the review copy.
-    for demo in ('demo/preview.js', 'demo/intents.js'):
+    for demo in ('demo/preview.js', 'demo/intents.js', 'demo/tracking-log.js'):
         code, _ = strip_module(read(demo))
         out.append(f'await (async () => {{\n{code}\n}})();')
     js = '\n'.join(out)

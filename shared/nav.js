@@ -23,7 +23,7 @@ const art = (id, version, extraClass = '') => `<img class="nav__image ${extraCla
 export function mountNav(ui, common, active) {
   const tabs = TABS.filter((item) => !(item.needsTask && common.program.tradingTask === false));
   const tab = (item) => `
-    <a class="nav__tab" href="${ui.href(item.file)}" ${item.id === active ? 'aria-current="page"' : ''}>
+    <a class="nav__tab" href="${ui.href(item.file)}" ${item.id === active ? 'aria-current="page"' : ''} data-track="loyalty_nav_click" data-track-target="${item.id === 'points' ? 'coins' : item.id}">
       <span class="nav__art ${item.flash && item.id !== active ? 'nav__art--flash' : ''}">
         ${item.id === active ? art(item.id, 'on') : art(item.id, 'light', 'nav__image--on-light') + art(item.id, 'dark', 'nav__image--on-dark') + (item.flash ? art(item.id, 'hot', 'nav__image--flash') : '')}
         ${item.hot && item.id !== active ? hot : ''}
@@ -34,7 +34,7 @@ export function mountNav(ui, common, active) {
   nav.className = 'nav';
   nav.setAttribute('aria-label', ui.t('nav.label'));
   nav.innerHTML = `
-    <button class="nav__exit" type="button" aria-label="${ui.t('nav.exit')}" data-intent="exit">${ui.icon('close')}</button>
+    <button class="nav__exit" type="button" aria-label="${ui.t('nav.exit')}" data-intent="exit" data-track="loyalty_nav_click" data-track-target="exit">${ui.icon('close')}</button>
     <div class="nav__tabs">${tabs.map(tab).join('')}</div>`;
   document.body.appendChild(nav);
   document.body.classList.add('has-nav');

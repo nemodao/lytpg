@@ -50,7 +50,7 @@ Heading `--font-heading-h1` tới `h4` là cỡ desktop, không dùng trên mobi
 - `STATES.md`: danh mục state của cả 3 trang (sinh tự động, không sửa tay).
 - `tokens/`: design token và script build.
 - `pages/`: mỗi trang gồm `<tên>.html`, `<tên>.js` (render) và `<tên>.css` (style riêng của trang).
-- `shared/`: `base.css` (khung, font, kiểu chữ), `components.css` và `components.js` (component dùng chung), `data-source.js` (chỗ duy nhất lấy dữ liệu: mock mặc định, hoặc dữ liệu dạng API khi thêm `?source=api`), `api-adapter.js` (chuyển response của 6 API thật sang shape trong `DATA.md`; kiểm bằng `node mock/api/check.mjs`), `app.js` (áp state, định dạng số và ngày), `nav.js` (thanh điều hướng dưới), `tour.js` (tour hướng dẫn 5 bước), `live-feed.js`, `date-filter.js`, `theme.js`, `icons.svg`.
+- `shared/`: `base.css` (khung, font, kiểu chữ), `components.css` và `components.js` (component dùng chung), `data-source.js` (chỗ duy nhất lấy dữ liệu: mock mặc định, hoặc dữ liệu dạng API khi thêm `?source=api`), `api-adapter.js` (chuyển response của 6 API thật sang shape trong `DATA.md`; kiểm bằng `node mock/api/check.mjs`), `app.js` (áp state, định dạng số và ngày), `tracking.js` (chỗ duy nhất gửi event lên GTM/GA4; danh sách event ở `TRACKING.md`, thêm hay đổi event thì sửa cả file đó), `nav.js` (thanh điều hướng dưới), `tour.js` (tour hướng dẫn 5 bước), `live-feed.js`, `date-filter.js`, `theme.js`, `icons.svg`.
 - `API/`: tài liệu API nội bộ và trao đổi với backend. **Không đưa lên git** (đã nằm trong `.gitignore`).
 - `mock/api/`: response mẫu đúng hình dạng API thật, một file mỗi endpoint; phải khớp với dữ liệu trong `mock/*.json` (lệnh check ở trên sẽ báo nếu lệch).
 - `mock/`: dữ liệu mẫu. `common.json` dùng chung; mỗi trang một file gồm `default` và `states` (mỗi state là phần ghi đè).
@@ -58,7 +58,7 @@ Heading `--font-heading-h1` tới `h4` là cỡ desktop, không dùng trên mobi
 - `assets/fonts/`: font woff2 đóng gói sẵn. Không dùng Google Fonts.
 - `assets/images/`: hình đã thu về đúng **3 lần kích thước hiển thị lớn nhất** (đo ở màn hình 430px). Hình lớn (quà, cup) dùng WebP; icon nhỏ dùng PNG. File gốc để ở `Design Elements/`, không đưa vào web.
 - `review/`: mockup review element.
-- `demo/`: chỉ dùng cho bản demo, **không giao cho front-end dev**: `preview.js` (thanh chuyển state) và `intents.js` + `intents.en.json` (pop-up "Internal Explanation" khi bấm nút). Mỗi trang nạp chúng trong khối `<!-- DEMO ONLY: start … end -->` cuối file HTML. Không import code trong `demo/` từ `pages/` hay `shared/`.
+- `demo/`: chỉ dùng cho bản demo, **không giao cho front-end dev**: `preview.js` (thanh chuyển state) và `intents.js` + `intents.en.json` (pop-up "Internal Explanation" khi bấm nút), `tracking-log.js` (nút "Events" liệt kê event vừa gửi). Mỗi trang nạp chúng trong khối `<!-- DEMO ONLY: start … end -->` cuối file HTML. Không import code trong `demo/` từ `pages/` hay `shared/`.
 
 ## Chạy thử
 

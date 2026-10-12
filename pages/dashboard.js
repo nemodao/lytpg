@@ -3,17 +3,19 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
 import { mountTour } from '../shared/tour.js';
+import { initTracking, trackView } from '../shared/tracking.js';
 import { appHeader, balanceBlock, coin, joinPanel, showStatus, tourButton } from '../shared/components.js';
 
 const { common, page, ui } = await load('dashboard');
 // `no-task-trading` state: the programme runs no trading task, so its card (and the Earn tab) are hidden.
 const hasTask = common.program.tradingTask !== false;
+initTracking('home', common);
 const { task, rewards, checkIn } = page;
 
 const balanceHref = ui.href('point-balance.html');
 const taskHref = ui.href('trading-task.html', task.capped ? ['capped'] : []);
 
-const detailsLink = (href) => `<a class="details above" href="${href}">${ui.t('common.details')}${ui.icon('right', 'icon--sm')}</a>`;
+const detailsLink = (href) => `<a class="details above" href="${href}" data-track="loyalty_card_click" data-track-target="earn">${ui.t('common.details')}${ui.icon('right', 'icon--sm')}</a>`;
 
 // The panel's footer only appears when today's max is reached.
 const todayFoot = () =>
@@ -39,12 +41,12 @@ const taskProgress = () => `
       ${todayFoot()}
     </div>
     ${feed.html()}
-    <button class="btn btn--onblend btn--lg task__cta above" type="button" data-intent="trade">${ui.t('task.trade')}</button>`;
+    <button class="btn btn--onblend btn--lg task__cta above" type="button" data-intent="trade" data-track="loyalty_trade_click" data-track-capped="${task.capped}">${ui.t('task.trade')}</button>`;
 
 // Users who still need KYC or a first deposit see "How to start" in place of today's progress (spec §39).
 const taskCard = () => `
   <section class="card card--blend blend-pale-theme task">
-    <a class="card-link" href="${taskHref}" aria-label="${ui.t('task.title')}"></a>
+    <a class="card-link" href="${taskHref}" aria-label="${ui.t('task.title')}" data-track="loyalty_card_click" data-track-target="earn"></a>
     ${cupIcon}
     <div class="task__head">
       <h2 class="t-title-s grow">${ui.t('task.title')}</h2>
@@ -79,10 +81,10 @@ function checkInCard() {
 }
 
 // A reward tile is an image only; without an image it stays an empty neutral tile.
-const reward = (item) => `
+const reward = (item, index) => `
   <div class="reward">
     ${item.image ? `<img src="${ui.esc(item.image)}" alt="${ui.esc(item.alt)}">` : ''}
-    <button class="btn btn--xs btn--glass reward__cta" type="button" data-intent="reward">${ui.t('balance.redeem')}</button>
+    <button class="btn btn--xs btn--glass reward__cta" type="button" data-intent="reward" data-track="loyalty_reward_click" data-track-position="${index + 1}">${ui.t('balance.redeem')}</button>
   </div>`;
 
 const app = document.getElementById('app');
@@ -104,6 +106,7 @@ if (showStatus(ui, common, app, header)) {
     </div>
     <div class="mosaic blend-pink">${rewards.map(reward).join('')}</div>`;
 
+  if (hasTask && task.capped && !common.program.joinRequirement) trackView('loyalty_daily_cap_view');
   feed.start(app);
   mountNav(ui, common, 'home');
 

@@ -10,6 +10,8 @@
 
 import { rulesList } from './components.js';
 
+import { track, trackView } from './tracking.js';
+
 const STEPS = [
   { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 2, sparkles: true },
   { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true, fingerAfter: 7 },
@@ -233,6 +235,7 @@ export function mountTour(ui, common, page) {
     Promise.race([preload(assetsFor(step)), new Promise((done) => setTimeout(done, PRELOAD_LIMIT_MS))]).then(() => {
       if (ticket !== opening) return;
       show(step);
+      trackView('loyalty_tour_step_view', { step: step.id }, step.id);
       const next = steps[steps.indexOf(step) + 1];
       if (next) preload(assetsFor(next));
     });
@@ -346,16 +349,17 @@ export function mountTour(ui, common, page) {
     if (!button) return;
     const index = steps.indexOf(current);
     const action = button.dataset.tourAction;
-    if (action === 'skip') end({ home: false });
+    if (action === 'skip') { track('loyalty_tour_skip', { step: current.id }); end({ home: false }); }
     else if (action === 'back') go(steps[index - 1]);
-    else if (index === steps.length - 1) end({ home: true });
+    else if (index === steps.length - 1) { track('loyalty_tour_finish'); end({ home: true }); }
     else go(steps[index + 1]);
   });
 
   // Keep the highlight in place when the screen size changes.
   window.addEventListener('resize', () => { if (current) show(current); });
 
-  const start = () => go(steps[0]);
+  // Called with a click event from the help button, and with nothing when the tour opens by itself.
+  const start = (event) => { track('loyalty_tour_start', { trigger: event ? 'help_button' : 'auto' }); go(steps[0]); };
 
   // Resume the step named in the URL, or open the tour on the first visit to Home. `?tour=off` never opens it.
   const wanted = params.get('tour');
