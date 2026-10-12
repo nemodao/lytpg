@@ -30,12 +30,10 @@
       "title": "Coin Balance",
       "states": [
         "empty",
-        "has-pending",
         "expiring"
       ],
       "descriptions": {
         "empty": "Balance is 0: no available, pending or expiring coins.",
-        "has-pending": "120 coins are waiting to be credited: “+120 pending” shows under the balance. May be used when applying the T+1 rule to release coins.",
         "expiring": "1,200 coins expire within 10 days: red warning under the balance."
       }
     },
@@ -131,15 +129,7 @@
       "common": {
         "balance": {
           "available": 0,
-          "pending": 0,
           "expiring": null
-        }
-      }
-    },
-    "has-pending": {
-      "common": {
-        "balance": {
-          "pending": 120
         }
       }
     },

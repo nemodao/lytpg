@@ -60,6 +60,22 @@ The hand never catches taps. With reduced motion the hand just appears and nothi
 
 ---
 
+### 1.4 No pending coins; same-day crediting by default (spec §41)
+
+Decided on 12 Oct 2026 after the review of the real API.
+
+- Removed everywhere: the `+N pending` line under the balance (`balanceBlock`), pending lots in the Coins Available tab, the `Trading today · Earning` row in the Coins History tab, the `Pending` badge. Removed preview state: `has-pending` (all three pages, and from `SHARED_STATES`).
+- The sample programme now credits the same day: `program.creditMode` is `"in-day"` by default. Preview states on Earn: `credited` and `delayed` replace `in-day`.
+- Earn, Today card, line under the figures: `earning` → `Coins are being credited to your balance`; `credited` → `Credited to your balance`; `pending` → no line.
+- Earn history: days with status `pending` are filtered out; today's row is labelled `Today` and carries today's own status.
+- `Update every 3–15 mins` and the in-day rule `…every 3–15 minutes` read the new `program.creditWindowMinutes` (`min`, `max`), which is fixed in the UI and not sent by the API. `program.refreshMinutes` is gone.
+
+Files: `shared/components.js` (`balanceBlock`, `rulesList`), `shared/app.js` (`SHARED_STATES`), `pages/dashboard.js`, `pages/trading-task.js` (`progressCard`, `historyList`), `pages/point-balance.js`, `copy/en.json` (removed `balance.pending`, `tt.status.pending`, `badge.pending`, `pb.item.pending.meta`, `hist.earning`; new `tt.status.earning`; changed `task.updateEvery`, `rule.credit.inDay`), all four mock files.
+
+`DATA.md`: removed `balance.pending`, `program.refreshMinutes`, `pendingItems[]`; new `program.creditWindowMinutes.min` / `.max`; `today.status` and `history[].status` now also take `"earning"`. `STATES.md`: `has-pending` and `in-day` removed, `credited` and `delayed` added.
+
+---
+
 ## 2. Files to update
 
 | File | Change |

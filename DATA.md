@@ -17,17 +17,17 @@ Example file: `mock/common.json`
 |---|---|---|---|
 | `now` | string | `"2026-10-14T14:35:00+07:00"` | Current server time, ISO 8601 with offset. Drives "today", days until expiry, and the live-feed open/closed check. |
 | `balance.available` | number | `3100` | Coins the user can spend now. The big number on Home and Coins. |
-| `balance.pending` | number | `0` | Coins earned but not yet credited. Shown as "+120 pending" when above 0. |
 | `balance.expiring` | null or object | `null` | Coins about to expire, or null. When set, the red warning shows under the balance. |
 | `balance.expiring.points` |  |  | How many coins expire within the warning window. |
 | `balance.expiring.date` | YYYY-MM-DD |  | Date of the nearest expiry (not displayed; kept for reference). |
 | `program.ended` | boolean | `false` | true when the programme is over: Earn shows the end message, no trade button. |
-| `program.creditMode` | "delayed" | "in-day" | `"delayed"` | When earned coins are credited: "delayed" (after creditDelayDays) or "in-day" (through the day). |
+| `program.creditMode` | "delayed" | "in-day" | `"in-day"` | When earned coins are credited: "delayed" (after creditDelayDays) or "in-day" (through the day). |
 | `program.dailyMaxPoints` | number | `2000` | Most coins a user can earn per day. Shown in the rules. |
 | `program.minHoldMinutes` | number | `3` | Minimum time a position must be held to earn. Shown in the rules. |
-| `program.creditDelayDays` | number | `3` | Days between the trading day and crediting, in "delayed" mode. Shown in the rules. |
+| `program.creditDelayDays` | number | `0` | Days between the trading day and crediting, in "delayed" mode. Shown in the rules. |
 | `program.expiryDays` | number | `30` | Days after crediting until coins expire. Shown in the rules. |
-| `program.refreshMinutes` | number | `30` | How often today's figures refresh. Shown as "Update every 30 mins". |
+| `program.creditWindowMinutes.min` | number | `3` | NOT FROM THE API: fixed in the UI. Shortest time for coins to arrive after a position is closed. Shown as "Update every 3–15 mins" and in the in-day rule. |
+| `program.creditWindowMinutes.max` | number | `15` | NOT FROM THE API: fixed in the UI. Longest time, same texts. |
 | `program.resetTime` | HH:MM | `"00:00"` | Local time (WIB) at which a new earning day starts. Shown in the rules. |
 | `program.expiryWarningDays` | number | `10` | Size of the "expiring soon" window in days: the balance warning text and the red highlight on lots. |
 | `program.tradingTask` | boolean | `true` | false when the trading task is off or hidden for this user: Home hides the Daily Trading card and the bottom bar drops the Earn tab. |
@@ -76,15 +76,15 @@ Example file: `mock/trading-task.json` (`default`)
 |---|---|---|---|
 | `today.lots` | number | `3.5` | Lots traded today. |
 | `today.points` | number | `310` | Coins earned today. |
-| `today.status` | "pending" | "credited" | `"pending"` | Whether today's coins are still waiting or already in the balance. Picks the status line under the figures. |
-| `today.creditAt` | ISO 8601 | `"2026-10-17T01:00:00+07:00"` | When pending coins will be credited. Shown in the pending status line. |
+| `today.status` | "earning" | "credited" | "pending" | `"earning"` | Where today's coins stand. Picks the line under the figures: earning = coins are arriving, credited = all in the balance, pending (delayed programmes) = no line. |
+| `today.creditAt` | ISO 8601 | `"2026-10-17T01:00:00+07:00"` | When coins of a delayed programme start to arrive (not displayed). |
 | `today.updatedAt` | ISO 8601 | `"2026-10-14T14:35:00+07:00"` | When today's figures were last refreshed (not displayed). |
 | `today.capped` | boolean | `false` | true when today's maximum is reached. |
 | `selectedAccountId` | string | `"50000234"` | Trading account currently selected; must match one of common.accounts[].id. |
 | `history[].date` | YYYY-MM-DD | `"2026-10-13"` | A past trading day. |
 | `history[].lots` | number | `1.4` | Lots traded that day. |
 | `history[].points` | number | `120` | Coins earned that day. |
-| `history[].status` | "pending" | "credited" | `"pending"` | Badge of that day. In "in-day" mode every past day shows as credited. |
+| `history[].status` | "earning" | "credited" | "pending" | `"credited"` | Badge of that day. Days with status "pending" are not listed. |
 | `history[].capped` | boolean | `false` | true when that day reached the maximum ("Reached Max Coins"). |
 
 ## Coins — `fetchPage('point-balance')`
@@ -97,14 +97,13 @@ Example file: `mock/point-balance.json` (`default`)
 | `items[].earnedOn` | YYYY-MM-DD | `"2026-10-14"` | Day the coins were earned. |
 | `items[].total` | number | `310` | Coins earned in this lot ("Earned"). |
 | `items[].remaining` | number | `310` | Coins of this lot not yet spent ("Remain"); for an expired lot, the coins that expired unspent. |
-| `items[].status` | "earning" | "pending" | "active" | "used" | "expired" | `"earning"` | State of the lot. earning/pending/active/used-before-expiry show in Available; expired and used-then-expired show in Expired. |
-| `items[].creditAt` | YYYY-MM-DD or null | `null` | When a pending lot will be credited. Null for other statuses. |
-| `items[].expiresAt` | YYYY-MM-DD or null | `"2026-10-28"` | Expiry date of the lot. Null while earning or pending. |
-| `history[].date` | YYYY-MM-DD | `"2026-10-14"` | Day of a balance movement. Rows are grouped by day, newest first. |
-| `history[].type` | "earning" | "earned" | "redeemed" | "refunded" | "expired" | "adjusted" | `"earning"` | Kind of movement; its label is copy key hist.<type>. |
-| `history[].points` | number | `310` | Signed amount: positive added, negative taken. |
+| `items[].status` | "earning" | "active" | "used" | "expired" | `"earning"` | State of the lot. earning/active/used-before-expiry show in Available; expired and used-then-expired show in Expired. |
+| `items[].creditAt` | YYYY-MM-DD or null | `null` | Not displayed. |
+| `items[].expiresAt` | YYYY-MM-DD or null | `"2026-10-28"` | Expiry date of the lot. Null while earning. |
+| `history[].date` | YYYY-MM-DD | `"2026-10-13"` | Day of a balance movement. Rows are grouped by day, newest first. |
+| `history[].type` | "earning" | "earned" | "redeemed" | "refunded" | "expired" | "adjusted" | `"earned"` | Kind of movement; its label is copy key hist.<type>. |
+| `history[].points` | number | `120` | Signed amount: positive added, negative taken. |
 | `history[].source` | "trading" or null | `"trading"` | Source of an earned movement, else null. |
-| `pendingItems[]` | same shape as items[] | `[]` | PREVIEW ONLY. Lots added by the has-pending state. With a real API put every lot in items and send [] or omit. |
 | `usedItems[]` | same shape as items[] | `[]` | PREVIEW ONLY. Lots added by the has-used state. Same remark. |
 | `empty.available` | optional |  | PREVIEW ONLY. Empties the Available tab. |
 | `empty.expired` | optional |  | PREVIEW ONLY. Empties the Expired tab. |

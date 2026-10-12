@@ -80,7 +80,7 @@ export function joinPanel(ui, common, { ratesHref, flat = false, nudged = false 
 export function rulesList(ui, common) {
   const { program } = common;
   const credit = program.creditMode === 'in-day'
-    ? ui.md('rule.credit.inDay', { minutes: program.refreshMinutes })
+    ? ui.md('rule.credit.inDay', program.creditWindowMinutes)
     : ui.md('rule.credit.delayed', { days: program.creditDelayDays });
   return `
     <ul class="rules">
@@ -92,11 +92,12 @@ export function rulesList(ui, common) {
     </ul>`;
 }
 
-// Balance block: coin, label, number, pending, Redeem button and the expiry warning.
+// Balance block: coin, label, number, Redeem button and the expiry warning. Coins that are not credited yet are never
+// shown (spec §41), so the API's `pending` total is not used.
 // Dashboard: bare on the page background, the whole block links to Point Balance (href).
 // Point Balance: the same content inside a pale theme card (card: true).
 export function balanceBlock(ui, common, { href = '', card = false } = {}) {
-  const { available, pending, expiring } = common.balance;
+  const { available, expiring } = common.balance;
   return `
   <section class="balance ${card ? 'card card--soft' : ''}" data-tour="balance">
     ${href ? `<a class="card-link" href="${href}" aria-label="${ui.t('balance.title')}"></a>` : ''}
@@ -105,7 +106,6 @@ export function balanceBlock(ui, common, { href = '', card = false } = {}) {
       <div class="grow">
         <p class="t-label c-3">${ui.t('balance.title')}</p>
         <p class="balance-number num">${ui.num(available)}</p>
-        ${pending > 0 ? `<p class="t-label c-2 num">${ui.t('balance.pending', { points: ui.num(pending) })}</p>` : ''}
       </div>
       <div class="balance-side">
         <button class="btn btn--sm btn--mono above" type="button" data-intent="redeem" data-tour="redeem">${ui.t('balance.redeem')}${ui.icon('gift', 'icon--sm')}</button>

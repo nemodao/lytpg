@@ -2,17 +2,19 @@
   "now": "2026-10-14T14:35:00+07:00",
   "balance": {
     "available": 3100,
-    "pending": 0,
     "expiring": null
   },
   "program": {
     "ended": false,
-    "creditMode": "delayed",
+    "creditMode": "in-day",
     "dailyMaxPoints": 2000,
     "minHoldMinutes": 3,
-    "creditDelayDays": 3,
+    "creditDelayDays": 0,
     "expiryDays": 30,
-    "refreshMinutes": 30,
+    "creditWindowMinutes": {
+      "min": 3,
+      "max": 15
+    },
     "resetTime": "00:00",
     "expiryWarningDays": 10,
     "tradingTask": true,

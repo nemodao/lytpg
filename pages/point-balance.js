@@ -8,15 +8,15 @@ import { appHeader, badge, balanceBlock, coin, notice } from '../shared/componen
 const { common, page, ui } = await load('point-balance');
 // Preview states can empty one tab (`page.empty.available|expired|history`) without touching the others.
 const empty = page.empty || {};
-// Pending lots only exist while there are pending coins (`has-pending` state) and fully used lots only with the
-// `has-used` state; both join the other lots here.
-// API: one list of lots is enough. `pendingItems`, `usedItems` and `empty` exist only so preview states can add or
-// remove groups of lots; with a real API send every lot in `items` and leave the other three empty/absent.
-const items = [...(page.pendingItems || []), ...(page.usedItems || []), ...page.items];
+// Fully used lots only exist with the `has-used` state; they join the other lots here. Coins that are not credited
+// yet have no lot and are never shown (spec §41).
+// API: one list of lots is enough. `usedItems` and `empty` exist only so preview states can add or remove groups of
+// lots; with a real API send every lot in `items` and leave the other two empty/absent.
+const items = [...(page.usedItems || []), ...page.items];
 // A lot is past its expiry once its expiry day has started (expiry is at 01:00 WIB).
 const isPastExpiry = (item) => Boolean(item.expiresAt) && ui.daysUntil(item.expiresAt) <= 0;
-// Available: pending, earning, active, plus fully used lots that have not expired yet.
-const inAvailable = (item) => ['pending', 'earning', 'active'].includes(item.status) || (item.status === 'used' && !isPastExpiry(item));
+// Available: earning, active, plus fully used lots that have not expired yet.
+const inAvailable = (item) => ['earning', 'active'].includes(item.status) || (item.status === 'used' && !isPastExpiry(item));
 // Expired: lots past their expiry, whether coins were left (`expired`) or everything was used first (`used`, shows 0).
 const inExpired = (item) => item.status === 'expired' || (item.status === 'used' && isPastExpiry(item));
 const availableLots = empty.available ? [] : items.filter(inAvailable);
@@ -44,7 +44,6 @@ function itemRow(item) {
   const used = item.status === 'used';
   const view = used ? usedView(item) : {
     earning: () => ({ meta: ui.t('pb.item.earning.meta'), badge: badge('blue', ui.t('badge.earning')) }),
-    pending: () => ({ meta: ui.t('pb.item.pending.meta', { date: ui.date(item.creditAt) }), badge: badge('yellow', ui.t('badge.pending')) }),
     active: () => ({ meta: ui.t('pb.item.active.meta', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.remain') }),
     expired: () => ({ meta: ui.t('pb.item.expired', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.expiredAmount') }),
   }[item.status]();
@@ -70,11 +69,10 @@ const usedView = (item) => (isPastExpiry(item)
   : { meta: ui.t('pb.item.active.meta', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.remain') });
 
 function availableTab() {
-  // Earning and pending first, then active lots by soonest expiry. Everything is shown: no filter, no paging.
-  // Order: pending, earning, active (soonest expiry first), then the "Fully used" section (soonest expiry first).
+  // Order: earning, active (soonest expiry first), then the "Fully used" section (soonest expiry first).
   const bySoonest = (a, b) => a.expiresAt.localeCompare(b.expiresAt);
   const of = (status) => availableLots.filter((item) => item.status === status);
-  const current = [...of('pending'), ...of('earning'), ...of('active').sort(bySoonest)];
+  const current = [...of('earning'), ...of('active').sort(bySoonest)];
   const usedUp = of('used').sort(bySoonest);
   const usedSection = usedUp.length ? `
     <p class="group-title">${ui.t('pb.fullyUsed')}</p>
@@ -101,7 +99,6 @@ function expiredTab() {
 function historyRow(entry) {
   const label = {
     earned: () => ui.t('hist.earned', { date: ui.date(entry.date) }),
-    earning: () => ui.t('hist.earning'),
     redeemed: () => ui.t('hist.redeemed'), // reward name: TODO in spec §8
     refunded: () => ui.t('hist.refunded'),
     expired: () => ui.t('hist.expired'),
@@ -112,7 +109,6 @@ function historyRow(entry) {
       <p class="t-label grow">${label}</p>
       <div class="list__end">
         <p class="t-label num ${entry.points > 0 ? 'points--plus' : ''}">${ui.signed(entry.points)}</p>
-        ${entry.type === 'earning' ? badge('blue', ui.t('badge.earning')) : ''}
       </div>
     </div>`;
 }

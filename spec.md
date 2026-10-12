@@ -515,3 +515,20 @@ This replaces the single pop of the first version. The finger never blocks taps.
 - **Sample:** the mock points at a placeholder PDF (`assets/docs/terms-sample.pdf`); its wording is not the real terms.
 
 Decided 8 Oct 2026: the document is a **PDF**; the backend sends its address. Known risk, accepted for speed: an in-app webview may not display a PDF inside a page (Android shows nothing, iOS may show only the first page). The developer must check this in the real app; if the PDF does not display, the fallback is to draw it with a PDF viewer library or to have the app open the PDF in its own viewer when `Terms & Conditions` is tapped.
+
+## 41. Coins that are not credited yet are never shown; same-day crediting is the default (decided 12 Oct 2026, phase 2)
+
+Decided with the backend review of the real API. Replaces every earlier mention of pending coins (§3, §5, §9, §16–17, §27).
+
+- **No pending coins anywhere.** Removed: the `+120 pending` line under the balance (Home, Coins), pending lots at the top of the Available tab, the `Trading today · Earning` row in the Coins History tab, the `Pending` badge, and the preview state `has-pending`.
+- **The launch programme credits coins the same day (T+0).** The sample data now uses this mode by default. A programme that credits days later (`delayed`) still works but is not tuned; it is a preview state on Earn and will be improved when such a programme exists.
+- **Today card, line under the figures** (Earn):
+  - coins still arriving: `Coins are being credited to your balance`
+  - all coins in the balance: `Credited to your balance`
+  - daily maximum reached, or no trade yet: unchanged
+  - delayed programme, coins not arrived: no line at all (not even the date they will arrive); `Coins earned` shows 0 until they arrive.
+- **Earn history:** a day is listed only once coins have arrived for it. Days still waiting are left out. Badges are `Earning` and `Credited`; today's row is labelled `Today`.
+- **Update interval:** coins arrive 3 to 15 minutes after a position is closed. The Today card reads `Update every 3–15 mins` and the rule reads `Coins are credited throughout the day, every 3–15 minutes.` (were 30 minutes). The two numbers are fixed in the UI, not sent by the API.
+- **Coins, Available tab:** today's lot of a same-day programme keeps its `Earning today` line and `Earning` badge.
+
+Preview states on Earn, group "Today trading task": `credited` and `delayed` replace `in-day`.

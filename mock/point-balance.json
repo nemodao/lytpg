@@ -4,12 +4,10 @@
       "title": "Coin Balance",
       "states": [
         "empty",
-        "has-pending",
         "expiring"
       ],
       "descriptions": {
         "empty": "Balance is 0: no available, pending or expiring coins. Tabs still show their lists.",
-        "has-pending": "120 coins are waiting to be credited: “+120 pending” under the balance and a Pending lot in Available. May be used when applying the T+1 rule to release coins.",
         "expiring": "1,200 coins expire within 10 days: red warning under the balance; that lot is highlighted in Available."
       }
     },
@@ -115,12 +113,6 @@
     ],
     "history": [
       {
-        "date": "2026-10-14",
-        "type": "earning",
-        "points": 310,
-        "source": "trading"
-      },
-      {
         "date": "2026-10-13",
         "type": "earned",
         "points": 120,
@@ -199,7 +191,6 @@
         "source": null
       }
     ],
-    "pendingItems": [],
     "usedItems": []
   },
   "states": {
@@ -207,29 +198,8 @@
       "common": {
         "balance": {
           "available": 0,
-          "pending": 0,
           "expiring": null
         }
-      }
-    },
-    "has-pending": {
-      "common": {
-        "balance": {
-          "pending": 120
-        }
-      },
-      "page": {
-        "pendingItems": [
-          {
-            "source": "trading",
-            "earnedOn": "2026-10-13",
-            "total": 120,
-            "remaining": 120,
-            "status": "pending",
-            "creditAt": "2026-10-16",
-            "expiresAt": null
-          }
-        ]
       }
     },
     "expiring": {

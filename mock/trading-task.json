@@ -23,16 +23,18 @@
     {
       "title": "Today trading task",
       "states": [
-        "in-day",
+        "credited",
+        "delayed",
         "capped",
         "no-trades-today",
         "market-closed"
       ],
       "descriptions": {
-        "in-day": "Coins are credited during the day instead of 3 days later; today shows as credited and appears in History as Earning.",
         "capped": "Today's max coins reached: capped message on the Today card, plain “Trade now” button.",
         "no-trades-today": "No trades yet today: 0 lots and 0 coins, with a hint to make the first trade.",
-        "market-closed": "Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7)."
+        "market-closed": "Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7).",
+        "credited": "All of today's coins are in the balance: the Today card reads “Credited to your balance” instead of the earning line.",
+        "delayed": "Programme that credits coins some days after the trading day (not used at launch). The rule reads “credited 3 days after the trading day”; the Today card shows the lots, 0 coins and no status line; today has no row in History until its coins arrive."
       }
     },
     {
@@ -51,7 +53,7 @@
     "today": {
       "lots": 3.5,
       "points": 310,
-      "status": "pending",
+      "status": "earning",
       "creditAt": "2026-10-17T01:00:00+07:00",
       "updatedAt": "2026-10-14T14:35:00+07:00",
       "capped": false
@@ -62,7 +64,7 @@
         "date": "2026-10-13",
         "lots": 1.4,
         "points": 120,
-        "status": "pending",
+        "status": "credited",
         "capped": false
       },
       {
@@ -145,15 +147,24 @@
         }
       }
     },
-    "in-day": {
+    "credited": {
+      "page": {
+        "today": {
+          "status": "credited"
+        }
+      }
+    },
+    "delayed": {
       "common": {
         "program": {
-          "creditMode": "in-day"
+          "creditMode": "delayed",
+          "creditDelayDays": 3
         }
       },
       "page": {
         "today": {
-          "status": "credited"
+          "status": "pending",
+          "points": 0
         }
       }
     },

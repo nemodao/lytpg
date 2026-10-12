@@ -79,14 +79,15 @@ function progressCard() {
   if (today.capped) footer = foot('trophy', ui.t('task.capped'));
   else if (!hasTrades) footer = foot('chart', ui.t('tt.empty.body'));
   else if (today.status === 'credited') footer = foot('check', ui.t('tt.status.credited'));
-  else footer = foot('clock', ui.t('tt.status.pending', { date: ui.date(today.creditAt), time: ui.time(today.creditAt), tz: ui.t('tz') }));
+  else if (today.status === 'earning') footer = foot('clock', ui.t('tt.status.earning'));
+  else footer = ''; // `pending` (delayed programmes): coins that are not credited yet are never shown (spec §41)
   return `
     <section class="card card--blend blend-pale-theme hero-card">
       <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
       <div class="today today--flat">
         <div class="today__label">
           <h2 class="t-body-strong grow">${ui.t('task.todayLabel')}</h2>
-          <p class="t-caption blend-faint num">${ui.t('task.updateEvery', { minutes: program.refreshMinutes })}</p>
+          <p class="t-caption blend-faint num">${ui.t('task.updateEvery', program.creditWindowMinutes)}</p>
         </div>
         <div class="today__stats">
           <div><p class="t-caption c-3">${ui.t('task.traded')}</p><p class="today__value num">${ui.lots(today.lots)}<small>${ui.lotUnit(today.lots)}</small></p></div>
@@ -159,18 +160,19 @@ function tradeButton() {
 
 
 function historyList() {
-  // In-day mode: today appears in the history as "Earning"; past days are all credited (spec §9).
-  const days = history.map((day) => ({ ...day, status: inDay ? 'credited' : day.status }));
+  // A day shows here only once coins have arrived for it: days still `pending` are left out (spec §41).
+  // In-day programmes: today is in the list as soon as it has trades, as "Earning" or "Credited".
+  const days = history.filter((day) => day.status !== 'pending').map((day) => ({ ...day }));
   if (inDay && today.lots > 0 && !ended) {
-    days.unshift({ date: common.now, lots: today.lots, points: today.points, status: 'earning', capped: today.capped });
+    days.unshift({ date: common.now, lots: today.lots, points: today.points, status: today.status, capped: today.capped, today: true });
   }
-  const statusBadge = { pending: badge('yellow', ui.t('badge.pending')), credited: badge('green', ui.t('badge.credited')), earning: badge('blue', ui.t('badge.earning')) };
+  const statusBadge = { credited: badge('green', ui.t('badge.credited')), earning: badge('blue', ui.t('badge.earning')) };
   // One row per day, no per-deal breakdown. Lots and points sit in fixed columns so they line up down the list (spec §15).
   const row = (day) => `
     <div class="list__row">
       <div class="grow stack stack--tight">
         <div class="day__head">
-          <p class="t-label num grow">${day.status === 'earning' ? ui.t('tt.history.today') : ui.dateYear(day.date)}</p>
+          <p class="t-label num grow">${day.today ? ui.t('tt.history.today') : ui.dateYear(day.date)}</p>
           ${statusBadge[day.status]}
         </div>
         <div class="day__figures t-caption c-3 num">
