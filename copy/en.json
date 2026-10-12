@@ -52,6 +52,7 @@
   "tt.trade.switch": "Switch to an eligible account",
   "tt.rules": "How it works",
   "rule.hold": "Hold each position for at least **{minutes} minutes**. Shorter trades earn **0 coins**.",
+  "rule.hold.seconds": "Hold each position for at least **{seconds} seconds**. Shorter trades earn **0 coins**.",
   "rule.credit.delayed": "Coins are credited **{days} days** after the trading day.",
   "rule.credit.inDay": "Coins are credited within **{minutes} minutes** after you close a position.",
   "rule.expire": "Coins expire **{days} days** after they are credited.",

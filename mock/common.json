@@ -20,7 +20,9 @@
     "rateRange": {
       "min": 70,
       "max": 100
-    }
+    },
+    "minHoldSeconds": 180,
+    "tzMinutes": 420
   },
   "accounts": [
     {

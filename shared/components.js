@@ -121,7 +121,7 @@ export function rulesList(ui, common) {
     : ui.md('rule.credit.delayed', { days: program.creditDelayDays });
   return `
     <ul class="rules">
-      <li><span>${ui.md('rule.hold', { minutes: program.minHoldMinutes })}</span></li>
+      <li><span>${program.minHoldSeconds % 60 ? ui.md('rule.hold.seconds', { seconds: program.minHoldSeconds }) : ui.md('rule.hold', { minutes: program.minHoldMinutes })}</span></li>
       <li><span>${credit}</span></li>
       <li><span>${ui.md('rule.expire', { days: program.expiryDays })}</span></li>
       <li><span>${ui.md('rule.reset', { time: program.resetTime, tz: ui.t('tz') })}</span></li>

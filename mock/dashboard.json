@@ -68,7 +68,6 @@
     "task": {
       "lotsToday": 3.5,
       "pointsToday": 310,
-      "updatedAt": "2026-10-14T14:35:00+07:00",
       "capped": false
     },
     "rewards": [
@@ -141,8 +140,7 @@
       "common": {
         "balance": {
           "expiring": {
-            "points": 1200,
-            "date": "2026-10-20"
+            "points": 1200
           }
         }
       }

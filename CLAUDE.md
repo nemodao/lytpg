@@ -50,7 +50,9 @@ Heading `--font-heading-h1` tới `h4` là cỡ desktop, không dùng trên mobi
 - `STATES.md`: danh mục state của cả 3 trang (sinh tự động, không sửa tay).
 - `tokens/`: design token và script build.
 - `pages/`: mỗi trang gồm `<tên>.html`, `<tên>.js` (render) và `<tên>.css` (style riêng của trang).
-- `shared/`: `base.css` (khung, font, kiểu chữ), `components.css` và `components.js` (component dùng chung), `data-source.js` (chỗ duy nhất lấy dữ liệu: mock hôm nay, API sau này), `app.js` (áp state, định dạng số và ngày), `nav.js` (thanh điều hướng dưới), `tour.js` (tour hướng dẫn 5 bước), `live-feed.js`, `date-filter.js`, `theme.js`, `icons.svg`.
+- `shared/`: `base.css` (khung, font, kiểu chữ), `components.css` và `components.js` (component dùng chung), `data-source.js` (chỗ duy nhất lấy dữ liệu: mock mặc định, hoặc dữ liệu dạng API khi thêm `?source=api`), `api-adapter.js` (chuyển response của 6 API thật sang shape trong `DATA.md`; kiểm bằng `node mock/api/check.mjs`), `app.js` (áp state, định dạng số và ngày), `nav.js` (thanh điều hướng dưới), `tour.js` (tour hướng dẫn 5 bước), `live-feed.js`, `date-filter.js`, `theme.js`, `icons.svg`.
+- `API/`: tài liệu API nội bộ và trao đổi với backend. **Không đưa lên git** (đã nằm trong `.gitignore`).
+- `mock/api/`: response mẫu đúng hình dạng API thật, một file mỗi endpoint; phải khớp với dữ liệu trong `mock/*.json` (lệnh check ở trên sẽ báo nếu lệch).
 - `mock/`: dữ liệu mẫu. `common.json` dùng chung; mỗi trang một file gồm `default` và `states` (mỗi state là phần ghi đè).
 - `copy/en.json`: toàn bộ chữ trên UI. Không viết chữ thẳng vào trang.
 - `assets/fonts/`: font woff2 đóng gói sẵn. Không dùng Google Fonts.

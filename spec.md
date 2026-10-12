@@ -569,3 +569,13 @@ These appear only with real data; the sample data is instant, so each has a prev
 - **Long lists** (Coins: Available, Expired, History): 15 rows at a time. When the user scrolls to the end of the list, a small spinner with `Loading more…` shows while the next 15 rows load, then they are added below. Changing the date range starts again from the first 15.
 - **Next rows failed to load** (state `more-error` on Coins): `Couldn’t load more. Try again` at the end of the list; tapping `Try again` loads them.
 - The Earn history has no paging: it is at most 30 days, one row a day.
+
+## 45. Where the data comes from (recorded 12 Oct 2026, phase 2)
+
+For reference; the full mapping is in `HANDOFF-2.md` §4.
+
+- Balance and the expiry warning, today's lots and coins, programme rules, trading accounts and their rates, the Earn history, coin lots and the coin history come from six loyalty endpoints.
+- Whether the user still needs KYC or a first deposit comes from the app's sign-in data.
+- Fixed in the pages, not sent by any endpoint: "within 15 minutes", the 10-day expiry warning, the 00:00 start of the earning day, the live activity line (simulated), the tour's simulated balance, the reward tiles on Home.
+- Still to arrive from backend: the programme's rate range, the Terms & Conditions address, and the holding time in seconds. Until then users without a trading account see no rate figure, the Terms & Conditions button is hidden, and the holding time is shown in whole minutes.
+- Today's lots are the lots already counted for coins, so they match the history; on a day that reached the maximum they are lower than the lots actually traded.

@@ -76,29 +76,46 @@ Search for these words; they are used consistently.
 | `data-intent="…"` | A button that leaves these pages | Attach the deeplink (§6) |
 | `data-tour="…"` | An element the guided tour highlights | Keep the attribute on the converted element |
 
-## 5. Connecting the API later
+## 5. Connecting the API (from handoff 2)
 
-All data enters through **`shared/data-source.js`**. Make `fetchCommon()` and `fetchPage(page)` return the shapes in
-`DATA.md` and the pages work unchanged. Where the API's shape differs, adapt it inside `data-source.js` (or your
-equivalent service layer), not in the components.
+The mapping is written. Three pieces:
 
-Other places marked `API:`:
-
-| Where | Today (demo) | With the API |
+| Piece | File | What it is |
 |---|---|---|
-| `shared/app.js` — `common.now` | The mock pins "now" so the demo never changes | Send the server time, or use the device clock |
-| `shared/live-feed.js` — `entryAt` | Entries are invented from a clock-seeded generator | Replace with the server's feed; keep `isOpen` (window: Sunday 17:00 – Friday 17:00 UTC) and the markup |
-| `shared/tour.js` — `seen` / `markSeen` | "Tour seen" kept in localStorage | Per-user flag from the app or API, if wanted |
-| `shared/date-filter.js` — `includes` | Filters the full list in the browser | Ask the API by date range if lists get long |
-| `pages/point-balance.js` — `items` | Lots split over `items`, `pendingItems`, `usedItems` for preview states | One `items` list from the API |
-| `pages/trading-task.js` — `selectedAccountId` | Account switch is local to the page | Tell the app which account to trade with |
-| `shared/components.js` — `joinPanel` (handoff 2) | Preview states `needs-kyc` / `needs-deposit` set `program.joinRequirement` | Send the user's real status: `"kyc"`, then `"deposit"`, then `null`. The rates line reads `rates[].ptsPerLot` and `program.dailyMaxPoints` |
-| `pages/trading-task.js` — `accountsCard`, join branch (handoff 2) | Mock still lists accounts for these users | `accounts` may be empty and `selectedAccountId` missing while `joinRequirement` is set; `rates` is still needed (these users do see the rates table) |
-| `pages/trading-task.js` — `termsButton` / `termsSheet` (handoff 2) | `program.termsUrl` points at a sample PDF | Send the address of the real PDF, or null to hide the button. Check that the app webview displays a PDF in the frame (see `HANDOFF-2.md`) |
+| Converter | `shared/api-adapter.js` | Pure functions that turn the answers of the six loyalty endpoints (and the two sign-in fields) into the shapes in `DATA.md`. No fetch, no DOM. Convert it once to your language and keep it as the single place that knows API field names |
+| Data source | `shared/data-source.js` | Calls the endpoints through `request(endpoint, body)` and hands the results to the converter. With `?source=api` it runs on sample answers |
+| Sample answers | `mock/api/*.json` | One file per endpoint, in the real response shape (`{ success, code, result, timestamp }`), plus `signin.json` with the two fields read from the app sign-in |
 
-Rules that are computed in the page from data (not sent by the API): which tab a lot belongs to and "expiring soon"
-(`pages/point-balance.js`, top of file; spec §17, §36), the highest rate for the tour, in-day history rows
-(`pages/trading-task.js` `historyList`). If the API later sends these directly, simplify there.
+To go live: set `USE_API` to true in `shared/data-source.js` and replace the body of `request()` with the real POST
+(the comment above it lists the body fields and the failure rule). Nothing in `pages/` changes.
+
+Check after any change to the converter: `node mock/api/check.mjs` converts the samples and compares the result with
+the UI-shaped mock files, key by key.
+
+See the pages running on the API-shaped samples: add `?source=api` to any page address.
+
+What the demo still does in the browser and the product must do with requests:
+
+| Where | Demo | Product |
+|---|---|---|
+| `shared/data-source.js` — `request` | Reads a sample file, once | POST to the endpoint; throw unless `success === true` |
+| `shared/components.js` — `showStatus` | `loading` / `error` come from preview states | Loading until every request of the page has answered; error when one fails; `Try again` repeats them |
+| `shared/date-filter.js` — `includes` | Filters the full list in the browser | Send `from` / `to` to `tradingTask/getHistory`, `coin/listExpired`, `coin/ledger` when the range changes (always both; at most 30 days) |
+| `pages/point-balance.js` — `loadMore` | Shows 15 more rows of a list it already has | Ask for `pageNo + 1` until the rows shown reach `total` |
+| Refresh | None | Call `tradingTask/get` and `coin/summary` again every 2 minutes while Home or Earn is visible, and when the page becomes visible again |
+| `shared/app.js` — `common.now` | The mock pins "now" | The converter takes it from the answer's `timestamp` (server time) |
+| `shared/live-feed.js` — `entryAt` | Entries are invented from a clock-seeded generator | Unchanged for now: there is no API for it |
+| `shared/tour.js` — `seen` / `markSeen` | "Tour seen" kept in localStorage | Per-user flag from the app, if wanted |
+| `pages/trading-task.js` — `selectedAccountId` | Account switch is local to the page | Tell the app which account to trade with |
+
+Not sent by the loyalty API, fixed in the UI (`UI_CONSTANTS` in the converter): 15 minutes for coins to arrive, the
+10-day expiry warning, the 00:00 start of an earning day. Dates are formatted in GMT+7 (WIB), the programme's time
+zone (`program.tzMinutes` = 420); if a programme ever uses another zone, change `WIB` in `shared/app.js` and the
+`tz` copy key.
+
+Three programme fields are being added by backend and are not on UAT yet: `rateRange`, `termsUrl`,
+`minHoldSeconds`. The converter reads them when present and falls back when they are missing (no rate range line,
+no Terms & Conditions button, whole minutes for the holding time).
 
 ## 6. Buttons that leave the pages (`data-intent`)
 

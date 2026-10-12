@@ -7,8 +7,8 @@ their code up to date. Everything in handoff 1 that is not named here is unchang
 The exact line changes are in `CHANGES-since-handoff-1.diff` in this folder. Behaviour is specified in `spec.md` §39
 to §42. `HANDOFF.md` still describes the overall structure and is unchanged except for three new rows in its §5.
 
-**Status:** the UI changes are final. The API is **not** mapped yet: data still comes from the mock files through
-`shared/data-source.js`, exactly as in handoff 1.
+**Status:** the UI changes are final and the real API is mapped (§4). By default the pages still run on the mock
+files; `?source=api` runs them on sample API answers through the converter.
 
 ---
 
@@ -158,7 +158,7 @@ Files: `shared/components.js`, `shared/components.css` (`.skeleton*`, `.page-err
 | `assets/docs/terms-sample.pdf` | New sample file. |
 | `pages/*.html` | Comments only (list of states). |
 
-Not changed: `shared/data-source.js`, `shared/nav.js`, `shared/live-feed.js`, `tokens/*`, every `data-intent` and `data-tour` value that existed in handoff 1 (one new intent: `open-account`), every file
+Not changed: `shared/nav.js`, `shared/live-feed.js`, `tokens/*`, every `data-intent` and `data-tour` value that existed in handoff 1 (one new intent: `open-account`), every file
 name. Function and class names that existed in handoff 1 are unchanged, except `rateRow` / `ratesList` in
 `pages/trading-task.js`, which now take a rate / an account.
 
@@ -178,23 +178,53 @@ Preview states: removed `has-pending` (all pages) and `in-day` (Earn); added `fi
 
 ---
 
-## 4. Values to map from the API (not mapped yet)
+## 4. API mapping (done in this handoff)
 
-The real API is now known. The mapping itself (a converter in `shared/data-source.js`) comes in the next drop; until
-then the mock files feed the pages. This table tells you where each value will come from.
+The real API is mapped. `HANDOFF.md` §5 explains how to switch it on; this section lists what is new.
 
-| # | UI field (`DATA.md`) | Source | Note |
-|---|---|---|---|
-| 1 | `program.joinRequirement` | App sign-in data (`/app/signin`), **not** the loyalty API | `kycApproveTime` = 0 → `"kyc"`; `kycApproveTime` > 0 and `firstDepositTime` = 0 → `"deposit"`; otherwise `null` |
-| 2 | `program.tradingTask` | `tradingTask/get` → `tradingTask` | `false` hides the whole trading part, whatever the KYC status |
-| 3 | `program.rateRange` | `tradingTask/get` → `program.rateRange` | **Being added by backend, not on UAT yet.** Treat a missing field as null |
-| 4 | `program.termsUrl` | `tradingTask/get` → `program.termsUrl` | **Being added by backend, not on UAT yet.** URL of a PDF, or null |
-| 5 | `program.dailyMaxPoints` | `tradingTask/get` → `program.dailyMaxPoints` | May be null |
-| 6 | `accounts[]`, `accounts[].rates[]`, `selectedAccountId` | `tradingTask/get` | Same shape as the mock. `accounts` may be empty; then `selectedAccountId` is missing |
-| 7 | `today.lots` | `tradingTask/get` → `today.lotsValid` | Not `today.lots`: `lotsValid` matches the lots shown in the history. It rises together with `today.points`, when coins arrive |
-| 8 | `today.status` | `tradingTask/get` → `today.status` | `not_started` \| `earning` \| `credited` \| `pending` |
-| 9 | `balance.available`, `balance.expiring` | `coin/summary` | `pending` from the API is not used |
-| 10 | `program.creditWithinMinutes` | none | Fixed in the UI (15) |
+**New files**
+
+| File | Purpose |
+|---|---|
+| `shared/api-adapter.js` | The converter: `toProgram`, `toAccounts`, `toBalance`, `toDashboardPage`, `toTradingTaskPage`, `toPointBalancePage`, `joinRequirementFrom`, `UI_CONSTANTS` |
+| `mock/api/tradingTask-get.json`, `tradingTask-getHistory.json`, `coin-summary.json`, `coin-listAvailable.json`, `coin-listExpired.json`, `coin-ledger.json` | Sample answers in the real response shape |
+| `mock/api/signin.json` | The two sign-in fields the pages need |
+| `mock/api/check.mjs` | `node mock/api/check.mjs`: verifies the converter against the samples |
+
+**Changed:** `shared/data-source.js` now has two sources (mock by default, the API path with `?source=api`) and one
+function to replace, `request()`.
+
+**Where each UI field comes from**
+
+| UI field (`DATA.md`) | Source | Note |
+|---|---|---|
+| `now` | `timestamp` of the answer (milliseconds) | Server time |
+| `balance.available` | `coin/summary` → `available` | |
+| `balance.expiring.points` | `coin/summary` → `expiring` | 0 → `expiring: null` (warning hidden). `pending` is not used |
+| `program.tradingTask` | `tradingTask/get` → `tradingTask` | `false` (the only field then) hides every trading part |
+| `program.ended`, `creditMode`, `creditDelayDays`, `expiryDays`, `dailyMaxPoints`, `tzMinutes` | `tradingTask/get` → `program.*` | `dailyMaxPoints` may be null |
+| `program.minHoldMinutes`, `minHoldSeconds` | `program.minHoldSeconds`, else `minHoldMinutes` × 60 | **`minHoldSeconds` not on UAT yet** |
+| `program.rateRange` | `program.rateRange` | **Not on UAT yet**; missing → null |
+| `program.termsUrl` | `program.termsUrl` | **Not on UAT yet**; missing → null |
+| `program.joinRequirement` | App sign-in (`/app/signin`), **not** the loyalty API | `kycApproveTime` = 0 → `"kyc"`; `kycApproveTime` > 0 and `firstDepositTime` = 0 → `"deposit"`; else `null` |
+| `program.creditWithinMinutes`, `expiryWarningDays`, `resetTime` | none | `UI_CONSTANTS` |
+| `accounts[]` | `tradingTask/get` → `accounts[]` | `id` number → text. May be empty |
+| `selectedAccountId` | `tradingTask/get` → `selectedAccountId` | Missing when there is no account → null |
+| Home `task.lotsToday`, Earn `today.lots` | `today.lotsValid` | Not `today.lots` |
+| Home `task.pointsToday`, Earn `today.points` | `today.points` | |
+| Earn `today.status`, `today.capped` | `today.status`, `today.capped` | |
+| Earn `history[]` | `tradingTask/getHistory` → `days[]` | Used as sent; includes today; `pending` days are hidden by the page |
+| Coins `items[]` with `list: "available"` | `coin/listAvailable` → `items[]` | `status` `active` / `used`; today's lot of a same-day programme becomes `earning` while `today.status` is `earning` |
+| Coins `items[]` with `list: "expired"` | `coin/listExpired` → `items[]` | `remaining` ← `expired`; `expiresAt` ← `expiredAt`; `status` = `expired` or, when 0 coins expired, `used` |
+| Coins `history[]` | `coin/ledger` → `items[]` | Used as sent |
+| `liveFeed`, `tour`, Home `rewards`, Home `checkIn` | none | UI data; not in these endpoints |
+
+**Sample data aligned with the API** (so the mock and the API path look the same): Earn `history[]` now includes
+today's row (the page no longer builds it from `today`); Coins lots carry `list` and `expiringSoon` (the page no
+longer works them out from dates); removed fields that were never displayed: `balance.expiring.date`,
+`task.updatedAt`, `today.creditAt`, `today.updatedAt`, `items[].creditAt`. New: `program.minHoldSeconds`,
+`program.tzMinutes`. A holding time that is not a whole number of minutes reads `at least 90 seconds`
+(`rule.hold.seconds`).
 
 Not API data:
 
@@ -216,4 +246,5 @@ Open each address in the reference build and compare with your version:
 | `pages/trading-task.html?state=no-account` | Today card with zeros; card with the message, the range line and `Open a trading account` |
 | `pages/trading-task.html?state=delayed&tab=history` | 0 coins on the Today card, no line under the figures, no row for today |
 | `pages/trading-task.html` | Rates of the selected account (six rows); switching account changes the table; `Terms & Conditions ›` under the rules opens the sheet |
+| any page with `?source=api` added | Same content as without it (data comes through the converter) |
 | `pages/dashboard.html?tour=off` | No pending line under the balance; `Updates within 15 mins`; new sample numbers |

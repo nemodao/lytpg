@@ -19,6 +19,7 @@ OUT = ROOT / 'dist' / 'hsb-loyalty-review'
 PAGES = ['dashboard', 'trading-task', 'point-balance']
 # Shared modules in dependency order, with the variable each one is bound to in the bundle.
 MODULES = {
+    '../shared/api-adapter.js': '__apiAdapter',
     '../shared/data-source.js': '__dataSource',
     '../shared/app.js': '__app',
     '../shared/components.js': '__components',
@@ -79,6 +80,9 @@ def script_bundle(page):
 
 def data_bundle(page):
     files = ['mock/common.json', f'mock/{page}.json', 'copy/en.json', 'demo/intents.en.json']
+    # ?source=api also works offline: the sample API answers and the UI-only parts it reads are inlined too.
+    files += sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'mock' / 'api').glob('*.json'))
+    files += [f for f in ('mock/dashboard.json',) if f not in files]
     data = {f: json.loads(assets_to_local(read(f))) for f in files}
     return (
         'window.__DATA = ' + json.dumps(data, ensure_ascii=False) + ';\n'

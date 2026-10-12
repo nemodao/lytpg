@@ -13,12 +13,11 @@ const empty = page.empty || {};
 // API: one list of lots is enough. `usedItems` and `empty` exist only so preview states can add or remove groups of
 // lots; with a real API send every lot in `items` and leave the other two empty/absent.
 const items = [...(page.usedItems || []), ...page.items];
-// A lot is past its expiry once its expiry day has started (expiry is at 01:00 WIB).
-const isPastExpiry = (item) => Boolean(item.expiresAt) && ui.daysUntil(item.expiresAt) <= 0;
-// Available: earning, active, plus fully used lots that have not expired yet.
-const inAvailable = (item) => ['earning', 'active'].includes(item.status) || (item.status === 'used' && !isPastExpiry(item));
-// Expired: lots past their expiry, whether coins were left (`expired`) or everything was used first (`used`, shows 0).
-const inExpired = (item) => item.status === 'expired' || (item.status === 'used' && isPastExpiry(item));
+// API: each lot says which tab it belongs to (`list`): lots from `coin/listAvailable` are "available", lots from
+// `coin/listExpired` are "expired". A fully used lot (`status: "used"`) can be in either.
+const inAvailable = (item) => item.list === 'available';
+const inExpired = (item) => item.list === 'expired';
+const isPastExpiry = inExpired;
 const availableLots = empty.available ? [] : items.filter(inAvailable);
 const history = empty.history ? [] : page.history;
 const app = document.getElementById('app');
@@ -51,7 +50,7 @@ const amount = (label, points, strong) =>
 // One lot. Right side: "Earned 2,000" (lighter) over the figure that matters for this row, with the coin.
 function itemRow(item) {
   // Fully used lots are never highlighted as expiring soon.
-  const soon = item.status === 'active' && ui.daysUntil(item.expiresAt) <= common.program.expiryWarningDays;
+  const soon = item.status === 'active' && item.expiringSoon; // API: `expiringSoon` (expires within 10 days)
   const used = item.status === 'used';
   const view = used ? usedView(item) : {
     earning: () => ({ meta: ui.t('pb.item.earning.meta'), badge: badge('blue', ui.t('badge.earning')) }),

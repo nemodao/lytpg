@@ -62,12 +62,17 @@
       "lots": 3.5,
       "points": 310,
       "status": "earning",
-      "creditAt": "2026-10-17T01:00:00+07:00",
-      "updatedAt": "2026-10-14T14:35:00+07:00",
       "capped": false
     },
     "selectedAccountId": "50000234",
     "history": [
+      {
+        "date": "2026-10-14",
+        "lots": 3.5,
+        "points": 310,
+        "status": "earning",
+        "capped": false
+      },
       {
         "date": "2026-10-13",
         "lots": 1.4,
@@ -139,6 +144,78 @@
         "program": {
           "ended": true
         }
+      },
+      "page": {
+        "history": [
+          {
+            "date": "2026-10-13",
+            "lots": 1.4,
+            "points": 120,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-10",
+            "lots": 4.2,
+            "points": 360,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-08",
+            "lots": 24.6,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-10-06",
+            "lots": 6.1,
+            "points": 540,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-02",
+            "lots": 2.8,
+            "points": 250,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-29",
+            "lots": 0.9,
+            "points": 80,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-24",
+            "lots": 5.3,
+            "points": 460,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-17",
+            "lots": 26.0,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-09-08",
+            "lots": 3.2,
+            "points": 280,
+            "status": "credited",
+            "capped": false
+          }
+        ],
+        "today": {
+          "lots": 0,
+          "points": 0,
+          "status": "not_started"
+        }
       }
     },
     "needs-kyc": {
@@ -159,7 +236,79 @@
       "page": {
         "today": {
           "status": "credited"
-        }
+        },
+        "history": [
+          {
+            "date": "2026-10-14",
+            "lots": 3.5,
+            "points": 310,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-13",
+            "lots": 1.4,
+            "points": 120,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-10",
+            "lots": 4.2,
+            "points": 360,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-08",
+            "lots": 24.6,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-10-06",
+            "lots": 6.1,
+            "points": 540,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-02",
+            "lots": 2.8,
+            "points": 250,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-29",
+            "lots": 0.9,
+            "points": 80,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-24",
+            "lots": 5.3,
+            "points": 460,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-17",
+            "lots": 26.0,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-09-08",
+            "lots": 3.2,
+            "points": 280,
+            "status": "credited",
+            "capped": false
+          }
+        ]
       }
     },
     "delayed": {
@@ -174,7 +323,79 @@
           "status": "pending",
           "points": 0,
           "lots": 0
-        }
+        },
+        "history": [
+          {
+            "date": "2026-10-14",
+            "lots": 0,
+            "points": 0,
+            "status": "pending",
+            "capped": false
+          },
+          {
+            "date": "2026-10-13",
+            "lots": 1.4,
+            "points": 120,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-10",
+            "lots": 4.2,
+            "points": 360,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-08",
+            "lots": 24.6,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-10-06",
+            "lots": 6.1,
+            "points": 540,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-02",
+            "lots": 2.8,
+            "points": 250,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-29",
+            "lots": 0.9,
+            "points": 80,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-24",
+            "lots": 5.3,
+            "points": 460,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-17",
+            "lots": 26.0,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-09-08",
+            "lots": 3.2,
+            "points": 280,
+            "status": "credited",
+            "capped": false
+          }
+        ]
       }
     },
     "capped": {
@@ -182,8 +403,81 @@
         "today": {
           "capped": true,
           "lots": 23.8,
-          "points": 2000
-        }
+          "points": 2000,
+          "status": "credited"
+        },
+        "history": [
+          {
+            "date": "2026-10-14",
+            "lots": 23.8,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-10-13",
+            "lots": 1.4,
+            "points": 120,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-10",
+            "lots": 4.2,
+            "points": 360,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-08",
+            "lots": 24.6,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-10-06",
+            "lots": 6.1,
+            "points": 540,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-02",
+            "lots": 2.8,
+            "points": 250,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-29",
+            "lots": 0.9,
+            "points": 80,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-24",
+            "lots": 5.3,
+            "points": 460,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-17",
+            "lots": 26.0,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-09-08",
+            "lots": 3.2,
+            "points": 280,
+            "status": "credited",
+            "capped": false
+          }
+        ]
       }
     },
     "no-trades-today": {
@@ -192,7 +486,72 @@
           "lots": 0,
           "points": 0,
           "status": "not_started"
-        }
+        },
+        "history": [
+          {
+            "date": "2026-10-13",
+            "lots": 1.4,
+            "points": 120,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-10",
+            "lots": 4.2,
+            "points": 360,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-08",
+            "lots": 24.6,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-10-06",
+            "lots": 6.1,
+            "points": 540,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-02",
+            "lots": 2.8,
+            "points": 250,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-29",
+            "lots": 0.9,
+            "points": 80,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-24",
+            "lots": 5.3,
+            "points": 460,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-17",
+            "lots": 26.0,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-09-08",
+            "lots": 3.2,
+            "points": 280,
+            "status": "credited",
+            "capped": false
+          }
+        ]
       }
     },
     "market-closed": {
@@ -259,7 +618,72 @@
           "lots": 0,
           "points": 0,
           "status": "not_started"
-        }
+        },
+        "history": [
+          {
+            "date": "2026-10-13",
+            "lots": 1.4,
+            "points": 120,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-10",
+            "lots": 4.2,
+            "points": 360,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-08",
+            "lots": 24.6,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-10-06",
+            "lots": 6.1,
+            "points": 540,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-02",
+            "lots": 2.8,
+            "points": 250,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-29",
+            "lots": 0.9,
+            "points": 80,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-24",
+            "lots": 5.3,
+            "points": 460,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-17",
+            "lots": 26.0,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-09-08",
+            "lots": 3.2,
+            "points": 280,
+            "status": "credited",
+            "capped": false
+          }
+        ]
       }
     },
     "loading": {
@@ -278,7 +702,72 @@
           "lots": 0,
           "points": 0,
           "status": "earning"
-        }
+        },
+        "history": [
+          {
+            "date": "2026-10-13",
+            "lots": 1.4,
+            "points": 120,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-10",
+            "lots": 4.2,
+            "points": 360,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-08",
+            "lots": 24.6,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-10-06",
+            "lots": 6.1,
+            "points": 540,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-10-02",
+            "lots": 2.8,
+            "points": 250,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-29",
+            "lots": 0.9,
+            "points": 80,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-24",
+            "lots": 5.3,
+            "points": 460,
+            "status": "credited",
+            "capped": false
+          },
+          {
+            "date": "2026-09-17",
+            "lots": 26.0,
+            "points": 2000,
+            "status": "credited",
+            "capped": true
+          },
+          {
+            "date": "2026-09-08",
+            "lots": 3.2,
+            "points": 280,
+            "status": "credited",
+            "capped": false
+          }
+        ]
       }
     }
   }

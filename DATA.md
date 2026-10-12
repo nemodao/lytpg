@@ -19,11 +19,12 @@ Example file: `mock/common.json`
 | `balance.available` | number | `3100` | Coins the user can spend now. The big number on Home and Coins. |
 | `balance.expiring` | null or object | `null` | Coins about to expire, or null. When set, the red warning shows under the balance. |
 | `balance.expiring.points` |  |  | How many coins expire within the warning window. |
-| `balance.expiring.date` | YYYY-MM-DD |  | Date of the nearest expiry (not displayed; kept for reference). |
 | `program.ended` | boolean | `false` | true when the programme is over: Earn shows the end message, no trade button. |
 | `program.creditMode` | "delayed" | "in-day" | `"in-day"` | When earned coins are credited: "delayed" (after creditDelayDays) or "in-day" (through the day). |
 | `program.dailyMaxPoints` | number or null | `2000` | Most coins a user can earn per day, or null for no maximum. Shown in the rules and next to the rate range; null hides both. |
 | `program.minHoldMinutes` | number | `3` | Minimum time a position must be held to earn. Shown in the rules. |
+| `program.minHoldSeconds` | number | `180` | The same minimum in seconds. When it is not a whole number of minutes the rule reads "at least 90 seconds". |
+| `program.tzMinutes` | number | `420` | Time zone of the programme as minutes from UTC (420 = GMT+7). Sent back to the coin list endpoints; the pages format every date in GMT+7 (WIB). |
 | `program.creditDelayDays` | number | `0` | Days between the trading day and crediting, in "delayed" mode. Shown in the rules. |
 | `program.expiryDays` | number | `30` | Days after crediting until coins expire. Shown in the rules. |
 | `program.creditWithinMinutes` | number | `15` | NOT FROM THE API: fixed in the UI. Longest time for coins to arrive after a position is closed. Shown as "Updates within 15 mins" and in the in-day rule. |
@@ -63,7 +64,6 @@ Example file: `mock/dashboard.json` (`default`)
 |---|---|---|---|
 | `task.lotsToday` | number | `3.5` | Lots traded today. "You traded" on the Daily Trading card. |
 | `task.pointsToday` | number | `310` | Coins earned today. "Coins earned" on the Daily Trading card. |
-| `task.updatedAt` | ISO 8601 | `"2026-10-14T14:35:00+07:00"` | When today's figures were last refreshed (not displayed). |
 | `task.capped` | boolean | `false` | true when today's maximum is reached: the capped message shows in the Today panel. |
 | `rewards[].image` | string | `"../assets/images/rewards/reward-1.webp"` | Image of a reward tile on Home (three tiles). Path or URL. |
 | `rewards[].alt` | string | `"Wireless earbuds and a smartphone"` | Text alternative of that image. |
@@ -81,14 +81,12 @@ Example file: `mock/trading-task.json` (`default`)
 | `today.lots` | number | `3.5` | Lots already counted for coins today (the API's today.lotsValid). It rises together with today.points, when the coins of a closed position arrive. |
 | `today.points` | number | `310` | Coins earned today. |
 | `today.status` | "not_started" | "earning" | "credited" | "pending" | `"earning"` | Where today's coins stand. Picks the line under the figures: earning = coins are arriving (shown even while lots and coins still read 0), credited = all in the balance, not_started = no trade yet, pending (delayed programmes) = no line. |
-| `today.creditAt` | ISO 8601 | `"2026-10-17T01:00:00+07:00"` | When coins of a delayed programme start to arrive (not displayed). |
-| `today.updatedAt` | ISO 8601 | `"2026-10-14T14:35:00+07:00"` | When today's figures were last refreshed (not displayed). |
 | `today.capped` | boolean | `false` | true when today's maximum is reached. |
 | `selectedAccountId` | string or null | `"50000234"` | Trading account selected when the page opens; one of common.accounts[].id. Missing or null when the user has no account. |
-| `history[].date` | YYYY-MM-DD | `"2026-10-13"` | A past trading day. |
-| `history[].lots` | number | `1.4` | Lots traded that day. |
-| `history[].points` | number | `120` | Coins earned that day. |
-| `history[].status` | "earning" | "credited" | "pending" | `"credited"` | Badge of that day. Days with status "pending" are not listed. |
+| `history[].date` | YYYY-MM-DD | `"2026-10-14"` | A trading day, newest first. Today is included once it has coins arriving and is labelled "Today". |
+| `history[].lots` | number | `3.5` | Lots traded that day. |
+| `history[].points` | number | `310` | Coins earned that day. |
+| `history[].status` | "earning" | "credited" | "pending" | `"earning"` | Badge of that day. Days with status "pending" are not listed. |
 | `history[].capped` | boolean | `false` | true when that day reached the maximum ("Reached Max Coins"). |
 
 ## Coins — `fetchPage('point-balance')`
@@ -102,8 +100,9 @@ Example file: `mock/point-balance.json` (`default`)
 | `items[].total` | number | `310` | Coins earned in this lot ("Earned"). |
 | `items[].remaining` | number | `310` | Coins of this lot not yet spent ("Remain"); for an expired lot, the coins that expired unspent. |
 | `items[].status` | "earning" | "active" | "used" | "expired" | `"earning"` | State of the lot. earning/active/used-before-expiry show in Available; expired and used-then-expired show in Expired. |
-| `items[].creditAt` | YYYY-MM-DD or null | `null` | Not displayed. |
-| `items[].expiresAt` | YYYY-MM-DD or null | `"2026-10-28"` | Expiry date of the lot. Null while earning. |
+| `items[].expiresAt` | date or ISO 8601, or null | `"2026-10-28"` | Expiry of the lot; only its day is shown. May be null while earning. |
+| `items[].list` | "available" | "expired" | `"available"` | Tab the lot belongs to. |
+| `items[].expiringSoon` | boolean | `false` | true when the lot still has coins and expires within 10 days: its expiry line turns red. |
 | `history[].happenedAt` | ISO 8601 | `"2026-10-14T14:12:00+07:00"` | When the movement happened. Its time is shown after the label; rows are ordered by it, newest first. |
 | `history[].date` | YYYY-MM-DD | `"2026-10-14"` | Local day of happenedAt. Rows are grouped under it. |
 | `history[].type` | "earn" | "consume" | "refund" | "expire" | "adjust_positive" | "adjust_negative" | `"earn"` | Kind of movement. earn shows the source as its label; consume = "Redeemed reward"; refund = "Refund"; expire = "Expired"; adjust_* = "Adjustment". |

@@ -48,8 +48,9 @@
         "total": 310,
         "remaining": 310,
         "status": "earning",
-        "creditAt": null,
-        "expiresAt": null
+        "expiresAt": null,
+        "list": "available",
+        "expiringSoon": false
       },
       {
         "source": "trading",
@@ -57,8 +58,9 @@
         "total": 2000,
         "remaining": 1200,
         "status": "active",
-        "creditAt": null,
-        "expiresAt": "2026-10-28"
+        "expiresAt": "2026-10-28",
+        "list": "available",
+        "expiringSoon": false
       },
       {
         "source": "trading",
@@ -66,8 +68,9 @@
         "total": 540,
         "remaining": 540,
         "status": "active",
-        "creditAt": null,
-        "expiresAt": "2026-11-08"
+        "expiresAt": "2026-11-08",
+        "list": "available",
+        "expiringSoon": false
       },
       {
         "source": "trading",
@@ -75,8 +78,9 @@
         "total": 2000,
         "remaining": 1000,
         "status": "active",
-        "creditAt": null,
-        "expiresAt": "2026-11-10"
+        "expiresAt": "2026-11-10",
+        "list": "available",
+        "expiringSoon": false
       },
       {
         "source": "trading",
@@ -84,35 +88,9 @@
         "total": 360,
         "remaining": 360,
         "status": "active",
-        "creditAt": null,
-        "expiresAt": "2026-11-12"
-      },
-      {
-        "source": "trading",
-        "earnedOn": "2026-09-01",
-        "total": 2000,
-        "remaining": 300,
-        "status": "expired",
-        "creditAt": null,
-        "expiresAt": "2026-10-04"
-      },
-      {
-        "source": "trading",
-        "earnedOn": "2026-08-10",
-        "total": 1500,
-        "remaining": 450,
-        "status": "expired",
-        "creditAt": null,
-        "expiresAt": "2026-09-12"
-      },
-      {
-        "source": "trading",
-        "earnedOn": "2026-08-20",
-        "total": 800,
-        "remaining": 800,
-        "status": "expired",
-        "creditAt": null,
-        "expiresAt": "2026-09-22"
+        "expiresAt": "2026-11-12",
+        "list": "available",
+        "expiringSoon": false
       },
       {
         "source": "trading",
@@ -120,8 +98,39 @@
         "total": 1200,
         "remaining": 200,
         "status": "expired",
-        "creditAt": null,
-        "expiresAt": "2026-10-12"
+        "expiresAt": "2026-10-12",
+        "list": "expired",
+        "expiringSoon": false
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-09-01",
+        "total": 2000,
+        "remaining": 300,
+        "status": "expired",
+        "expiresAt": "2026-10-04",
+        "list": "expired",
+        "expiringSoon": false
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-08-20",
+        "total": 800,
+        "remaining": 800,
+        "status": "expired",
+        "expiresAt": "2026-09-22",
+        "list": "expired",
+        "expiringSoon": false
+      },
+      {
+        "source": "trading",
+        "earnedOn": "2026-08-10",
+        "total": 1500,
+        "remaining": 450,
+        "status": "expired",
+        "expiresAt": "2026-09-12",
+        "list": "expired",
+        "expiringSoon": false
       }
     ],
     "history": [
@@ -323,8 +332,7 @@
       "common": {
         "balance": {
           "expiring": {
-            "points": 1200,
-            "date": "2026-10-20"
+            "points": 1200
           }
         }
       },
@@ -336,8 +344,9 @@
             "total": 310,
             "remaining": 310,
             "status": "earning",
-            "creditAt": null,
-            "expiresAt": null
+            "expiresAt": null,
+            "list": "available",
+            "expiringSoon": false
           },
           {
             "source": "trading",
@@ -345,8 +354,9 @@
             "total": 2000,
             "remaining": 1200,
             "status": "active",
-            "creditAt": null,
-            "expiresAt": "2026-10-20"
+            "expiresAt": "2026-10-20",
+            "list": "available",
+            "expiringSoon": true
           },
           {
             "source": "trading",
@@ -354,8 +364,9 @@
             "total": 540,
             "remaining": 540,
             "status": "active",
-            "creditAt": null,
-            "expiresAt": "2026-11-08"
+            "expiresAt": "2026-11-08",
+            "list": "available",
+            "expiringSoon": false
           },
           {
             "source": "trading",
@@ -363,8 +374,9 @@
             "total": 2000,
             "remaining": 1000,
             "status": "active",
-            "creditAt": null,
-            "expiresAt": "2026-11-10"
+            "expiresAt": "2026-11-10",
+            "list": "available",
+            "expiringSoon": false
           },
           {
             "source": "trading",
@@ -372,8 +384,9 @@
             "total": 360,
             "remaining": 360,
             "status": "active",
-            "creditAt": null,
-            "expiresAt": "2026-11-12"
+            "expiresAt": "2026-11-12",
+            "list": "available",
+            "expiringSoon": false
           },
           {
             "source": "trading",
@@ -381,17 +394,9 @@
             "total": 2000,
             "remaining": 300,
             "status": "expired",
-            "creditAt": null,
-            "expiresAt": "2026-10-04"
-          },
-          {
-            "source": "trading",
-            "earnedOn": "2026-08-10",
-            "total": 1500,
-            "remaining": 450,
-            "status": "expired",
-            "creditAt": null,
-            "expiresAt": "2026-09-12"
+            "expiresAt": "2026-10-04",
+            "list": "expired",
+            "expiringSoon": false
           },
           {
             "source": "trading",
@@ -399,8 +404,19 @@
             "total": 800,
             "remaining": 800,
             "status": "expired",
-            "creditAt": null,
-            "expiresAt": "2026-09-22"
+            "expiresAt": "2026-09-22",
+            "list": "expired",
+            "expiringSoon": false
+          },
+          {
+            "source": "trading",
+            "earnedOn": "2026-08-10",
+            "total": 1500,
+            "remaining": 450,
+            "status": "expired",
+            "expiresAt": "2026-09-12",
+            "list": "expired",
+            "expiringSoon": false
           }
         ]
       }
@@ -435,8 +451,9 @@
             "total": 2000,
             "remaining": 0,
             "status": "used",
-            "creditAt": null,
-            "expiresAt": "2026-10-23"
+            "expiresAt": "2026-10-23",
+            "list": "available",
+            "expiringSoon": false
           },
           {
             "source": "trading",
@@ -444,8 +461,9 @@
             "total": 1800,
             "remaining": 0,
             "status": "used",
-            "creditAt": null,
-            "expiresAt": "2026-11-04"
+            "expiresAt": "2026-11-04",
+            "list": "available",
+            "expiringSoon": false
           },
           {
             "source": "trading",
@@ -453,8 +471,9 @@
             "total": 900,
             "remaining": 0,
             "status": "used",
-            "creditAt": null,
-            "expiresAt": "2026-10-10"
+            "expiresAt": "2026-10-10",
+            "list": "expired",
+            "expiringSoon": false
           }
         ]
       }

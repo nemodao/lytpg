@@ -10,7 +10,6 @@ const { program, accounts } = common;
 const { today, history } = page;
 
 const ended = program.ended;
-const inDay = program.creditMode === 'in-day';
 const app = document.getElementById('app');
 
 // Decorative sky behind the top of the page: diagonal light streaks. Positions come from a fixed seed, so the sky is
@@ -175,19 +174,16 @@ function tradeButton() {
 
 
 function historyList() {
+  // API: `tradingTask/getHistory` days, newest first; today is one of them once it has coins arriving.
   // A day shows here only once coins have arrived for it: days still `pending` are left out (spec §41).
-  // In-day programmes: today is in the list as soon as it has trades, as "Earning" or "Credited".
-  const days = history.filter((day) => day.status !== 'pending').map((day) => ({ ...day }));
-  if (inDay && today.lots > 0 && !ended) {
-    days.unshift({ date: common.now, lots: today.lots, points: today.points, status: today.status, capped: today.capped, today: true });
-  }
+  const days = history.filter((day) => day.status !== 'pending');
   const statusBadge = { credited: badge('green', ui.t('badge.credited')), earning: badge('blue', ui.t('badge.earning')) };
   // One row per day, no per-deal breakdown. Lots and points sit in fixed columns so they line up down the list (spec §15).
   const row = (day) => `
     <div class="list__row">
       <div class="grow stack stack--tight">
         <div class="day__head">
-          <p class="t-label num grow">${day.today ? ui.t('tt.history.today') : ui.dateYear(day.date)}</p>
+          <p class="t-label num grow">${ui.isToday(day.date) ? ui.t('tt.history.today') : ui.dateYear(day.date)}</p>
           ${statusBadge[day.status]}
         </div>
         <div class="day__figures t-caption c-3 num">
