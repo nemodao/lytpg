@@ -71,7 +71,7 @@ FIELDS = {
     'trading-task': {
         'today.lots': ('Lots already counted for coins today (the API\'s today.lotsValid). It rises together with today.points, when the coins of a closed position arrive.', ''),
         'today.points': ('Coins earned today.', ''),
-        'today.status': ('Where today\'s coins stand. Picks the line under the figures: earning = coins are arriving, credited = all in the balance, pending (delayed programmes) = no line.', '"earning" | "credited" | "pending"'),
+        'today.status': ('Where today\'s coins stand. Picks the line under the figures: earning = coins are arriving (shown even while lots and coins still read 0), credited = all in the balance, not_started = no trade yet, pending (delayed programmes) = no line.', '"not_started" | "earning" | "credited" | "pending"'),
         'today.creditAt': ('When coins of a delayed programme start to arrive (not displayed).', 'ISO 8601'),
         'today.updatedAt': ('When today\'s figures were last refreshed (not displayed).', 'ISO 8601'),
         'today.capped': ('true when today\'s maximum is reached.', ''),

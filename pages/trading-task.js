@@ -74,11 +74,13 @@ function progressCard() {
   const hasTrades = today.lots > 0;
   // Same Today panel as the Dashboard's task card, laid flat on the blend card (spec §15).
   const foot = (icon, text) => `<div class="today__foot today__foot--icon num">${ui.icon(icon, 'icon--sm')}<span>${text}</span></div>`;
+  // API: `today.status` decides the line. Lots and coins only rise once coins have arrived, so right after the first
+  // trade of the day the card can read 0 lots and 0 coins while the status is already "earning".
   let footer;
   if (today.capped) footer = foot('trophy', ui.t('task.capped'));
+  else if (today.status === 'earning') footer = foot('clock', ui.t('tt.status.earning'));
   else if (!hasTrades) footer = foot('chart', ui.t('tt.empty.body'));
   else if (today.status === 'credited') footer = foot('check', ui.t('tt.status.credited'));
-  else if (today.status === 'earning') footer = foot('clock', ui.t('tt.status.earning'));
   else footer = ''; // `pending` (delayed programmes): coins that are not credited yet are never shown (spec §41)
   return `
     <section class="card card--blend blend-pale-theme hero-card">

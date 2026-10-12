@@ -80,7 +80,7 @@ Example file: `mock/trading-task.json` (`default`)
 |---|---|---|---|
 | `today.lots` | number | `3.5` | Lots already counted for coins today (the API's today.lotsValid). It rises together with today.points, when the coins of a closed position arrive. |
 | `today.points` | number | `310` | Coins earned today. |
-| `today.status` | "earning" | "credited" | "pending" | `"earning"` | Where today's coins stand. Picks the line under the figures: earning = coins are arriving, credited = all in the balance, pending (delayed programmes) = no line. |
+| `today.status` | "not_started" | "earning" | "credited" | "pending" | `"earning"` | Where today's coins stand. Picks the line under the figures: earning = coins are arriving (shown even while lots and coins still read 0), credited = all in the balance, not_started = no trade yet, pending (delayed programmes) = no line. |
 | `today.creditAt` | ISO 8601 | `"2026-10-17T01:00:00+07:00"` | When coins of a delayed programme start to arrive (not displayed). |
 | `today.updatedAt` | ISO 8601 | `"2026-10-14T14:35:00+07:00"` | When today's figures were last refreshed (not displayed). |
 | `today.capped` | boolean | `false` | true when today's maximum is reached. |

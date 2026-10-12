@@ -67,6 +67,7 @@ Decided on 12 Oct 2026 after the review of the real API.
 - Removed everywhere: the `+N pending` line under the balance (`balanceBlock`), pending lots in the Coins Available tab, the `Trading today · Earning` row in the Coins History tab, the `Pending` badge. Removed preview state: `has-pending` (all three pages, and from `SHARED_STATES`).
 - The sample programme now credits the same day: `program.creditMode` is `"in-day"` by default. Preview states on Earn: `credited` and `delayed` replace `in-day`.
 - Earn, Today card, line under the figures: `earning` → `Coins are being credited to your balance`; `credited` → `Credited to your balance`; `pending` → no line.
+  The status wins over the figures: `earning` shows its line even while lots and coins still read 0 (first trade of the day; preview state `first-trade`). `not_started` shows the "after your first trade" line.
 - Earn history: days with status `pending` are filtered out; today's row is labelled `Today` and carries today's own status.
 - `Updates within 15 mins` and the in-day rule `Coins are credited within 15 minutes after you close a position.` read the new `program.creditWithinMinutes`, which is fixed in the UI and not sent by the API. `program.refreshMinutes` is gone.
 
@@ -171,7 +172,7 @@ name. Function and class names that existed in handoff 1 are unchanged, except `
 | Removed | top-level `rates[]`, `balance.pending`, `program.refreshMinutes`, `pendingItems[]` (Coins) |
 | Same name, wider meaning | `program.joinRequirement` (decides what the Today card and the Earn page show), `program.dailyMaxPoints` (may be null), `today.status` and `history[].status` (also `"earning"`), `selectedAccountId` (may be null), `accounts` (may be empty) |
 
-Preview states: removed `has-pending` (all pages) and `in-day` (Earn); added `credited`, `delayed`, `no-account` (Earn),
+Preview states: removed `has-pending` (all pages) and `in-day` (Earn); added `first-trade`, `credited`, `delayed`, `no-account` (Earn),
 `loading` and `error` (all pages), `more-error` (Coins).
 `needs-kyc` and `needs-deposit` have new descriptions.
 

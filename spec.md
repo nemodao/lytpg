@@ -529,6 +529,7 @@ Decided with the backend review of the real API. Replaces every earlier mention 
   - delayed programme, coins not arrived: no line at all (not even the date they will arrive); `Coins earned` shows 0 until they arrive.
 - **Earn history:** a day is listed only once coins have arrived for it. Days still waiting are left out. Badges are `Earning` and `Credited`; today's row is labelled `Today`.
 - **Update interval:** coins arrive within 15 minutes after a position is closed (often sooner). The Today card reads `Updates within 15 mins` and the rule reads `Coins are credited within 15 minutes after you close a position.` (was 30 minutes; a first version said 3–15 minutes, dropped because 3 is not a real lower limit). The number is fixed in the UI, not sent by the API.
+- **First trade of the day:** for up to 15 minutes the card reads 0 lots and 0 coins together with `Coins are being credited to your balance` (preview state `first-trade`). On a day that reached the maximum, the lots stop rising even if the user keeps trading.
 - **Today's lots and coins move together:** both rise only when the coins of a closed position have arrived, so a trade shows up on the card up to 15 minutes after it is closed.
 - **Known gap for delayed programmes:** the Today card shows 0 lots and 0 coins all day, with no explanation, even after the user has traded. Accepted for now because launch is same-day; to be fixed when a delayed programme is planned.
 - **Coins, Available tab:** today's lot of a same-day programme keeps its `Earning today` line and `Earning` badge.
