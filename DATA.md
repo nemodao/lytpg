@@ -26,8 +26,7 @@ Example file: `mock/common.json`
 | `program.minHoldMinutes` | number | `3` | Minimum time a position must be held to earn. Shown in the rules. |
 | `program.creditDelayDays` | number | `0` | Days between the trading day and crediting, in "delayed" mode. Shown in the rules. |
 | `program.expiryDays` | number | `30` | Days after crediting until coins expire. Shown in the rules. |
-| `program.creditWindowMinutes.min` | number | `3` | NOT FROM THE API: fixed in the UI. Shortest time for coins to arrive after a position is closed. Shown as "Update every 3–15 mins" and in the in-day rule. |
-| `program.creditWindowMinutes.max` | number | `15` | NOT FROM THE API: fixed in the UI. Longest time, same texts. |
+| `program.creditWithinMinutes` | number | `15` | NOT FROM THE API: fixed in the UI. Longest time for coins to arrive after a position is closed. Shown as "Updates within 15 mins" and in the in-day rule. |
 | `program.resetTime` | HH:MM | `"00:00"` | Local time (WIB) at which a new earning day starts. Shown in the rules. |
 | `program.expiryWarningDays` | number | `10` | Size of the "expiring soon" window in days: the balance warning text and the red highlight on lots. |
 | `program.tradingTask` | boolean | `true` | false when the trading task is off or hidden for this user: Home hides the Daily Trading card and the bottom bar drops the Earn tab. |
@@ -79,7 +78,7 @@ Example file: `mock/trading-task.json` (`default`)
 
 | Field | Type | Example | Meaning |
 |---|---|---|---|
-| `today.lots` | number | `3.5` | Lots traded today. |
+| `today.lots` | number | `3.5` | Lots already counted for coins today (the API's today.lotsValid). It rises together with today.points, when the coins of a closed position arrive. |
 | `today.points` | number | `310` | Coins earned today. |
 | `today.status` | "earning" | "credited" | "pending" | `"earning"` | Where today's coins stand. Picks the line under the figures: earning = coins are arriving, credited = all in the balance, pending (delayed programmes) = no line. |
 | `today.creditAt` | ISO 8601 | `"2026-10-17T01:00:00+07:00"` | When coins of a delayed programme start to arrive (not displayed). |

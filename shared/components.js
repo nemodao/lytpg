@@ -117,7 +117,7 @@ export const loadMoreRow = (ui, failed) => (failed
 export function rulesList(ui, common) {
   const { program } = common;
   const credit = program.creditMode === 'in-day'
-    ? ui.md('rule.credit.inDay', program.creditWindowMinutes)
+    ? ui.md('rule.credit.inDay', { minutes: program.creditWithinMinutes })
     : ui.md('rule.credit.delayed', { days: program.creditDelayDays });
   return `
     <ul class="rules">

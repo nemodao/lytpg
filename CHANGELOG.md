@@ -15,7 +15,7 @@ Summary:
 - Rates belong to the selected trading account; users without an account see only `70–100 coins per lot` (no rates table, no `See rates`); new no-account card with `Open a trading account` (`data-intent="open-account"`). Spec §42. New preview state `no-account`.
 - Loading placeholder, failed-to-load card with `Try again`, and 15-row pages with load-on-scroll on the Coins lists. Spec §44. New preview states `loading`, `error`, `more-error`.
 - Coins history: one row per credit with its time, not merged; source labels; custom date ranges limited to 30 days. Spec §43.
-- No pending coins anywhere; same-day crediting is the default; `Update every 3–15 mins`. Spec §41. Preview states `has-pending` and `in-day` removed, `credited` and `delayed` added.
+- No pending coins anywhere; same-day crediting is the default; `Updates within 15 mins`. Spec §41. Preview states `has-pending` and `in-day` removed, `credited` and `delayed` added.
 - Sample data: rates 70–100 coins per lot, daily maximum 2,000, all sample amounts rescaled.
 - `DATA.md` and `STATES.md` changed: see `HANDOFF-2.md` §3 for the full list of fields and states added and removed.
 - API mapping: not done yet. The values to map are listed in `HANDOFF-2.md` §4.

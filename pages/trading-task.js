@@ -86,7 +86,7 @@ function progressCard() {
       <div class="today today--flat">
         <div class="today__label">
           <h2 class="t-body-strong grow">${ui.t('task.todayLabel')}</h2>
-          <p class="t-caption blend-faint num">${ui.t('task.updateEvery', program.creditWindowMinutes)}</p>
+          <p class="t-caption blend-faint num">${ui.t('task.updateEvery', { minutes: program.creditWithinMinutes })}</p>
         </div>
         <div class="today__stats">
           <div><p class="t-caption c-3">${ui.t('task.traded')}</p><p class="today__value num">${ui.lots(today.lots)}<small>${ui.lotUnit(today.lots)}</small></p></div>

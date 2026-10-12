@@ -53,7 +53,7 @@
   "tt.rules": "How it works",
   "rule.hold": "Hold each position for at least **{minutes} minutes**. Shorter trades earn **0 coins**.",
   "rule.credit.delayed": "Coins are credited **{days} days** after the trading day.",
-  "rule.credit.inDay": "Coins are credited throughout the day, every **{min}–{max} minutes**.",
+  "rule.credit.inDay": "Coins are credited within **{minutes} minutes** after you close a position.",
   "rule.expire": "Coins expire **{days} days** after they are credited.",
   "rule.reset": "A new earning day starts at **{time} {tz}**. Coins you’ve already earned are kept.",
   "rule.max": "Earn up to **{points} coins per day**.",
@@ -91,7 +91,7 @@
   "task.earned": "Coins earned",
   "rewards.title": "Redeem coins for rewards",
   "rewards.subtitle": "Unlimited rewards waiting for you",
-  "task.updateEvery": "Update every {min}–{max} mins",
+  "task.updateEvery": "Updates within {minutes} mins",
   "weekdays": [
     "Mo",
     "Tu",

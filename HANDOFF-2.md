@@ -68,11 +68,11 @@ Decided on 12 Oct 2026 after the review of the real API.
 - The sample programme now credits the same day: `program.creditMode` is `"in-day"` by default. Preview states on Earn: `credited` and `delayed` replace `in-day`.
 - Earn, Today card, line under the figures: `earning` → `Coins are being credited to your balance`; `credited` → `Credited to your balance`; `pending` → no line.
 - Earn history: days with status `pending` are filtered out; today's row is labelled `Today` and carries today's own status.
-- `Update every 3–15 mins` and the in-day rule `…every 3–15 minutes` read the new `program.creditWindowMinutes` (`min`, `max`), which is fixed in the UI and not sent by the API. `program.refreshMinutes` is gone.
+- `Updates within 15 mins` and the in-day rule `Coins are credited within 15 minutes after you close a position.` read the new `program.creditWithinMinutes`, which is fixed in the UI and not sent by the API. `program.refreshMinutes` is gone.
 
 Files: `shared/components.js` (`balanceBlock`, `rulesList`), `shared/app.js` (`SHARED_STATES`), `pages/dashboard.js`, `pages/trading-task.js` (`progressCard`, `historyList`), `pages/point-balance.js`, `copy/en.json` (removed `balance.pending`, `tt.status.pending`, `badge.pending`, `pb.item.pending.meta`, `hist.earning`; new `tt.status.earning`; changed `task.updateEvery`, `rule.credit.inDay`), all four mock files.
 
-`DATA.md`: removed `balance.pending`, `program.refreshMinutes`, `pendingItems[]`; new `program.creditWindowMinutes.min` / `.max`; `today.status` and `history[].status` now also take `"earning"`. `STATES.md`: `has-pending` and `in-day` removed, `credited` and `delayed` added.
+`DATA.md`: removed `balance.pending`, `program.refreshMinutes`, `pendingItems[]`; new `program.creditWithinMinutes`; `today.status` and `history[].status` now also take `"earning"`. `STATES.md`: `has-pending` and `in-day` removed, `credited` and `delayed` added.
 
 ---
 
@@ -167,7 +167,7 @@ name. Function and class names that existed in handoff 1 are unchanged, except `
 
 | Change | Field |
 |---|---|
-| New | `program.termsUrl`, `program.rateRange.min` / `.max`, `program.creditWindowMinutes.min` / `.max` (fixed in the UI), `accounts[].rates[].type` / `.value` / `.ptsPerLot` |
+| New | `program.termsUrl`, `program.rateRange.min` / `.max`, `program.creditWithinMinutes` (fixed in the UI), `accounts[].rates[].type` / `.value` / `.ptsPerLot` |
 | Removed | top-level `rates[]`, `balance.pending`, `program.refreshMinutes`, `pendingItems[]` (Coins) |
 | Same name, wider meaning | `program.joinRequirement` (decides what the Today card and the Earn page show), `program.dailyMaxPoints` (may be null), `today.status` and `history[].status` (also `"earning"`), `selectedAccountId` (may be null), `accounts` (may be empty) |
 
@@ -190,10 +190,10 @@ then the mock files feed the pages. This table tells you where each value will c
 | 4 | `program.termsUrl` | `tradingTask/get` → `program.termsUrl` | **Being added by backend, not on UAT yet.** URL of a PDF, or null |
 | 5 | `program.dailyMaxPoints` | `tradingTask/get` → `program.dailyMaxPoints` | May be null |
 | 6 | `accounts[]`, `accounts[].rates[]`, `selectedAccountId` | `tradingTask/get` | Same shape as the mock. `accounts` may be empty; then `selectedAccountId` is missing |
-| 7 | `today.lots` | `tradingTask/get` → `today.lotsValid` | Not `today.lots`: `lotsValid` matches the lots shown in the history |
+| 7 | `today.lots` | `tradingTask/get` → `today.lotsValid` | Not `today.lots`: `lotsValid` matches the lots shown in the history. It rises together with `today.points`, when coins arrive |
 | 8 | `today.status` | `tradingTask/get` → `today.status` | `not_started` \| `earning` \| `credited` \| `pending` |
 | 9 | `balance.available`, `balance.expiring` | `coin/summary` | `pending` from the API is not used |
-| 10 | `program.creditWindowMinutes` | none | Fixed in the UI (3 and 15) |
+| 10 | `program.creditWithinMinutes` | none | Fixed in the UI (15) |
 
 Not API data:
 
@@ -215,4 +215,4 @@ Open each address in the reference build and compare with your version:
 | `pages/trading-task.html?state=no-account` | Today card with zeros; card with the message, the range line and `Open a trading account` |
 | `pages/trading-task.html?state=delayed&tab=history` | 0 coins on the Today card, no line under the figures, no row for today |
 | `pages/trading-task.html` | Rates of the selected account (six rows); switching account changes the table; `Terms & Conditions ›` under the rules opens the sheet |
-| `pages/dashboard.html?tour=off` | No pending line under the balance; `Update every 3–15 mins`; new sample numbers |
+| `pages/dashboard.html?tour=off` | No pending line under the balance; `Updates within 15 mins`; new sample numbers |

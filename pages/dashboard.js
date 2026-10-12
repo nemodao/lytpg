@@ -30,7 +30,7 @@ const taskProgress = () => `
     <div class="today">
       <div class="today__label">
         <p class="t-body-strong grow">${ui.t('task.todayLabel')}</p>
-        <p class="t-caption blend-faint num">${ui.t('task.updateEvery', common.program.creditWindowMinutes)}</p>
+        <p class="t-caption blend-faint num">${ui.t('task.updateEvery', { minutes: common.program.creditWithinMinutes })}</p>
       </div>
       <div class="today__stats">
         <div><p class="t-caption c-3">${ui.t('task.traded')}</p><p class="today__value num">${ui.lots(task.lotsToday)}<small>${ui.lotUnit(task.lotsToday)}</small></p></div>
