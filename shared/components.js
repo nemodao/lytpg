@@ -118,6 +118,8 @@ export const loadMoreRow = (ui, failed) => (failed
 
 // "How it works" rules. One list, shown in the Trading Task's How it works tab and in the guided tour (step 2):
 // change it here and both change.
+// API: the holding-time rule is left out when `program.minHoldSeconds` is 0 (no minimum), and the daily-maximum
+// rule when `program.dailyMaxPoints` is null.
 export function rulesList(ui, common) {
   const { program } = common;
   const credit = program.creditMode === 'in-day'
@@ -125,7 +127,7 @@ export function rulesList(ui, common) {
     : ui.md('rule.credit.delayed', { days: program.creditDelayDays });
   return `
     <ul class="rules">
-      <li><span>${program.minHoldSeconds % 60 ? ui.md('rule.hold.seconds', { seconds: program.minHoldSeconds }) : ui.md('rule.hold', { minutes: program.minHoldMinutes })}</span></li>
+      ${program.minHoldSeconds > 0 ? `<li><span>${program.minHoldSeconds % 60 ? ui.md('rule.hold.seconds', { seconds: program.minHoldSeconds }) : ui.md('rule.hold', { minutes: program.minHoldMinutes })}</span></li>` : ''}
       <li><span>${credit}</span></li>
       <li><span>${ui.md('rule.expire', { days: program.expiryDays })}</span></li>
       <li><span>${ui.md('rule.reset', { time: program.resetTime, tz: ui.t('tz') })}</span></li>

@@ -32,7 +32,7 @@ export function joinRequirementFrom(signin) {
 export function toProgram(task, signin) {
   if (!task || task.tradingTask !== true) return { tradingTask: false, joinRequirement: null, ...UI_CONSTANTS };
   const program = task.program;
-  // minHoldSeconds is being added by backend; until then only whole minutes are known.
+  // minHoldSeconds is the exact value (minHoldMinutes is rounded down); it can be 0 = no minimum.
   const holdSeconds = program.minHoldSeconds ?? program.minHoldMinutes * 60;
   return {
     tradingTask: true,
@@ -44,8 +44,8 @@ export function toProgram(task, signin) {
     expiryDays: program.expiryDays,
     dailyMaxPoints: program.dailyMaxPoints ?? null, // null = no daily maximum
     tzMinutes: program.tzMinutes, // send this as `tzMinutes` to the three coin list endpoints
-    rateRange: program.rateRange ?? null, // being added by backend; missing = no rate range shown
-    termsUrl: program.termsUrl ?? null, // being added by backend; missing = no Terms & Conditions button
+    rateRange: program.rateRange ?? null, // null = the programme has no rate yet: no rate range shown
+    termsUrl: program.termsUrl || null, // null, missing or an empty string all mean: no Terms & Conditions button
     joinRequirement: joinRequirementFrom(signin),
     ...UI_CONSTANTS,
   };

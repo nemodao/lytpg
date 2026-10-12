@@ -3,6 +3,12 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 3 — in progress (started 12 Oct 2026)
+
+**Full description for developers: `HANDOFF-3.md`.**
+
+- The three new programme fields are on UAT. Two empty values handled: `termsUrl` as an empty string hides the Terms & Conditions button; `minHoldSeconds` = 0 hides the holding-time rule. Files: `shared/api-adapter.js`, `shared/components.js`, `mock/api/check.mjs`.
+
 ## Handoff 2 — UI changes and API mapping (12 Oct 2026)
 
 **Full description for developers: `HANDOFF-2.md`** (what changed since handoff 1, file by file, and the values to map from the API).

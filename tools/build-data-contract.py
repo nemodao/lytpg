@@ -24,7 +24,7 @@ FIELDS = {
         'program.creditMode': ('When earned coins are credited: "delayed" (after creditDelayDays) or "in-day" (through the day).', '"delayed" | "in-day"'),
         'program.dailyMaxPoints': ('Most coins a user can earn per day, or null for no maximum. Shown in the rules and next to the rate range; null hides both.', 'number or null'),
         'program.minHoldMinutes': ('Minimum time a position must be held to earn. Shown in the rules.', ''),
-        'program.minHoldSeconds': ('The same minimum in seconds. When it is not a whole number of minutes the rule reads "at least 90 seconds".', ''),
+        'program.minHoldSeconds': ('The same minimum in seconds. When it is not a whole number of minutes the rule reads "at least 90 seconds"; when it is 0 the rule is not shown.', ''),
         'program.tzMinutes': ('Time zone of the programme as minutes from UTC (420 = GMT+7). Sent back to the coin list endpoints; the pages format every date in GMT+7 (WIB).', ''),
         'program.creditDelayDays': ('Days between the trading day and crediting, in "delayed" mode. Shown in the rules.', ''),
         'program.expiryDays': ('Days after crediting until coins expire. Shown in the rules.', ''),

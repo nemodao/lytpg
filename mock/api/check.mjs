@@ -40,6 +40,9 @@ Object.entries(built).forEach(([name, [got, want]]) => compare(name, got, want))
 // Sign-in rule.
 const rule = [[{ kycApproveTime: 0, firstDepositTime: 0 }, 'kyc'], [{ kycApproveTime: 5, firstDepositTime: 0 }, 'deposit'], [{ kycApproveTime: 5, firstDepositTime: 9 }, null]];
 rule.forEach(([input, want]) => { if (joinRequirementFrom(input) !== want) problems.push(`joinRequirementFrom(${JSON.stringify(input)}) is not ${want}`); });
+// An empty Terms & Conditions address hides the button, like null.
+if (toProgram({ tradingTask: true, program: { ...task.program, termsUrl: '' } }, null).termsUrl !== null) problems.push('toProgram: empty termsUrl should become null');
+if (toProgram({ tradingTask: true, program: { ...task.program, minHoldSeconds: 0 } }, null).minHoldSeconds !== 0) problems.push('toProgram: minHoldSeconds 0 not kept');
 // A user without a trading task.
 if (toProgram({ tradingTask: false }, null).tradingTask !== false) problems.push('toProgram: tradingTask false not kept');
 if (toAccounts({ tradingTask: false }).length !== 0) problems.push('toAccounts: expected no accounts without a task');

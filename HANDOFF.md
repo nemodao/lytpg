@@ -113,9 +113,9 @@ Not sent by the loyalty API, fixed in the UI (`UI_CONSTANTS` in the converter): 
 zone (`program.tzMinutes` = 420); if a programme ever uses another zone, change `WIB` in `shared/app.js` and the
 `tz` copy key.
 
-Three programme fields are being added by backend and are not on UAT yet: `rateRange`, `termsUrl`,
-`minHoldSeconds`. The converter reads them when present and falls back when they are missing (no rate range line,
-no Terms & Conditions button, whole minutes for the holding time).
+The programme fields `rateRange`, `termsUrl` and `minHoldSeconds` are on UAT since 12 Oct 2026. Each can be
+empty: `rateRange` null (no rate range line), `termsUrl` null or an empty string (no Terms & Conditions button),
+`minHoldSeconds` 0 (no holding-time rule).
 
 ## 6. Buttons that leave the pages (`data-intent`)
 
@@ -133,7 +133,8 @@ no Terms & Conditions button, whole minutes for the holding time).
 
 ## 7. Receiving the next drop
 
-**Already converted handoff 1? Read `HANDOFF-2.md` instead of this file:** it lists only what changed since then.
+**Already converted an earlier handoff? Read the `HANDOFF-<n>.md` files after yours instead of this file:** each
+lists only what changed since the handoff before it (`HANDOFF-2.md`, `HANDOFF-3.md`, …).
 
 Each drop is a complete copy of this folder with a higher number in `VERSION.txt`.
 

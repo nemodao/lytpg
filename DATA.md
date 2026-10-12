@@ -23,7 +23,7 @@ Example file: `mock/common.json`
 | `program.creditMode` | "delayed" | "in-day" | `"in-day"` | When earned coins are credited: "delayed" (after creditDelayDays) or "in-day" (through the day). |
 | `program.dailyMaxPoints` | number or null | `2000` | Most coins a user can earn per day, or null for no maximum. Shown in the rules and next to the rate range; null hides both. |
 | `program.minHoldMinutes` | number | `3` | Minimum time a position must be held to earn. Shown in the rules. |
-| `program.minHoldSeconds` | number | `180` | The same minimum in seconds. When it is not a whole number of minutes the rule reads "at least 90 seconds". |
+| `program.minHoldSeconds` | number | `180` | The same minimum in seconds. When it is not a whole number of minutes the rule reads "at least 90 seconds"; when it is 0 the rule is not shown. |
 | `program.tzMinutes` | number | `420` | Time zone of the programme as minutes from UTC (420 = GMT+7). Sent back to the coin list endpoints; the pages format every date in GMT+7 (WIB). |
 | `program.creditDelayDays` | number | `0` | Days between the trading day and crediting, in "delayed" mode. Shown in the rules. |
 | `program.expiryDays` | number | `30` | Days after crediting until coins expire. Shown in the rules. |
