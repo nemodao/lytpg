@@ -3,7 +3,7 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
 import { mountTour } from '../shared/tour.js';
-import { appHeader, balanceBlock, coin, joinPanel, tourButton } from '../shared/components.js';
+import { appHeader, balanceBlock, coin, joinPanel, showStatus, tourButton } from '../shared/components.js';
 
 const { common, page, ui } = await load('dashboard');
 // `no-task-trading` state: the programme runs no trading task, so its card (and the Earn tab) are hidden.
@@ -86,23 +86,28 @@ const reward = (item) => `
   </div>`;
 
 const app = document.getElementById('app');
-app.innerHTML = `
-  ${appHeader(ui, { title: ui.t('dash.title'), action: tourButton(ui) })}
-  ${balanceBlock(ui, common, { href: balanceHref })}
-  <hr class="dash-divider">
-  ${checkInCard()}
-  ${hasTask ? taskCard() : ''}
-  <div class="rewards-head">
-    <h2 class="section-title">${ui.t('rewards.title')}</h2>
-    <p class="t-body c-3">${ui.t('rewards.subtitle')}</p>
-  </div>
-  <div class="mosaic blend-pink">${rewards.map(reward).join('')}</div>`;
+const header = appHeader(ui, { title: ui.t('dash.title'), action: tourButton(ui) });
 
-feed.start(app);
+// Loading or failed to load: the header and a placeholder, nothing else (spec §44).
+if (showStatus(ui, common, app, header)) {
+  mountNav(ui, common, 'home');
+} else {
+  app.innerHTML = `
+    ${header}
+    ${balanceBlock(ui, common, { href: balanceHref })}
+    <hr class="dash-divider">
+    ${checkInCard()}
+    ${hasTask ? taskCard() : ''}
+    <div class="rewards-head">
+      <h2 class="section-title">${ui.t('rewards.title')}</h2>
+      <p class="t-body c-3">${ui.t('rewards.subtitle')}</p>
+    </div>
+    <div class="mosaic blend-pink">${rewards.map(reward).join('')}</div>`;
 
+  feed.start(app);
+  mountNav(ui, common, 'home');
 
-mountNav(ui, common, 'home');
-
-// Guided tour: opens on the first visit, and again from the help button in the header.
-const tour = mountTour(ui, common, 'dashboard');
-app.querySelector('[data-tour-start]').addEventListener('click', tour.start);
+  // Guided tour: opens on the first visit, and again from the help button in the header.
+  const tour = mountTour(ui, common, 'dashboard');
+  app.querySelector('[data-tour-start]').addEventListener('click', tour.start);
+}

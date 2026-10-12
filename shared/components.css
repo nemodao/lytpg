@@ -203,6 +203,24 @@
 .doc { position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: var(--radius-card-inner); border: var(--size-stroke) solid var(--card-stroke); background: var(--color-neutral-0); }
 .doc__loading { position: absolute; inset: 0; display: grid; place-items: center; }
 .doc__frame { position: relative; display: block; width: 100%; height: 100%; border: 0; }
+/* ---- Page status: loading skeleton and load error (spec §44) ---- */
+.skeleton { display: flex; flex-direction: column; gap: var(--spacing-section); }
+.skeleton__card { gap: var(--spacing-12); }
+.skeleton__card--row { flex-direction: row; align-items: center; }
+.skeleton__bar, .skeleton__dot { display: block; border-radius: var(--radius-pill); background: var(--ui-surface-soft); animation: skeleton-pulse 1.2s ease-in-out infinite; }
+.skeleton__bar { height: var(--spacing-12); }
+.skeleton__bar--s { width: 30%; } .skeleton__bar--m { width: 45%; } .skeleton__bar--l { width: 70%; } .skeleton__bar--full { width: 100%; }
+.skeleton__dot { flex: none; width: var(--size-avatar); height: var(--size-avatar); }
+@keyframes skeleton-pulse { 50% { opacity: 0.45; } }
+.page-error { align-items: center; text-align: center; gap: var(--spacing-16); padding-block: var(--spacing-32); }
+.page-error__icon { display: grid; place-items: center; width: var(--size-control-lg); height: var(--size-control-lg); border-radius: var(--radius-pill); background: var(--ui-surface-soft); color: var(--ui-icon-secondary); }
+/* End of a paged list: spinner or retry line. */
+.load-more { display: flex; align-items: center; justify-content: center; gap: var(--spacing-8); min-height: var(--size-control-sm); }
+.load-more .text-btn { align-self: auto; font: var(--font-x-small-semibold); }
+.spinner { width: var(--size-icon-sm); height: var(--size-icon-sm); border-radius: var(--radius-pill); border: var(--spacing-2) solid var(--ui-stroke-soft); border-top-color: var(--accent-surface-brand); animation: spinner-turn 0.8s linear infinite; }
+@keyframes spinner-turn { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .skeleton__bar, .skeleton__dot { animation: none; } .spinner { animation-duration: 2.4s; } }
+
 /* Text button: a quiet link-style button, e.g. "Terms & Conditions" under the rules. */
 .text-btn { align-self: flex-start; display: inline-flex; align-items: center; gap: var(--spacing-2); min-height: var(--size-control-sm); padding: 0; border: 0; background: none; font: var(--font-small-semibold); color: var(--ui-text-brand); cursor: pointer; }
 

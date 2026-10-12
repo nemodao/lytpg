@@ -556,3 +556,13 @@ Replaces the History rules in §17 and the filter rules in §15.
 - **Row labels:** coins received show where they came from (`Trading`, `Daily check-in`, `Adjustment`); `Redeemed reward`; `Refund`; `Expired`; `Adjustment` (added or removed by hand).
 - **Date on a lot** (Available and Expired tabs, `Trading · 6 Oct`): the day the coins reached the balance, not the trading day. At launch both are the same day.
 - **Custom date range** (Earn history, Coins Expired and History): at most 30 days. After the first day is picked, days more than 29 days later cannot be chosen; the calendar says `You can select up to 30 days.`
+
+## 44. Loading, failed to load, and long lists (decided 12 Oct 2026, phase 2; design to be confirmed)
+
+These appear only with real data; the sample data is instant, so each has a preview state.
+
+- **Loading** (all three pages; state `loading`): the page header stays (on Earn, on its dark sky), and under it three grey placeholder cards that pulse gently: one short card with a circle and two bars, two cards with bars. The bottom bar stays. No tour, no live activity line. With reduced motion the placeholders do not pulse.
+- **Failed to load** (all three pages; state `error`): the header, then one card: an info icon, `Couldn’t load this page`, `Check your connection and try again.`, and the button `Try again`, which asks for the data again. The bottom bar stays, so the user can still leave or change page.
+- **Long lists** (Coins: Available, Expired, History): 15 rows at a time. When the user scrolls to the end of the list, a small spinner with `Loading more…` shows while the next 15 rows load, then they are added below. Changing the date range starts again from the first 15.
+- **Next rows failed to load** (state `more-error` on Coins): `Couldn’t load more. Try again` at the end of the list; tapping `Try again` loads them.
+- The Earn history has no paging: it is at most 30 days, one row a day.

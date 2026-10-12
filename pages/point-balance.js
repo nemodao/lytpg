@@ -3,7 +3,7 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { mountTour } from '../shared/tour.js';
-import { appHeader, badge, balanceBlock, coin, notice } from '../shared/components.js';
+import { appHeader, badge, balanceBlock, coin, loadMoreRow, notice, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('point-balance');
 // Preview states can empty one tab (`page.empty.available|expired|history`) without touching the others.
@@ -28,6 +28,16 @@ const TABS = ['available', 'expired', 'history'];
 let tab = TABS.includes(new URLSearchParams(location.search).get('tab')) ? new URLSearchParams(location.search).get('tab') : 'available';
 
 // `earnedOn` is the day the coins reached the balance (spec §43).
+// Paging (spec §44): each tab shows PAGE_SIZE rows, and loads the next page when the user reaches the end of the list.
+// API: `coin/listAvailable`, `coin/listExpired` and `coin/ledger` take pageNo / pageSize and return `total`. Ask for
+// the next page when the end row comes into view, until the rows shown reach `total`. In this demo the full list is
+// already in memory, so "loading" a page is a short wait (DEMO delay) and then more rows.
+const PAGE_SIZE = 15;
+const LOAD_DELAY_MS = 700; // DEMO: stands in for the request
+const shown = { available: PAGE_SIZE, expired: PAGE_SIZE, history: PAGE_SIZE };
+let loadFailed = Boolean(page.loadMoreError); // PREVIEW ONLY: the `more-error` state shows the failed-to-load row
+const moreRow = (total) => (total > shown[tab] ? loadMoreRow(ui, loadFailed) : '');
+
 const source = (item) => (['trading', 'daily_checkin', 'adjust'].includes(item.source) ? ui.t(`pb.source.${item.source}`) : ui.esc(item.source));
 
 const expiredLots = empty.expired ? [] : items.filter(inExpired);
@@ -73,8 +83,10 @@ function availableTab() {
   // Order: earning, active (soonest expiry first), then the "Fully used" section (soonest expiry first).
   const bySoonest = (a, b) => a.expiresAt.localeCompare(b.expiresAt);
   const of = (status) => availableLots.filter((item) => item.status === status);
-  const current = [...of('earning'), ...of('active').sort(bySoonest)];
-  const usedUp = of('used').sort(bySoonest);
+  const ordered = [...of('earning'), ...of('active').sort(bySoonest), ...of('used').sort(bySoonest)];
+  const visible = ordered.slice(0, shown.available);
+  const current = visible.filter((item) => item.status !== 'used');
+  const usedUp = visible.filter((item) => item.status === 'used');
   const usedSection = usedUp.length ? `
     <p class="group-title">${ui.t('pb.fullyUsed')}</p>
     <section class="card"><div class="list">${usedUp.map(itemRow).join('')}</div></section>` : '';
@@ -85,7 +97,8 @@ function availableTab() {
   return `
     ${notice(ui, { icon: 'info', tone: 'neutral', text: ui.t('pb.note') })}
     ${current.length ? `<section class="card"><div class="list">${current.map(itemRow).join('')}</div></section>` : `<section class="card"><p class="t-body c-3 list-none">${ui.t('pb.noActive')}</p></section>`}
-    ${usedSection}`;
+    ${usedSection}
+    ${moreRow(ordered.length)}`;
 }
 
 function expiredTab() {
@@ -93,8 +106,9 @@ function expiredTab() {
   return `
     ${filters.expired.chips()}
     <section class="card">
-      ${lots.length ? `<div class="list">${lots.map(itemRow).join('')}</div>` : `<p class="t-body c-3 list-none">${ui.t('pb.expired.none')}</p>`}
-    </section>`;
+      ${lots.length ? `<div class="list">${lots.slice(0, shown.expired).map(itemRow).join('')}</div>` : `<p class="t-body c-3 list-none">${ui.t('pb.expired.none')}</p>`}
+    </section>
+    ${moreRow(lots.length)}`;
 }
 
 // One movement of the balance (spec §43). Every credit is its own row with its time: coins from trading arrive several
@@ -118,7 +132,8 @@ function historyRow(entry) {
 function historyTab() {
   // Grouped by day (`date` is the local day of `happenedAt`), newest first, rows inside a day newest first.
   const groups = new Map();
-  history.filter((entry) => filters.history.includes(entry.date)).sort((a, b) => b.happenedAt.localeCompare(a.happenedAt)).forEach((entry) => {
+  const entries = history.filter((entry) => filters.history.includes(entry.date)).sort((a, b) => b.happenedAt.localeCompare(a.happenedAt));
+  entries.slice(0, shown.history).forEach((entry) => {
     if (!groups.has(entry.date)) groups.set(entry.date, []);
     groups.get(entry.date).push(entry);
   });
@@ -127,7 +142,8 @@ function historyTab() {
     ${groups.size ? [...groups].map(([date, entries]) => `
       <p class="group-title">${ui.isToday(date) ? ui.t('hist.today') : ui.date(date)}</p>
       <section class="card"><div class="list list--compact">${entries.map(historyRow).join('')}</div></section>`).join('')
-      : `<section class="card"><p class="t-body c-3 list-none">${ui.t('pb.history.none')}</p></section>`}`;
+      : `<section class="card"><p class="t-body c-3 list-none">${ui.t('pb.history.none')}</p></section>`}
+    ${moreRow(entries.length)}`;
 }
 
 function body() {
@@ -144,12 +160,31 @@ function render() {
     ${balanceBlock(ui, common, { card: true })}
     ${body()}
     ${filters.expired.sheet()}${filters.history.sheet()}`;
+  watchEnd();
+}
+
+// Load the next page when the end-of-list row scrolls into view.
+let loading = false;
+function loadMore() {
+  if (loading) return;
+  loading = true;
+  loadFailed = false;
+  setTimeout(() => { shown[tab] += PAGE_SIZE; loading = false; render(); }, LOAD_DELAY_MS);
+}
+function watchEnd() {
+  const end = app.querySelector('[data-load-more]');
+  if (!end) return;
+  new IntersectionObserver((entries, observer) => {
+    if (entries.some((entry) => entry.isIntersecting)) { observer.disconnect(); loadMore(); }
+  }).observe(end);
 }
 
 app.addEventListener('click', (event) => {
   const target = event.target.closest('[data-action]');
   if (!target) return;
-  if (filters.expired.handle(target, event) || filters.history.handle(target, event)) { render(); return; }
+  // A new range starts again from the first page.
+  if (filters.expired.handle(target, event) || filters.history.handle(target, event)) { shown[tab] = PAGE_SIZE; render(); return; }
+  if (target.dataset.action === 'load-more') { render(); loadMore(); return; }
   if (target.dataset.action === 'tab') tab = target.dataset.tab;
   else return;
   render();
@@ -161,6 +196,11 @@ document.addEventListener('keydown', (event) => {
   render();
 });
 
-render();
-mountNav(ui, common, 'points');
-mountTour(ui, common, 'point-balance');
+// Loading or failed to load: the header and a placeholder, nothing else (spec §44).
+if (showStatus(ui, common, app, appHeader(ui, { title: ui.t('pb.title') }))) {
+  mountNav(ui, common, 'points');
+} else {
+  render();
+  mountNav(ui, common, 'points');
+  mountTour(ui, common, 'point-balance');
+}

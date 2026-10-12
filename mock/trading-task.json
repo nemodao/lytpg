@@ -3,10 +3,14 @@
     {
       "title": "Page",
       "states": [
-        "ended"
+        "ended",
+        "loading",
+        "error"
       ],
       "descriptions": {
-        "ended": "The programme has ended: end message on the Today card, no HOT badge, no trade button."
+        "ended": "The programme has ended: end message on the Today card, no HOT badge, no trade button.",
+        "loading": "The page is waiting for its data: the header and grey placeholder cards.",
+        "error": "The data could not be loaded: a message and “Try again”."
       }
     },
     {
@@ -252,6 +256,16 @@
           "points": 0,
           "status": "not_started"
         }
+      }
+    },
+    "loading": {
+      "common": {
+        "view": "loading"
+      }
+    },
+    "error": {
+      "common": {
+        "view": "error"
       }
     }
   }

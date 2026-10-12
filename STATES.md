@@ -22,6 +22,8 @@ File: `mock/dashboard.json` · page: `pages/dashboard.html`
 |---|---|---|---|
 | Page | `first-visit` ("First visit (tour)") | Treats this as the first time Home is opened on the device: the guided tour opens by itself. Without it, the tour opens only once per device, or from the help button in the header. | `common.tour.firstVisit = true` |
 | Page | `no-task-trading` ("No Task: Trading") | The Trading Task is not shown to this user, because: (1) the Trading Task has been turned off; (2) the Trading Task has been blocked for this user (reason set in config, e.g. blacklist, A-Book); or (3) the Trading Task has been hidden from all users. The Daily Trading card and the Earn tab are hidden. | `common.program.tradingTask = false` |
+| Page | `loading` | The page is waiting for its data: the header and grey placeholder cards. | `common.view = "loading"` |
+| Page | `error` | The data could not be loaded: a message and “Try again”. | `common.view = "error"` |
 | Participation | `needs-kyc` · shared | User has not passed KYC yet. The Daily Trading card shows “How to start” (step 1 is the one to do) instead of today’s figures; the button reads “Verify my account”. | `common.program.joinRequirement = "kyc"` |
 | Participation | `needs-deposit` · shared | User passed KYC but has not made a first deposit. The Daily Trading card shows “How to start” (step 1 checked, step 2 is the one to do) instead of today’s figures; the button reads “Deposit now”. | `common.program.joinRequirement = "deposit"` |
 | Coin Balance | `empty` · shared | Balance is 0: no available, pending or expiring coins. | `common.balance.available = 0`<br>`common.balance.expiring = null` |
@@ -38,6 +40,8 @@ File: `mock/trading-task.json` · page: `pages/trading-task.html`
 | Group | State | What it shows | Data it changes |
 |---|---|---|---|
 | Page | `ended` | The programme has ended: end message on the Today card, no HOT badge, no trade button. | `common.program.ended = true` |
+| Page | `loading` | The page is waiting for its data: the header and grey placeholder cards. | `common.view = "loading"` |
+| Page | `error` | The data could not be loaded: a message and “Try again”. | `common.view = "error"` |
 | Participation | `needs-kyc` · shared | User has not passed KYC and has no trading account yet. The Today card shows “How to start” (step 1 is the one to do) with the rate range and “Verify my account”. No account picker and no rates table. | `common.program.joinRequirement = "kyc"` |
 | Participation | `needs-deposit` · shared | User passed KYC but has not made a first deposit and has no trading account yet. The Today card shows “How to start” (step 1 checked, step 2 is the one to do) with the rate range and “Deposit now”. No account picker and no rates table. | `common.program.joinRequirement = "deposit"` |
 | Today trading task | `credited` | All of today's coins are in the balance: the Today card reads “Credited to your balance” instead of the earning line. | `page.today.status = "credited"` |
@@ -55,9 +59,12 @@ File: `mock/point-balance.json` · page: `pages/point-balance.html`
 
 | Group | State | What it shows | Data it changes |
 |---|---|---|---|
+| Page | `loading` | The page is waiting for its data: the header and grey placeholder cards. | `common.view = "loading"` |
+| Page | `error` | The data could not be loaded: a message and “Try again”. | `common.view = "error"` |
 | Coin Balance | `empty` · shared | Balance is 0: no available, pending or expiring coins. Tabs still show their lists. | `common.balance.available = 0`<br>`common.balance.expiring = null` |
 | Coin Balance | `expiring` · shared | 1,200 coins expire within 10 days: red warning under the balance; that lot is highlighted in Available. | `common.balance.expiring.points = 1200`<br>`common.balance.expiring.date = "2026-10-20"`<br>`page.items = [8 items]` |
 | Tabs | `available-empty` | The Available tab has no lots: it shows “No available coins.” | `page.empty.available = true` |
 | Tabs | `expired-empty` | The Expired tab has nothing: “No expired coins in this period.” | `page.empty.expired = true` |
 | Tabs | `history-empty` | The History tab has nothing: “No activity in this period.” | `page.empty.history = true` |
 | Tabs | `has-used` | Adds fully used lots: two still before expiry, shown muted in a “Fully used” section at the end of Available (Remain 0), and one used up and then expired, shown in Expired with “Expired 0” (inside Last 7 days). | `page.usedItems = [3 items]` |
+| Tabs | `more-error` | The next page of a long list failed to load: “Couldn’t load more. Try again” at the end of the list (open the History tab with Last 30 days). | `page.loadMoreError = true` |

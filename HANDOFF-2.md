@@ -118,6 +118,28 @@ Files: `pages/point-balance.js` (`historyLabel`, `historyRow`, `historyTab`, `so
 
 ---
 
+### 1.7 Loading, failed to load, paged lists (spec §44)
+
+- **`showStatus(ui, common, app, header)`** (new, `shared/components.js`): when `common.view` is `"loading"` or
+  `"error"` it renders the page header plus the loading skeleton or the error card, and returns true; the page then
+  only mounts the bottom bar. In the product, drive it from the requests: loading until every request of the page has
+  answered, error when any fails (no network, HTTP error, or a response without `success = true`). `Try again`
+  (`data-action="retry"`) repeats the requests; the demo reloads the page.
+- **Paged lists on Coins** (`pages/point-balance.js`): `PAGE_SIZE = 15` per tab (`shown`), `loadMoreRow(ui, failed)`
+  (new, `shared/components.js`) at the end of a list that has more rows, an `IntersectionObserver` on that row
+  (`watchEnd`) that calls `loadMore()`. In the demo `loadMore` waits `LOAD_DELAY_MS` and shows more of the list it
+  already has; with the API it requests `pageNo + 1` until the rows shown reach `total`. A new date range resets to
+  the first page.
+- New preview states: `loading`, `error` (all pages), `more-error` (Coins). New PREVIEW ONLY data: `view`,
+  `loadMoreError`.
+
+Files: `shared/components.js`, `shared/components.css` (`.skeleton*`, `.page-error*`, `.load-more`, `.spinner`),
+`pages/dashboard.js` (page body now inside `if (showStatus(...)) … else …`), `pages/trading-task.js`,
+`pages/point-balance.js`, `copy/en.json` (`common.retry`, `common.loading`, `common.loadingMore`,
+`common.loadMoreError`, `error.title`, `error.body`), the three page mock files.
+
+---
+
 ## 2. Files to update
 
 | File | Change |
@@ -149,7 +171,8 @@ name. Function and class names that existed in handoff 1 are unchanged, except `
 | Removed | top-level `rates[]`, `balance.pending`, `program.refreshMinutes`, `pendingItems[]` (Coins) |
 | Same name, wider meaning | `program.joinRequirement` (decides what the Today card and the Earn page show), `program.dailyMaxPoints` (may be null), `today.status` and `history[].status` (also `"earning"`), `selectedAccountId` (may be null), `accounts` (may be empty) |
 
-Preview states: removed `has-pending` (all pages) and `in-day` (Earn); added `credited`, `delayed`, `no-account` (Earn).
+Preview states: removed `has-pending` (all pages) and `in-day` (Earn); added `credited`, `delayed`, `no-account` (Earn),
+`loading` and `error` (all pages), `more-error` (Coins).
 `needs-kyc` and `needs-deposit` have new descriptions.
 
 ---

@@ -3,7 +3,7 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
-import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList } from '../shared/components.js';
+import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('trading-task');
 const { program, accounts } = common;
@@ -301,5 +301,6 @@ document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && (sheetOpen || termsOpen || historyFilter.isOpen())) { sheetOpen = false; termsOpen = false; historyFilter.close(); render(); }
 });
 
-render();
+// Loading or failed to load: the header on its sky and a placeholder, nothing else (spec §44).
+if (!showStatus(ui, common, app, `<div class="hero">${heroBg}${appHeader(ui, { title: ui.t('task.title') })}</div>`)) render();
 mountNav(ui, common, 'earn');

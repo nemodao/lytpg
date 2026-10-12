@@ -52,6 +52,7 @@ Example file: `mock/common.json`
 | `liveFeed.points.bands[].max` | number | `29` | DEMO generator: highest amount of a band. |
 | `liveFeed.points.bands[].weight` | number | `70` | DEMO generator: share of entries drawn from this band. |
 | `liveFeed.intervalSeconds[]` | number | `[1, 2, 3, 4, 5, 6]` | DEMO generator: possible waits between two entries, in seconds. |
+| `view` | "loading" | "error", optional |  | PREVIEW ONLY. "loading" or "error" replaces the page content with the loading placeholder or the error message. In the product this comes from the state of the requests, not from data. |
 | `tour.firstVisit` | boolean | `false` | PREVIEW ONLY. Forces the guided tour to open as on a first visit. |
 | `tour.simulatedBalance` | number | `3410` | Figure the balance counts up to in tour step 3 (a simulation). No effect if the real balance is already higher. |
 
@@ -110,6 +111,7 @@ Example file: `mock/point-balance.json` (`default`)
 | `history[].source` | "trading" | "daily_checkin" | "adjust" | "redeem" | `"trading"` | Where the coins came from or went to; label of an earn row (copy key pb.source.<source>). |
 | `history[].points` | number | `80` | Signed amount: positive added, negative taken. One row per credit: several earn rows a day are normal and are not merged. |
 | `usedItems[]` | same shape as items[] | `[]` | PREVIEW ONLY. Lots added by the has-used state. Same remark. |
+| `loadMoreError` | optional |  | PREVIEW ONLY. Shows the failed-to-load row at the end of a long list. |
 | `empty.available` | optional |  | PREVIEW ONLY. Empties the Available tab. |
 | `empty.expired` | optional |  | PREVIEW ONLY. Empties the Expired tab. |
 | `empty.history` | optional |  | PREVIEW ONLY. Empties the History tab. |

@@ -78,6 +78,40 @@ export function rateRangeLine(ui, common) {
   return `<div class="join__rates num"><p class="grow">${range ? `<strong>${range}</strong>` : ''}${range && cap ? ' · ' : ''}${cap}</p></div>`;
 }
 
+// Page status (spec §44): what a page shows instead of its content while its data is on the way, or when it could not
+// be loaded. `header` is the page's own header markup. Returns true when it took over the page.
+// API: drive this from the real requests: "loading" from the moment a page opens until all of its requests have
+// answered; "error" when any of them fails (no network, HTTP error, or a response without success = true). In this
+// demo `common.view` is set by the `loading` and `error` preview states, and "Try again" simply reloads the page;
+// with the API it repeats the page's requests.
+export function showStatus(ui, common, app, header) {
+  if (!common.view) return false;
+  const bar = (size) => `<span class="skeleton__bar skeleton__bar--${size}"></span>`;
+  const loading = `
+    <div class="skeleton" role="status" aria-label="${ui.t('common.loading')}">
+      <section class="card skeleton__card skeleton__card--row"><span class="skeleton__dot"></span><div class="grow stack stack--tight">${bar('s')}${bar('l')}</div></section>
+      <section class="card skeleton__card">${bar('m')}${bar('full')}${bar('full')}${bar('l')}</section>
+      <section class="card skeleton__card">${bar('m')}${bar('full')}${bar('l')}</section>
+    </div>`;
+  const error = `
+    <section class="card page-error" role="alert">
+      <span class="page-error__icon">${ui.icon('info')}</span>
+      <div class="stack stack--tight">
+        <h2 class="t-title-s">${ui.t('error.title')}</h2>
+        <p class="t-body c-3">${ui.t('error.body')}</p>
+      </div>
+      <button class="btn btn--primary btn--lg btn--block" type="button" data-action="retry">${ui.t('common.retry')}</button>
+    </section>`;
+  app.innerHTML = header + (common.view === 'loading' ? loading : error);
+  app.addEventListener('click', (event) => { if (event.target.closest('[data-action="retry"]')) location.reload(); });
+  return true;
+}
+
+// End of a paged list (spec §44): a spinner while the next page loads, or a retry line when it failed.
+export const loadMoreRow = (ui, failed) => (failed
+  ? `<p class="load-more t-caption c-3">${ui.t('common.loadMoreError')} <button class="text-btn" type="button" data-action="load-more">${ui.t('common.retry')}</button></p>`
+  : `<p class="load-more t-caption c-3" data-load-more><span class="spinner" aria-hidden="true"></span>${ui.t('common.loadingMore')}</p>`);
+
 // "How it works" rules. One list, shown in the Trading Task's How it works tab and in the guided tour (step 2):
 // change it here and both change.
 export function rulesList(ui, common) {
