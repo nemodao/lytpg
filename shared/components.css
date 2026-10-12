@@ -277,7 +277,6 @@
 .join__step--done .join__mark { background: var(--accent-success); color: var(--on-brand); }
 .join__rates { display: flex; align-items: baseline; gap: var(--spacing-8); font: var(--font-x-small-regular); color: var(--ui-text-tertiary); }
 .join__rates strong { font: var(--font-x-small-semibold); color: var(--ui-text-primary); }
-.join__rates .details { flex: none; font: var(--font-x-small-medium); color: var(--ui-text-secondary); }
 
 /* Nudge towards the button: after --nudge-after the finger (the guided tour's hand) grows in from its fingertip under
    the button, then double-taps it (about 0.65 s), waits 4 s, and repeats. On each tap the button answers as if pressed: it sinks slightly and takes

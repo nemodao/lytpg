@@ -34,45 +34,48 @@ export const joinLabel = (ui, common) =>
 // Which step the user must take before joining (`kyc` | `deposit`), or null. Used as the button's data-intent.
 export const joinIntent = (common) => common.program.joinRequirement || null;
 
-// "How to start" (spec §39): what the Today card shows on Home and Earn while the user still needs KYC or a first
+// "How to start" (spec §39, §42): what the Today card shows on Home and Earn while the user still needs KYC or a first
 // deposit. Three steps (the one to do now is bold, finished ones get a green check), a one-line summary of the earning
-// rates with a link to the full rates, and the button for the current step. `flat` lays the steps straight on the card.
+// rates, and the button for the current step. `flat` lays the steps straight on the card.
 // Nudge: JOIN_NUDGE_AFTER seconds after the card appears, a finger (the tour's hand) comes in under the button and
 // keeps tapping it; the button answers each tap as if pressed. `nudged` = the finger already came in (the page
 // re-rendered): it is simply there and goes on tapping.
-// API: three values feed this block.
-//   1. `program.joinRequirement` ("kyc" | "deposit" | null) picks the step to do now and the button. The API must send
-//      the user's real status: "kyc" until identity is verified, then "deposit" until the first deposit, then null.
-//   2. `rates[].ptsPerLot` gives the "70–100 coins per lot" range (lowest and highest rate above 0).
-//   3. `program.dailyMaxPoints` gives "up to 2,000 a day".
+// API: `program.joinRequirement` ("kyc" | "deposit" | null) is not sent by the loyalty API. Derive it from the app's
+// sign-in data: kycApproveTime = 0 -> "kyc"; kycApproveTime > 0 and firstDepositTime = 0 -> "deposit"; else null.
 // The button carries data-intent "kyc" or "deposit": the host app attaches the KYC / Deposit deeplink.
 const JOIN_NUDGE_AFTER = 3;
-export function joinPanel(ui, common, { ratesHref, flat = false, nudged = false }) {
-  const { program, rates } = common;
+export function joinPanel(ui, common, { flat = false, nudged = false } = {}) {
+  const { program } = common;
   const current = ['kyc', 'deposit'].indexOf(program.joinRequirement);
   const steps = ['kyc', 'deposit', 'trade'].map((id, index) => {
     const state = index < current ? 'done' : index === current ? 'current' : 'later';
     const mark = state === 'done' ? ui.icon('check', 'icon--sm') : index + 1;
     return `<li class="join__step join__step--${state}"${state === 'current' ? ' aria-current="step"' : ''}><span class="join__mark num">${mark}</span><span>${ui.t(`join.step.${id}${state === 'done' ? '.done' : ''}`)}</span></li>`;
   });
-  // Lowest and highest rate across the symbol groups that earn.
-  const perLot = rates.map((rate) => rate.ptsPerLot).filter((pts) => pts > 0);
-  const min = Math.min(...perLot);
-  const max = Math.max(...perLot);
-  const range = min === max ? ui.t('join.rates.single', { max: ui.num(max) }) : ui.t('join.rates', { min: ui.num(min), max: ui.num(max) });
   return `
     <div class="today join${flat ? ' today--flat' : ''}">
       <h3 class="join__title">${ui.t('join.title')}</h3>
       <ol class="join__steps">${steps.join('')}</ol>
     </div>
-    <div class="join__rates num">
-      <p class="grow"><strong>${range}</strong> · ${ui.t('join.rates.cap', { max: ui.num(program.dailyMaxPoints) })}</p>
-      <a class="details above" href="${ratesHref}">${ui.t('join.seeRates')}${ui.icon('right', 'icon--sm')}</a>
-    </div>
+    ${rateRangeLine(ui, common)}
     <div class="join__cta above${nudged ? ' join__cta--nudged' : ''}" style="--nudge-after:${JOIN_NUDGE_AFTER}s">
       <button class="btn btn--primary btn--lg btn--block" type="button" data-intent="${joinIntent(common)}">${joinLabel(ui, common)}</button>
       <img class="join__finger" src="../assets/tour/finger.webp" alt="">
     </div>`;
+}
+
+// "70–100 coins per lot · up to 2,000 a day": the programme's lowest and highest rate and its daily maximum. Shown to
+// users who have no trading account, and so no rates table (spec §42).
+// API: `program.rateRange` ({ min, max } or null) and `program.dailyMaxPoints` (number or null). Each half is left out
+// when its value is missing; with neither, nothing is rendered.
+export function rateRangeLine(ui, common) {
+  const { rateRange, dailyMaxPoints } = common.program;
+  const range = !rateRange ? ''
+    : rateRange.min === rateRange.max ? ui.t('join.rates.single', { max: ui.num(rateRange.max) })
+      : ui.t('join.rates', { min: ui.num(rateRange.min), max: ui.num(rateRange.max) });
+  const cap = dailyMaxPoints ? ui.t('join.rates.cap', { max: ui.num(dailyMaxPoints) }) : '';
+  if (!range && !cap) return '';
+  return `<div class="join__rates num"><p class="grow">${range ? `<strong>${range}</strong>` : ''}${range && cap ? ' · ' : ''}${cap}</p></div>`;
 }
 
 // "How it works" rules. One list, shown in the Trading Task's How it works tab and in the guided tour (step 2):
@@ -88,7 +91,7 @@ export function rulesList(ui, common) {
       <li><span>${credit}</span></li>
       <li><span>${ui.md('rule.expire', { days: program.expiryDays })}</span></li>
       <li><span>${ui.md('rule.reset', { time: program.resetTime, tz: ui.t('tz') })}</span></li>
-      <li><span class="num">${ui.md('rule.max', { points: ui.num(program.dailyMaxPoints) })}</span></li>
+      ${program.dailyMaxPoints ? `<li><span class="num">${ui.md('rule.max', { points: ui.num(program.dailyMaxPoints) })}</span></li>` : ''}
     </ul>`;
 }
 

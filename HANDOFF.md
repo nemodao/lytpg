@@ -110,6 +110,7 @@ Rules that are computed in the page from data (not sent by the API): which tab a
 | `trade-account` (+ `data-account`) | Market screen, switched to that account |
 | `kyc` | KYC screen in the app |
 | `deposit` | Deposit screen in the app |
+| `open-account` (handoff 2) | Open a live trading account in the app |
 | `checkin` | Check in (future feature) |
 | `exit` | Close the webview |
 

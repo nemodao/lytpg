@@ -480,7 +480,7 @@ While the user still needs KYC or a first deposit (`program.joinRequirement` = `
 - Today's figures, the "Update every 30 mins" note and the live activity line are not shown in these two cases.
 - On Earn, the button now sits on the Today card; the Earning rates card below keeps the rates and has no button.
 
-Decided 8 Oct 2026: a user who has not passed KYC or made a first deposit **does see** the full Earning rates table on the Earn page (unchanged).
+Decided 8 Oct 2026 that these users see the full Earning rates table; **reversed on 12 Oct 2026, see §42:** they see only the rate range.
 
 **Sample rates and daily maximum changed (8 Oct 2026):** the sample data now uses Forex 80, Metal 100, Indices 90 and Other symbols 70 coins per lot, with a daily maximum of 2,000 coins (was 5 / 10 / 3 / 1 and 10,000). Every text that reads these values follows: the rates table, the rule `Earn up to 2,000 coins per day.`, and tour step 2 `Earn up to 100 coins per lot.` Earlier sections that quote 10 coins per lot or 10,000 a day are superseded.
 
@@ -532,3 +532,18 @@ Decided with the backend review of the real API. Replaces every earlier mention 
 - **Coins, Available tab:** today's lot of a same-day programme keeps its `Earning today` line and `Earning` badge.
 
 Preview states on Earn, group "Today trading task": `credited` and `delayed` replace `in-day`.
+
+## 42. Rates belong to a trading account; users without an account see only the rate range (decided 12 Oct 2026, phase 2)
+
+In the real system a rate is attached to a trading account, not to the programme. Replaces the rates rules in §15, §26 and §39.
+
+- **Earning rates table (Earn)** shows the rates of the selected trading account; choosing another account changes the table. Rows come in the order the system gives them (highest first, the catch-all row last). Row names: `Forex`, `Metal`, `Energy`, `Indices`, `Stocks`, `Others`, or a symbol such as `XAUUSD` when a rate is set for one symbol.
+- **A user without a trading account sees no rates table.** Instead: `70–100 coins per lot · up to 2,000 a day` (the programme's lowest and highest rate, and the daily maximum; one figure if lowest = highest; each half disappears when the programme has no value for it).
+  - Not yet KYC, or no first deposit: that line is on the "How to start" card. The `See rates` link is removed. On Earn there is no Trading account card: the page is the "How to start" card and the rules.
+  - KYC and first deposit done but no live trading account (only demo accounts, or the live account was removed): Earn shows the Today card as usual, then a card `Trading account` with `You don’t have a live trading account yet. Open one to start earning coins.`, the line above, and the button `Open a trading account`, which goes back to the app to open one.
+- **All accounts not eligible:** nothing special. The selected account shows `Not eligible` and the usual notice.
+- **Tour step 2** takes `Earn up to 100 coins per lot` from the programme's highest rate; without one the sentence is `Here’s how it works:`.
+- **Daily maximum:** if the programme has none, the rule `Earn up to … coins per day` is not shown.
+- **Who is "not yet KYC" / "no first deposit":** taken from the app's sign-in data, not from the loyalty system: KYC approval time = 0 → not yet KYC; KYC approved and first deposit time = 0 → no first deposit.
+
+New preview state on Earn: `no-account`.

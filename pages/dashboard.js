@@ -51,7 +51,7 @@ const taskCard = () => `
       ${detailsLink(taskHref)}
     </div>
     <p class="t-body c-2">${ui.t('task.desc')}</p>
-    ${common.program.joinRequirement ? joinPanel(ui, common, { ratesHref: taskHref }) : taskProgress()}
+    ${common.program.joinRequirement ? joinPanel(ui, common) : taskProgress()}
   </section>`;
 
 // Daily check-in (future feature, spec §20): hidden unless the `check-in` state is on. Style follows the review

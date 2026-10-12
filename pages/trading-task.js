@@ -3,12 +3,11 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createLiveFeed } from '../shared/live-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
-import { appHeader, badge, coin, joinPanel, notice, rulesList } from '../shared/components.js';
+import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList } from '../shared/components.js';
 
 const { common, page, ui } = await load('trading-task');
 const { program, accounts } = common;
 const { today, history } = page;
-const { rates } = common; // earning rates are shared data: the guided tour on Home reads them too
 
 const ended = program.ended;
 const inDay = program.creditMode === 'in-day';
@@ -67,7 +66,7 @@ const feed = createLiveFeed(ui, common);
 const joinCard = () => `
   <section class="card card--blend blend-pale-theme hero-card">
     <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
-    ${joinPanel(ui, common, { ratesHref: '#rates', flat: true, nudged })}
+    ${joinPanel(ui, common, { flat: true, nudged })}
   </section>`;
 
 function progressCard() {
@@ -99,32 +98,46 @@ function progressCard() {
     </section>`;
 }
 
-// Rates are set per symbol group only at this stage (spec §15).
-const rateRow = (label, pts) => `
+// Earning rates belong to a trading account (spec §42): the table shows the rates of the selected account.
+// API: `accounts[].rates[]` = { type, value, ptsPerLot }, highest rate first, the catch-all row last, no zero rows.
+//   type "symbol_group": value is one of RATE_GROUPS (label from copy key rate.<value>)
+//   type "symbol": value is a symbol such as XAUUSD, shown as is
+//   type "any": everything else; value is "other" or null, shown as "Others"
+const RATE_GROUPS = ['forex', 'metal', 'energy', 'index', 'stocks', 'other'];
+const rateLabel = (rate) => {
+  if (rate.type === 'any' || rate.value == null) return ui.t('rate.other');
+  if (rate.type === 'symbol_group' && RATE_GROUPS.includes(rate.value)) return ui.t(`rate.${rate.value}`);
+  return ui.esc(rate.value); // a symbol, or a group this version does not know yet
+};
+const rateRow = (rate) => `
   <div class="list__row">
-    <span class="grow t-label">${label}</span>
-    <span class="rate num c-2">${ui.tHtml('rate.value', { pts, coin: coin('coin--xs') })}</span>
+    <span class="grow t-label">${rateLabel(rate)}</span>
+    <span class="rate num c-2">${ui.tHtml('rate.value', { pts: ui.num(rate.ptsPerLot), coin: coin('coin--xs') })}</span>
   </div>`;
 
-const ratesList = () => `
-  <div class="list">
-    ${rates
-      .filter((rate) => rate.ptsPerLot > 0)
-      .map((rate) => rateRow(ui.t(`rate.${rate.group}`), rate.ptsPerLot))
-      .join('')}
-  </div>`;
+const ratesList = (item) => `<div class="list">${item.rates.map(rateRow).join('')}</div>`;
 
 function accountsCard() {
-  const rates = (intro) => `
-      <div class="stack stack--tight"><h3 class="t-label">${ui.t('tt.rates')}</h3><p class="t-body c-3">${intro}</p></div>
-      <div class="rates-frame">${ratesList()}</div>
+  const rates = (item) => `
+      <div class="stack stack--tight"><h3 class="t-label">${ui.t('tt.rates')}</h3><p class="t-body c-3">${ui.t('tt.rates.intro')}</p></div>
+      <div class="rates-frame">${ratesList(item)}</div>
       <p class="t-caption c-3">${ui.t('tt.rates.note')}</p>`;
-  // API: for these users `accounts` may be empty and `selectedAccountId` missing; neither is read in this branch.
-  // `rates` must still be sent: these users do see the rates table (decided, spec §39), and the Today card reads it.
-  // Users who still need KYC or a first deposit have no trading account yet: rates only (spec §26). Their button
-  // sits on the Today card, next to the step it belongs to (spec §39).
-  if (program.joinRequirement) {
-    return `<section class="card" id="rates">${rates(ui.t('tt.rates.introNoAccount'))}</section>`;
+  // Users who still need KYC or a first deposit have no trading account, and so no rates table: the Today card
+  // carries their rate range and their button (spec §39, §42).
+  if (program.joinRequirement) return '';
+  // Allowed to trade but no live account (only demo accounts, or the live one was removed): nothing to pick and no
+  // rates table; a message, the programme's rate range and a button back to the app to open an account (spec §42).
+  // API: `accounts` is empty and `selectedAccountId` is missing in this case.
+  if (!accounts.length) {
+    return `
+    <section class="card">
+      <div class="stack stack--tight">
+        <h2 class="t-title-s">${ui.t('tt.accounts.label')}</h2>
+        <p class="t-body c-3">${ui.t('tt.noAccount.body')}</p>
+      </div>
+      ${rateRangeLine(ui, common)}
+      ${ended ? '' : `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="open-account">${ui.t('tt.noAccount.cta')}</button>`}
+    </section>`;
   }
   const selected = account(selectedId);
   const single = accounts.length === 1;
@@ -141,7 +154,7 @@ function accountsCard() {
       </div>
       ${selector}
       ${selected.eligible
-        ? rates(ui.t('tt.rates.intro'))
+        ? rates(selected)
         : notice(ui, { icon: 'info', tone: 'warning', text: ui.t('tt.accounts.ineligible') })}
       ${tradeButton()}
     </section>`;

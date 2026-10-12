@@ -19,20 +19,79 @@
     "expiryWarningDays": 10,
     "tradingTask": true,
     "joinRequirement": null,
-    "termsUrl": "../assets/docs/terms-sample.pdf"
+    "termsUrl": "../assets/docs/terms-sample.pdf",
+    "rateRange": {
+      "min": 70,
+      "max": 100
+    }
   },
   "accounts": [
     {
       "id": "50000234",
-      "eligible": true
+      "eligible": true,
+      "rates": [
+        {
+          "type": "symbol_group",
+          "value": "metal",
+          "ptsPerLot": 100
+        },
+        {
+          "type": "symbol_group",
+          "value": "index",
+          "ptsPerLot": 90
+        },
+        {
+          "type": "symbol_group",
+          "value": "energy",
+          "ptsPerLot": 85
+        },
+        {
+          "type": "symbol_group",
+          "value": "forex",
+          "ptsPerLot": 80
+        },
+        {
+          "type": "symbol_group",
+          "value": "stocks",
+          "ptsPerLot": 75
+        },
+        {
+          "type": "any",
+          "value": "other",
+          "ptsPerLot": 70
+        }
+      ]
     },
     {
       "id": "50000519",
-      "eligible": true
+      "eligible": true,
+      "rates": [
+        {
+          "type": "symbol",
+          "value": "XAUUSD",
+          "ptsPerLot": 100
+        },
+        {
+          "type": "symbol_group",
+          "value": "metal",
+          "ptsPerLot": 90
+        },
+        {
+          "type": "symbol_group",
+          "value": "forex",
+          "ptsPerLot": 80
+        },
+        {
+          "type": "any",
+          "value": "other",
+          "ptsPerLot": 70
+        }
+      ]
     },
     {
       "id": "50000871",
-      "eligible": false
+      "eligible": false,
+      "rates": []
     }
   ],
   "liveFeed": {
@@ -82,23 +141,5 @@
   "tour": {
     "firstVisit": false,
     "simulatedBalance": 3410
-  },
-  "rates": [
-    {
-      "group": "forex",
-      "ptsPerLot": 80
-    },
-    {
-      "group": "metal",
-      "ptsPerLot": 100
-    },
-    {
-      "group": "indices",
-      "ptsPerLot": 90
-    },
-    {
-      "group": "other",
-      "ptsPerLot": 70
-    }
-  ]
+  }
 }

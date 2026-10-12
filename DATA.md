@@ -22,7 +22,7 @@ Example file: `mock/common.json`
 | `balance.expiring.date` | YYYY-MM-DD |  | Date of the nearest expiry (not displayed; kept for reference). |
 | `program.ended` | boolean | `false` | true when the programme is over: Earn shows the end message, no trade button. |
 | `program.creditMode` | "delayed" | "in-day" | `"in-day"` | When earned coins are credited: "delayed" (after creditDelayDays) or "in-day" (through the day). |
-| `program.dailyMaxPoints` | number | `2000` | Most coins a user can earn per day. Shown in the rules. |
+| `program.dailyMaxPoints` | number or null | `2000` | Most coins a user can earn per day, or null for no maximum. Shown in the rules and next to the rate range; null hides both. |
 | `program.minHoldMinutes` | number | `3` | Minimum time a position must be held to earn. Shown in the rules. |
 | `program.creditDelayDays` | number | `0` | Days between the trading day and crediting, in "delayed" mode. Shown in the rules. |
 | `program.expiryDays` | number | `30` | Days after crediting until coins expire. Shown in the rules. |
@@ -31,12 +31,16 @@ Example file: `mock/common.json`
 | `program.resetTime` | HH:MM | `"00:00"` | Local time (WIB) at which a new earning day starts. Shown in the rules. |
 | `program.expiryWarningDays` | number | `10` | Size of the "expiring soon" window in days: the balance warning text and the red highlight on lots. |
 | `program.tradingTask` | boolean | `true` | false when the trading task is off or hidden for this user: Home hides the Daily Trading card and the bottom bar drops the Earn tab. |
-| `program.joinRequirement` | null | "kyc" | "deposit" | `null` | What the user must still do before joining the trading task. When set, the Today card on Home and Earn shows "How to start" (three steps and the button for the current step) instead of today's figures, and Earn hides the account picker. |
+| `program.joinRequirement` | null | "kyc" | "deposit" | `null` | NOT SENT BY THE LOYALTY API: derive it from the app sign-in data (kycApproveTime = 0 -> "kyc"; kycApproveTime > 0 and firstDepositTime = 0 -> "deposit"; else null). When set, the Today card on Home and Earn shows "How to start" instead of today's figures, and Earn shows no account picker and no rates table. |
 | `program.termsUrl` | URL of a PDF, or null | `"../assets/docs/terms-sample.pdf"` | Address of the Terms & Conditions document. Earn shows a `Terms & Conditions` text button under the How it works rules; it opens this address inside a bottom sheet. The document is a PDF. Null or missing hides the button. The mock points at a sample PDF. |
-| `accounts[].id` | string | `"50000234"` | Trading account number, shown as is. |
+| `program.rateRange` | object or null |  | Lowest and highest earning rate of the programme, or null when it has no rate yet. Shown as "70–100 coins per lot" to users without a trading account, and its max in tour step 2. Null hides both. |
+| `program.rateRange.min` | number | `70` | Lowest coins per lot. |
+| `program.rateRange.max` | number | `100` | Highest coins per lot. One figure is shown when min = max. |
+| `accounts[].id` | string | `"50000234"` | Trading account number, shown as is. The list is empty for users without a live account. |
 | `accounts[].eligible` | boolean | `true` | Whether this account takes part in the programme (false e.g. for an MT5 group that is excluded). |
-| `rates[].group` | "forex" | "metal" | "indices" | "other" | `"forex"` | Symbol group of an earning rate; its label is copy key rate.<group>. |
-| `rates[].ptsPerLot` | number | `80` | Coins earned per lot in that group. Rows with 0 are hidden. The highest value fills "Earn up to {max} coins per lot" in the tour. |
+| `accounts[].rates[].type` | "symbol" | "symbol_group" | "any" | `"symbol_group"` | Kind of rate row. Empty list for an account that is not eligible. |
+| `accounts[].rates[].value` | string or null | `"metal"` | Symbol (shown as is), or group: forex, metal, energy, index, stocks, other (label = copy key rate.<value>). For type "any": "other" or null, shown as "Others". |
+| `accounts[].rates[].ptsPerLot` | number | `100` | Coins earned per lot for that row. Rows come highest first, the "any" row last, never 0. |
 | `liveFeed.openUtc.day` | weekday name | `"Sunday"` | Start of the weekly window in which the live activity line shows (UTC). |
 | `liveFeed.openUtc.time` | HH:MM | `"17:00"` | Start time of that window (UTC). |
 | `liveFeed.closeUtc.day` | weekday name | `"Friday"` | End of the weekly window (UTC). |
@@ -80,7 +84,7 @@ Example file: `mock/trading-task.json` (`default`)
 | `today.creditAt` | ISO 8601 | `"2026-10-17T01:00:00+07:00"` | When coins of a delayed programme start to arrive (not displayed). |
 | `today.updatedAt` | ISO 8601 | `"2026-10-14T14:35:00+07:00"` | When today's figures were last refreshed (not displayed). |
 | `today.capped` | boolean | `false` | true when today's maximum is reached. |
-| `selectedAccountId` | string | `"50000234"` | Trading account currently selected; must match one of common.accounts[].id. |
+| `selectedAccountId` | string or null | `"50000234"` | Trading account selected when the page opens; one of common.accounts[].id. Missing or null when the user has no account. |
 | `history[].date` | YYYY-MM-DD | `"2026-10-13"` | A past trading day. |
 | `history[].lots` | number | `1.4` | Lots traded that day. |
 | `history[].points` | number | `120` | Coins earned that day. |

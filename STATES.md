@@ -38,15 +38,16 @@ File: `mock/trading-task.json` · page: `pages/trading-task.html`
 | Group | State | What it shows | Data it changes |
 |---|---|---|---|
 | Page | `ended` | The programme has ended: end message on the Today card, no HOT badge, no trade button. | `common.program.ended = true` |
-| Participation | `needs-kyc` · shared | User has not passed KYC and has no trading account yet. The Today card shows “How to start” (step 1 is the one to do) with “Verify my account”; below it only the earning rates, no account picker. | `common.program.joinRequirement = "kyc"` |
-| Participation | `needs-deposit` · shared | User passed KYC but has not made a first deposit and has no trading account yet. The Today card shows “How to start” (step 1 checked, step 2 is the one to do) with “Deposit now”; below it only the earning rates, no account picker. | `common.program.joinRequirement = "deposit"` |
+| Participation | `needs-kyc` · shared | User has not passed KYC and has no trading account yet. The Today card shows “How to start” (step 1 is the one to do) with the rate range and “Verify my account”. No account picker and no rates table. | `common.program.joinRequirement = "kyc"` |
+| Participation | `needs-deposit` · shared | User passed KYC but has not made a first deposit and has no trading account yet. The Today card shows “How to start” (step 1 checked, step 2 is the one to do) with the rate range and “Deposit now”. No account picker and no rates table. | `common.program.joinRequirement = "deposit"` |
 | Today trading task | `credited` | All of today's coins are in the balance: the Today card reads “Credited to your balance” instead of the earning line. | `page.today.status = "credited"` |
 | Today trading task | `delayed` | Programme that credits coins some days after the trading day (not used at launch). The rule reads “credited 3 days after the trading day”; the Today card shows the lots, 0 coins and no status line; today has no row in History until its coins arrive. | `common.program.creditMode = "delayed"`<br>`common.program.creditDelayDays = 3`<br>`page.today.status = "pending"`<br>`page.today.points = 0` |
 | Today trading task | `capped` | Today's max coins reached: capped message on the Today card, plain “Trade now” button. | `page.today.capped = true`<br>`page.today.lots = 23.8`<br>`page.today.points = 2000` |
 | Today trading task | `no-trades-today` | No trades yet today: 0 lots and 0 coins, with a hint to make the first trade. | `page.today.lots = 0`<br>`page.today.points = 0` |
 | Today trading task | `market-closed` · shared | Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7). | `common.liveFeed.clock = "2026-10-17T10:00:00+07:00"` |
-| Trading account | `single-account` | User has only one trading account: a fixed field instead of the account picker. | `common.accounts = [{"id": "50000234", "eligible": true}]` |
+| Trading account | `single-account` | User has only one trading account: a fixed field instead of the account picker. | `common.accounts = [1 items]` |
 | Trading account | `ineligible-selected` | The selected trading account belongs to an MT5 group that cannot take part in the programme, for example an A-Book group or any group not listed in the programme config. Shows a warning and “Switch to an eligible account”. | `page.selectedAccountId = "50000871"` |
+| Trading account | `no-account` | User passed KYC and made a first deposit but has no live trading account (only demo accounts, or the live account was removed). Instead of the account picker and rates: a short message, the rate range and “Open a trading account”. | `common.accounts = []`<br>`page.selectedAccountId = null`<br>`page.today.lots = 0`<br>`page.today.points = 0`<br>`page.today.status = "not_started"` |
 
 ## Coin Balance (Coins tab)
 

@@ -132,7 +132,9 @@ const markSeen = () => { try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) 
 // `page` is this page's id.
 export function mountTour(ui, common, page) {
   // Placeholders in the copy: {max} is the highest earning rate ("Earn up to {max} coins per lot").
-  const vars = { max: ui.num(Math.max(...common.rates.map((rate) => rate.ptsPerLot))) };
+  // API: `program.rateRange.max` is the highest rate of the programme; without it step 2 drops the figure.
+  const topRate = common.program.rateRange?.max;
+  const vars = { max: ui.num(topRate || 0) };
   const params = new URLSearchParams(location.search);
   const app = document.getElementById('app');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -254,7 +256,7 @@ export function mountTour(ui, common, page) {
 
     const body = step.list
       ? `<ul class="tour__list">${step.list.map((icon, item) => `<li><img src="../assets/tour/step-${step.id}-${icon}.webp" alt=""><span>${ui.md(`tour.${step.id}.item${item + 1}`, vars)}</span></li>`).join('')}</ul>`
-      : `<p class="t-body c-2 num">${ui.md(`tour.${step.id}.body`, vars)}</p>`;
+      : `<p class="t-body c-2 num">${ui.md(step.id === 2 && !topRate ? 'tour.2.bodyNoRate' : `tour.${step.id}.body`, vars)}</p>`;
     layer = document.createElement('div');
     layer.className = 'tour';
     layer.innerHTML = `
