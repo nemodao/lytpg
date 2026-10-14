@@ -4,8 +4,8 @@
 `61a36ba`, `0803bff`, `06d92c4`). Everything not named here is unchanged. Exact line changes in the reference:
 `CHANGES-since-handoff-3.diff`. Behaviour: `spec.md` §48.
 
-Six items from the project owner's manual test of the UAT app on real phones (14 Oct 2026). Items 1, 2, 3 and 5 are
-fixes in your app only; items 2, 4 and 6 also changed the reference code.
+Seven items from the project owner's manual test of the UAT app on real phones (14 Oct 2026). Items 1, 2, 3 and 5
+are fixes in your app only; items 2, 4, 6 and 7 also changed the reference code.
 
 ---
 
@@ -105,13 +105,34 @@ in `<span class="coin-glow">`, and `.coin-glow::before` draws the glow as
 
 ---
 
+## 7. Dates always show the year
+
+**Seen:** K4, Coins: no date shows a year.
+
+**Decision:** every short date shows the year, always, not only when it differs from the current year. This replaces
+item 3 of `HANDOFF-3.md`.
+
+**Reference change** (`shared/app.js`, `ui.date`): `19 Oct 2026` (was `19 Oct` this year, `21 Mar 2027` another
+year). `ui.date` is used for every short date: lot lines and expiry lines in Available and Expired, the day titles of
+the coin history, the custom range chip. Earn history rows already used `ui.dateYear` (same format).
+
+**Fix:** your `formatDate` (commit `61a36ba`) always appends the year.
+
+**Check:** K4, Coins, Available: "Trading · 22 Sep 2026", "Expires 21 Mar 2027", "Adjustment · 11 Oct 2026",
+"Expires 19 Oct 2026"; History: day titles "13 Oct 2026"; Earn → History → Custom: chip "… 2026 – … 2026".
+
+---
+
 ## Not a change: K9 and K10 during this test
 
 - **K9** showed `90 seconds`, no daily-maximum rule, rates with XAUUSD 120 and `Earn up to 120`: that is the
   programme's **state A**, which is correct for state A. The UAT data was reloaded during the day and K9 went back
   to state A.
-- **K10** still showed today's figures on Home: the UAT build did not yet include the handoff 3 fixes. The code is
-  correct (checked on a local UAT build).
+- **K10** still showed today's figures on Home, and K4 showed no year on dates: the UAT build the owner tested did
+  not include the handoff 3 commits (`dcd3a77`, `61a36ba`, `0803bff`, `06d92c4`). On a local build of `uat` at
+  `06d92c4`, K10 Home shows only "This program has ended". **Please rebuild UAT from the latest `uat` and confirm the
+  commit.** Quick sign that UAT is up to date: K10, Earn shows only "This program has ended" with nothing under it
+  (the old build still shows the trading account and the rules under the message).
 
 ## Data contract and states
 

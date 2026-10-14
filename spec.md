@@ -609,3 +609,4 @@ New preview state on Home: `ended`.
 - **The pages feel like the app:** text cannot be selected, a long press shows no menu and no link preview, images cannot be dragged.
 - **The tapping finger** under the "How to start" button stays above the cards that follow it; it is never hidden behind them.
 - **The glow around the large balance coin** is drawn as a soft gradient behind the coin, not as a CSS shadow filter, which some phones painted as a square box.
+- **Dates always carry the year** (decided 14 Oct 2026, replaces the §47 rule "year only when not the current year"): "19 Oct 2026", "Expires 21 Mar 2027", day titles of the coin history "13 Oct 2026", lot lines "Trading · 22 Sep 2026", date filter chip "1 Oct 2026 – 14 Oct 2026".

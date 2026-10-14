@@ -12,6 +12,7 @@ and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 - No text selection, long-press menu or link preview.
 - The tapping finger stays above the next card.
 - Coin glow drawn as a gradient, not a filter.
+- Dates always show the year (replaces the handoff 3 rule).
 - `DATA.md` and `STATES.md` unchanged.
 
 ## Handoff 3 — fixes from the QA with real UAT accounts (14 Oct 2026)
