@@ -3,6 +3,17 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 4 — fixes from the owner's manual test (14 Oct 2026)
+
+**Full description for developers: `HANDOFF-4.md`.** Spec §48.
+
+- Trade buttons open the market; `Open a trading account` opens KYC.
+- Terms & Conditions opens in the bottom sheet inside the page (PDF viewer on Android).
+- No text selection, long-press menu or link preview.
+- The tapping finger stays above the next card.
+- Coin glow drawn as a gradient, not a filter.
+- `DATA.md` and `STATES.md` unchanged.
+
 ## Handoff 3 — fixes from the QA with real UAT accounts (14 Oct 2026)
 
 **Full description for developers: `HANDOFF-3.md`.** Spec §47.

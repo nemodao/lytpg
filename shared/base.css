@@ -9,6 +9,11 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; }
+/* Feel like the app, not a web page (spec §48): no text selection, no long-press menu or link preview, no image
+   dragging. Fields stay selectable. The host app should also turn off link previews in its webview. */
+html { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+input, textarea, [contenteditable] { -webkit-user-select: text; user-select: text; }
+img { -webkit-user-drag: none; }
 html[data-theme="dark"] { color-scheme: dark; }
 
 body {

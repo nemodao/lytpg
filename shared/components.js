@@ -146,7 +146,7 @@ export function balanceBlock(ui, common, { href = '', card = false } = {}) {
   <section class="balance ${card ? 'card card--soft' : ''}" data-tour="balance">
     ${href ? `<a class="card-link" href="${href}" aria-label="${ui.t('balance.title')}" data-track="loyalty_card_click" data-track-target="coins"></a>` : ''}
     <div class="balance-row">
-      ${coin('coin--lg')}
+      <span class="coin-glow">${coin('coin--lg')}</span>
       <div class="grow">
         <p class="t-label c-3">${ui.t('balance.title')}</p>
         <p class="balance-number num">${ui.num(available)}</p>

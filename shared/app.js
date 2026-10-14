@@ -5,6 +5,9 @@ import { fetchCommon, fetchCopy, fetchPage, fetchPreview } from './data-source.j
 
 const params = new URLSearchParams(location.search);
 
+// No long-press menu (Android) or right-click menu: the pages should feel like the app (spec §48).
+document.addEventListener('contextmenu', (event) => event.preventDefault());
+
 // States that mean the same on several pages. Links between pages carry them along, so a Point Balance state
 // set on the Dashboard is still on when you open Point Balance (and back).
 const SHARED_STATES = ['empty', 'market-closed', 'needs-kyc', 'needs-deposit', 'expiring'];

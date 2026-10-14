@@ -600,3 +600,12 @@ The pages send analytics events to Google Tag Manager, which forwards them to GA
   - The line "Pending coins will still be credited." is removed.
 
 New preview state on Home: `ended`.
+
+## 48. Fixes from the owner's manual test on the UAT app (decided 14 Oct 2026)
+
+- **Trade buttons** (`Trade now`, `Trade with account …`) open the app's market screen, like `Verify my account` and `Deposit now` open KYC and Deposit. `Trade with account …` also switches the app to that account.
+- **`Open a trading account` opens the KYC screen.** Business rule: a user who has completed KYC always has a live trading account (it may be not eligible or blocked, but it exists). A user without one has not completed KYC.
+- **Terms & Conditions opens inside the page,** in the bottom sheet of §40, never in an external browser. On Android, where the webview cannot show a PDF in a frame, the PDF is drawn inside the sheet by a PDF viewer library.
+- **The pages feel like the app:** text cannot be selected, a long press shows no menu and no link preview, images cannot be dragged.
+- **The tapping finger** under the "How to start" button stays above the cards that follow it; it is never hidden behind them.
+- **The glow around the large balance coin** is drawn as a soft gradient behind the coin, not as a CSS shadow filter, which some phones painted as a square box.

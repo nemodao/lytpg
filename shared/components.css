@@ -164,7 +164,11 @@
 .balance { position: relative; display: flex; flex-direction: column; gap: var(--spacing-stack); margin-block: var(--spacing-8); }
 .balance-row { display: flex; align-items: center; gap: var(--spacing-12); }
 /* Balance coin with a soft glow in the theme hue; drop-shadow follows the coin's outline, not its box. */
-.coin--lg { width: var(--size-control-lg); height: var(--size-control-lg); filter: drop-shadow(0 0 var(--spacing-10) color-mix(in srgb, var(--bg-blend) 60%, transparent)); }
+/* Large coin with a soft glow. The glow is a radial gradient behind the image, not a CSS filter: a drop-shadow
+   filter is sometimes painted as a square box in mobile webviews (spec §48). */
+.coin--lg { position: relative; width: var(--size-control-lg); height: var(--size-control-lg); }
+.coin-glow { position: relative; display: grid; place-items: center; flex: none; }
+.coin-glow::before { content: ""; position: absolute; inset: calc(var(--spacing-10) * -1); border-radius: var(--radius-pill); background: radial-gradient(closest-side, color-mix(in srgb, var(--bg-blend) 60%, transparent), transparent); pointer-events: none; }
 .balance-number { font: var(--font-display-m); }
 .balance-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-8); }
 .balance.card { margin-block: 0; }
