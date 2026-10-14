@@ -68,7 +68,8 @@ function makeUi(copy, common) {
     // Arrays from the copy file (month and weekday names).
     list: (key) => text(key),
     dateYear: (iso) => { const [year, month, day] = dayKey(iso).split('-'); return `${Number(day)} ${copy.months[Number(month) - 1]} ${year}`; },
-    date: (iso) => { const [, month, day] = dayKey(iso).split('-'); return `${Number(day)} ${copy.months[Number(month) - 1]}`; },
+    // Day and month; the year is added when it is not the current year, e.g. "21 Mar 2027" (spec §47).
+    date: (iso) => { const [year, month, day] = dayKey(iso).split('-'); return `${Number(day)} ${copy.months[Number(month) - 1]}${year === today.slice(0, 4) ? '' : ` ${year}`}`; },
     time: (iso) => hourMinute.format(new Date(iso)),
     dayKey,
     isToday: (iso) => dayKey(iso) === today,

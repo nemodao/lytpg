@@ -33,6 +33,9 @@
 .task .details { color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
 
 .task__cta { align-self: center; min-width: 60%; }
+/* Programme over: one message line in place of today's progress. */
+.task-ended { display: flex; align-items: center; gap: var(--spacing-12); padding: var(--spacing-12); border-radius: var(--radius-card-inner); background: var(--blend-glass); }
+.task-ended__icon { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--blend-glass); }
 
 
 /* ---- Rewards mosaic: one tall tile on the left, two stacked on the right ---- */

@@ -3,6 +3,16 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 3 — fixes from the QA with real UAT accounts (14 Oct 2026)
+
+**Full description for developers: `HANDOFF-3.md`.** Spec §47.
+
+- Delayed programme: no "after your first trade" line while coins wait.
+- Singular wording: "1 day", "1 minute".
+- Dates show the year when it is not the current year.
+- Programme ended: only "This program has ended", nothing to tap, on Home and Earn.
+- `DATA.md` unchanged. `STATES.md`: new Home state `ended`.
+
 ## Handoff 2 — UI changes, API mapping and event tracking (12 Oct 2026)
 
 **Full description for developers: `HANDOFF-2.md`** (what changed since handoff 1, file by file, and the values to map from the API).

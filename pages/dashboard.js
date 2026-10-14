@@ -43,8 +43,16 @@ const taskProgress = () => `
     ${feed.html()}
     <button class="btn btn--onblend btn--lg task__cta above" type="button" data-intent="trade" data-track="loyalty_trade_click" data-track-capped="${task.capped}">${ui.t('task.trade')}</button>`;
 
+// Programme over: the card only says so; it is not a link and has nothing to tap (spec §47).
+const endedCard = () => `
+  <section class="card card--blend blend-pale-theme task">
+    ${cupIcon}
+    <div class="task__head"><h2 class="t-title-s grow">${ui.t('task.title')}</h2></div>
+    <div class="task-ended"><span class="task-ended__icon">${ui.icon('info')}</span><p class="t-body-strong">${ui.t('tt.ended.title')}</p></div>
+  </section>`;
+
 // Users who still need KYC or a first deposit see "How to start" in place of today's progress (spec §39).
-const taskCard = () => `
+const taskCard = () => common.program.ended ? endedCard() : `
   <section class="card card--blend blend-pale-theme task">
     <a class="card-link" href="${taskHref}" aria-label="${ui.t('task.title')}" data-track="loyalty_card_click" data-track-target="earn"></a>
     ${cupIcon}
@@ -106,7 +114,7 @@ if (showStatus(ui, common, app, header)) {
     </div>
     <div class="mosaic blend-pink">${rewards.map(reward).join('')}</div>`;
 
-  if (hasTask && task.capped && !common.program.joinRequirement) trackView('loyalty_daily_cap_view');
+  if (hasTask && task.capped && !common.program.joinRequirement && !common.program.ended) trackView('loyalty_daily_cap_view');
   feed.start(app);
   mountNav(ui, common, 'home');
 

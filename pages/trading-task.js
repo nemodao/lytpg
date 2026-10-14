@@ -51,14 +51,14 @@ const eligibleBadge = (item) =>
   item.eligible ? badge('green', ui.t('badge.eligible')) : badge('neutral', ui.t('badge.notEligible'));
 
 // The hero always keeps the sky and the cup; the Today card under the cup changes with the page state (spec §23).
-// Ended: the programme is over, so the card carries that message instead of today's progress (no HOT badge).
+// Ended: the programme is over. The page shows only this message under the cup: no figures, no account, no rules or
+// history, nothing to tap (spec §47). No HOT badge.
 const endedCard = () => `
   <section class="card card--blend blend-pale-theme hero-card hero-message">
     <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
     <span class="hero-message__icon">${ui.icon('info')}</span>
     <div class="stack stack--tight">
       <h2 class="t-body-strong">${ui.t('tt.ended.title')}</h2>
-      <p class="t-body c-2">${ui.t('tt.ended.body')}</p>
     </div>
   </section>`;
 
@@ -81,9 +81,12 @@ function progressCard() {
   let footer;
   if (today.capped) { footer = foot('trophy', ui.t('task.capped')); trackView('loyalty_daily_cap_view'); }
   else if (today.status === 'earning') footer = foot('clock', ui.t('tt.status.earning'));
+  // `pending` (delayed programmes): coins that are not credited yet are never shown, so no line at all (spec §41).
+  // Checked before "no trade yet": while coins wait, the lots read 0 although the user has traded (spec §47).
+  else if (today.status === 'pending') footer = '';
   else if (!hasTrades) footer = foot('chart', ui.t('tt.empty.body'));
   else if (today.status === 'credited') footer = foot('check', ui.t('tt.status.credited'));
-  else footer = ''; // `pending` (delayed programmes): coins that are not credited yet are never shown (spec §41)
+  else footer = '';
   return `
     <section class="card card--blend blend-pale-theme hero-card">
       <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
@@ -270,9 +273,7 @@ function render() {
         ${ended ? '' : '<img class="hero-hot" src="../assets/images/hot-badge.png" alt="">'}
       </div>
     </div>
-    ${ended ? endedCard() : progressCard()}
-    ${accountsCard()}
-    ${infoCard()}
+    ${ended ? endedCard() : `${progressCard()}${accountsCard()}${infoCard()}`}
     ${sheetOpen ? sheet() : ''}
     ${termsOpen ? termsSheet() : ''}
     ${historyFilter.sheet()}`;

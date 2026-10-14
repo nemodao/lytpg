@@ -588,3 +588,15 @@ The pages send analytics events to Google Tag Manager, which forwards them to GA
 - Every event carries the page, the colour mode, whether the user has a trading task, the step still to take (KYC / deposit / none), the crediting mode, and the balance as a range.
 - Never sent: account numbers, the exact balance, names or other personal data. The client id is attached by GTM at sign-in, not by the pages.
 - In the demo, a floating `Events` button (bottom left) lists the events as they are sent, so tracking can be checked without GTM. It is not part of the product.
+
+## 47. Fixes from the QA with real UAT accounts (decided 14 Oct 2026)
+
+- **Delayed programme, coins waiting:** the Today card shows no line under the figures, as §41 says. It used to show "Your lots and coins will show up here after your first trade." because the lots read 0 while coins wait; the `pending` status is now checked first.
+- **Singular wording:** "1 day" and "1 minute" instead of "1 days" and "1 minutes", in the rules for crediting, expiry and holding time.
+- **Dates carry the year when it is not the current year:** "Expires 21 Mar 2027", "Expired 4 Oct 2025". Dates of the current year stay "21 Mar". Applies to every short date (lots, history group titles, date filter chips).
+- **Programme ended:** the pages only say that the programme has ended, and nothing can be tapped.
+  - Home: the Daily Trading card keeps its cup and title and shows "This program has ended". No figures, no `Details`, no button, and the card is not a link.
+  - Earn: under the cup, only "This program has ended". No Today figures, no trading account, no rates, no rules or history.
+  - The line "Pending coins will still be credited." is removed.
+
+New preview state on Home: `ended`.

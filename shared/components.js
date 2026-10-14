@@ -124,12 +124,12 @@ export function rulesList(ui, common) {
   const { program } = common;
   const credit = program.creditMode === 'in-day'
     ? ui.md('rule.credit.inDay', { minutes: program.creditWithinMinutes })
-    : ui.md('rule.credit.delayed', { days: program.creditDelayDays });
+    : ui.md(program.creditDelayDays === 1 ? 'rule.credit.delayed.one' : 'rule.credit.delayed', { days: program.creditDelayDays });
   return `
     <ul class="rules">
-      ${program.minHoldSeconds > 0 ? `<li><span>${program.minHoldSeconds % 60 ? ui.md('rule.hold.seconds', { seconds: program.minHoldSeconds }) : ui.md('rule.hold', { minutes: program.minHoldMinutes })}</span></li>` : ''}
+      ${program.minHoldSeconds > 0 ? `<li><span>${program.minHoldSeconds % 60 ? ui.md('rule.hold.seconds', { seconds: program.minHoldSeconds }) : ui.md(program.minHoldMinutes === 1 ? 'rule.hold.one' : 'rule.hold', { minutes: program.minHoldMinutes })}</span></li>` : ''}
       <li><span>${credit}</span></li>
-      <li><span>${ui.md('rule.expire', { days: program.expiryDays })}</span></li>
+      <li><span>${ui.md(program.expiryDays === 1 ? 'rule.expire.one' : 'rule.expire', { days: program.expiryDays })}</span></li>
       <li><span>${ui.md('rule.reset', { time: program.resetTime, tz: ui.t('tz') })}</span></li>
       ${program.dailyMaxPoints ? `<li><span class="num">${ui.md('rule.max', { points: ui.num(program.dailyMaxPoints) })}</span></li>` : ''}
     </ul>`;

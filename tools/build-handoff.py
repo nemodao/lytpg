@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'dist' / 'handoff'
-INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'HANDOFF.md', 'HANDOFF-2.md', 'TRACKING.md', 'CHANGELOG.md', 'DATA.md', 'STATES.md', 'spec.md']
+INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'HANDOFF.md', 'HANDOFF-2.md', 'HANDOFF-3.md', 'TRACKING.md', 'CHANGELOG.md', 'DATA.md', 'STATES.md', 'spec.md']
 SKIP = shutil.ignore_patterns('.DS_Store', '_*', 'coin-hex.png', '__pycache__')
 DEMO_BLOCK = re.compile(r'\n[ \t]*<!-- DEMO ONLY: start.*?<!-- DEMO ONLY: end -->[ \t]*', re.S)
 FORBIDDEN = ['demo/', 'intents.en.json', 'Internal Explanation', 'DEMO ONLY', 'tracklog']
