@@ -70,6 +70,7 @@ export function joinPanel(ui, common, { flat = false, nudged = false, source = '
       <ol class="join__steps">${steps.join('')}</ol>
     </div>
     ${rateRangeLine(ui, common)}
+    ${guest ? `<p class="t-caption c-3">${ui.t('join.ratesByAccount')}</p>` : ''}
     <div class="join__cta above${nudged ? ' join__cta--nudged' : ''}" style="--nudge-after:${JOIN_NUDGE_AFTER}s">
       <button class="btn btn--primary btn--lg btn--block" type="button" data-intent="${joinIntent(common)}" data-track="loyalty_${joinIntent(common)}_click"${guest ? ` data-track-source="${source}"` : ''}>${joinLabel(ui, common)}</button>
       <img class="join__finger" src="../assets/tour/finger.webp" alt="">
@@ -172,8 +173,8 @@ export const loadMoreRow = (ui, failed) => (failed
 
 // "How it works" rules. One list, shown in the Trading Task's How it works tab and in the guided tour (step 2):
 // change it here and both change.
-// API: the holding-time rule is left out when `program.minHoldSeconds` is 0 (no minimum), and the daily-maximum
-// rule when `program.dailyMaxPoints` is null.
+// API: the holding-time rule is left out when `program.minHoldSeconds` is 0 (no minimum), the daily-maximum rule when
+// `program.dailyMaxPoints` is null, and the expiry rule when `program.expiryDays` is null.
 export function rulesList(ui, common) {
   const { program } = common;
   const credit = program.creditMode === 'in-day'
@@ -183,7 +184,7 @@ export function rulesList(ui, common) {
     <ul class="rules">
       ${program.minHoldSeconds > 0 ? `<li><span>${program.minHoldSeconds % 60 ? ui.md('rule.hold.seconds', { seconds: program.minHoldSeconds }) : ui.md(program.minHoldMinutes === 1 ? 'rule.hold.one' : 'rule.hold', { minutes: program.minHoldMinutes })}</span></li>` : ''}
       <li><span>${credit}</span></li>
-      <li><span>${ui.md(program.expiryDays === 1 ? 'rule.expire.one' : 'rule.expire', { days: program.expiryDays })}</span></li>
+      ${program.expiryDays != null ? `<li><span>${ui.md(program.expiryDays === 1 ? 'rule.expire.one' : 'rule.expire', { days: program.expiryDays })}</span></li>` : ''}
       <li><span>${ui.md('rule.reset', { time: program.resetTime, tz: ui.t('tz') })}</span></li>
       ${program.dailyMaxPoints ? `<li><span class="num">${ui.md('rule.max', { points: ui.num(program.dailyMaxPoints) })}</span></li>` : ''}
     </ul>`;

@@ -30,12 +30,12 @@ const getJSON = (path) =>
 // API: one call to the loyalty API. `endpoint` is the path after /pointSys/app/point/, e.g. 'tradingTask/get'.
 // Real call: POST, JSON body { clientId, timestamp (seconds), ...body }, same authentication as the app's check-in
 // calls. Anything other than `success === true` is a failure: throw, and the page shows its error view (spec §44).
-// Here: the sample answer in mock/api/<endpoint with "/" replaced by "-">.json.
+// Here: the sample answer in mock/api/<endpoint with every "/" replaced by "-">.json.
 const cache = new Map();
 function request(endpoint, body = {}) {
   const key = endpoint + JSON.stringify(body);
   if (!cache.has(key)) {
-    cache.set(key, getJSON(`../mock/api/${endpoint.replace('/', '-')}.json`).then((answer) => {
+    cache.set(key, getJSON(`../mock/api/${endpoint.replaceAll('/', '-')}.json`).then((answer) => {
       if (answer.success !== true) throw new Error(`${endpoint}: ${answer.message}`);
       return answer; // { result, timestamp (server time, milliseconds), ... }
     }));
@@ -67,15 +67,31 @@ const activityList = () => sessionCached('hsb-loyalty-activity-v3', () => getJSO
 // Date ranges and paging. API: the three list endpoints take from / to (at most 30 days) and pageNo / pageSize;
 // send the range of the date filter and ask for the next page as the user scrolls (spec §43, §44). The demo asks
 // once and filters and pages in the browser.
-const taskGet = () => result('tradingTask/get');
+// Guest mode (spec §53): the app opened the page without a token. API: decide it from the token the app gives (none =
+// guest). In this demo: ?source=api&guest=1. Guests call guest/tradingTask/get (no Authorization, no clientId; still
+// the x-auth-key header): the same answer as tradingTask/get for a user with no live account (today not_started, all
+// 0, accounts []), so the same adapter reads it. They never call an endpoint that needs a token.
+const GUEST = USE_API && new URLSearchParams(location.search).get('guest') === '1';
+const TASK_ENDPOINT = GUEST ? 'guest/tradingTask/get' : 'tradingTask/get';
+const taskGet = () => result(TASK_ENDPOINT);
 
 async function commonFromApi() {
+  if (GUEST) {
+    const [taskAnswer, ui] = await Promise.all([request(TASK_ENDPOINT), uiOnly()]);
+    const task = taskAnswer.result;
+    return {
+      guest: true,
+      now: new Date(taskAnswer.timestamp).toISOString(),
+      balance: { available: 0, expiring: null },
+      program: { ...toProgram(task, null), joinRequirement: 'signup' },
+      accounts: toAccounts(task),
+      tiers: [],
+      activity: await activityList(), // API: the recent activity API needs no token (spec §53); not created yet
+      tour: ui.tour,
+    };
+  }
   const [taskAnswer, summary, user, ui, tierInfo] = await Promise.all([request('tradingTask/get'), result('coin/summary'), signin(), uiOnly(), result('tradingTask/getTiers')]);
   const task = taskAnswer.result;
-  // API (guest mode, spec §53): when the app opened the page without a token, set `guest: true` and build `common`
-  // from the guest APIs instead (no token): the guest trading-task API for `program` (joinRequirement "signup") and
-  // `tiers`, balance 0, no accounts, the recent activity list. Never call the endpoints that need a token. The guest
-  // trading-task API is requested from the backend; until it exists the mock's `guest` state stands in.
   return {
     guest: false,
     now: new Date(taskAnswer.timestamp).toISOString(), // server time
@@ -103,6 +119,8 @@ function getOrders(path) {
 }
 
 async function pageFromApi(page) {
+  if (GUEST && page === 'point-balance') return toPointBalancePage(null, null, null, null); // nothing to ask for
+  if (GUEST && page === 'redemptions') return { orders: [], total: 0 }; // guests never reach it
   if (page === 'redemptions') {
     const first = toOrdersPage(await getOrders(`loyalty/orders?page=1&pageSize=${ORDERS_PAGE_SIZE}`));
     return { orders: first.orders, total: first.total };
@@ -111,7 +129,7 @@ async function pageFromApi(page) {
   if (page === 'dashboard') return toDashboardPage(task, await uiOnly());
   if (page === 'trading-task') {
     // No history call for a user without a trading task.
-    return toTradingTaskPage(task, task.tradingTask ? await result('tradingTask/getHistory') : null);
+    return toTradingTaskPage(task, task.tradingTask && !GUEST ? await result('tradingTask/getHistory') : null);
   }
   const tz = task.tradingTask ? { tzMinutes: task.program.tzMinutes } : {}; // without a task the backend uses GMT+7
   const [available, expired, ledger] = await Promise.all([

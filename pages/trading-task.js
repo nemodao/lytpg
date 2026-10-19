@@ -159,6 +159,7 @@ function accountsCard() {
         <p class="t-body c-3">${ui.t('tt.noAccount.body')}</p>
       </div>
       ${rateRangeLine(ui, common)}
+      <p class="t-caption c-3">${ui.t('join.ratesByAccount')}</p>
       ${ended ? '' : `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="open-account" data-track="loyalty_open_account_click">${ui.t('tt.noAccount.cta')}</button>`}
     </section>`;
   }
@@ -201,7 +202,7 @@ function upgradeRow(item) {
     </button>`;
 }
 
-// Coins per lot on every tier (spec §51), with `nowGroup`'s column highlighted ("Now"), or none (guests, spec §53).
+// Coins per lot on every tier (spec §51), with `nowGroup`'s column highlighted ("Now").
 // Rows: every row any tier lists, in the order of the top tier. A tier without that row: its catch-all row for a group
 // row; "—" for a symbol row (e.g. XAUUSD), because the page cannot tell which group a symbol falls in. Too wide for the
 // screen: the first column stays, the tiers scroll (render() brings the "Now" column to the middle).
@@ -229,17 +230,6 @@ function tierTable(nowGroup = null) {
       </table>
     </div>
     <p class="t-caption c-3">${ui.t('upgrade.table.unit')}</p>`;
-}
-
-// Guests (spec §53): no account, so the coins per lot of every tier, to show what each tier earns.
-// API: `common.tiers` comes from the guest trading-task API (no token) in guest mode.
-function tiersCard() {
-  if (!common.guest || !tiers.some((tier) => TIER_LABELS[tier.group])) return '';
-  return `
-    <section class="card">
-      <div class="stack stack--tight"><h2 class="t-title-s">${ui.t('tt.tiers.title')}</h2><p class="t-body c-3">${ui.t('tt.tiers.intro')}</p></div>
-      ${tierTable()}
-    </section>`;
 }
 
 // Tier sheet (spec §51) for the selected account: its tier among the four, then either the way up (lifetime deposit
@@ -410,7 +400,7 @@ function render() {
         ${ended ? '' : '<img class="hero-hot" src="../assets/images/hot-badge.png" alt="">'}
       </div>
     </div>
-    ${ended ? endedCard() : `${progressCard()}${feed.html()}${accountsCard()}${tiersCard()}${infoCard()}`}
+    ${ended ? endedCard() : `${progressCard()}${feed.html()}${accountsCard()}${infoCard()}`}
     ${sheetOpen ? sheet() : ''}
     ${termsOpen ? termsSheet() : ''}
     ${upgradeOpen ? upgradeSheet() : ''}

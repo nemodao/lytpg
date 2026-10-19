@@ -119,13 +119,15 @@ turns light purple.
   user back afterwards. It opens from Redeem, the balance, reward cards, `Explore all rewards` and `Redemption history`
   (`redeemAttrs(common, intent, from)`; `from` goes with `loyalty_login_prompt_view`).
 - **Home:** balance 0, rewards (guest API, same shape), recent activity, "Earn more coins" → Earn.
-- **Earn:** "How to start" (4 steps, rate line, Sign up / Log in), a card with the coins per lot of every tier
-  (`tiersCard`, `tierTable()` without a "Now" column), the rules and Terms without tabs. No account, no History, no
-  trade button.
+- **Earn:** "How to start" (4 steps, rate line, "Coins per lot depend on your trading account type.", Sign up / Log
+  in), the rules and Terms without tabs. No account, no History, no trade button, no tier table. The same sentence is
+  added to the "no live account" card of signed-in users. The expiry rule is left out when `expiryDays` is null.
 - **Coins:** balance 0 and a "Your coins will show up here" card with Sign up / Log in, in place of the tabs.
 - **Tour:** runs for guests too.
-- **API:** the guest trading-task API is requested from the backend (see `shared/data-source.js`, `commonFromApi`);
-  until it exists the mock's `guest` state stands in.
+- **API:** `POST /pointSys/app/point/guest/tradingTask/get` (name may change; on UAT when the backend says so): no
+  Authorization, no `clientId`, still `x-auth-key`; same answer as `tradingTask/get` for a user with no live account,
+  so `toProgram` / `toAccounts` read it. See `GUEST` / `TASK_ENDPOINT` in `shared/data-source.js` (demo:
+  `?source=api&guest=1`); sample `mock/api/guest-tradingTask-get.json`.
 
 ## 7. Bottom sheets grow with their content, up to 80% of the screen
 

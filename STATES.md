@@ -40,7 +40,7 @@ File: `mock/trading-task.json` · page: `pages/trading-task.html`
 
 | Group | State | What it shows | Data it changes |
 |---|---|---|---|
-| Sign-in | `guest` ("Guest (not signed in)") · shared | Not signed in: “How to start” with four steps (Create your free account first) and Sign up / Log in in place of today's figures; coins per lot of every tier; the rules and Terms; no account, no History tab, no trade button. | `common.guest = true`<br>`common.balance.available = 0`<br>`common.balance.expiring = null`<br>`common.program.joinRequirement = "signup"`<br>`common.accounts = []` |
+| Sign-in | `guest` ("Guest (not signed in)") · shared | Not signed in: “How to start” with four steps (Create your free account first), the rate line, “Coins per lot depend on your trading account type.” and Sign up / Log in in place of today's figures; then the rules and Terms; no account, no History tab, no trade button. | `common.guest = true`<br>`common.balance.available = 0`<br>`common.balance.expiring = null`<br>`common.program.joinRequirement = "signup"`<br>`common.accounts = []` |
 | Page | `ended` | The programme is over: under the cup only “This program has ended”. No figures, no account, no rules or history, nothing to tap. | `common.program.ended = true`<br>`page.history = [9 items]`<br>`page.today.lots = 0`<br>`page.today.points = 0`<br>`page.today.status = "not_started"` |
 | Page | `loading` | The page is waiting for its data: the header and grey placeholder cards. | `common.view = "loading"` |
 | Page | `error` | The data could not be loaded: a message and “Try again”. | `common.view = "error"` |
