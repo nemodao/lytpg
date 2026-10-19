@@ -41,6 +41,7 @@
 .blend-dim { color: color-mix(in srgb, var(--blend-fg) 78%, transparent); }
 /* Whole-card link: covers the card; controls marked .above stay tappable on top of it. */
 .card-link { position: absolute; inset: 0; border-radius: inherit; }
+button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .above { position: relative; }
 
 /* ---- Buttons ---- */
@@ -205,6 +206,10 @@
 /* "How to start" sheet that Redeem opens (spec §49): blend-pale-theme gives the step marks their colours, as on the
    Earn card; room under the button for the tapping finger, which would otherwise be cut by the sheet's edge. */
 .sheet--join .join__cta { margin-bottom: var(--size-control-lg); }
+/* Guests: "Already have an account? Log in" under the button (and under the finger in the sheet). */
+.text-btn.join__login { align-self: center; gap: var(--spacing-4); font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.join__login strong { color: var(--ui-text-brand); }
+.join__cta:has(+ .join__login) { margin-bottom: var(--size-control-lg); } /* room for the finger above the line */
 
 /* Document sheet (Terms & Conditions): fixed height, title row with a close button, and the document in a frame that
    scrolls by itself. The document is served by the backend and keeps its own (light) look in both themes. */

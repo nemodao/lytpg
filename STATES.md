@@ -7,7 +7,7 @@ A state is a named override of the mock data that shows one situation of a page.
 `mock/common.json` plus its own `mock/<page>.json`; a state merges its `common` and `page` parts over the
 default data (objects merge key by key, arrays and plain values replace).
 
-**Shared states** mean the same thing on every page and carry over through links between pages: `empty`, `needs-kyc`, `needs-deposit`, `expiring`, `activity-empty`.
+**Shared states** mean the same thing on every page and carry over through links between pages: `guest`, `empty`, `needs-kyc`, `needs-deposit`, `expiring`, `activity-empty`.
 
 Guided tour: `?tour=<step>` resumes a step, `?tour=off` keeps it closed (use it for screenshots).
 
@@ -20,6 +20,7 @@ File: `mock/dashboard.json` · page: `pages/dashboard.html`
 
 | Group | State | What it shows | Data it changes |
 |---|---|---|---|
+| Sign-in | `guest` ("Guest (not signed in)") · shared | Not signed in (the app opened the page without a token): balance 0; Redeem, the balance, reward cards and Explore all rewards open the sign-up sheet (“How to start” with “Create your free account” first, Sign up, Log in). Rewards and recent activity still show. | `common.guest = true`<br>`common.balance.available = 0`<br>`common.balance.expiring = null`<br>`common.program.joinRequirement = "signup"`<br>`common.accounts = []` |
 | Page | `first-visit` ("First visit (tour)") | Treats this as the first time Home is opened on the device: the guided tour opens by itself. Without it, the tour opens only once per device, or from the help button in the header. | `common.tour.firstVisit = true` |
 | Page | `no-task-trading` ("No Task: Trading") | The Trading Task is not shown to this user, because: (1) the Trading Task has been turned off; (2) the Trading Task has been blocked for this user (reason set in config, e.g. blacklist, A-Book); or (3) the Trading Task has been hidden from all users. The “earn coins” card in the rewards grid and the Earn tab are hidden. | `common.program.tradingTask = false` |
 | Page | `ended` | The programme is over: the “earn coins” card in the rewards grid is hidden; the grid shows rewards only. | `common.program.ended = true` |
@@ -39,6 +40,7 @@ File: `mock/trading-task.json` · page: `pages/trading-task.html`
 
 | Group | State | What it shows | Data it changes |
 |---|---|---|---|
+| Sign-in | `guest` ("Guest (not signed in)") · shared | Not signed in: “How to start” with four steps (Create your free account first) and Sign up / Log in in place of today's figures; coins per lot of every tier; the rules and Terms; no account, no History tab, no trade button. | `common.guest = true`<br>`common.balance.available = 0`<br>`common.balance.expiring = null`<br>`common.program.joinRequirement = "signup"`<br>`common.accounts = []` |
 | Page | `ended` | The programme is over: under the cup only “This program has ended”. No figures, no account, no rules or history, nothing to tap. | `common.program.ended = true`<br>`page.history = [9 items]`<br>`page.today.lots = 0`<br>`page.today.points = 0`<br>`page.today.status = "not_started"` |
 | Page | `loading` | The page is waiting for its data: the header and grey placeholder cards. | `common.view = "loading"` |
 | Page | `error` | The data could not be loaded: a message and “Try again”. | `common.view = "error"` |
@@ -65,6 +67,7 @@ File: `mock/point-balance.json` · page: `pages/point-balance.html`
 
 | Group | State | What it shows | Data it changes |
 |---|---|---|---|
+| Sign-in | `guest` ("Guest (not signed in)") · shared | Not signed in: balance 0 and a card inviting the user to sign up or log in, in place of the tabs. Redeem and Redemption history open the sign-up sheet. | `common.guest = true`<br>`common.balance.available = 0`<br>`common.balance.expiring = null`<br>`common.program.joinRequirement = "signup"`<br>`common.accounts = []` |
 | Page | `loading` | The page is waiting for its data: the header and grey placeholder cards. | `common.view = "loading"` |
 | Page | `error` | The data could not be loaded: a message and “Try again”. | `common.view = "error"` |
 | Participation | `needs-kyc` · shared | User has not passed KYC yet. Redeem opens a sheet with “How to start” (button “Verify my account”) instead of going to Tada. | `common.program.joinRequirement = "kyc"` |

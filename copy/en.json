@@ -251,5 +251,14 @@
   "orders.awb": "AWB number",
   "orders.trackingNumber": "Tracking number",
   "orders.noTracking": "Shipping details will show here once your item is on its way.",
-  "orders.recipient": "Delivery to"
+  "orders.recipient": "Delivery to",
+  "join.signup": "Sign up",
+  "join.step.signup": "Create your free account",
+  "join.login": "Already have an account? **Log in**",
+  "redeemGate.guestTitle": "Join to redeem rewards",
+  "redeemGate.guestBody": "Create your free account to earn coins when you trade and spend them on rewards.",
+  "guest.coins.title": "Your coins will show up here",
+  "guest.coins.body": "Sign up to earn coins on every lot you trade, then spend them on rewards.",
+  "tt.tiers.title": "Coins per lot by account tier",
+  "tt.tiers.intro": "Your trading account's tier sets how many coins each lot earns. The more you deposit, the higher the tier."
 }

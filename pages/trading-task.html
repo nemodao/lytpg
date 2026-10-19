@@ -2,6 +2,7 @@
 <!--
   Loyalty · Daily Trading
   States by part of the page (combine with commas):
+    Sign-in: guest  (not signed in, spec §53)
     Page: ended
     Participation: needs-kyc, needs-deposit  ("How to start" on the Today card, spec §39)
     Today trading task: first-trade, credited, delayed, capped, no-trades-today
@@ -10,7 +11,7 @@
     Trading account: single-account, ineligible-selected
   Example: trading-task.html?state=in-day,capped
     Page status: loading, error  (spec §44)
-  Shared states (empty, needs-kyc, needs-deposit, expiring, activity-empty) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
+  Shared states (guest, empty, needs-kyc, needs-deposit, expiring, activity-empty) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
 -->
 <html lang="en">
 <head>

@@ -5,7 +5,7 @@
 > then.
 
 **Who this is for:** developers (and their AI assistants) who have already applied handoff 4. Everything not named here
-is unchanged. Behaviour: `spec.md` §49–§52. Exact line changes: `CHANGES-since-handoff-4.diff` in the package.
+is unchanged. Behaviour: `spec.md` §49–§53. Exact line changes: `CHANGES-since-handoff-4.diff` in the package.
 
 Phase 3 was asked for by business users: Home sells rewards instead of trading, Earn pushes users to a higher account
 tier, and a new page lets users follow their reward orders.
@@ -109,32 +109,52 @@ turns light purple.
   403 when the order or the query's `clientId` is not the user's (show the error view). Adapter: `toOrdersPage`,
   `toOrder`; data: `fetchPage('redemptions')`, `fetchMoreOrders(page)`, `fetchOrder(ref)`.
 
-## 6. Bottom sheets grow with their content, up to 80% of the screen
+## 6. Guest mode: the pages before sign-in (spec §53)
+
+- **Guest = no token:** when the app opens the webview without a token, set `common.guest = true` and
+  `program.joinRequirement = "signup"`, balance 0, no accounts, and call only the guest APIs (rewards, trading task,
+  recent activity). Never call an endpoint that needs a token. Preview: shared state `guest`.
+- **Sign-up prompt:** the "How to start" sheet with a first step "Create your free account", `Sign up` (intent `signup`,
+  app screen `/sign-up`) and "Already have an account? Log in" (intent `login`, `/login`). The app does not bring the
+  user back afterwards. It opens from Redeem, the balance, reward cards, `Explore all rewards` and `Redemption history`
+  (`redeemAttrs(common, intent, from)`; `from` goes with `loyalty_login_prompt_view`).
+- **Home:** balance 0, rewards (guest API, same shape), recent activity, "Earn more coins" → Earn.
+- **Earn:** "How to start" (4 steps, rate line, Sign up / Log in), a card with the coins per lot of every tier
+  (`tiersCard`, `tierTable()` without a "Now" column), the rules and Terms without tabs. No account, no History, no
+  trade button.
+- **Coins:** balance 0 and a "Your coins will show up here" card with Sign up / Log in, in place of the tabs.
+- **Tour:** runs for guests too.
+- **API:** the guest trading-task API is requested from the backend (see `shared/data-source.js`, `commonFromApi`);
+  until it exists the mock's `guest` state stands in.
+
+## 7. Bottom sheets grow with their content, up to 80% of the screen
 
 `size/sheet-max-height` is now `"80vh"` (was 520px), for every sheet. A sheet is as tall as its content up to 80% of
 the screen height, then scrolls. **Token change:** this size token is now a string (`tokens/build.py` writes strings as
 they are). If your token script turns `tokens.json` into a theme, check it accepts a string size.
 
-## 7. Events (`TRACKING.md`): 28 events
+## 8. Events (`TRACKING.md`): 31 events
 
 - New: `loyalty_upgrade_open` (`tier`, `next_tier`); `loyalty_orders_open`, `loyalty_order_open` (`status`),
-  `loyalty_code_reveal` / `loyalty_code_copy` (`kind`), `loyalty_voucher_open`.
+  `loyalty_code_reveal` / `loyalty_code_copy` (`kind`), `loyalty_voucher_open`; guests: `loyalty_login_prompt_view`
+  (`from`), `loyalty_signup_click`, `loyalty_login_click` (`source`). `join_step` = `signup` marks every guest event.
 - New parameters: `reward_id` on `loyalty_reward_click` (`position` is now 1–10, the grid cell); `source` on
   `loyalty_join_card_view` (`card` | `redeem`) and on `loyalty_deposit_click` (`upgrade` from the tier sheet);
   `target` = `rewards` on `loyalty_card_click`; `page` = `orders`.
 - No longer sent from Home: `loyalty_trade_click`, `loyalty_daily_cap_view`, `loyalty_card_click` with `target` = `earn`
   from the old card (the "Earn more coins" card sends it now).
 
-## 8. Data contract and states
+## 9. Data contract and states
 
-- `DATA.md`: `common.activity[]`, `common.tiers[]`, `accounts[].group` and `lifetimeDeposit`, Home `rewards[]` (`id`,
+- `DATA.md`: `common.guest`, `program.joinRequirement` may be `signup`, `common.activity[]`, `common.tiers[]`, `accounts[].group` and `lifetimeDeposit`, Home `rewards[]` (`id`,
   `name`, `points`, `image`), the new `redemptions` page; removed Home `task`, `rewards[].alt` and `common.liveFeed`.
 - `STATES.md`: Home drops `capped`, `no-trades-today`, `market-closed`; adds `big-prices`, `activity-empty`. Earn drops
   `market-closed`; adds `activity-empty`, `tier-micro`, `tier-standard`, `tier-top`, `tier-reached`, `tier-unknown`.
-  Coins adds `needs-kyc`, `needs-deposit`. New page `redemptions`: `orders-empty`, `orders-more`, `loading`, `error`.
+  Coins adds `needs-kyc`, `needs-deposit`. All three add `guest` (shared). New page `redemptions`: `orders-empty`, `orders-more`, `loading`, `error`.
 
 ## Waiting on others
 
-- Backend: the rewards list API, the recent activity API, the tiers API; for Redemption history, an item count and an
-  image per order (optional).
+- Backend: the rewards list API (guest and signed-in, same shape), the recent activity API (needs no token; not created
+  yet), the tiers API, the guest trading-task API; for Redemption history, an item count and an image per order
+  (optional).
 - App team: the parameter names for the Deposit amount; Back on the Redemption history page.

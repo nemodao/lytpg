@@ -1,6 +1,18 @@
 {
   "stateGroups": [
     {
+      "title": "Sign-in",
+      "states": [
+        "guest"
+      ],
+      "labels": {
+        "guest": "Guest (not signed in)"
+      },
+      "descriptions": {
+        "guest": "Not signed in (the app opened the page without a token): balance 0; Redeem, the balance, reward cards and Explore all rewards open the sign-up sheet (“How to start” with “Create your free account” first, Sign up, Log in). Rewards and recent activity still show."
+      }
+    },
+    {
       "title": "Page",
       "states": [
         "first-visit",
@@ -279,6 +291,19 @@
     "activity-empty": {
       "common": {
         "activity": []
+      }
+    },
+    "guest": {
+      "common": {
+        "guest": true,
+        "balance": {
+          "available": 0,
+          "expiring": null
+        },
+        "program": {
+          "joinRequirement": "signup"
+        },
+        "accounts": []
       }
     }
   }

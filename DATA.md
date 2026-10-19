@@ -15,6 +15,7 @@ Example file: `mock/common.json`
 
 | Field | Type | Example | Meaning |
 |---|---|---|---|
+| `guest` | boolean | `false` | true when the app opened the page without a token (not signed in, spec §53). The pages then show their guest version and call only the guest APIs; program.joinRequirement is "signup", balance 0, no accounts. |
 | `now` | string | `"2026-10-14T14:35:00+07:00"` | Current server time, ISO 8601 with offset. Drives "today", days until expiry, and "3m ago" in the recent activity card. |
 | `activity[].type` | "gift" | "coin" | `"coin"` | Recent activity card on Home and Earn (spec §50), one list per session from the backend. Kind of entry: "gift" (a reward was redeemed) or "coin" (coins were earned). |
 | `activity[].client` | string | `"95***356"` | Client of that entry, already masked by the backend, e.g. "95***442". |
@@ -36,7 +37,7 @@ Example file: `mock/common.json`
 | `program.resetTime` | HH:MM | `"00:00"` | Local time (WIB) at which a new earning day starts. Shown in the rules. |
 | `program.expiryWarningDays` | number | `10` | Size of the "expiring soon" window in days: the balance warning text and the red highlight on lots. |
 | `program.tradingTask` | boolean | `true` | false when the trading task is off or hidden for this user: Home hides the "earn coins" card of the rewards grid and the bottom bar drops the Earn tab. |
-| `program.joinRequirement` | null | "kyc" | "deposit" | `null` | NOT SENT BY THE LOYALTY API: derive it from the app sign-in data (kycApproveTime = 0 -> "kyc"; kycApproveTime > 0 and firstDepositTime = 0 -> "deposit"; else null). When set, the Today card on Earn shows "How to start" instead of today's figures, Earn shows no account picker and no rates table, and every Redeem button (Home, Coins) opens the "How to start" sheet instead of Tada. |
+| `program.joinRequirement` | null | "signup" | "kyc" | "deposit" | `null` | Guests (no token): "signup". Otherwise NOT SENT BY THE LOYALTY API: derive it from the app sign-in data (kycApproveTime = 0 -> "kyc"; kycApproveTime > 0 and firstDepositTime = 0 -> "deposit"; else null). When set, the Today card on Earn shows "How to start" instead of today's figures, Earn shows no account picker and no rates table, and every Redeem button (Home, Coins) opens the "How to start" sheet instead of Tada. |
 | `program.termsUrl` | URL of a PDF, or null | `"../assets/docs/terms-sample.pdf"` | Address of the Terms & Conditions document. Earn shows a `Terms & Conditions` text button under the How it works rules; it opens this address inside a bottom sheet. The document is a PDF. Null or missing hides the button. The mock points at a sample PDF. |
 | `program.rateRange` | object or null |  | Lowest and highest earning rate of the programme, or null when it has no rate yet. Shown as "70–100 coins per lot" to users without a trading account, and its max in tour step 2. Null hides both. |
 | `program.rateRange.min` | number | `70` | Lowest coins per lot. |

@@ -47,7 +47,7 @@ function checkInCard() {
 const GRID_CELLS = 10;
 const EARN_CELL = 3; // the "earn coins" card is the 3rd cell
 const rewardCard = (item, position) => `
-  <button class="card reward-card" type="button" ${redeemAttrs(common, 'reward')} data-reward="${ui.esc(item.id)}" data-track="loyalty_reward_click" data-track-position="${position}" data-track-reward_id="${ui.esc(item.id)}">
+  <button class="card reward-card" type="button" ${redeemAttrs(common, 'reward', 'reward')} data-reward="${ui.esc(item.id)}" data-track="loyalty_reward_click" data-track-position="${position}" data-track-reward_id="${ui.esc(item.id)}">
     <span class="reward-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</span>
     <span class="reward-card__name">${ui.esc(item.name)}</span>
     <span class="reward-card__foot">
@@ -81,7 +81,7 @@ const moreCard = () => {
       <div class="stack stack--tight grow">
         <h3 class="t-title-s">${ui.t('rewards.more.title')}</h3>
         <p class="t-body c-2 num">${available > 0 ? ui.t('rewards.more.body', { points: ui.num(available) }) : ui.t('rewards.more.bodyNoCoins')}</p>
-        <button class="btn btn--primary btn--sm rewards-more__cta" type="button" ${redeemAttrs(common, 'redeem')} data-track="loyalty_card_click" data-track-target="rewards">${ui.t('rewards.more.button')}${ui.icon('right', 'icon--sm')}</button>
+        <button class="btn btn--primary btn--sm rewards-more__cta" type="button" ${redeemAttrs(common, 'redeem', 'explore')} data-track="loyalty_card_click" data-track-target="rewards">${ui.t('rewards.more.button')}${ui.icon('right', 'icon--sm')}</button>
       </div>
     </div>
   </section>`;

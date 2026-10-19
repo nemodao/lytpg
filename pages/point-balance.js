@@ -155,12 +155,23 @@ function body() {
     ${{ available: availableTab, expired: expiredTab, history: historyTab }[tab]()}`;
 }
 
+// Guests (spec §53): balance 0 and an invitation to sign up or log in, in place of the tabs.
+const guestCard = () => `
+  <section class="card guest-card" data-tour="tabs">
+    <span class="guest-card__art"><img src="../assets/images/home/coin-cup.webp" alt=""></span>
+    <div class="stack stack--tight">
+      <h2 class="t-title-s">${ui.t('guest.coins.title')}</h2>
+      <p class="t-body c-3">${ui.t('guest.coins.body')}</p>
+    </div>
+    <button class="btn btn--primary btn--lg btn--block" type="button" data-intent="signup" data-track="loyalty_signup_click" data-track-source="card">${ui.t('join.signup')}</button>
+    <button class="text-btn guest-card__login" type="button" data-intent="login" data-track="loyalty_login_click" data-track-source="card">${ui.md('join.login')}</button>
+  </section>`;
+
 function render() {
   app.innerHTML = `
     ${appHeader(ui, { title: ui.t('pb.title') })}
     ${balanceBlock(ui, common, { card: true, history: ui.href('redemptions.html') })}
-    ${body()}
-    ${filters.expired.sheet()}${filters.history.sheet()}`;
+    ${common.guest ? guestCard() : `${body()}${filters.expired.sheet()}${filters.history.sheet()}`}`;
   watchEnd();
 }
 

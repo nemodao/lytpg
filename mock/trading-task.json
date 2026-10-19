@@ -1,6 +1,18 @@
 {
   "stateGroups": [
     {
+      "title": "Sign-in",
+      "states": [
+        "guest"
+      ],
+      "labels": {
+        "guest": "Guest (not signed in)"
+      },
+      "descriptions": {
+        "guest": "Not signed in: “How to start” with four steps (Create your free account first) and Sign up / Log in in place of today's figures; coins per lot of every tier; the rules and Terms; no account, no History tab, no trade button."
+      }
+    },
+    {
       "title": "Page",
       "states": [
         "ended",
@@ -1332,6 +1344,19 @@
             "rates": []
           }
         ]
+      }
+    },
+    "guest": {
+      "common": {
+        "guest": true,
+        "balance": {
+          "available": 0,
+          "expiring": null
+        },
+        "program": {
+          "joinRequirement": "signup"
+        },
+        "accounts": []
       }
     }
   }

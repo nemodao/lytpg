@@ -18,7 +18,7 @@ Every analytics event the three pages send, when it is sent, and with which para
 | `page` | `home` \| `earn` \| `coins` \| `orders` | Page the event happened on (`orders`: Redemption history) |
 | `theme` | `light` \| `dark` | Colour mode on screen |
 | `has_task` | `true` \| `false` | Whether the user has a trading task |
-| `join_step` | `kyc` \| `deposit` \| `none` | Step the user still has to take before earning |
+| `join_step` | `signup` \| `kyc` \| `deposit` \| `none` | Step the user still has to take before earning; `signup` = guest, not signed in (spec §53) |
 | `credit_mode` | `in-day` \| `delayed` \| `none` | How the programme credits coins |
 | `balance_range` | `0` \| `1-999` \| `1000-4999` \| `5000+` | Available coins, as a range (the exact balance is never sent) |
 
@@ -67,7 +67,17 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 | `loyalty_tour_skip` | `Skip tour` is tapped | `step`: step it was skipped on | `shared/tour.js` |
 | `loyalty_tour_finish` | `Finish tour` is tapped | | `shared/tour.js` |
 
-### E. Redemption history (spec §52)
+### E. Guest mode (spec §53)
+
+| Event | Sent when | Extra parameters | Where |
+|---|---|---|---|
+| `loyalty_login_prompt_view` | A guest gets the sign-up sheet | `from`: `redeem` \| `balance` \| `reward` \| `explore` \| `history` (the button tapped) | `mountJoinSheet` in `shared/components.js` |
+| `loyalty_signup_click` | `Sign up` is tapped | `source`: `card` (Earn's "How to start", the Coins card) \| `redeem` (the sheet) | `joinPanel`, `pages/point-balance.js` |
+| `loyalty_login_click` | `Log in` is tapped | `source`: as above | `joinPanel`, `pages/point-balance.js` |
+
+Guests also send `loyalty_join_card_view` with `step` = `signup`.
+
+### F. Redemption history (spec §52)
 
 | Event | Sent when | Extra parameters | Where |
 |---|---|---|---|
@@ -77,19 +87,20 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 | `loyalty_code_copy` | `Copy` is tapped | `kind`: `code` \| `pin` \| `serial` \| `awb` \| `order` | `pages/redemptions.js` |
 | `loyalty_voucher_open` | `Open voucher` is tapped | | `pages/redemptions.js` |
 
-### F. Problems
+### G. Problems
 
 | Event | Sent when | Extra parameters | Where |
 |---|---|---|---|
 | `loyalty_error_view` | The "Couldn’t load this page" card is shown | | `showStatus` in `shared/components.js` |
 | `loyalty_retry_click` | `Try again` on that card is tapped | | `showStatus` |
 
-28 events in all.
+31 events in all.
 
 ## Questions these events answer
 
 | Question | Read it from |
 |---|---|
+| How many guests sign up, and from which button? | `loyalty_login_prompt_view` (by `from`) → `loyalty_signup_click`; any event split by `join_step` = `signup` |
 | How many users who see "How to start" go on to KYC, and to deposit? | `loyalty_join_card_view` (by `step`, and `source` = `redeem` for those who first tried to redeem) → `loyalty_kyc_click`, `loyalty_deposit_click` |
 | Do the pages send users to trade? | `loyalty_page_view` → `loyalty_trade_click`, split by `page` |
 | Does reaching the daily maximum stop users trading? | `loyalty_daily_cap_view` → `loyalty_trade_click` with `capped = true` |
@@ -106,7 +117,7 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 2. One GA4 Event tag using that trigger, event name `{{Event}}`.
 3. Create a Data Layer Variable for each parameter above and add them to the tag as event parameters.
 4. In GA4, register the parameters you want to break reports down by as custom dimensions (`page`, `join_step`,
-   `step`, `target`, `tab`, `range`, `trigger`, `balance_range`, `capped`, `source`, `reward_id`, `tier`, `next_tier`, `status`, `kind`).
+   `step`, `target`, `tab`, `range`, `trigger`, `balance_range`, `capped`, `source`, `reward_id`, `tier`, `next_tier`, `status`, `kind`, `from`).
 
 Notes:
 

@@ -72,7 +72,12 @@ const taskGet = () => result('tradingTask/get');
 async function commonFromApi() {
   const [taskAnswer, summary, user, ui, tierInfo] = await Promise.all([request('tradingTask/get'), result('coin/summary'), signin(), uiOnly(), result('tradingTask/getTiers')]);
   const task = taskAnswer.result;
+  // API (guest mode, spec §53): when the app opened the page without a token, set `guest: true` and build `common`
+  // from the guest APIs instead (no token): the guest trading-task API for `program` (joinRequirement "signup") and
+  // `tiers`, balance 0, no accounts, the recent activity list. Never call the endpoints that need a token. The guest
+  // trading-task API is requested from the backend; until it exists the mock's `guest` state stands in.
   return {
+    guest: false,
     now: new Date(taskAnswer.timestamp).toISOString(), // server time
     balance: toBalance(summary),
     program: toProgram(task, user),

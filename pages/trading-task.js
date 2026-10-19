@@ -201,6 +201,47 @@ function upgradeRow(item) {
     </button>`;
 }
 
+// Coins per lot on every tier (spec §51), with `nowGroup`'s column highlighted ("Now"), or none (guests, spec §53).
+// Rows: every row any tier lists, in the order of the top tier. A tier without that row: its catch-all row for a group
+// row; "—" for a symbol row (e.g. XAUUSD), because the page cannot tell which group a symbol falls in. Too wide for the
+// screen: the first column stays, the tiers scroll (render() brings the "Now" column to the middle).
+function tierTable(nowGroup = null) {
+  const shown = tiers.filter((tier) => TIER_LABELS[tier.group]);
+  const key = (rate) => `${rate.type}:${rate.value}`;
+  const rows = [];
+  [...shown].reverse().forEach((tier) => tier.rates.forEach((rate) => { if (!rows.some((row) => key(row) === key(rate))) rows.push(rate); }));
+  rows.sort((x, y) => Number(x.type === 'any') - Number(y.type === 'any')); // catch-all row last
+  const valueIn = (rates, row) => {
+    const same = rates.find((rate) => key(rate) === key(row));
+    if (same) return same.ptsPerLot;
+    return row.type === 'symbol' ? null : rates.find((rate) => rate.type === 'any')?.ptsPerLot ?? null;
+  };
+  const isNow = (tier) => nowGroup && tier.group === nowGroup;
+  const cell = (tier, row) => {
+    const value = valueIn(tier.rates, row);
+    return `<td class="num${isNow(tier) ? ' is-now' : ''}">${value == null ? '—' : ui.num(value)}</td>`;
+  };
+  return `
+    <div class="tier-table" data-tier-table>
+      <table>
+        <thead><tr><th scope="col"><span class="sr-only">${ui.t('upgrade.table.group')}</span></th>${shown.map((tier) => `<th scope="col"${isNow(tier) ? ' class="is-now"' : ''}>${isNow(tier) ? `<span class="tier-table__now">${ui.t('upgrade.table.now')}</span>` : ''}${tierName(tier.group)}</th>`).join('')}</tr></thead>
+        <tbody>${rows.map((row) => `<tr><th scope="row">${rateLabel(row)}</th>${shown.map((tier) => cell(tier, row)).join('')}</tr>`).join('')}</tbody>
+      </table>
+    </div>
+    <p class="t-caption c-3">${ui.t('upgrade.table.unit')}</p>`;
+}
+
+// Guests (spec §53): no account, so the coins per lot of every tier, to show what each tier earns.
+// API: `common.tiers` comes from the guest trading-task API (no token) in guest mode.
+function tiersCard() {
+  if (!common.guest || !tiers.some((tier) => TIER_LABELS[tier.group])) return '';
+  return `
+    <section class="card">
+      <div class="stack stack--tight"><h2 class="t-title-s">${ui.t('tt.tiers.title')}</h2><p class="t-body c-3">${ui.t('tt.tiers.intro')}</p></div>
+      ${tierTable()}
+    </section>`;
+}
+
 // Tier sheet (spec §51) for the selected account: its tier among the four, then either the way up (lifetime deposit
 // against the next threshold, rates now and next, Deposit now) or, on the top tier, its rates and the trade button.
 function upgradeSheet() {
@@ -212,31 +253,7 @@ function upgradeSheet() {
     const state = index < at ? 'done' : index === at ? 'current' : 'later';
     return `<li class="ladder__step ladder__step--${state}"${state === 'current' ? ' aria-current="step"' : ''}><span class="ladder__dot">${state === 'current' ? ui.icon('check', 'icon--sm') : ''}</span><span class="ladder__name">${tierName(tier.group)}</span></li>`;
   }).join('');
-  // Coins per lot on every tier, the account's tier highlighted. Rows: every row any tier lists, in the order of the top
-  // tier. A tier without that row: its catch-all row for a group row; "—" for a symbol row (e.g. XAUUSD), because the
-  // page cannot tell which group a symbol falls in. Too wide for the screen: the first column stays, the tiers scroll.
-  const shown = tiers.filter((tier) => TIER_LABELS[tier.group]);
-  const key = (rate) => `${rate.type}:${rate.value}`;
-  const rows = [];
-  [...shown].reverse().forEach((tier) => tier.rates.forEach((rate) => { if (!rows.some((row) => key(row) === key(rate))) rows.push(rate); }));
-  rows.sort((x, y) => Number(x.type === 'any') - Number(y.type === 'any')); // catch-all row last
-  const valueIn = (rates, row) => {
-    const same = rates.find((rate) => key(rate) === key(row));
-    if (same) return same.ptsPerLot;
-    return row.type === 'symbol' ? null : rates.find((rate) => rate.type === 'any')?.ptsPerLot ?? null;
-  };
-  const cell = (tier, row) => {
-    const value = valueIn(tier.rates, row);
-    return `<td class="num${tier.group === item.group ? ' is-now' : ''}">${value == null ? '—' : ui.num(value)}</td>`;
-  };
-  const table = `
-    <div class="tier-table" data-tier-table>
-      <table>
-        <thead><tr><th scope="col"><span class="sr-only">${ui.t('upgrade.table.group')}</span></th>${shown.map((tier) => `<th scope="col"${tier.group === item.group ? ' class="is-now"' : ''}>${tier.group === item.group ? `<span class="tier-table__now">${ui.t('upgrade.table.now')}</span>` : ''}${tierName(tier.group)}</th>`).join('')}</tr></thead>
-        <tbody>${rows.map((row) => `<tr><th scope="row">${rateLabel(row)}</th>${shown.map((tier) => cell(tier, row)).join('')}</tr>`).join('')}</tbody>
-      </table>
-    </div>
-    <p class="t-caption c-3">${ui.t('upgrade.table.unit')}</p>`;
+  const table = tierTable(item.group);
   let body;
   if (next) {
     const deposited = item.lifetimeDeposit;
@@ -321,6 +338,14 @@ function historyList() {
 function infoCard() {
   const tabButton = (id, key) =>
     `<button class="tab" type="button" role="tab" aria-selected="${tab === id}" data-action="tab" data-tab="${id}" data-track="loyalty_tab_click" data-track-tab="${id}">${ui.t(key)}</button>`;
+  // Guests have no history (spec §53): the rules only, under a plain title.
+  if (common.guest) {
+    return `
+    <section class="card">
+      <h2 class="t-title-s">${ui.t('tt.rules')}</h2>
+      ${rulesList(ui, common)}${termsButton()}
+    </section>`;
+  }
   return `
     <section class="card">
       <div class="tabs" role="tablist">${tabButton('rules', 'tt.rules')}${tabButton('history', 'tt.history')}</div>
@@ -385,7 +410,7 @@ function render() {
         ${ended ? '' : '<img class="hero-hot" src="../assets/images/hot-badge.png" alt="">'}
       </div>
     </div>
-    ${ended ? endedCard() : `${progressCard()}${feed.html()}${accountsCard()}${infoCard()}`}
+    ${ended ? endedCard() : `${progressCard()}${feed.html()}${accountsCard()}${tiersCard()}${infoCard()}`}
     ${sheetOpen ? sheet() : ''}
     ${termsOpen ? termsSheet() : ''}
     ${upgradeOpen ? upgradeSheet() : ''}
@@ -394,12 +419,12 @@ function render() {
   nudged = true;
   // Tier sheet: when the table scrolls sideways, open it with the account's column as near the middle of the scrolling
   // part as it goes, so the tiers on both sides of it show (e.g. VIP with Standard and Platinum).
-  const tierTable = app.querySelector('[data-tier-table]');
-  const now = tierTable?.querySelector('th.is-now');
+  const box = app.querySelector('.sheet [data-tier-table]');
+  const now = box?.querySelector('th.is-now');
   if (now) {
-    const frozen = tierTable.querySelector('th').offsetWidth;
-    const middle = frozen + (tierTable.clientWidth - frozen) / 2;
-    tierTable.scrollLeft = Math.max(0, now.offsetLeft + now.offsetWidth / 2 - middle);
+    const frozen = box.querySelector('th').offsetWidth;
+    const middle = frozen + (box.clientWidth - frozen) / 2;
+    box.scrollLeft = Math.max(0, now.offsetLeft + now.offsetWidth / 2 - middle);
   }
 }
 

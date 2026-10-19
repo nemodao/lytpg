@@ -1,6 +1,18 @@
 {
   "stateGroups": [
     {
+      "title": "Sign-in",
+      "states": [
+        "guest"
+      ],
+      "labels": {
+        "guest": "Guest (not signed in)"
+      },
+      "descriptions": {
+        "guest": "Not signed in: balance 0 and a card inviting the user to sign up or log in, in place of the tabs. Redeem and Redemption history open the sign-up sheet."
+      }
+    },
+    {
       "title": "Page",
       "states": [
         "loading",
@@ -516,6 +528,19 @@
         "program": {
           "joinRequirement": "deposit"
         }
+      }
+    },
+    "guest": {
+      "common": {
+        "guest": true,
+        "balance": {
+          "available": 0,
+          "expiring": null
+        },
+        "program": {
+          "joinRequirement": "signup"
+        },
+        "accounts": []
       }
     }
   }

@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # path -> (meaning, extra type note or '')
 FIELDS = {
     'common': {
+        'guest': ('true when the app opened the page without a token (not signed in, spec §53). The pages then show their guest version and call only the guest APIs; program.joinRequirement is "signup", balance 0, no accounts.', 'boolean'),
         'now': ('Current server time, ISO 8601 with offset. Drives "today", days until expiry, and "3m ago" in the recent activity card.', ''),
         'activity[].type': ('Recent activity card on Home and Earn (spec §50), one list per session from the backend. Kind of entry: "gift" (a reward was redeemed) or "coin" (coins were earned).', '"gift" | "coin"'),
         'activity[].client': ('Client of that entry, already masked by the backend, e.g. "95***442".', ''),
@@ -37,7 +38,7 @@ FIELDS = {
         'program.resetTime': ('Local time (WIB) at which a new earning day starts. Shown in the rules.', 'HH:MM'),
         'program.expiryWarningDays': ('Size of the "expiring soon" window in days: the balance warning text and the red highlight on lots.', ''),
         'program.tradingTask': ('false when the trading task is off or hidden for this user: Home hides the "earn coins" card of the rewards grid and the bottom bar drops the Earn tab.', ''),
-        'program.joinRequirement': ('NOT SENT BY THE LOYALTY API: derive it from the app sign-in data (kycApproveTime = 0 -> "kyc"; kycApproveTime > 0 and firstDepositTime = 0 -> "deposit"; else null). When set, the Today card on Earn shows "How to start" instead of today\'s figures, Earn shows no account picker and no rates table, and every Redeem button (Home, Coins) opens the "How to start" sheet instead of Tada.', 'null | "kyc" | "deposit"'),
+        'program.joinRequirement': ('Guests (no token): "signup". Otherwise NOT SENT BY THE LOYALTY API: derive it from the app sign-in data (kycApproveTime = 0 -> "kyc"; kycApproveTime > 0 and firstDepositTime = 0 -> "deposit"; else null). When set, the Today card on Earn shows "How to start" instead of today\'s figures, Earn shows no account picker and no rates table, and every Redeem button (Home, Coins) opens the "How to start" sheet instead of Tada.', 'null | "signup" | "kyc" | "deposit"'),
         'program.termsUrl': ('Address of the Terms & Conditions document. Earn shows a `Terms & Conditions` text button under the How it works rules; it opens this address inside a bottom sheet. The document is a PDF. Null or missing hides the button. The mock points at a sample PDF.', 'URL of a PDF, or null'),
         'program.rateRange': ('Lowest and highest earning rate of the programme, or null when it has no rate yet. Shown as "70–100 coins per lot" to users without a trading account, and its max in tour step 2. Null hides both.', 'object or null'),
         'program.rateRange.min': ('Lowest coins per lot.', ''),

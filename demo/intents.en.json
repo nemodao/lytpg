@@ -21,5 +21,9 @@
   "intent.exit.body": "Clicking this button will close these pages and take you back to the app.",
   "intent.label": "Internal Explanation",
   "intent.voucher.title": "Opens the voucher",
-  "intent.voucher.body": "Clicking this button will open the voucher's page (from the rewards provider) in the app."
+  "intent.voucher.body": "Clicking this button will open the voucher's page (from the rewards provider) in the app.",
+  "intent.signup.title": "Opens Sign up",
+  "intent.signup.body": "Clicking this button will open the app's sign-up screen (/sign-up). The app does not bring the user back here afterwards.",
+  "intent.login.title": "Opens Log in",
+  "intent.login.body": "Clicking this button will open the app's log-in screen (/login). The app does not bring the user back here afterwards."
 }

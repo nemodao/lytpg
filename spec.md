@@ -680,3 +680,20 @@ A new page listing the user's reward orders (redeemed in Tada) and the details o
 Still open with the backend: an item count and an image per order in the list (the list shows the first reward's name only for now).
 
 Preview states on the new page: `orders-empty`, `orders-more`, `loading`, `error`; an order opens with `?order=<orderReference>`.
+
+## 53. Guest mode: the pages before the user signs in (decided 20 Oct 2026, phase 3)
+
+Users who have not signed in can open the loyalty pages to see the rewards and how to earn coins. Anything that needs an account asks them to sign up or log in.
+
+- **Guest = no token.** When the app opens the webview without a token (`initWebview` with no `token`), the pages run in guest mode. No separate page: Home, Earn and Coins (and the bottom bar) are the same, in their guest version.
+- **Sign-up prompt:** the "How to start" sheet (§49), with a first step "Create your free account" before Verify, Deposit and Trade, the programme's rate line, a `Sign up` button (app screen `/sign-up`) and "Already have an account? Log in" (`/login`). After signing up or logging in, the app does not bring the user back to these pages; they find their way back themselves.
+- **What opens it:** Redeem on the balance, the balance itself, every reward card, `Explore all rewards`, `Redemption history` on Coins.
+- **Home:** balance 0; the rewards grid from the guest rewards API (same data shape as the signed-in one); the recent activity card (its API needs no token); the "Earn more coins" card goes to Earn.
+- **Earn:** general information only: "How to start" (four steps, rate line, `Sign up`) in place of today's figures, the coins per lot of every account tier, the rules and Terms. No trading account, no History tab, no trade button. Data from a guest trading-task API that needs no token (requested from the backend).
+- **Coins:** balance 0 and a card inviting the user to sign up or log in, in place of the Available / Expired / History tabs.
+- **Tour:** runs for guests as for everyone.
+- **APIs:** in guest mode the pages call only the guest APIs (rewards, trading task, recent activity) and never the ones that need a token (balance, coin lots, history, orders, tiers per account).
+- **Events:** `join_step` = `signup` for guests (so every event can be split); new `loyalty_login_prompt_view` (`from`: `redeem` | `balance` | `reward` | `explore` | `history`), `loyalty_signup_click` and `loyalty_login_click` (`source`: `card` | `redeem`, like `loyalty_join_card_view`).
+- **Open item:** the recent activity API (§50) does not exist yet; the guest version needs no token.
+
+Preview state, on every page (shared): `guest`.

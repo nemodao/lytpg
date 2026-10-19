@@ -1,5 +1,6 @@
 {
   "now": "2026-10-14T14:35:00+07:00",
+  "guest": false,
   "balance": {
     "available": 3100,
     "expiring": null

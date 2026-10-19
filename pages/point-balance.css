@@ -7,3 +7,9 @@
 .expiring-soon { display: flex; align-items: center; gap: var(--spacing-4); color: var(--ui-text-red); font: var(--font-x-small-medium); }
 
 .points--plus { color: var(--ui-text-green); }
+
+/* Guests (spec §53): an invitation to sign up or log in, in place of the tabs. */
+.guest-card { align-items: center; text-align: center; }
+.guest-card__art img { display: block; width: calc(var(--size-avatar-lg) + var(--spacing-24)); height: auto; }
+.guest-card__login { align-self: center; font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.guest-card__login strong { color: var(--ui-text-brand); }
