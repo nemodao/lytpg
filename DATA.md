@@ -63,10 +63,10 @@ Example file: `mock/dashboard.json` (`default`)
 
 | Field | Type | Example | Meaning |
 |---|---|---|---|
-| `rewards[].id` | string | `"gift-01"` | Reward id. Sent with the `reward` intent (data-reward) so the app opens that reward in Tada, and as `reward_id` in loyalty_reward_click. |
-| `rewards[].name` | string | `"iPhone 16 Pro"` | Reward name on its card in the rewards grid (two lines at most). |
+| `rewards[].id` | string | `"101"` | HSB's key for the reward card (GET /loyalty/catalog, number in the API, text here). Sent as data-reward and as reward_id in loyalty_reward_click. Not a Tada id: it does not open the reward in Tada. |
+| `rewards[].name` | string | `"iPhone 16 Pro"` | Reward name as HSB sends it (may include a denomination, e.g. "Rp50.000"), two lines at most. |
 | `rewards[].points` | number | `95000` | Price in coins on the card. |
-| `rewards[].image` | string | `"../assets/images/rewards/gift-01.webp"` | Image of the reward on its card. Path or URL; square, transparent background, product centred with room around it (shown whole). |
+| `rewards[].image` | string | `"../assets/images/rewards/gift-01.webp"` | HTTPS link to the reward image, hosted by HSB: square, transparent background, product centred, at least 460px; shown whole. |
 | `checkIn.enabled` | boolean | `false` | Shows the daily check-in card (future feature, off by default). |
 | `checkIn.rewards[]` | number | `[10, 10, 20, 20, 30, 50, 100]` | Coins for each of the seven check-in days, in order. |
 | `checkIn.checkedDays` | number | `3` | How many days in a row the user has checked in. |

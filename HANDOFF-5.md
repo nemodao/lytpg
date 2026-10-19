@@ -35,9 +35,12 @@ three image tiles. Earn keeps all of the trading content.
   small `Explore all rewards` button (intent `redeem`).
 - **Recent activity card** between the balance and the grid: see item 3.
 
-**API:** `rewards` will come from an HSB rewards API (a fixed list); fields and mapping to be agreed. Until then the
-mock list (9 rewards, `assets/images/rewards/gift-01…09.webp`) stands in. The front end keeps the data shape in
-`DATA.md` (`rewards[].id`, `name`, `points`, `image`).
+**API (settled 20 Oct 2026):** `GET /loyalty/catalog?clientId=…` (app token) or, for guests,
+`GET /loyalty/catalog-guest` (app key); `result.rewards[] = { id, name, points, image }`, in display order (show the
+first 9). `toRewards` in `shared/api-adapter.js`, `rewardsList` in `shared/data-source.js`; samples
+`mock/api/loyalty-catalog.json`, `loyalty-catalog-guest.json`. `id` is HSB's key, **not** a Tada link: for now the
+`reward` intent opens the Tada catalog like `redeem`. When the catalog fails or is empty, Home still opens: no title, no
+grid, and the last card reads "Find rewards for your coins" (preview state `rewards-empty`).
 
 ## 2. Every Redeem asks for KYC and a first deposit first (spec §49)
 

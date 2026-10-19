@@ -31,6 +31,7 @@ File: `mock/dashboard.json` · page: `pages/dashboard.html`
 | Coin Balance | `empty` · shared | Balance is 0: no available, pending or expiring coins. | `common.balance.available = 0`<br>`common.balance.expiring = null` |
 | Coin Balance | `expiring` · shared | 1,200 coins expire within 10 days: red warning under the balance. | `common.balance.expiring.points = 1200` |
 | Activity | `activity-empty` · shared | The backend sent no recent activity: the “Trader … just redeemed / earned” card is hidden (Home and Earn). | `common.activity = []` |
+| Rewards grid | `rewards-empty` ("No rewards") | The rewards API sent nothing, or failed (it is a different backend): the “Redeem coins for rewards” title and the grid (with its “Earn more coins” card) are left out; the rest of Home stays, including “Looking for something else?”. | `page.rewards = []` |
 | Rewards grid | `big-prices` ("Big prices") | Some rewards cost a lot of coins (99,999 to 12,500,000). When one price and its Redeem do not fit on one row (about 6 digits and up), Redeem moves under the price, at the right, on every card of the grid; the number is never cut. | `page.rewards = [9 items]` |
 | Daily check-in (future) | `check-in` | Shows the daily check-in card (future feature, not launched). | `page.checkIn.enabled = true` |
 

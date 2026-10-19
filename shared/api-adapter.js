@@ -5,6 +5,7 @@
 //   tradingTask/get         -> common.program, common.accounts, Earn today + selected account
 //   tradingTask/getHistory  -> Earn history
 //   (tradingTask/get also gives common.tiers and each account's group and lifetime deposit, spec §51)
+//   GET /loyalty/catalog    -> Home rewards (GET /loyalty/catalog-guest for guests), spec §49
 //   GET /loyalty/orders     -> Redemption history list; GET /loyalty/orders/{ref} -> one order (HSB backend, spec §52)
 //   coin/summary            -> common.balance
 //   coin/listAvailable      -> Coins, Available tab
@@ -83,9 +84,8 @@ const toToday = (task) => {
   return { lots: today.lotsValid ?? 0, points: today.points ?? 0, status: today.status ?? 'not_started', capped: today.capped === true };
 };
 
-// The Home page's data (spec §49). Nothing on Home comes from tradingTask/get any more. `rewards` will come from
-// HSB's rewards API (fields and mapping to be confirmed) and `checkIn` has its own API (off for now): pass what the
-// page should show.
+// The Home page's data (spec §49). Nothing on Home comes from tradingTask/get any more. `rewards` comes from HSB's
+// catalog (toRewards) and `checkIn` has its own API (off for now): pass what the page should show.
 export function toDashboardPage(task, { rewards, checkIn }) {
   return { rewards, checkIn };
 }
@@ -180,3 +180,15 @@ export const toOrder = (order) => ({
   })),
   recipient: order.recipient ?? null,
 });
+
+// GET /loyalty/catalog?clientId=… (signed in) or GET /loyalty/catalog-guest (guests) -> page.rewards (spec §49).
+// The backend sends only the rewards on show, in display order, for the user's client group (guests: the default
+// group). `id` is HSB's own key for the card (point_featured_gift.id): it does not open the reward in Tada (see the
+// `reward` intent). Images are hosted by HSB: square, transparent background, product centred, at least 460px.
+export const toRewards = (catalog) =>
+  (catalog?.rewards ?? []).map((reward) => ({
+    id: String(reward.id),
+    name: reward.name ?? '',
+    points: reward.points ?? 0,
+    image: reward.image ?? '',
+  }));

@@ -1,0 +1,65 @@
+{
+  "success": true,
+  "message": "",
+  "code": 200,
+  "result": {
+    "rewards": [
+      {
+        "id": 101,
+        "name": "iPhone 16 Pro",
+        "points": 95000,
+        "image": "../assets/images/rewards/gift-01.webp"
+      },
+      {
+        "id": 102,
+        "name": "AirPods Pro 2",
+        "points": 18000,
+        "image": "../assets/images/rewards/gift-02.webp"
+      },
+      {
+        "id": 103,
+        "name": "MacBook Air 13-inch",
+        "points": 85000,
+        "image": "../assets/images/rewards/gift-03.webp"
+      },
+      {
+        "id": 104,
+        "name": "Travel voucher",
+        "points": 60000,
+        "image": "../assets/images/rewards/gift-04.webp"
+      },
+      {
+        "id": 105,
+        "name": "Galaxy Z Fold",
+        "points": 90000,
+        "image": "../assets/images/rewards/gift-05.webp"
+      },
+      {
+        "id": 106,
+        "name": "Nintendo Switch",
+        "points": 30000,
+        "image": "../assets/images/rewards/gift-06.webp"
+      },
+      {
+        "id": 107,
+        "name": "PlayStation 5",
+        "points": 45000,
+        "image": "../assets/images/rewards/gift-07.webp"
+      },
+      {
+        "id": 108,
+        "name": "Starbucks gift card",
+        "points": 2000,
+        "image": "../assets/images/rewards/gift-08.webp"
+      },
+      {
+        "id": 109,
+        "name": "Adidas Campus 00s",
+        "points": 8000,
+        "image": "../assets/images/rewards/gift-09.webp"
+      }
+    ]
+  },
+  "extraData": null,
+  "timestamp": 1791963300000
+}

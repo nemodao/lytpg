@@ -42,8 +42,10 @@ function checkInCard() {
 
 // Rewards grid (spec §49): up to GRID_CELLS cards, two per row. The whole card is one button; its Redeem is a label
 // inside it. Users who still need KYC or a first deposit get the "How to start" sheet instead of Tada (redeemAttrs).
-// API: `rewards` comes from HSB's rewards API (a fixed list); fields and mapping to be confirmed. The id travels with
-// the `reward` intent (data-reward) so the app can open that reward in Tada.
+// API: `rewards` comes from HSB's catalog (toRewards, data-source rewardsList): up to GRID_CELLS shown, in the order
+// sent. None (empty answer or the catalog failed): no title and no grid; the rest of Home stays. The id travels with
+// the `reward` intent (data-reward): HSB's own key, not a Tada link. Until Tada gives a link per reward, the app
+// treats `reward` like `redeem` (the Tada catalog).
 const GRID_CELLS = 10;
 const EARN_CELL = 3; // the "earn coins" card is the 3rd cell
 const rewardCard = (item, position) => `
@@ -71,7 +73,8 @@ const earnCard = () => {
 };
 
 // Last card under the grid: the rest of the catalogue is in Tada (intent `redeem`, the store). Gated like every Redeem.
-// The line names the user's balance when there is one, as a reason to go and look.
+// The line names the user's balance when there is one, as a reason to go and look. Without a grid above it, its title
+// does not say "something else".
 const moreCard = () => {
   const { available } = common.balance;
   return `
@@ -79,7 +82,7 @@ const moreCard = () => {
     <div class="rewards-more__head">
       <img class="rewards-more__art" src="../assets/images/home/giftbox.webp" alt="">
       <div class="stack stack--tight grow">
-        <h3 class="t-title-s">${ui.t('rewards.more.title')}</h3>
+        <h3 class="t-title-s">${ui.t(rewards.length ? 'rewards.more.title' : 'rewards.more.titleAlone')}</h3>
         <p class="t-body c-2 num">${available > 0 ? ui.t('rewards.more.body', { points: ui.num(available) }) : ui.t('rewards.more.bodyNoCoins')}</p>
         <button class="btn btn--primary btn--sm rewards-more__cta" type="button" ${redeemAttrs(common, 'redeem', 'explore')} data-track="loyalty_card_click" data-track-target="rewards">${ui.t('rewards.more.button')}${ui.icon('right', 'icon--sm')}</button>
       </div>
@@ -118,11 +121,12 @@ if (showStatus(ui, common, app, header)) {
     ${balanceBlock(ui, common, { href: balanceHref })}
     ${checkInCard()}
     ${feed.html()}
+    ${rewards.length ? `
     <div class="rewards-head">
       <h2 class="section-title">${ui.t('rewards.title')}</h2>
       <p class="t-body c-3">${ui.t('rewards.subtitle')}</p>
     </div>
-    ${rewardsGrid()}
+    ${rewardsGrid()}` : ''}
     ${moreCard()}`;
 
   feed.start(app);

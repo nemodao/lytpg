@@ -122,7 +122,7 @@ empty: `rateRange` null (no rate range line), `termsUrl` null or an empty string
 | `data-intent` | Destination |
 |---|---|
 | `redeem` | Tada (rewards store) |
-| `reward` | That reward in Tada (its id is in `data-reward`) |
+| `reward` | For now the same as `redeem` (the Tada catalog): `data-reward` is HSB's own key for the card, not a Tada link. When Tada gives a link per reward, the backend will send it and this opens that reward |
 | `trade` | Market screen, current trading account |
 | `trade-account` (+ `data-account`) | Market screen, switched to that account |
 | `kyc` | KYC screen in the app |

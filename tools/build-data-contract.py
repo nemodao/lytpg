@@ -59,10 +59,10 @@ FIELDS = {
         'tour.simulatedBalance': ('Figure the balance counts up to in tour step 3 (a simulation). No effect if the real balance is already higher.', ''),
     },
     'dashboard': {
-        'rewards[].id': ('Reward id. Sent with the `reward` intent (data-reward) so the app opens that reward in Tada, and as `reward_id` in loyalty_reward_click.', ''),
-        'rewards[].name': ('Reward name on its card in the rewards grid (two lines at most).', ''),
+        'rewards[].id': ('HSB\'s key for the reward card (GET /loyalty/catalog, number in the API, text here). Sent as data-reward and as reward_id in loyalty_reward_click. Not a Tada id: it does not open the reward in Tada.', ''),
+        'rewards[].name': ('Reward name as HSB sends it (may include a denomination, e.g. "Rp50.000"), two lines at most.', ''),
         'rewards[].points': ('Price in coins on the card.', ''),
-        'rewards[].image': ('Image of the reward on its card. Path or URL; square, transparent background, product centred with room around it (shown whole).', ''),
+        'rewards[].image': ('HTTPS link to the reward image, hosted by HSB: square, transparent background, product centred, at least 460px; shown whole.', ''),
         'checkIn.enabled': ('Shows the daily check-in card (future feature, off by default).', ''),
         'checkIn.rewards[]': ('Coins for each of the seven check-in days, in order.', ''),
         'checkIn.checkedDays': ('How many days in a row the user has checked in.', ''),

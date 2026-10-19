@@ -17,7 +17,7 @@
 // TO CONNECT THE REAL API: make `USE_API` true and replace the body of `request()` with the real call. Everything
 // else in this file, in the adapter and in the pages stays as it is.
 
-import { joinRequirementFrom, toAccounts, toBalance, toDashboardPage, toOrder, toOrdersPage, toPointBalancePage, toProgram, toTiers, toTradingTaskPage } from './api-adapter.js';
+import { joinRequirementFrom, toAccounts, toBalance, toDashboardPage, toOrder, toOrdersPage, toPointBalancePage, toProgram, toRewards, toTiers, toTradingTaskPage } from './api-adapter.js';
 
 const USE_API = new URLSearchParams(location.search).get('source') === 'api';
 
@@ -47,9 +47,8 @@ const result = (endpoint, body) => request(endpoint, body).then((answer) => answ
 // API: the app already holds the sign-in answer (/app/signin); only kycApproveTime and firstDepositTime are read.
 const signin = () => getJSON('../mock/api/signin.json').then((answer) => answer.result);
 
-// Not sent by the loyalty API: the tour's simulated balance (a UI constant),
-// the rewards grid on Home (HSB's rewards API, to be mapped; mock until then) and the check-in card (its own API, off
-// for now).
+// Not sent by the loyalty API: the tour's simulated balance (a UI constant) and the check-in card (its own API, off for
+// now). The rewards come from rewardsList() below.
 const uiOnly = () => Promise.all([getJSON('../mock/common.json'), getJSON('../mock/dashboard.json')])
   .then(([common, dashboard]) => ({ tour: common.tour, rewards: dashboard.default.rewards, checkIn: dashboard.default.checkIn }));
 
@@ -118,6 +117,17 @@ function getOrders(path) {
   });
 }
 
+// API: Home's rewards (spec §49), from HSB (the Tada integration), GET: /loyalty/catalog?clientId=… with the app token,
+// or /loyalty/catalog-guest (app key only) for guests; { success, result: { rewards } }. A different backend from the
+// rest of Home: when it fails, Home still opens, without the rewards grid (rewards = []).
+// Here: mock/api/loyalty-catalog.json or loyalty-catalog-guest.json.
+function rewardsList() {
+  const file = GUEST ? 'loyalty-catalog-guest' : 'loyalty-catalog';
+  return getJSON(`../mock/api/${file}.json`)
+    .then((answer) => { if (answer.success !== true) throw new Error(`${file}: ${answer.message}`); return toRewards(answer.result); })
+    .catch(() => []);
+}
+
 async function pageFromApi(page) {
   if (GUEST && page === 'point-balance') return toPointBalancePage(null, null, null, null); // nothing to ask for
   if (GUEST && page === 'redemptions') return { orders: [], total: 0 }; // guests never reach it
@@ -126,7 +136,7 @@ async function pageFromApi(page) {
     return { orders: first.orders, total: first.total };
   }
   const task = await taskGet();
-  if (page === 'dashboard') return toDashboardPage(task, await uiOnly());
+  if (page === 'dashboard') return toDashboardPage(task, { ...(await uiOnly()), rewards: await rewardsList() });
   if (page === 'trading-task') {
     // No history call for a user without a trading task.
     return toTradingTaskPage(task, task.tradingTask && !GUEST ? await result('tradingTask/getHistory') : null);
