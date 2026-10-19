@@ -121,7 +121,7 @@ empty: `rateRange` null (no rate range line), `termsUrl` null or an empty string
 
 | `data-intent` | Destination |
 |---|---|
-| `redeem` | Tada (rewards store) |
+| `redeem` | Tada (rewards store). The webview only tells the app; the **app** calls `POST /loyalty/redeem/session` (app token in the header, no body) and opens `result.url` (a Tada SSO link, valid about 300 s) in its in-app webview, not an outside browser (settled with the backend 20 Oct 2026) |
 | `reward` | For now the same as `redeem` (the Tada catalog): `data-reward` is HSB's own key for the card, not a Tada link. When Tada gives a link per reward, the backend will send it and this opens that reward |
 | `trade` | Market screen, current trading account |
 | `trade-account` (+ `data-account`) | Market screen, switched to that account |

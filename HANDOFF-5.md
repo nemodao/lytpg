@@ -40,7 +40,12 @@ three image tiles. Earn keeps all of the trading content.
 first 9). `toRewards` in `shared/api-adapter.js`, `rewardsList` in `shared/data-source.js`; samples
 `mock/api/loyalty-catalog.json`, `loyalty-catalog-guest.json`. `id` is HSB's key, **not** a Tada link: for now the
 `reward` intent opens the Tada catalog like `redeem`. When the catalog fails or is empty, Home still opens: no title, no
-grid, and the last card reads "Find rewards for your coins" (preview state `rewards-empty`).
+grid, and the last card reads "Find rewards for your coins" (preview state `rewards-empty`). Show `name` as sent, even
+with a denomination such as "Rp50.000" (HSB owns the wording; don't trim it).
+
+**Opening Tada:** unchanged for the webview, which only sends the `redeem` / `reward` intent. The **app** calls
+`POST /loyalty/redeem/session` (app token, no body) and opens `result.url` (Tada SSO link, valid about 300 s) in its
+in-app webview. See `HANDOFF.md` §6.
 
 ## 2. Every Redeem asks for KYC and a first deposit first (spec §49)
 
