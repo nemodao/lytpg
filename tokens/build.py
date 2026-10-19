@@ -29,7 +29,8 @@ o += ["", "  /* Color — semantic (light) */"] + [decl(k, x) for k, x in sem["l
 o += ["", "  /* Effect strengths (light) */"] + [decl(k, x) for k, x in fx["light"].items()]
 o += ["", "  /* Spacing */"] + [decl(k, f"{x}px") for k, x in d["spacing"].items()]
 o += ["", "  /* Radius */"] + [decl(k, f"{x}px") for k, x in d["radius"].items()]
-o += ["", "  /* Component sizes */"] + [decl(k, f"{x}px") for k, x in d["size"].items()]
+# A size is a number of px, or a string written as is (e.g. "80vh" for a share of the screen).
+o += ["", "  /* Component sizes */"] + [decl(k, x if isinstance(x, str) else f"{x}px") for k, x in d["size"].items()]
 o += ["", "  /* Typography — use with the `font` shorthand */"]
 for k, t in d["typography"].items():
     o.append(decl(k, f"{t['fontWeight']} {t['fontSize']}px/{t['lineHeight']}px \"{t['fontFamily']}\", sans-serif", "font/"))

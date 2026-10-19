@@ -62,6 +62,30 @@
         "ineligible-selected": "The selected trading account belongs to an MT5 group that cannot take part in the programme, for example an A-Book group or any group not listed in the programme config. Shows a warning and “Switch to an eligible account”.",
         "no-account": "User passed KYC and made a first deposit but has no live trading account (only demo accounts, or the live account was removed). Instead of the account picker and rates: a short message, the rate range and “Open a trading account”."
       }
+    },
+    {
+      "title": "Account tier",
+      "states": [
+        "tier-micro",
+        "tier-standard",
+        "tier-top",
+        "tier-reached",
+        "tier-unknown"
+      ],
+      "labels": {
+        "tier-micro": "Tier: Micro",
+        "tier-standard": "Tier: Standard",
+        "tier-top": "Tier: Platinum (top)",
+        "tier-reached": "Tier: deposit reached",
+        "tier-unknown": "Tier: unknown group"
+      },
+      "descriptions": {
+        "tier-micro": "Selected account is Micro (MT5 group Mini400), $50 deposited: the upgrade row offers Standard; the sheet asks for $150 more.",
+        "tier-standard": "Selected account is Standard (Mini10), $450 deposited: the upgrade row offers VIP; the sheet asks for $550 more.",
+        "tier-top": "Selected account is Platinum (MIVIP), the top tier: a quiet row (crown, no border, grey) reads “Platinum: our highest rates”; the sheet says the account is on the top tier and offers to trade.",
+        "tier-reached": "Selected account is still VIP (VIP1) but has $5,200 deposited, past Platinum's $5,000: the sheet says the upgrade is on its way instead of asking for more.",
+        "tier-unknown": "Selected account's MT5 group is not one the page knows (Mini50): no tier label and no upgrade row."
+      }
     }
   ],
   "default": {
@@ -567,6 +591,8 @@
           {
             "id": "50000234",
             "eligible": true,
+            "group": "VIP1",
+            "lifetimeDeposit": 2350,
             "rates": [
               {
                 "type": "symbol_group",
@@ -773,6 +799,539 @@
     "activity-empty": {
       "common": {
         "activity": []
+      }
+    },
+    "tier-micro": {
+      "common": {
+        "accounts": [
+          {
+            "id": "50000234",
+            "eligible": true,
+            "group": "Mini400",
+            "lifetimeDeposit": 50,
+            "rates": [
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 70
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 60
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 55
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 50
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 45
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 40
+              }
+            ]
+          },
+          {
+            "id": "50000519",
+            "eligible": true,
+            "group": "MIVIP",
+            "lifetimeDeposit": 6200,
+            "rates": [
+              {
+                "type": "symbol",
+                "value": "XAUUSD",
+                "ptsPerLot": 130
+              },
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 120
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 110
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 95
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 85
+              }
+            ]
+          },
+          {
+            "id": "50000642",
+            "eligible": true,
+            "group": "VIP1",
+            "lifetimeDeposit": 1200,
+            "rates": [
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 85
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 80
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 75
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 70
+              }
+            ]
+          },
+          {
+            "id": "50000871",
+            "eligible": false,
+            "group": "Mini10",
+            "lifetimeDeposit": 300,
+            "rates": []
+          }
+        ]
+      }
+    },
+    "tier-standard": {
+      "common": {
+        "accounts": [
+          {
+            "id": "50000234",
+            "eligible": true,
+            "group": "Mini10",
+            "lifetimeDeposit": 450,
+            "rates": [
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 85
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 75
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 70
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 65
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 60
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 55
+              }
+            ]
+          },
+          {
+            "id": "50000519",
+            "eligible": true,
+            "group": "MIVIP",
+            "lifetimeDeposit": 6200,
+            "rates": [
+              {
+                "type": "symbol",
+                "value": "XAUUSD",
+                "ptsPerLot": 130
+              },
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 120
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 110
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 95
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 85
+              }
+            ]
+          },
+          {
+            "id": "50000642",
+            "eligible": true,
+            "group": "VIP1",
+            "lifetimeDeposit": 1200,
+            "rates": [
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 85
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 80
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 75
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 70
+              }
+            ]
+          },
+          {
+            "id": "50000871",
+            "eligible": false,
+            "group": "Mini10",
+            "lifetimeDeposit": 300,
+            "rates": []
+          }
+        ]
+      }
+    },
+    "tier-top": {
+      "page": {
+        "selectedAccountId": "50000519"
+      }
+    },
+    "tier-reached": {
+      "common": {
+        "accounts": [
+          {
+            "id": "50000234",
+            "eligible": true,
+            "group": "VIP1",
+            "lifetimeDeposit": 5200,
+            "rates": [
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 85
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 80
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 75
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 70
+              }
+            ]
+          },
+          {
+            "id": "50000519",
+            "eligible": true,
+            "group": "MIVIP",
+            "lifetimeDeposit": 6200,
+            "rates": [
+              {
+                "type": "symbol",
+                "value": "XAUUSD",
+                "ptsPerLot": 130
+              },
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 120
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 110
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 95
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 85
+              }
+            ]
+          },
+          {
+            "id": "50000642",
+            "eligible": true,
+            "group": "VIP1",
+            "lifetimeDeposit": 1200,
+            "rates": [
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 85
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 80
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 75
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 70
+              }
+            ]
+          },
+          {
+            "id": "50000871",
+            "eligible": false,
+            "group": "Mini10",
+            "lifetimeDeposit": 300,
+            "rates": []
+          }
+        ]
+      }
+    },
+    "tier-unknown": {
+      "common": {
+        "accounts": [
+          {
+            "id": "50000234",
+            "eligible": true,
+            "group": "Mini50",
+            "lifetimeDeposit": 800,
+            "rates": [
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 85
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 80
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 75
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 70
+              }
+            ]
+          },
+          {
+            "id": "50000519",
+            "eligible": true,
+            "group": "MIVIP",
+            "lifetimeDeposit": 6200,
+            "rates": [
+              {
+                "type": "symbol",
+                "value": "XAUUSD",
+                "ptsPerLot": 130
+              },
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 120
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 110
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 95
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 85
+              }
+            ]
+          },
+          {
+            "id": "50000642",
+            "eligible": true,
+            "group": "VIP1",
+            "lifetimeDeposit": 1200,
+            "rates": [
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 85
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 80
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 75
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 70
+              }
+            ]
+          },
+          {
+            "id": "50000871",
+            "eligible": false,
+            "group": "Mini10",
+            "lifetimeDeposit": 300,
+            "rates": []
+          }
+        ]
       }
     }
   }

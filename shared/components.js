@@ -14,13 +14,14 @@ export const badge = (tone, label) => `<span class="badge badge--${tone}">${labe
 export const notice = (ui, { icon = 'info', tone = 'neutral', text }) =>
   `<div class="notice notice--${tone}">${ui.icon(icon)}<p>${text}</p></div>`;
 
-// Header used on every page: centred title. No back button: leaving the webview is the bottom bar's X (spec §29).
+// Header used on every page: centred title. The tab pages have no back button: leaving the webview is the bottom bar's
+// X (spec §29). `back` (a link) adds one on the left, for pages opened from a tab (Redemption history, spec §52).
 // `action` is optional markup for the right edge (Home: the help button that reopens the tour).
-export const appHeader = (ui, { title, action = '' }) => `
+export const appHeader = (ui, { title, action = '', back = '' }) => `
   <header class="app-header">
-    <span></span>
+    ${back ? `<a class="header-action" href="${back}" aria-label="${ui.t('orders.back')}" data-back>${ui.icon('back')}</a>` : '<span></span>'}
     <h1>${title}</h1>
-    ${action}
+    ${action || (back ? '<span></span>' : '')}
   </header>`;
 
 // Round help button for the header: reopens the guided tour.
@@ -179,7 +180,8 @@ export function rulesList(ui, common) {
 // shown (spec §41), so the API's `pending` total is not used.
 // Dashboard: bare on the page background, the whole block links to Point Balance (href).
 // Point Balance: the same content inside a pale theme card (card: true).
-export function balanceBlock(ui, common, { href = '', card = false } = {}) {
+// `history`: link of the small "Redemption history" button under Redeem (Coins, spec §52).
+export function balanceBlock(ui, common, { href = '', card = false, history = '' } = {}) {
   const { available, expiring } = common.balance;
   if (expiring) trackView('loyalty_expiring_notice_view');
   return `
@@ -193,6 +195,7 @@ export function balanceBlock(ui, common, { href = '', card = false } = {}) {
       </div>
       <div class="balance-side">
         <button class="btn btn--sm btn--mono above" type="button" ${redeemAttrs(common, 'redeem')} data-tour="redeem" data-track="loyalty_redeem_click">${ui.t('balance.redeem')}${ui.icon('gift', 'icon--sm')}</button>
+        ${history ? `<a class="text-btn balance-history above" href="${history}" data-track="loyalty_orders_open">${ui.t('orders.button')}${ui.icon('right', 'icon--sm')}</a>` : ''}
       </div>
     </div>
     ${expiring ? `<div class="notice notice--danger">${ui.icon('clock')}<p class="num">${expiringText(ui, common)}</p></div>` : ''}

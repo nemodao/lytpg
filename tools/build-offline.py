@@ -16,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'dist' / 'hsb-loyalty-review'
-PAGES = ['dashboard', 'trading-task', 'point-balance']
+PAGES = ['dashboard', 'trading-task', 'point-balance', 'redemptions']
 # Shared modules in dependency order, with the variable each one is bound to in the bundle.
 MODULES = {
     '../shared/tracking.js': '__tracking',

@@ -36,6 +36,7 @@ const heroBg = streakField();
 let selectedId = page.selectedAccountId;
 let sheetOpen = false;
 let termsOpen = false; // Terms & Conditions sheet
+let upgradeOpen = false; // tier sheet (spec §51)
 let nudged = false; // the join button's nudge plays on the first render only
 // Rules and history share one card, switched by tabs; rules show first (spec §15).
 
@@ -49,6 +50,21 @@ const account = (id) => accounts.find((item) => item.id === id) || accounts[0];
 const accountName = (item) => ui.esc(item.id);
 const eligibleBadge = (item) =>
   item.eligible ? badge('green', ui.t('badge.eligible')) : badge('neutral', ui.t('badge.notEligible'));
+
+// Account tiers (spec §51). The MT5 group of each account is shown as a tier; this mapping is the only tier logic held
+// by the page. API: `accounts[].group`, `accounts[].lifetimeDeposit` (USD) and `common.tiers` (lowest first: group,
+// minDeposit, rates) come from the proposed tiers endpoint. A group missing from TIER_LABELS (or from `tiers`) shows no
+// tier and no upgrade row.
+const TIER_LABELS = { Mini400: 'micro', Mini10: 'standard', VIP1: 'vip', MIVIP: 'platinum' };
+const tiers = common.tiers ?? [];
+const tierAt = (item) => (TIER_LABELS[item.group] ? tiers.findIndex((tier) => tier.group === item.group) : -1);
+const tierName = (group) => ui.t(`tier.${TIER_LABELS[group]}`);
+// Right after the account number, for eligible accounts only.
+const tierBadge = (item) => (item.eligible && tierAt(item) >= 0
+  ? `<span class="badge tier tier--${TIER_LABELS[item.group]}">${tierName(item.group)}</span>`
+  : '');
+const maxRate = (rates) => Math.max(0, ...rates.map((rate) => rate.ptsPerLot));
+const usd = (amount) => ui.t('money.usd', { amount: ui.num(Math.ceil(amount)) });
 
 // The hero always keeps the sky and the cup; the Today card under the cup changes with the page state (spec §23).
 // Ended: the programme is over. The page shows only this message under the cup: no figures, no account, no rules or
@@ -126,7 +142,7 @@ const ratesList = (item) => `<div class="list">${item.rates.map(rateRow).join(''
 
 function accountsCard() {
   const rates = (item) => `
-      <div class="stack stack--tight"><h3 class="t-label">${ui.t('tt.rates')}</h3><p class="t-body c-3">${ui.t('tt.rates.intro')}</p></div>
+      <div class="stack stack--tight"><h3 class="t-label num">${ui.t('tt.rates', { account: item.id })}</h3><p class="t-body c-3">${ui.t('tt.rates.intro')}</p></div>
       <div class="rates-frame">${ratesList(item)}</div>
       <p class="t-caption c-3">${ui.t('tt.rates.note')}</p>`;
   // Users who still need KYC or a first deposit have no trading account, and so no rates table: the Today card
@@ -151,8 +167,8 @@ function accountsCard() {
   const eligibleCount = accounts.filter((item) => item.eligible).length;
 
   const selector = single
-    ? `<div class="select select--static"><span class="grow">${accountName(selected)}</span>${eligibleBadge(selected)}</div>`
-    : `<button class="select" type="button" data-action="open-sheet" aria-haspopup="dialog"><span class="grow">${accountName(selected)}</span>${eligibleBadge(selected)}${ui.icon('down')}</button>`;
+    ? `<div class="select select--static"><span class="grow account-name">${accountName(selected)}${tierBadge(selected)}</span>${eligibleBadge(selected)}</div>`
+    : `<button class="select" type="button" data-action="open-sheet" aria-haspopup="dialog"><span class="grow account-name">${accountName(selected)}${tierBadge(selected)}</span>${eligibleBadge(selected)}${ui.icon('down')}</button>`;
   return `
     <section class="card">
       <div class="stack stack--tight">
@@ -160,11 +176,107 @@ function accountsCard() {
         ${single ? '' : `<p class="t-body c-3 num">${ui.t('tt.accounts.summary', { eligible: eligibleCount, total: accounts.length })}</p>`}
       </div>
       ${selector}
+      ${selected.eligible ? upgradeRow(selected) : ''}
       ${selected.eligible
         ? rates(selected)
         : notice(ui, { icon: 'info', tone: 'warning', text: ui.t('tt.accounts.ineligible') })}
       ${tradeButton()}
     </section>`;
+}
+
+// Under the account field: the way to a higher tier, or, on the top tier, a look at it. Opens the tier sheet.
+// Under the account field: the way to a higher tier, or, on the top tier, a quiet look at it (no border, muted, since
+// there is nothing left to upgrade). Opens the tier sheet.
+function upgradeRow(item) {
+  const at = tierAt(item);
+  if (at < 0 || ended) return '';
+  const next = tiers[at + 1];
+  const title = next ? ui.t('upgrade.row.title') : ui.t('upgrade.row.topTitle', { tier: tierName(item.group) });
+  const body = next ? ui.t('upgrade.row.body', { tier: tierName(next.group), max: ui.num(maxRate(next.rates)) }) : ui.t('upgrade.row.topBody');
+  return `
+    <button class="upgrade-row${next ? '' : ' upgrade-row--top'}" type="button" data-action="open-upgrade" aria-haspopup="dialog" data-track="loyalty_upgrade_open" data-track-tier="${TIER_LABELS[item.group]}" data-track-next_tier="${next ? TIER_LABELS[next.group] : 'none'}">
+      <img class="upgrade-row__art" src="../assets/images/earn/${next ? 'money-bag' : 'crown'}.webp" alt="">
+      <span class="grow stack stack--tight"><span class="t-body-strong">${title}</span><span class="t-caption c-2 num">${body}</span></span>
+      ${ui.icon('right', 'icon--sm')}
+    </button>`;
+}
+
+// Tier sheet (spec §51) for the selected account: its tier among the four, then either the way up (lifetime deposit
+// against the next threshold, rates now and next, Deposit now) or, on the top tier, its rates and the trade button.
+function upgradeSheet() {
+  const item = account(selectedId);
+  const at = tierAt(item);
+  const next = tiers[at + 1];
+  const name = tierName(item.group);
+  const ladder = tiers.filter((tier) => TIER_LABELS[tier.group]).map((tier, index) => {
+    const state = index < at ? 'done' : index === at ? 'current' : 'later';
+    return `<li class="ladder__step ladder__step--${state}"${state === 'current' ? ' aria-current="step"' : ''}><span class="ladder__dot">${state === 'current' ? ui.icon('check', 'icon--sm') : ''}</span><span class="ladder__name">${tierName(tier.group)}</span></li>`;
+  }).join('');
+  // Coins per lot on every tier, the account's tier highlighted. Rows: every row any tier lists, in the order of the top
+  // tier. A tier without that row: its catch-all row for a group row; "—" for a symbol row (e.g. XAUUSD), because the
+  // page cannot tell which group a symbol falls in. Too wide for the screen: the first column stays, the tiers scroll.
+  const shown = tiers.filter((tier) => TIER_LABELS[tier.group]);
+  const key = (rate) => `${rate.type}:${rate.value}`;
+  const rows = [];
+  [...shown].reverse().forEach((tier) => tier.rates.forEach((rate) => { if (!rows.some((row) => key(row) === key(rate))) rows.push(rate); }));
+  rows.sort((x, y) => Number(x.type === 'any') - Number(y.type === 'any')); // catch-all row last
+  const valueIn = (rates, row) => {
+    const same = rates.find((rate) => key(rate) === key(row));
+    if (same) return same.ptsPerLot;
+    return row.type === 'symbol' ? null : rates.find((rate) => rate.type === 'any')?.ptsPerLot ?? null;
+  };
+  const cell = (tier, row) => {
+    const value = valueIn(tier.rates, row);
+    return `<td class="num${tier.group === item.group ? ' is-now' : ''}">${value == null ? '—' : ui.num(value)}</td>`;
+  };
+  const table = `
+    <div class="tier-table" data-tier-table>
+      <table>
+        <thead><tr><th scope="col"><span class="sr-only">${ui.t('upgrade.table.group')}</span></th>${shown.map((tier) => `<th scope="col"${tier.group === item.group ? ' class="is-now"' : ''}>${tier.group === item.group ? `<span class="tier-table__now">${ui.t('upgrade.table.now')}</span>` : ''}${tierName(tier.group)}</th>`).join('')}</tr></thead>
+        <tbody>${rows.map((row) => `<tr><th scope="row">${rateLabel(row)}</th>${shown.map((tier) => cell(tier, row)).join('')}</tr>`).join('')}</tbody>
+      </table>
+    </div>
+    <p class="t-caption c-3">${ui.t('upgrade.table.unit')}</p>`;
+  let body;
+  if (next) {
+    const deposited = item.lifetimeDeposit;
+    // API: Deposit opens the app's Deposit screen for this account with the amount still needed already filled in
+    // (data-account, data-amount: whole USD, rounded up; none once the deposit is reached or unknown). The names of
+    // these parameters on the app side are to be agreed with the app team.
+    const missing = deposited == null ? 0 : Math.max(0, Math.ceil(next.minDeposit - deposited));
+    const progress = deposited == null ? '' : `
+      <div class="upgrade-progress">
+        <p class="t-caption c-2 num">${ui.t('upgrade.progress', { deposited: usd(deposited), target: usd(next.minDeposit) })}</p>
+        <span class="upgrade-progress__bar"><i style="width:${Math.min(100, Math.round((deposited / next.minDeposit) * 100))}%"></i></span>
+        <p class="t-body num">${deposited < next.minDeposit
+          ? ui.md('upgrade.need', { amount: usd(next.minDeposit - deposited), tier: tierName(next.group) })
+          : ui.md('upgrade.reached', { tier: tierName(next.group) })}</p>
+      </div>`;
+    body = `
+      ${progress}
+      ${table}
+      <p class="t-caption c-3">${ui.t('upgrade.note')}</p>
+      <div class="sheet__sticky"><button class="btn btn--primary btn--lg btn--block" type="button" data-intent="deposit" data-account="${ui.esc(item.id)}"${missing > 0 ? ` data-amount="${missing}"` : ''} data-track="loyalty_deposit_click" data-track-source="upgrade">${ui.t('upgrade.deposit')}</button></div>`;
+  } else {
+    body = `
+      <p class="t-body c-2 num">${ui.md('upgrade.topBody', { max: ui.num(maxRate(item.rates)) })}</p>
+      ${table}
+      <p class="t-caption c-3">${ui.t('upgrade.note')}</p>
+      <div class="sheet__sticky">${tradeButton()}</div>`;
+  }
+  return `
+    <div class="scrim" data-action="close-sheet">
+      <div class="sheet sheet--upgrade" role="dialog" aria-modal="true" aria-label="${next ? ui.t('upgrade.sheet.title') : ui.t('upgrade.sheet.topTitle')}">
+        <span class="sheet__grab"></span>
+        <div class="sheet__head">
+          <h2 class="t-title-s grow">${next ? ui.t('upgrade.sheet.title') : ui.t('upgrade.sheet.topTitle')}</h2>
+          <button class="header-action" type="button" data-action="close-upgrade" aria-label="${ui.t('common.close')}">${ui.icon('close')}</button>
+        </div>
+        <p class="t-label num">${ui.t('upgrade.account', { account: item.id })}</p>
+        <ol class="ladder">${ladder}</ol>
+        ${body}
+      </div>
+    </div>`;
 }
 
 function tradeButton() {
@@ -254,7 +366,7 @@ function sheet() {
         <div>
           ${sorted.map((item) => `
             <button class="option ${item.eligible ? '' : 'option--muted'}" type="button" data-action="select-account" data-id="${ui.esc(item.id)}" data-track="loyalty_account_select" data-track-eligible="${item.eligible}">
-              <span class="grow">${accountName(item)}</span>
+              <span class="grow account-name">${accountName(item)}${tierBadge(item)}</span>
               ${eligibleBadge(item)}
               <span class="radio ${item.id === selectedId ? 'radio--on' : ''}"></span>
             </button>`).join('')}
@@ -276,9 +388,19 @@ function render() {
     ${ended ? endedCard() : `${progressCard()}${feed.html()}${accountsCard()}${infoCard()}`}
     ${sheetOpen ? sheet() : ''}
     ${termsOpen ? termsSheet() : ''}
+    ${upgradeOpen ? upgradeSheet() : ''}
     ${historyFilter.sheet()}`;
   feed.start(app);
   nudged = true;
+  // Tier sheet: when the table scrolls sideways, open it with the account's column as near the middle of the scrolling
+  // part as it goes, so the tiers on both sides of it show (e.g. VIP with Standard and Platinum).
+  const tierTable = app.querySelector('[data-tier-table]');
+  const now = tierTable?.querySelector('th.is-now');
+  if (now) {
+    const frozen = tierTable.querySelector('th').offsetWidth;
+    const middle = frozen + (tierTable.clientWidth - frozen) / 2;
+    tierTable.scrollLeft = Math.max(0, now.offsetLeft + now.offsetWidth / 2 - middle);
+  }
 }
 
 app.addEventListener('click', (event) => {
@@ -289,18 +411,21 @@ app.addEventListener('click', (event) => {
   if (action === 'open-sheet') sheetOpen = true;
   else if (action === 'open-terms') termsOpen = true;
   else if (action === 'close-terms') termsOpen = false;
+  else if (action === 'open-upgrade') upgradeOpen = true;
+  else if (action === 'close-upgrade') upgradeOpen = false;
   else if (action === 'tab') tab = target.dataset.tab;
   else if (action === 'select-account') { selectedId = target.dataset.id; sheetOpen = false; }
   else if (action === 'close-sheet') {
     if (event.target !== target) return; // taps inside the sheet do not close it
     sheetOpen = false;
     termsOpen = false;
+    upgradeOpen = false;
   } else return;
   render();
 });
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && (sheetOpen || termsOpen || historyFilter.isOpen())) { sheetOpen = false; termsOpen = false; historyFilter.close(); render(); }
+  if (event.key === 'Escape' && (sheetOpen || termsOpen || upgradeOpen || historyFilter.isOpen())) { sheetOpen = false; termsOpen = false; upgradeOpen = false; historyFilter.close(); render(); }
 });
 
 // Loading or failed to load: the header on its sky and a placeholder, nothing else (spec §44).

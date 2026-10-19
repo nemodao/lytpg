@@ -11,11 +11,15 @@
   "intent.kyc.body": "Clicking this button will open the KYC screen in the app. Once you are verified, you can join the trading task.",
   "intent.deposit.title": "Opens Deposit",
   "intent.deposit.body": "Clicking this button will open the Deposit screen in the app. After your first deposit, you can join the trading task.",
+  "intent.deposit.amount.title": "Opens Deposit, amount filled in",
+  "intent.deposit.amount.body": "Clicking this button will open the Deposit screen in the app for account {account}, with ${amount} already filled in: what is still needed to reach the next tier.",
   "intent.open-account.title": "Opens identity verification",
   "intent.open-account.body": "Clicking this button will open the KYC screen in the app. A live trading account is created when KYC is completed.",
   "intent.checkin.title": "Checks you in",
   "intent.checkin.body": "Clicking this button will mark today as checked in and add today's coins to your balance.",
   "intent.exit.title": "Leaves HSB Loyalty",
   "intent.exit.body": "Clicking this button will close these pages and take you back to the app.",
-  "intent.label": "Internal Explanation"
+  "intent.label": "Internal Explanation",
+  "intent.voucher.title": "Opens the voucher",
+  "intent.voucher.body": "Clicking this button will open the voucher's page (from the rewards provider) in the app."
 }

@@ -15,7 +15,7 @@ Every analytics event the three pages send, when it is sent, and with which para
 
 | Parameter | Values | Meaning |
 |---|---|---|
-| `page` | `home` \| `earn` \| `coins` | Page the event happened on |
+| `page` | `home` \| `earn` \| `coins` \| `orders` | Page the event happened on (`orders`: Redemption history) |
 | `theme` | `light` \| `dark` | Colour mode on screen |
 | `has_task` | `true` \| `false` | Whether the user has a trading task |
 | `join_step` | `kyc` \| `deposit` \| `none` | Step the user still has to take before earning |
@@ -32,7 +32,7 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 |---|---|---|---|
 | `loyalty_join_card_view` | "How to start" is shown: on the Today card on Earn, or in the sheet that Redeem opens for users who still need KYC or a first deposit | `step`: `kyc` \| `deposit`; `source`: `card` \| `redeem` | `joinPanel`, `mountJoinSheet` in `shared/components.js` |
 | `loyalty_kyc_click` | `Verify my account` is tapped | | button in `joinPanel` |
-| `loyalty_deposit_click` | `Deposit now` is tapped | | button in `joinPanel` |
+| `loyalty_deposit_click` | `Deposit now` is tapped | `source`: `upgrade` when it is the tier sheet's button (none from "How to start") | button in `joinPanel`; tier sheet in `pages/trading-task.js` |
 | `loyalty_open_account_click` | `Open a trading account` is tapped | | `pages/trading-task.js` |
 | `loyalty_trade_click` | `Trade now` / `Trade with account …` is tapped | `capped`: `true` \| `false` | `pages/trading-task.js` |
 
@@ -54,6 +54,7 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 | `loyalty_tab_click` | A tab inside a page is tapped | `tab`: `rules` \| `history` (Earn); `available` \| `expired` \| `history` (Coins) | `pages/trading-task.js`, `pages/point-balance.js` |
 | `loyalty_date_filter_apply` | A date range is chosen (a preset chip, or `Apply` in the calendar) | `tab`: `history` \| `expired`; `range`: `7` \| `30` \| `custom` | `shared/date-filter.js` |
 | `loyalty_account_select` | A trading account is chosen in the account sheet | `eligible`: `true` \| `false` | `pages/trading-task.js` |
+| `loyalty_upgrade_open` | The upgrade row under the account field on Earn is tapped (opens the tier sheet) | `tier`: `micro` \| `standard` \| `vip` \| `platinum` (current); `next_tier`: the next one, or `none` on Platinum | `pages/trading-task.js` |
 | `loyalty_terms_open` | `Terms & Conditions` is tapped | | `pages/trading-task.js` |
 | `loyalty_daily_cap_view` | The "reached today's maximum" message is shown | | `pages/trading-task.js` |
 
@@ -66,14 +67,24 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 | `loyalty_tour_skip` | `Skip tour` is tapped | `step`: step it was skipped on | `shared/tour.js` |
 | `loyalty_tour_finish` | `Finish tour` is tapped | | `shared/tour.js` |
 
-### E. Problems
+### E. Redemption history (spec §52)
+
+| Event | Sent when | Extra parameters | Where |
+|---|---|---|---|
+| `loyalty_orders_open` | `Redemption history` under Redeem on Coins is tapped | | `balanceBlock` in `shared/components.js` |
+| `loyalty_order_open` | An order in the list is tapped | `status`: `new` \| `on process` \| `completed` \| `canceled` \| `failed` | `pages/redemptions.js` |
+| `loyalty_code_reveal` | `Show` is tapped on a hidden code | `kind`: `code` \| `pin` \| `serial` | `pages/redemptions.js` |
+| `loyalty_code_copy` | `Copy` is tapped | `kind`: `code` \| `pin` \| `serial` \| `awb` \| `order` | `pages/redemptions.js` |
+| `loyalty_voucher_open` | `Open voucher` is tapped | | `pages/redemptions.js` |
+
+### F. Problems
 
 | Event | Sent when | Extra parameters | Where |
 |---|---|---|---|
 | `loyalty_error_view` | The "Couldn’t load this page" card is shown | | `showStatus` in `shared/components.js` |
 | `loyalty_retry_click` | `Try again` on that card is tapped | | `showStatus` |
 
-22 events in all.
+28 events in all.
 
 ## Questions these events answer
 
@@ -84,6 +95,7 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 | Does reaching the daily maximum stop users trading? | `loyalty_daily_cap_view` → `loyalty_trade_click` with `capped = true` |
 | How strong is the interest in rewards, and from which balance? Which rewards? | `loyalty_redeem_click`, `loyalty_reward_click`, split by `balance_range`; `reward_id` and `position` |
 | Does the expiry warning push users to redeem? | `loyalty_expiring_notice_view` → `loyalty_redeem_click` |
+| Does showing the next tier push users to deposit? | `loyalty_upgrade_open` (by `tier`) → `loyalty_deposit_click` with `source` = `upgrade` |
 | Which pages and tabs are used? | `loyalty_page_view`, `loyalty_nav_click`, `loyalty_card_click`, `loyalty_tab_click`, `loyalty_date_filter_apply` |
 | Do users finish the tour, and where do they leave it? | `loyalty_tour_start` → `loyalty_tour_step_view` by `step` → `loyalty_tour_finish` / `loyalty_tour_skip` |
 | How often do pages fail to load? | `loyalty_error_view` against `loyalty_page_view` |
@@ -94,7 +106,7 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 2. One GA4 Event tag using that trigger, event name `{{Event}}`.
 3. Create a Data Layer Variable for each parameter above and add them to the tag as event parameters.
 4. In GA4, register the parameters you want to break reports down by as custom dimensions (`page`, `join_step`,
-   `step`, `target`, `tab`, `range`, `trigger`, `balance_range`, `capped`, `source`, `reward_id`).
+   `step`, `target`, `tab`, `range`, `trigger`, `balance_range`, `capped`, `source`, `reward_id`, `tier`, `next_tier`, `status`, `kind`).
 
 Notes:
 

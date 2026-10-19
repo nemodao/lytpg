@@ -126,7 +126,8 @@ empty: `rateRange` null (no rate range line), `termsUrl` null or an empty string
 | `trade` | Market screen, current trading account |
 | `trade-account` (+ `data-account`) | Market screen, switched to that account |
 | `kyc` | KYC screen in the app |
-| `deposit` | Deposit screen in the app |
+| `voucher` (+ `data-url`) | Redemption history (spec §52): opens the voucher's link, like `terms` (the app's link viewer) |
+| `deposit` | Deposit screen in the app. From the tier sheet (spec §51) it also carries `data-account` (the account) and `data-amount` (USD still needed to reach the next tier, whole dollars, rounded up; absent when nothing is missing), so the Deposit screen opens on that account with the amount filled in. The parameter names on the app side are to be agreed with the app team |
 | `open-account` (handoff 2) | The KYC screen of the app (since handoff 4: completing KYC creates the live account) |
 | `checkin` | Check in (future feature) |
 | `exit` | Close the webview |

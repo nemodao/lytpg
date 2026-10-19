@@ -1,7 +1,8 @@
 // DEMO ONLY — never ship to production. Front-end developers wire each button to a deeplink instead.
 // To remove it, delete the demo/ folder and the DEMO ONLY block at the end of each page's HTML.
 //
-// Buttons that leave these pages carry data-intent="<name>" (plus data-account for a trading account). In the demo
+// Buttons that leave these pages carry data-intent="<name>" (plus data-account for a trading account, data-amount for
+// the amount to deposit). In the demo
 // a tap shows an "Internal Explanation" message in the middle of the screen saying where the button would go and
 // what would happen; it hides itself after 3 seconds, or earlier on a tap outside or Escape (spec §30).
 // The text lives in demo/intents.en.json (intent.<name>.title / .body).
@@ -57,7 +58,9 @@ document.addEventListener('click', (event) => {
   const target = event.target.closest('[data-intent]');
   if (!target || target.disabled) return;
   event.preventDefault();
-  show(target.dataset.intent, { account: esc(target.dataset.account || '') });
+  // Deposit from the tier sheet carries the amount to fill in: its own message.
+  const name = target.dataset.intent === 'deposit' && target.dataset.amount ? 'deposit.amount' : target.dataset.intent;
+  show(name, { account: esc(target.dataset.account || ''), amount: esc(Number(target.dataset.amount || 0).toLocaleString('en-US')) });
 });
 
 document.addEventListener('keydown', (event) => {

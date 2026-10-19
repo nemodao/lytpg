@@ -1,0 +1,182 @@
+{
+  "success": true,
+  "message": "",
+  "code": 200,
+  "result": {
+    "tiers": [
+      {
+        "group": "Mini400",
+        "minDeposit": 0.0,
+        "rates": [
+          {
+            "type": "symbol_group",
+            "value": "metal",
+            "ptsPerLot": 70.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "index",
+            "ptsPerLot": 60.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "energy",
+            "ptsPerLot": 55.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "forex",
+            "ptsPerLot": 50.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "stocks",
+            "ptsPerLot": 45.0
+          },
+          {
+            "type": "any",
+            "value": "other",
+            "ptsPerLot": 40.0
+          }
+        ]
+      },
+      {
+        "group": "Mini10",
+        "minDeposit": 200.0,
+        "rates": [
+          {
+            "type": "symbol_group",
+            "value": "metal",
+            "ptsPerLot": 85.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "index",
+            "ptsPerLot": 75.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "energy",
+            "ptsPerLot": 70.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "forex",
+            "ptsPerLot": 65.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "stocks",
+            "ptsPerLot": 60.0
+          },
+          {
+            "type": "any",
+            "value": "other",
+            "ptsPerLot": 55.0
+          }
+        ]
+      },
+      {
+        "group": "VIP1",
+        "minDeposit": 1000.0,
+        "rates": [
+          {
+            "type": "symbol_group",
+            "value": "metal",
+            "ptsPerLot": 100.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "index",
+            "ptsPerLot": 90.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "energy",
+            "ptsPerLot": 85.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "forex",
+            "ptsPerLot": 80.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "stocks",
+            "ptsPerLot": 75.0
+          },
+          {
+            "type": "any",
+            "value": "other",
+            "ptsPerLot": 70.0
+          }
+        ]
+      },
+      {
+        "group": "MIVIP",
+        "minDeposit": 5000.0,
+        "rates": [
+          {
+            "type": "symbol",
+            "value": "XAUUSD",
+            "ptsPerLot": 130.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "metal",
+            "ptsPerLot": 120.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "index",
+            "ptsPerLot": 110.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "energy",
+            "ptsPerLot": 100.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "forex",
+            "ptsPerLot": 95.0
+          },
+          {
+            "type": "symbol_group",
+            "value": "stocks",
+            "ptsPerLot": 90.0
+          },
+          {
+            "type": "any",
+            "value": "other",
+            "ptsPerLot": 85.0
+          }
+        ]
+      }
+    ],
+    "accounts": [
+      {
+        "id": 50000234,
+        "group": "VIP1",
+        "lifetimeDeposit": 2350.0
+      },
+      {
+        "id": 50000519,
+        "group": "MIVIP",
+        "lifetimeDeposit": 6200.0
+      },
+      {
+        "id": 50000642,
+        "group": "VIP1",
+        "lifetimeDeposit": 1200.0
+      },
+      {
+        "id": 50000871,
+        "group": "Mini10",
+        "lifetimeDeposit": 300.0
+      }
+    ]
+  },
+  "extraData": null,
+  "timestamp": 1791963300000
+}

@@ -1,0 +1,70 @@
+{
+  "success": true,
+  "message": "",
+  "code": 200,
+  "result": {
+    "orders": [
+      {
+        "orderReference": "ord_a03f77",
+        "orderNumber": "TADA26101406220019",
+        "status": "new",
+        "orderDate": "2026-10-14T06:22:00Z",
+        "firstItemName": "Nintendo Switch",
+        "coinSpent": 30000
+      },
+      {
+        "orderReference": "ord_7f3a91",
+        "orderNumber": "TADA26101214305512",
+        "status": "completed",
+        "orderDate": "2026-10-12T07:30:00Z",
+        "firstItemName": "Starbucks gift card",
+        "coinSpent": 2000
+      },
+      {
+        "orderReference": "ord_5c2e08",
+        "orderNumber": "TADA26101009120384",
+        "status": "on process",
+        "orderDate": "2026-10-10T02:12:00Z",
+        "firstItemName": "AirPods Pro 2",
+        "coinSpent": 18000
+      },
+      {
+        "orderReference": "ord_91d4b2",
+        "orderNumber": "TADA26100815004410",
+        "status": "completed",
+        "orderDate": "2026-10-08T08:00:00Z",
+        "firstItemName": "PLN electricity token",
+        "coinSpent": 5000
+      },
+      {
+        "orderReference": "ord_3b8c15",
+        "orderNumber": "TADA26100511452207",
+        "status": "canceled",
+        "orderDate": "2026-10-05T04:45:00Z",
+        "firstItemName": "PlayStation 5",
+        "coinSpent": 45000
+      },
+      {
+        "orderReference": "ord_e61d90",
+        "orderNumber": "TADA26100109301175",
+        "status": "failed",
+        "orderDate": "2026-10-01T02:30:00Z",
+        "firstItemName": "Grab voucher",
+        "coinSpent": 1500
+      },
+      {
+        "orderReference": "ord_2d7c44",
+        "orderNumber": "TADA26092810150933",
+        "status": "completed",
+        "orderDate": "2026-09-28T03:15:00Z",
+        "firstItemName": "Tokopedia voucher",
+        "coinSpent": 4000
+      }
+    ],
+    "page": 1,
+    "pageSize": 20,
+    "total": 7
+  },
+  "extraData": null,
+  "timestamp": 1791963300000
+}

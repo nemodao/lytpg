@@ -65,6 +65,8 @@
 }
 .select--static { background: var(--ui-field-surface-locked); }
 .select .icon { color: var(--ui-icon-tertiary); }
+/* Account number with its tier right after it. */
+.account-name { display: inline-flex; align-items: center; gap: var(--spacing-8); min-width: 0; }
 
 /* History: one row per day. Lots and points sit in fixed columns so they line up from row to row. */
 .day__head { display: flex; align-items: center; gap: var(--spacing-8); }
@@ -78,3 +80,77 @@
 .radio { width: var(--size-check); height: var(--size-check); flex: none; display: grid; place-items: center; border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--ui-text-disabled); background: var(--card-surface); }
 .radio--on { border-color: var(--accent-surface-brand); }
 .radio--on::after { content: ""; width: 70%; height: 70%; border-radius: var(--radius-pill); background: var(--accent-surface-brand); }
+
+/* ---- Account tiers (spec §51) ---- */
+/* Tier badge next to Eligible: grey Micro, blue Standard, purple VIP, inverted Platinum (the top). */
+.tier--micro { background: var(--ui-surface-soft); color: var(--ui-text-secondary); }
+.tier--standard { background: var(--ui-badge-blue); color: var(--ui-text-brand); }
+.tier--vip { background: color-mix(in srgb, var(--color-purple-main) 14%, transparent); color: color-mix(in srgb, var(--color-purple-main) 72%, var(--ui-text-primary)); }
+.tier--platinum { background: var(--ui-text-primary); color: var(--card-surface); }
+
+/* Upgrade row under the rates table: a light purple strip, icon, two lines, chevron; the whole row opens the sheet. */
+.upgrade-row {
+  display: flex; align-items: center; gap: var(--spacing-12); width: 100%; padding: var(--spacing-12);
+  border-radius: var(--radius-card-inner); border: var(--size-stroke) solid color-mix(in srgb, var(--color-purple-main) 24%, var(--card-stroke));
+  background: color-mix(in srgb, var(--color-purple-main) 8%, var(--card-surface)); font: inherit; color: var(--ui-text-primary); text-align: left; cursor: pointer;
+}
+.upgrade-row:active { background: color-mix(in srgb, var(--color-purple-main) 14%, var(--card-surface)); }
+.upgrade-row__art { flex: none; width: var(--size-avatar); height: var(--size-avatar); object-fit: contain; }
+/* Top tier: nothing left to upgrade, so the row steps back: no border, a plain field surface, softer title. */
+.upgrade-row--top { border-color: transparent; background: var(--ui-field-surface); }
+.upgrade-row--top:active { background: var(--ui-field-surface); }
+.upgrade-row--top .t-body-strong { color: var(--ui-text-secondary); }
+.upgrade-row > .icon:last-child { flex: none; color: var(--ui-icon-tertiary); }
+
+/* Tier sheet. Its parts keep their height: the sheet scrolls as a whole (the table would otherwise shrink, since it
+   scrolls sideways). */
+.sheet--upgrade > * { flex-shrink: 0; }
+/* The four tiers as steps on a line: done (check), current (ringed), later (plain). */
+.ladder { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; list-style: none; }
+.ladder__step { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-6); font: var(--font-x-small-regular); color: var(--ui-text-tertiary); }
+.ladder { --dot: var(--size-icon-lg); --gap: var(--spacing-6); }
+/* Each connector runs from the previous dot's edge to this dot's edge (with a small gap), never behind a dot. */
+.ladder__step + .ladder__step::before {
+  content: ''; position: absolute; top: calc(var(--dot) / 2 - var(--spacing-2) / 2); height: var(--spacing-2); border-radius: var(--radius-pill);
+  left: calc(-50% + var(--dot) / 2 + var(--gap)); right: calc(50% + var(--dot) / 2 + var(--gap)); background: var(--ui-surface-soft);
+}
+.ladder__step--done + .ladder__step::before { background: color-mix(in srgb, var(--color-purple-main) 45%, var(--card-surface)); }
+.ladder__dot { display: grid; place-items: center; width: var(--dot); height: var(--dot); border-radius: var(--radius-pill); background: var(--ui-surface-soft); color: var(--on-brand); }
+.ladder__step--done .ladder__dot { background: color-mix(in srgb, var(--color-purple-main) 45%, var(--card-surface)); }
+.ladder__step--current .ladder__dot { background: var(--color-purple-main); box-shadow: 0 0 0 var(--spacing-4) color-mix(in srgb, var(--color-purple-main) 20%, transparent); }
+.ladder__step--current { font: var(--font-x-small-semibold); color: var(--ui-text-primary); }
+.ladder__step--done { color: var(--ui-text-secondary); }
+
+/* Lifetime deposit against the next tier's threshold. */
+.upgrade-progress { display: flex; flex-direction: column; gap: var(--spacing-6); padding: var(--spacing-12); border-radius: var(--radius-card-inner); background: var(--ui-field-surface); }
+.upgrade-progress__bar { display: block; height: var(--spacing-6); border-radius: var(--radius-pill); background: var(--ui-surface-soft); overflow: hidden; }
+.upgrade-progress__bar i { display: block; height: 100%; border-radius: inherit; background: var(--color-purple-main); }
+
+/* Coins per lot on every tier. The group column stays put; the tier columns scroll sideways when the screen is too
+   narrow. The account's tier is tinted purple, with a "Now" tag. */
+.tier-table { overflow-x: auto; scrollbar-width: none; }
+.tier-table::-webkit-scrollbar { display: none; }
+.tier-table table { border-collapse: separate; border-spacing: 0; min-width: 100%; font: var(--font-small-regular); }
+.tier-table th, .tier-table td { padding: var(--spacing-8) var(--spacing-10); border-bottom: var(--size-stroke) solid var(--ui-stroke-soft); white-space: nowrap; }
+.tier-table tbody tr:last-child > * { border-bottom: 0; }
+.tier-table thead th { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); text-align: center; vertical-align: bottom; }
+.tier-table td { min-width: calc(var(--size-control-lg) + var(--spacing-10)); text-align: center; color: var(--ui-text-secondary); }
+.tier-table tbody th { text-align: left; font: var(--font-small-medium); color: var(--ui-text-primary); }
+.tier-table tr > :first-child { position: sticky; left: 0; z-index: 1; padding-left: 0; background: var(--card-surface); }
+.tier-table .is-now { background: color-mix(in srgb, var(--color-purple-main) 10%, var(--card-surface)); color: var(--ui-text-primary); font-weight: 600; }
+.tier-table thead .is-now { color: color-mix(in srgb, var(--color-purple-main) 72%, var(--ui-text-primary)); border-radius: var(--radius-control) var(--radius-control) 0 0; }
+.tier-table tbody tr:last-child .is-now { border-radius: 0 0 var(--radius-control) var(--radius-control); }
+/* "Now" above the tier name, in a light pill. */
+.tier-table__now {
+  display: table; margin: 0 auto var(--spacing-4); padding: 0 var(--spacing-8); border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-purple-main) 18%, var(--card-surface)); font: var(--font-x-small-semibold);
+}
+
+/* The sheet's button stays in view at its bottom edge while the comparison scrolls under it. */
+/* It also covers the sheet's bottom padding (same amount as .sheet), so nothing scrolls into view below it. Above the
+   table's frozen column. */
+.sheet__sticky {
+  --pad: calc(env(safe-area-inset-bottom, 0px) + var(--spacing-20));
+  position: sticky; bottom: calc(var(--pad) * -1); z-index: 2;
+  margin-bottom: calc(var(--pad) * -1); padding: var(--spacing-8) 0 var(--pad); background: var(--card-surface);
+}

@@ -641,3 +641,42 @@ Home preview states removed: `capped`, `no-trades-today`, `market-closed`. Coins
 - Draft choices to confirm: a new entry every 4 seconds; a message takes two lines at most and the card always keeps room for two lines, so its height never changes; with an empty list the card is hidden.
 
 New preview state on Home and Earn (shared): `activity-empty`.
+
+## 51. Account tiers and the way up on Earn (decided 16 Oct 2026, built 19 Oct 2026 as a first draft, phase 3)
+
+Asked for by business users: give users a reason to deposit more into an account. Draft built from the owner's brief; the owner reviews and corrects.
+
+- **Tier label.** Each trading account belongs to an MT5 group, which the page shows as a tier, right after the account number (eligible accounts only), in the account field and in the account sheet (changed 19 Oct 2026). Mapping, fixed in the front end: `Mini400` → Micro, `Mini10` → Standard, `VIP1` → VIP, `MIVIP` → Platinum. A group not in this list shows no tier and no upgrade row.
+- **Tiers by lifetime deposit** (total deposited into that account, USD): Micro under 200, Standard 200 to under 1,000, VIP 1,000 to under 5,000, Platinum 5,000 and over. A higher tier earns more coins per lot.
+- **Upgrade row** right under the account field, above the rates (eligible accounts with a known tier; moved 19 Oct 2026): "Want more coins per lot?" with "Upgrade to {next tier}: up to {n} coins per lot". Icon: a money bag. On Platinum it reads "{Platinum}: our highest rates" / "See your account tier" instead, with a crown, and is deliberately quiet (no border, grey surface, softer title): there is nothing left to upgrade. Either way, tapping it opens the tier sheet. The row is its own block under the account field (an option joining it to the field was tried and dropped, 19 Oct 2026).
+- **Tier sheet** (bottom sheet), for the selected account:
+  - The account number; the four tiers as steps, only the account's tier ticked (the tiers below it filled, no tick).
+  - Below Platinum: the lifetime deposit against the next tier's threshold ("$2,350 of $5,000 deposited", with a bar) and "Deposit $2,650 more to reach Platinum."; a `Deposit now` button: it opens the app's Deposit screen for that account with the missing amount already filled in (the "$2,650" of the line above, decided 19 Oct 2026; the parameter names are to be agreed with the app team). If the deposit already reaches the next tier (the group has not changed yet), a line says the upgrade is on its way instead of an amount.
+  - On Platinum: "You're on the top tier", "This account already earns our highest rates: up to {n} coins per lot." and a `Trade with account …` button.
+  - In both cases, a table of coins per lot on **every** tier (one column per tier, one row per rate row), the account's tier highlighted, with "Now" in a light pill above its name. When it is too wide for the screen, the first column (the symbol group) stays in place and the tier columns scroll sideways; the sheet opens scrolled to the account's column (changed 19 Oct 2026).
+  - The sheet's button stays visible at its bottom edge while the rest scrolls. In the table, a symbol row (e.g. XAUUSD) on a tier that does not list it shows "—" for now: the page cannot tell which group a symbol falls in.
+  - A note: tiers depend on the total deposited into that account.
+- **API** (new, to be defined with the backend): per account its MT5 group and lifetime deposit; for the programme the full set of tiers, each with its group, deposit threshold and rates (same rows as an account's rates). The front end only holds the group → label mapping.
+- **Events:** tapping the upgrade row sends `loyalty_upgrade_open` with `tier` (current) and `next_tier` (none on Platinum); `Deposit now` in the sheet sends `loyalty_deposit_click` with `source` = `upgrade`.
+
+New preview states on Earn: `tier-micro`, `tier-standard`, `tier-top`, `tier-reached`, `tier-unknown`.
+
+## 52. Redemption history (decided 19 Oct 2026, phase 3; first draft from the backend's brief)
+
+A new page listing the user's reward orders (redeemed in Tada) and the details of each, so users can follow an order and find their voucher codes without leaving the app.
+
+- **Way in:** on Coins, a small `Redemption history` text button under `Redeem` in the balance card. It opens the page.
+- **The page** (`pages/redemptions.html`) has no bottom bar; its header has a back button. The list's back goes to Coins; an order's back goes to the list (and the app's Back does the same).
+- **List** (newest first): one row per order: the first reward's name, the order number, the order date, the coins spent and a status badge. The whole row opens the order. Empty: "No redemptions yet" and a button to the rewards store. Loading and error as §44.
+- **Statuses** (normalised by the backend): `new` → "Order placed" (blue), `on process` → "Processing" (yellow), `completed` → "Completed" (green), `canceled` → "Cancelled" (grey), `failed` → "Failed" (red). Phase 1 has only the current status and the time of the last change: a badge and "Updated {date, time}". No step-by-step timeline (no data for it yet).
+- **Order details:** the status badge and last update; order number (copyable), order date, coins spent; when `refunded`, a note that the coins went back to the balance. Then each item: name, kind, quantity, and one block by kind:
+  - e-voucher: code and PIN hidden until the user taps `Show`, then copyable; a button to open the voucher link; "Valid until {date}".
+  - PLN token / mobile credit: the serial number hidden until `Show`, then copyable; the message.
+  - physical goods: courier, AWB number (copyable), tracking number; and the recipient (name, address, postal code).
+- **Never shown:** any IDR amount (reward price, fees, order value). The page shows coins only (`coinSpent`). The backend strips every IDR value from its answers (decided 19 Oct 2026).
+- **API** (HSB backend, not Tada; the app token is sent): `GET /loyalty/orders?clientId=…&page=…&pageSize=…` for the list, answering `{ orders: [...], page, pageSize, total }` with `firstItemName` in each summary, newest first (settled with the backend 20 Oct 2026: `page` from 1, `pageSize` 20 by default, at most 100; the backend takes the client from the app token and answers 403 when the query's `clientId` differs; both answers wrapped in `{ success, result }`); the list loads 20 at a time and the next page on scroll, until it holds `total`; `GET /loyalty/orders/{orderReference}` for one order (403 when it is not the user's). Codes, PINs and serial numbers arrive in clear; the page hides them until asked.
+- **Events:** `loyalty_orders_open` (the button on Coins), `loyalty_order_open` (`status`), `loyalty_code_reveal` and `loyalty_code_copy` (`kind`: `code` | `pin` | `serial` | `awb` | `order`), `loyalty_voucher_open`. `page` = `orders` on this page.
+
+Still open with the backend: an item count and an image per order in the list (the list shows the first reward's name only for now).
+
+Preview states on the new page: `orders-empty`, `orders-more`, `loading`, `error`; an order opens with `?order=<orderReference>`.

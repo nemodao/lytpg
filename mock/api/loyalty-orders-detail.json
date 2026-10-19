@@ -1,0 +1,36 @@
+{
+  "success": true,
+  "message": "",
+  "code": 200,
+  "result": {
+    "orderReference": "ord_5c2e08",
+    "orderNumber": "TADA26101009120384",
+    "status": "onprocess",
+    "orderDate": "2026-10-10T02:12:00Z",
+    "lastStatusAt": "2026-10-11T08:20:00Z",
+    "coinSpent": 18000,
+    "refunded": false,
+    "items": [
+      {
+        "name": "AirPods Pro 2",
+        "type": "physical",
+        "quantity": 1,
+        "status": "on process",
+        "evoucher": null,
+        "token": null,
+        "tracking": {
+          "awbNumber": "JNE0012345678",
+          "shippingCompany": "JNE",
+          "trackingNumber": "CGK-7788120"
+        }
+      }
+    ],
+    "recipient": {
+      "name": "Budi Santoso",
+      "address": "Jl. Sudirman No. 21, Kebayoran Baru, Jakarta Selatan",
+      "postalCode": "12190"
+    }
+  },
+  "extraData": null,
+  "timestamp": 1791963300000
+}

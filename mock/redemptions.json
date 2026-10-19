@@ -1,0 +1,294 @@
+{
+  "stateGroups": [
+    {
+      "title": "Page",
+      "states": [
+        "orders-empty",
+        "orders-more",
+        "loading",
+        "error"
+      ],
+      "descriptions": {
+        "orders-empty": "The user has not redeemed anything yet: “No redemptions yet” and a button to the rewards store.",
+        "loading": "The page is waiting for its data: the header and grey placeholder cards.",
+        "error": "The data could not be loaded: a message and “Try again”.",
+        "orders-more": "The backend says there are more orders than the first page (total 30): a spinner row at the end of the list loads the next page as the user scrolls. In this demo the next page is empty, so the row then goes away."
+      }
+    }
+  ],
+  "default": {
+    "orders": [
+      {
+        "orderReference": "ord_a03f77",
+        "orderNumber": "TADA26101406220019",
+        "status": "new",
+        "orderDate": "2026-10-14T06:22:00Z",
+        "firstItemName": "Nintendo Switch",
+        "coinSpent": 30000
+      },
+      {
+        "orderReference": "ord_7f3a91",
+        "orderNumber": "TADA26101214305512",
+        "status": "completed",
+        "orderDate": "2026-10-12T07:30:00Z",
+        "firstItemName": "Starbucks gift card",
+        "coinSpent": 2000
+      },
+      {
+        "orderReference": "ord_5c2e08",
+        "orderNumber": "TADA26101009120384",
+        "status": "on process",
+        "orderDate": "2026-10-10T02:12:00Z",
+        "firstItemName": "AirPods Pro 2",
+        "coinSpent": 18000
+      },
+      {
+        "orderReference": "ord_91d4b2",
+        "orderNumber": "TADA26100815004410",
+        "status": "completed",
+        "orderDate": "2026-10-08T08:00:00Z",
+        "firstItemName": "PLN electricity token",
+        "coinSpent": 5000
+      },
+      {
+        "orderReference": "ord_3b8c15",
+        "orderNumber": "TADA26100511452207",
+        "status": "canceled",
+        "orderDate": "2026-10-05T04:45:00Z",
+        "firstItemName": "PlayStation 5",
+        "coinSpent": 45000
+      },
+      {
+        "orderReference": "ord_e61d90",
+        "orderNumber": "TADA26100109301175",
+        "status": "failed",
+        "orderDate": "2026-10-01T02:30:00Z",
+        "firstItemName": "Grab voucher",
+        "coinSpent": 1500
+      },
+      {
+        "orderReference": "ord_2d7c44",
+        "orderNumber": "TADA26092810150933",
+        "status": "completed",
+        "orderDate": "2026-09-28T03:15:00Z",
+        "firstItemName": "Tokopedia voucher",
+        "coinSpent": 4000
+      }
+    ],
+    "total": 7,
+    "details": [
+      {
+        "orderReference": "ord_a03f77",
+        "orderNumber": "TADA26101406220019",
+        "status": "new",
+        "orderDate": "2026-10-14T06:22:00Z",
+        "lastStatusAt": "2026-10-14T06:22:00Z",
+        "coinSpent": 30000,
+        "refunded": false,
+        "items": [
+          {
+            "name": "Nintendo Switch",
+            "type": "physical",
+            "quantity": 1,
+            "status": "new",
+            "evoucher": null,
+            "token": null,
+            "tracking": null
+          }
+        ],
+        "recipient": {
+          "name": "Budi Santoso",
+          "address": "Jl. Sudirman No. 21, Kebayoran Baru, Jakarta Selatan",
+          "postalCode": "12190"
+        }
+      },
+      {
+        "orderReference": "ord_7f3a91",
+        "orderNumber": "TADA26101214305512",
+        "status": "completed",
+        "orderDate": "2026-10-12T07:30:00Z",
+        "lastStatusAt": "2026-10-12T07:31:00Z",
+        "coinSpent": 2000,
+        "refunded": false,
+        "items": [
+          {
+            "name": "Starbucks gift card",
+            "type": "egift",
+            "quantity": 1,
+            "status": "completed",
+            "evoucher": {
+              "code": "SBUX-8KQ2-77LM",
+              "pin": "4821",
+              "link": "https://example.com/voucher/sbux-8kq2",
+              "expiredDate": "2027-04-12T16:59:59Z"
+            },
+            "token": null,
+            "tracking": null
+          }
+        ],
+        "recipient": null
+      },
+      {
+        "orderReference": "ord_5c2e08",
+        "orderNumber": "TADA26101009120384",
+        "status": "on process",
+        "orderDate": "2026-10-10T02:12:00Z",
+        "lastStatusAt": "2026-10-11T08:20:00Z",
+        "coinSpent": 18000,
+        "refunded": false,
+        "items": [
+          {
+            "name": "AirPods Pro 2",
+            "type": "physical",
+            "quantity": 1,
+            "status": "on process",
+            "evoucher": null,
+            "token": null,
+            "tracking": {
+              "awbNumber": "JNE0012345678",
+              "shippingCompany": "JNE",
+              "trackingNumber": "CGK-7788120"
+            }
+          }
+        ],
+        "recipient": {
+          "name": "Budi Santoso",
+          "address": "Jl. Sudirman No. 21, Kebayoran Baru, Jakarta Selatan",
+          "postalCode": "12190"
+        }
+      },
+      {
+        "orderReference": "ord_91d4b2",
+        "orderNumber": "TADA26100815004410",
+        "status": "completed",
+        "orderDate": "2026-10-08T08:00:00Z",
+        "lastStatusAt": "2026-10-08T08:02:00Z",
+        "coinSpent": 5000,
+        "refunded": false,
+        "items": [
+          {
+            "name": "PLN electricity token",
+            "type": "pln",
+            "quantity": 1,
+            "status": "completed",
+            "evoucher": null,
+            "token": {
+              "serialNumber": "5172 8830 1946 2207 3381",
+              "message": "72.4 kWh added to meter 5172 8830 194"
+            },
+            "tracking": null
+          }
+        ],
+        "recipient": null
+      },
+      {
+        "orderReference": "ord_3b8c15",
+        "orderNumber": "TADA26100511452207",
+        "status": "canceled",
+        "orderDate": "2026-10-05T04:45:00Z",
+        "lastStatusAt": "2026-10-06T03:10:00Z",
+        "coinSpent": 45000,
+        "refunded": true,
+        "items": [
+          {
+            "name": "PlayStation 5",
+            "type": "physical",
+            "quantity": 1,
+            "status": "canceled",
+            "evoucher": null,
+            "token": null,
+            "tracking": null
+          }
+        ],
+        "recipient": {
+          "name": "Budi Santoso",
+          "address": "Jl. Sudirman No. 21, Kebayoran Baru, Jakarta Selatan",
+          "postalCode": "12190"
+        }
+      },
+      {
+        "orderReference": "ord_e61d90",
+        "orderNumber": "TADA26100109301175",
+        "status": "failed",
+        "orderDate": "2026-10-01T02:30:00Z",
+        "lastStatusAt": "2026-10-01T02:31:00Z",
+        "coinSpent": 1500,
+        "refunded": true,
+        "items": [
+          {
+            "name": "Grab voucher",
+            "type": "egift",
+            "quantity": 1,
+            "status": "failed",
+            "evoucher": null,
+            "token": null,
+            "tracking": null
+          }
+        ],
+        "recipient": null
+      },
+      {
+        "orderReference": "ord_2d7c44",
+        "orderNumber": "TADA26092810150933",
+        "status": "completed",
+        "orderDate": "2026-09-28T03:15:00Z",
+        "lastStatusAt": "2026-09-28T03:16:00Z",
+        "coinSpent": 4000,
+        "refunded": false,
+        "items": [
+          {
+            "name": "Tokopedia voucher",
+            "type": "egift",
+            "quantity": 1,
+            "status": "completed",
+            "evoucher": {
+              "code": "TKPD-55XW-19QA",
+              "pin": null,
+              "link": "https://example.com/voucher/tkpd-55xw",
+              "expiredDate": "2026-12-31T16:59:59Z"
+            },
+            "token": null,
+            "tracking": null
+          },
+          {
+            "name": "Google Play voucher",
+            "type": "egift",
+            "quantity": 1,
+            "status": "completed",
+            "evoucher": {
+              "code": "GPLY-7HTR-02MC-KK41",
+              "pin": null,
+              "link": null,
+              "expiredDate": "2027-09-28T16:59:59Z"
+            },
+            "token": null,
+            "tracking": null
+          }
+        ],
+        "recipient": null
+      }
+    ]
+  },
+  "states": {
+    "orders-empty": {
+      "page": {
+        "orders": []
+      }
+    },
+    "loading": {
+      "common": {
+        "view": "loading"
+      }
+    },
+    "error": {
+      "common": {
+        "view": "error"
+      }
+    },
+    "orders-more": {
+      "page": {
+        "total": 30
+      }
+    }
+  }
+}

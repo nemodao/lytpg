@@ -53,6 +53,11 @@ File: `mock/trading-task.json` · page: `pages/trading-task.html`
 | Trading account | `single-account` | User has only one trading account: a fixed field instead of the account picker. | `common.accounts = [1 items]` |
 | Trading account | `ineligible-selected` | The selected trading account belongs to an MT5 group that cannot take part in the programme, for example an A-Book group or any group not listed in the programme config. Shows a warning and “Switch to an eligible account”. | `page.selectedAccountId = "50000871"` |
 | Trading account | `no-account` | User passed KYC and made a first deposit but has no live trading account (only demo accounts, or the live account was removed). Instead of the account picker and rates: a short message, the rate range and “Open a trading account”. | `common.accounts = []`<br>`page.selectedAccountId = null`<br>`page.today.lots = 0`<br>`page.today.points = 0`<br>`page.today.status = "not_started"`<br>`page.history = [9 items]` |
+| Account tier | `tier-micro` ("Tier: Micro") | Selected account is Micro (MT5 group Mini400), $50 deposited: the upgrade row offers Standard; the sheet asks for $150 more. | `common.accounts = [4 items]` |
+| Account tier | `tier-standard` ("Tier: Standard") | Selected account is Standard (Mini10), $450 deposited: the upgrade row offers VIP; the sheet asks for $550 more. | `common.accounts = [4 items]` |
+| Account tier | `tier-top` ("Tier: Platinum (top)") | Selected account is Platinum (MIVIP), the top tier: a quiet row (crown, no border, grey) reads “Platinum: our highest rates”; the sheet says the account is on the top tier and offers to trade. | `page.selectedAccountId = "50000519"` |
+| Account tier | `tier-reached` ("Tier: deposit reached") | Selected account is still VIP (VIP1) but has $5,200 deposited, past Platinum's $5,000: the sheet says the upgrade is on its way instead of asking for more. | `common.accounts = [4 items]` |
+| Account tier | `tier-unknown` ("Tier: unknown group") | Selected account's MT5 group is not one the page knows (Mini50): no tier label and no upgrade row. | `common.accounts = [4 items]` |
 
 ## Coin Balance (Coins tab)
 
@@ -71,3 +76,14 @@ File: `mock/point-balance.json` · page: `pages/point-balance.html`
 | Tabs | `history-empty` | The History tab has nothing: “No activity in this period.” | `page.empty.history = true` |
 | Tabs | `has-used` | Adds fully used lots: two still before expiry, shown muted in a “Fully used” section at the end of Available (Remain 0), and one used up and then expired, shown in Expired with “Expired 0” (inside Last 7 days). | `page.usedItems = [3 items]` |
 | Tabs | `more-error` | The next page of a long list failed to load: “Couldn’t load more. Try again” at the end of the list (open the History tab with Last 30 days). | `page.loadMoreError = true` |
+
+## Redemption history (from Coins)
+
+File: `mock/redemptions.json` · page: `pages/redemptions.html`
+
+| Group | State | What it shows | Data it changes |
+|---|---|---|---|
+| Page | `orders-empty` | The user has not redeemed anything yet: “No redemptions yet” and a button to the rewards store. | `page.orders = []` |
+| Page | `orders-more` | The backend says there are more orders than the first page (total 30): a spinner row at the end of the list loads the next page as the user scrolls. In this demo the next page is empty, so the row then goes away. | `page.total = 30` |
+| Page | `loading` | The page is waiting for its data: the header and grey placeholder cards. | `common.view = "loading"` |
+| Page | `error` | The data could not be loaded: a message and “Try again”. | `common.view = "error"` |

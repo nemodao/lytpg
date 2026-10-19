@@ -43,9 +43,16 @@ Example file: `mock/common.json`
 | `program.rateRange.max` | number | `100` | Highest coins per lot. One figure is shown when min = max. |
 | `accounts[].id` | string | `"50000234"` | Trading account number, shown as is. The list is empty for users without a live account. |
 | `accounts[].eligible` | boolean | `true` | Whether this account takes part in the programme (false e.g. for an MT5 group that is excluded). |
+| `accounts[].group` | string or null | `"VIP1"` | MT5 group of the account (proposed tiers endpoint, spec §51). Shown as a tier next to Eligible: Mini400 = Micro, Mini10 = Standard, VIP1 = VIP, MIVIP = Platinum (mapping held by the page). Any other value: no tier, no upgrade row. |
+| `accounts[].lifetimeDeposit` | number or null | `2350` | Total ever deposited into this account, USD (proposed tiers endpoint). The tier sheet compares it with the next tier's minDeposit. null: no progress shown. |
 | `accounts[].rates[].type` | "symbol" | "symbol_group" | "any" | `"symbol_group"` | Kind of rate row. Empty list for an account that is not eligible. |
 | `accounts[].rates[].value` | string or null | `"metal"` | Symbol (shown as is), or group: forex, metal, energy, index, stocks, other (label = copy key rate.<value>). For type "any": "other" or null, shown as "Others". |
 | `accounts[].rates[].ptsPerLot` | number | `100` | Coins earned per lot for that row. Rows come highest first, the "any" row last, never 0. |
+| `tiers[].group` | string | `"Mini400"` | Programme tiers, lowest first (proposed tiers endpoint, spec §51). MT5 group of this tier. |
+| `tiers[].minDeposit` | number | `0` | Lifetime deposit (USD) from which an account is in this tier: 0, 200, 1,000, 5,000. |
+| `tiers[].rates[].type` | "symbol" | "symbol_group" | "any" | `"symbol_group"` | Rates of this tier, same rows as an account's rates. Shown in the tier sheet as the next tier's rates. |
+| `tiers[].rates[].value` | string or null | `"metal"` | As accounts[].rates[].value. |
+| `tiers[].rates[].ptsPerLot` | number | `70` | Coins per lot on this tier for that row. |
 | `view` | "loading" | "error", optional |  | PREVIEW ONLY. "loading" or "error" replaces the page content with the loading placeholder or the error message. In the product this comes from the state of the requests, not from data. |
 | `tour.firstVisit` | boolean | `false` | PREVIEW ONLY. Forces the guided tour to open as on a first visit. |
 | `tour.simulatedBalance` | number | `3410` | Figure the balance counts up to in tour step 3 (a simulation). No effect if the real balance is already higher. |
@@ -106,3 +113,43 @@ Example file: `mock/point-balance.json` (`default`)
 | `empty.available` | optional |  | PREVIEW ONLY. Empties the Available tab. |
 | `empty.expired` | optional |  | PREVIEW ONLY. Empties the Expired tab. |
 | `empty.history` | optional |  | PREVIEW ONLY. Empties the History tab. |
+
+## Redemption history — `fetchPage('redemptions')` (list) and `fetchOrder(ref)` (one order, shape of `details[]`)
+
+Example file: `mock/redemptions.json` (`default`)
+
+| Field | Type | Example | Meaning |
+|---|---|---|---|
+| `total` | number | `7` | Number of orders the user has (the `total` of GET /loyalty/orders). While the list holds fewer, it loads the next page on scroll (page, pageSize 20). |
+| `orders[].orderReference` | string | `"ord_a03f77"` | Order id from GET /loyalty/orders (spec §52). Opens the order: fetchOrder(orderReference). |
+| `orders[].orderNumber` | string | `"TADA26101406220019"` | Order number shown to the user, e.g. TADA26101214305512. |
+| `orders[].status` | "new" | "on process" | "completed" | "canceled" | "failed" | `"new"` | Normalised by the backend. Badge: new = Order placed, on process = Processing, completed, canceled = Cancelled, failed. |
+| `orders[].orderDate` | string | `"2026-10-14T06:22:00Z"` | When the order was placed (ISO 8601). List is newest first. |
+| `orders[].firstItemName` | string | `"Nintendo Switch"` | Name of the order's first reward (field name in the API to be confirmed). |
+| `orders[].coinSpent` | number | `30000` | Coins taken for the order. |
+| `details[].orderReference` | string | `"ord_a03f77"` | MOCK ONLY: the demo's orders for fetchOrder(ref). With the API, one GET /loyalty/orders/{orderReference} per order, in this shape. |
+| `details[].orderNumber` | string | `"TADA26101406220019"` | As in the list. |
+| `details[].status` | as orders[].status | `"new"` | Current status (phase 1 has no step-by-step history). |
+| `details[].orderDate` | string | `"2026-10-14T06:22:00Z"` | When the order was placed. |
+| `details[].lastStatusAt` | string | `"2026-10-14T06:22:00Z"` | When the status last changed: "Updated {date}, {time}". |
+| `details[].coinSpent` | number | `30000` | Coins taken for the order. |
+| `details[].refunded` | boolean | `false` | true when the coins went back to the balance: a green note. |
+| `details[].items[].name` | string | `"Nintendo Switch"` | Reward name. |
+| `details[].items[].type` | "egift" | "physical" | "pln" | "pulsa" | … | `"physical"` | Kind: decides the block shown. egift: evoucher; pln / pulsa: token; physical: tracking. Others: label "Reward". |
+| `details[].items[].quantity` | number | `1` | Quantity. |
+| `details[].items[].status` | string | `"new"` | Item status; shown only when it differs from the order's. |
+| `details[].items[].evoucher` | object or null | `null` | E-gift items only; null otherwise. Each item has at most one of evoucher, token, tracking. |
+| `details[].items[].token` | object or null | `null` | PLN / mobile credit items only; null otherwise. |
+| `details[].items[].tracking` | object or null | `null` | Physical goods only, once shipped; null otherwise. |
+| `details[].items[].evoucher.code` | string or null |  | E-voucher code. Arrives in clear; hidden until Show, then copyable. |
+| `details[].items[].evoucher.pin` | string or null |  | E-voucher PIN, same handling. |
+| `details[].items[].evoucher.link` | string or null |  | Voucher link: "Open voucher" (intent `voucher`, data-url). |
+| `details[].items[].evoucher.expiredDate` | ISO 8601 or null |  | "Valid until {date}". |
+| `details[].items[].token.serialNumber` |  |  | PLN / mobile credit token. Hidden until Show, then copyable. |
+| `details[].items[].token.message` |  |  | Message shown under it. |
+| `details[].items[].tracking.awbNumber` |  |  | Physical goods: AWB number (copyable). |
+| `details[].items[].tracking.shippingCompany` |  |  | Courier. |
+| `details[].items[].tracking.trackingNumber` |  |  | Tracking number. |
+| `details[].recipient.name` | string | `"Budi Santoso"` | Physical goods: "Delivery to". |
+| `details[].recipient.address` | string | `"Jl. Sudirman No. 21, Kebayoran Baru, Jakar…` | Address. |
+| `details[].recipient.postalCode` | string | `"12190"` | Postal code. |

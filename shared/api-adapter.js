@@ -4,6 +4,8 @@
 // The six endpoints (all POST, JSON, under /pointSys/app/point/) and what each feeds:
 //   tradingTask/get         -> common.program, common.accounts, Earn today + selected account
 //   tradingTask/getHistory  -> Earn history
+//   tradingTask/getTiers    -> common.tiers, accounts' group and lifetime deposit (proposed endpoint, spec §51)
+//   GET /loyalty/orders     -> Redemption history list; GET /loyalty/orders/{ref} -> one order (HSB backend, spec §52)
 //   coin/summary            -> common.balance
 //   coin/listAvailable      -> Coins, Available tab
 //   coin/listExpired        -> Coins, Expired tab
@@ -51,13 +53,27 @@ export function toProgram(task, signin) {
   };
 }
 
-// tradingTask/get -> common.accounts. Account ids are numbers in the API and text in the UI.
-export const toAccounts = (task) =>
-  (task?.accounts ?? []).map((account) => ({
-    id: String(account.id),
-    eligible: account.eligible === true,
-    rates: account.rates ?? [], // { type, value, ptsPerLot }: used as sent
-  }));
+// tradingTask/get (+ tradingTask/getTiers) -> common.accounts. Account ids are numbers in the API and text in the UI.
+// API: `group` (MT5 group) and `lifetimeDeposit` (USD) come from the proposed tiers endpoint (spec §51), matched by id;
+// null when it does not know the account.
+export const toAccounts = (task, tierInfo) =>
+  (task?.accounts ?? []).map((account) => {
+    const tier = (tierInfo?.accounts ?? []).find((item) => String(item.id) === String(account.id));
+    return {
+      id: String(account.id),
+      eligible: account.eligible === true,
+      group: tier?.group ?? null,
+      lifetimeDeposit: tier?.lifetimeDeposit ?? null,
+      rates: account.rates ?? [], // { type, value, ptsPerLot }: used as sent
+    };
+  });
+
+// tradingTask/getTiers (proposed, spec §51) -> common.tiers: the programme's tiers, lowest first. Each: MT5 group,
+// lifetime deposit needed (USD), rates (same rows as an account's rates). The page labels groups itself (TIER_LABELS).
+export const toTiers = (tierInfo) =>
+  [...(tierInfo?.tiers ?? [])]
+    .sort((a, b) => a.minDeposit - b.minDeposit)
+    .map((tier) => ({ group: tier.group, minDeposit: tier.minDeposit, rates: tier.rates ?? [] }));
 
 // coin/summary -> common.balance. `pending` is sent by the API but never shown (spec §41).
 export const toBalance = (summary) => ({
@@ -120,3 +136,52 @@ export function toPointBalancePage(available, expired, ledger, task) {
     history: ledger?.items ?? [],
   };
 }
+
+// Redemption history (spec §52). The backend normalises the status ("onprocess" -> "on process"); done here too in case.
+export const ORDER_STATUSES = ['new', 'on process', 'completed', 'canceled', 'failed'];
+const orderStatus = (value) => String(value ?? '').trim().toLowerCase().replace(/^onprocess$/, 'on process');
+
+// GET /loyalty/orders?clientId=…&page=…&pageSize=… answers { orders: [...], page, pageSize, total } (settled with the
+// backend, 20 Oct 2026). One summary per order; the first reward's name is `firstItemName`.
+export const toOrdersPage = (answer) => ({
+  orders: toOrders(answer?.orders ?? []),
+  page: answer?.page ?? 1,
+  pageSize: answer?.pageSize ?? 0,
+  total: answer?.total ?? 0,
+});
+
+// The summaries of one page, newest first.
+export const toOrders = (list) =>
+  [...(list ?? [])]
+    .map((order) => ({
+      orderReference: String(order.orderReference),
+      orderNumber: order.orderNumber ?? '',
+      status: orderStatus(order.status),
+      orderDate: order.orderDate,
+      firstItemName: order.firstItemName ?? '',
+      coinSpent: order.coinSpent ?? 0,
+    }))
+    .sort((a, b) => Date.parse(b.orderDate) - Date.parse(a.orderDate));
+
+// GET /loyalty/orders/{orderReference} -> the order the details view shows. No money values: the backend strips every
+// IDR amount (price, fees, value) and the page shows coins only (spec §52). Each item carries at most one of
+// evoucher (e-gifts), token (PLN, mobile credit) or tracking (physical goods); the others are null.
+export const toOrder = (order) => ({
+  orderReference: String(order.orderReference),
+  orderNumber: order.orderNumber ?? '',
+  status: orderStatus(order.status),
+  orderDate: order.orderDate,
+  lastStatusAt: order.lastStatusAt ?? order.orderDate,
+  coinSpent: order.coinSpent ?? 0,
+  refunded: order.refunded === true,
+  items: (order.items ?? []).map((item) => ({
+    name: item.name ?? '',
+    type: item.type ?? '',
+    quantity: item.quantity ?? 1,
+    status: orderStatus(item.status),
+    evoucher: item.evoucher ?? null,
+    token: item.token ?? null,
+    tracking: item.tracking ?? null,
+  })),
+  recipient: order.recipient ?? null,
+});

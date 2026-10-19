@@ -5,7 +5,10 @@
 //   fetchCopy()        -> UI strings, key -> text           (copy/en.json; swap the file to localise)
 //   fetchPreview(page) -> PREVIEW ONLY: the named state overrides used by ?state=...; return {} with a real API
 //
-// `page` is 'dashboard' | 'trading-task' | 'point-balance'. The shapes are documented field by field in DATA.md.
+//   fetchOrder(ref)    -> one reward order, for Redemption history (spec §52)
+//
+// `page` is 'dashboard' | 'trading-task' | 'point-balance' | 'redemptions'. The shapes are documented field by field in
+// DATA.md.
 //
 // Two sources:
 //   1. Mock (default): the UI-shaped files in mock/. This is what the demo and the preview states use.
@@ -14,7 +17,7 @@
 // TO CONNECT THE REAL API: make `USE_API` true and replace the body of `request()` with the real call. Everything
 // else in this file, in the adapter and in the pages stays as it is.
 
-import { joinRequirementFrom, toAccounts, toBalance, toDashboardPage, toPointBalancePage, toProgram, toTradingTaskPage } from './api-adapter.js';
+import { joinRequirementFrom, toAccounts, toBalance, toDashboardPage, toOrder, toOrdersPage, toPointBalancePage, toProgram, toTiers, toTradingTaskPage } from './api-adapter.js';
 
 const USE_API = new URLSearchParams(location.search).get('source') === 'api';
 
@@ -67,19 +70,38 @@ const activityList = () => sessionCached('hsb-loyalty-activity-v3', () => getJSO
 const taskGet = () => result('tradingTask/get');
 
 async function commonFromApi() {
-  const [taskAnswer, summary, user, ui] = await Promise.all([request('tradingTask/get'), result('coin/summary'), signin(), uiOnly()]);
+  const [taskAnswer, summary, user, ui, tierInfo] = await Promise.all([request('tradingTask/get'), result('coin/summary'), signin(), uiOnly(), result('tradingTask/getTiers')]);
   const task = taskAnswer.result;
   return {
     now: new Date(taskAnswer.timestamp).toISOString(), // server time
     balance: toBalance(summary),
     program: toProgram(task, user),
-    accounts: toAccounts(task),
+    accounts: toAccounts(task, tierInfo),
+    tiers: toTiers(tierInfo),
     activity: await activityList(),
     tour: ui.tour,
   };
 }
 
+// API: the HSB backend's order endpoints (spec §52): GET, with the app token; not the loyalty API above. `path` is e.g.
+// 'loyalty/orders?page=1&pageSize=20' (add clientId=<the user's> to the query) or 'loyalty/orders/{orderReference}'.
+// Settled with the backend: { success, result } like the loyalty API; the list's result is { orders, page, pageSize,
+// total }, newest first, page from 1, pageSize at most 100. The backend takes the client from the token: 403 when the
+// order, or the query's clientId, is not the user's (the page then shows its error view).
+// Here: mock/api/loyalty-orders.json for the list and mock/api/loyalty-orders-detail.json for any one order.
+function getOrders(path) {
+  const file = path.startsWith('loyalty/orders/') ? 'loyalty-orders-detail' : 'loyalty-orders';
+  return getJSON(`../mock/api/${file}.json`).then((answer) => {
+    if (answer.success !== true) throw new Error(`${path}: ${answer.message || 'request failed'}`);
+    return answer.result;
+  });
+}
+
 async function pageFromApi(page) {
+  if (page === 'redemptions') {
+    const first = toOrdersPage(await getOrders(`loyalty/orders?page=1&pageSize=${ORDERS_PAGE_SIZE}`));
+    return { orders: first.orders, total: first.total };
+  }
   const task = await taskGet();
   if (page === 'dashboard') return toDashboardPage(task, await uiOnly());
   if (page === 'trading-task') {
@@ -96,6 +118,17 @@ async function pageFromApi(page) {
 export const fetchCommon = () => (USE_API ? commonFromApi() : getJSON('../mock/common.json'));
 
 export const fetchPage = (page) => (USE_API ? pageFromApi(page) : getJSON(`../mock/${page}.json`).then((file) => file.default));
+
+// Redemption history, the next page of the list (pageNo from 2). Mock: the mock holds every order, so nothing more.
+export const ORDERS_PAGE_SIZE = 20;
+export const fetchMoreOrders = (pageNo) => (USE_API
+  ? getOrders(`loyalty/orders?page=${pageNo}&pageSize=${ORDERS_PAGE_SIZE}`).then((answer) => toOrdersPage(answer).orders)
+  : Promise.resolve([]));
+
+// One order of Redemption history. Mock: from the `details` list of mock/redemptions.json.
+export const fetchOrder = (ref) => (USE_API
+  ? getOrders(`loyalty/orders/${encodeURIComponent(ref)}`).then(toOrder)
+  : getJSON('../mock/redemptions.json').then((file) => file.default.details.find((order) => order.orderReference === ref) ?? null));
 
 export const fetchCopy = () => getJSON('../copy/en.json');
 

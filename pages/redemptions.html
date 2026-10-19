@@ -1,0 +1,32 @@
+<!doctype html>
+<!--
+  Loyalty · Redemption history (spec §52), opened from Coins
+  States (combine with commas):
+    Page: orders-empty, orders-more
+    Page status: loading, error  (spec §44)
+  One order: redemptions.html?order=<orderReference>, e.g. ?order=ord_7f3a91 (e-voucher), ord_5c2e08 (shipping),
+    ord_91d4b2 (PLN token), ord_a03f77 (new), ord_3b8c15 (cancelled, refunded), ord_e61d90 (failed), ord_2d7c44 (two items)
+  Shared states (empty, needs-kyc, needs-deposit, expiring, activity-empty) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Loyalty · Redemption history</title>
+  <script src="../shared/theme.js"></script>
+  <link rel="stylesheet" href="../tokens/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="../shared/components.css">
+  <link rel="stylesheet" href="redemptions.css">
+</head>
+<body data-page="redemptions">
+  <main class="app" id="app"></main>
+  <script type="module" src="redemptions.js"></script>
+  <!-- DEMO ONLY: start. Review aids, not part of the product. Strip this block (and the demo/ folder) before handoff:
+       the state switcher, the "Internal Explanation" messages on buttons and the analytics event list. -->
+  <script type="module" src="../demo/preview.js"></script>
+  <script type="module" src="../demo/intents.js"></script>
+  <script type="module" src="../demo/tracking-log.js"></script>
+  <!-- DEMO ONLY: end -->
+</body>
+</html>

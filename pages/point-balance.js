@@ -158,7 +158,7 @@ function body() {
 function render() {
   app.innerHTML = `
     ${appHeader(ui, { title: ui.t('pb.title') })}
-    ${balanceBlock(ui, common, { card: true })}
+    ${balanceBlock(ui, common, { card: true, history: ui.href('redemptions.html') })}
     ${body()}
     ${filters.expired.sheet()}${filters.history.sheet()}`;
   watchEnd();

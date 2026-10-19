@@ -2,7 +2,7 @@
 // UI-shaped mock files, key by key. Run from the project root:  node mock/api/check.mjs
 // It fails if the adapter stops producing a field the pages read, or produces a different value for the sample data.
 import { readFileSync } from 'node:fs';
-import { toAccounts, toBalance, toDashboardPage, toPointBalancePage, toProgram, toTradingTaskPage, joinRequirementFrom } from '../../shared/api-adapter.js';
+import { toAccounts, toBalance, toDashboardPage, toOrder, toOrdersPage, toPointBalancePage, toProgram, toTiers, toTradingTaskPage, joinRequirementFrom } from '../../shared/api-adapter.js';
 
 const read = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url)));
 const api = (name) => read(`./${name}.json`).result;
@@ -13,10 +13,14 @@ const mock = (page) => read(`../${page}.json`).default;
 const built = {
   'common.balance': [toBalance(api('coin-summary')), mockCommon.balance],
   'common.program': [toProgram(task, api('signin')), mockCommon.program],
-  'common.accounts': [toAccounts(task), mockCommon.accounts],
+  'common.accounts': [toAccounts(task, api('tradingTask-getTiers')), mockCommon.accounts],
+  'common.tiers': [toTiers(api('tradingTask-getTiers')), mockCommon.tiers],
   dashboard: [toDashboardPage(task, mock('dashboard')), mock('dashboard')],
   'trading-task': [toTradingTaskPage(task, api('tradingTask-getHistory')), mock('trading-task')],
   'point-balance': [toPointBalancePage(api('coin-listAvailable'), api('coin-listExpired'), api('coin-ledger'), task), mock('point-balance')],
+  'redemptions.orders': [toOrdersPage(api('loyalty-orders')).orders, mock('redemptions').orders],
+  'redemptions.total': [toOrdersPage(api('loyalty-orders')).total, mock('redemptions').total],
+  'redemptions.order': [toOrder(api('loyalty-orders-detail')), mock('redemptions').details.find((order) => order.orderReference === api('loyalty-orders-detail').orderReference)],
 };
 
 // Differences that are expected: preview-only fields of the mock, and values the sample API states more precisely.

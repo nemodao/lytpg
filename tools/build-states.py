@@ -15,6 +15,7 @@ PAGES = [
     ('dashboard', 'Dashboard (Home tab)'),
     ('trading-task', 'Daily Trading (Earn tab)'),
     ('point-balance', 'Coin Balance (Coins tab)'),
+    ('redemptions', 'Redemption history (from Coins)'),
 ]
 
 
