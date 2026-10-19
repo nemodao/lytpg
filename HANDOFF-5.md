@@ -1,8 +1,6 @@
 # Handoff 5 — what changed since handoff 4
 
-> **Status: in progress.** Phase 3 is not finished: the guided tour still has to be reworked for the new Home and Earn
-> (it runs, but steps 2 and 4 describe the old layout). This file grows until the round is handed off; read it again
-> then.
+> **Status: in progress.** This file grows until the round is handed off; read it again then.
 
 **Who this is for:** developers (and their AI assistants) who have already applied handoff 4. Everything not named here
 is unchanged. Behaviour: `spec.md` §49–§53. Exact line changes: `CHANGES-since-handoff-4.diff` in the package.
@@ -135,7 +133,7 @@ turns light purple.
   in), the rules and Terms without tabs. No account, no History, no trade button, no tier table. The same sentence is
   added to the "no live account" card of signed-in users. The expiry rule is left out when `expiryDays` is null.
 - **Coins:** balance 0 and a "Your coins will show up here" card with Sign up / Log in, in place of the tabs.
-- **Tour:** runs for guests too.
+- **Tour:** runs for guests too, without step 5 (see §10).
 - **API:** `POST /pointSys/app/point/guest/tradingTask/get` (name may change; on UAT when the backend says so): no
   Authorization, no `clientId`, still `x-auth-key`; same answer as `tradingTask/get` for a user with no live account,
   so `toProgram` / `toAccounts` read it. See `GUEST` / `TASK_ENDPOINT` in `shared/data-source.js` (demo:
@@ -165,6 +163,16 @@ they are). If your token script turns `tokens.json` into a theme, check it accep
 - `STATES.md`: Home drops `capped`, `no-trades-today`, `market-closed`; adds `big-prices`, `activity-empty`. Earn drops
   `market-closed`; adds `activity-empty`, `tier-micro`, `tier-standard`, `tier-top`, `tier-reached`, `tier-unknown`.
   Coins adds `needs-kyc`, `needs-deposit`. All three add `guest` (shared). New page `redemptions`: `orders-empty`, `orders-more`, `loading`, `error`.
+
+## 10. Guided tour: two fixes (spec §38)
+
+The tour was reviewed against the new pages, signed in and as a guest; its steps stay as they are, with two fixes in
+`shared/tour.js`:
+
+- **Guests skip step 5** ("Manage your coins"): they have no Available / Expired / History tabs. Their tour has 4 steps
+  and step 4 ends it with `Finish tour` (new copy key `tour.finish`). Steps take a new flag `signedIn`.
+- **Step 4's pop-up opens under the whole balance card**, not right under `Redeem`, so it no longer cuts through the
+  "Redemption history" link. Steps take a new option `below` (a selector).
 
 ## Waiting on others
 

@@ -16,9 +16,12 @@ const STEPS = [
   { id: 1, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-1', fingerAfter: 2, sparkles: true },
   { id: 2, page: 'dashboard', file: 'dashboard.html', target: null, art: 'step-2', rules: true, needsTask: true, fingerAfter: 7 },
   { id: 3, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="balance"]', effect: 'coins', note: true },
-  { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', effect: 'gifts', art: 'step-4' },
-  { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: ['available', 'expired', 'history'] },
+  { id: 4, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="redeem"]', below: '[data-tour="balance"]', effect: 'gifts', art: 'step-4' },
+  { id: 5, page: 'point-balance', file: 'point-balance.html', target: '[data-tour="tabs"]', list: ['available', 'expired', 'history'], signedIn: true },
 ];
+// `below`: the pop-up opens under this element rather than right under the highlight (step 4: under the whole balance
+// card, so it does not cut through the "Redemption history" link). `signedIn`: skipped for guests, who have no tabs
+// (spec §53); the last step then reads "Finish tour".
 // API: "tour already seen" is remembered in this browser only. If the app or the API should remember it per user,
 // replace `seen` / `markSeen` below; nothing else depends on localStorage.
 const SEEN_KEY = 'hsb-loyalty-tour-seen';
@@ -145,6 +148,7 @@ export function mountTour(ui, common, page) {
   // along in the URL so the other pages count the same steps.
   const skipped = new Set((params.get('tourskip') || '').split(',').filter(Boolean).map(Number));
   if (common.program.tradingTask === false) STEPS.filter((step) => step.needsTask).forEach((step) => skipped.add(step.id));
+  if (common.guest) STEPS.filter((step) => step.signedIn).forEach((step) => skipped.add(step.id));
   const steps = STEPS.filter((step) => !skipped.has(step.id));
 
   // Step 3 counts the balance up from the user's real balance to a simulated figure. A user who already has that
@@ -276,7 +280,7 @@ export function mountTour(ui, common, page) {
         ${step.note && simulated ? `<p class="t-caption c-3">${ui.t(`tour.${step.id}.note`)}</p>` : ''}
         <div class="tour__actions">
           ${index > 0 ? `<button class="btn btn--stroke btn--sm" type="button" data-tour-action="back">${ui.t('tour.back')}</button>` : ''}
-          <button class="btn btn--primary btn--sm" type="button" data-tour-action="next">${ui.t(`tour.${step.id}.cta`)}</button>
+          <button class="btn btn--primary btn--sm" type="button" data-tour-action="next">${ui.t(isLast && step !== STEPS.at(-1) ? 'tour.finish' : `tour.${step.id}.cta`)}</button>
         </div>
       </div>
       <img class="tour__finger" src="../assets/tour/finger.webp" alt="" style="--finger-after:${step.fingerAfter || FINGER_AFTER}s">`;
@@ -295,7 +299,8 @@ export function mountTour(ui, common, page) {
       rect = target.getBoundingClientRect();
       const pad = 6;
       spot.style.cssText = `left:${rect.left - pad}px;top:${rect.top - pad}px;width:${rect.width + pad * 2}px;height:${rect.height + pad * 2}px;border-radius:${getComputedStyle(target).borderRadius}`;
-      const below = rect.bottom + pad + 12;
+      const under = step.below ? app.querySelector(step.below) : null;
+      const below = Math.max(rect.bottom + pad, under ? under.getBoundingClientRect().bottom : 0) + 12;
       const above = rect.top - pad - 12 - card.offsetHeight;
       if (below + card.offsetHeight <= window.innerHeight - gutter) card.style.top = `${below}px`;
       else if (above >= gutter) card.style.top = `${above}px`;
