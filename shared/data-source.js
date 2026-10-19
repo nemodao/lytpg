@@ -90,15 +90,15 @@ async function commonFromApi() {
       tour: ui.tour,
     };
   }
-  const [taskAnswer, summary, user, ui, tierInfo] = await Promise.all([request('tradingTask/get'), result('coin/summary'), signin(), uiOnly(), result('tradingTask/getTiers')]);
+  const [taskAnswer, summary, user, ui] = await Promise.all([request('tradingTask/get'), result('coin/summary'), signin(), uiOnly()]);
   const task = taskAnswer.result;
   return {
     guest: false,
     now: new Date(taskAnswer.timestamp).toISOString(), // server time
     balance: toBalance(summary),
     program: toProgram(task, user),
-    accounts: toAccounts(task, tierInfo),
-    tiers: toTiers(tierInfo),
+    accounts: toAccounts(task),
+    tiers: toTiers(task),
     activity: await activityList(),
     tour: ui.tour,
   };

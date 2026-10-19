@@ -92,11 +92,11 @@
         "tier-unknown": "Tier: unknown group"
       },
       "descriptions": {
-        "tier-micro": "Selected account is Micro (MT5 group Mini400), $50 deposited: the upgrade row offers Standard; the sheet asks for $150 more.",
-        "tier-standard": "Selected account is Standard (Mini10), $450 deposited: the upgrade row offers VIP; the sheet asks for $550 more.",
-        "tier-top": "Selected account is Platinum (MIVIP), the top tier: a quiet row (crown, no border, grey) reads “Platinum: our highest rates”; the sheet says the account is on the top tier and offers to trade.",
-        "tier-reached": "Selected account is still VIP (VIP1) but has $5,200 deposited, past Platinum's $5,000: the sheet says the upgrade is on its way instead of asking for more.",
-        "tier-unknown": "Selected account's MT5 group is not one the page knows (Mini50): no tier label and no upgrade row."
+        "tier-micro": "Selected account is Micro (MT5 group Direct\\Mini400), $50 deposited: the upgrade row offers Standard; the sheet asks for $150 more.",
+        "tier-standard": "Selected account is Standard (Direct\\Mini10), $450 deposited: the upgrade row offers VIP; the sheet asks for $550 more.",
+        "tier-top": "Selected account is Platinum (Direct\\MIVIP), the top tier: a quiet row (crown, no border, grey) reads “Platinum: our highest rates”; the sheet says the account is on the top tier and offers to trade.",
+        "tier-reached": "Selected account is still VIP (Direct\\VIP1) but has $5,200 deposited, past Platinum's $5,000 (the dealing team changes groups by hand): the sheet says the upgrade is on its way instead of asking for more.",
+        "tier-unknown": "Selected account's MT5 group is not one of the four tiers (1F\\Direct\\Mini10, matched exactly): no tier label and no upgrade row."
       }
     }
   ],
@@ -603,7 +603,7 @@
           {
             "id": "50000234",
             "eligible": true,
-            "group": "VIP1",
+            "group": "Direct\\VIP1",
             "lifetimeDeposit": 2350,
             "rates": [
               {
@@ -819,7 +819,7 @@
           {
             "id": "50000234",
             "eligible": true,
-            "group": "Mini400",
+            "group": "Direct\\Mini400",
             "lifetimeDeposit": 50,
             "rates": [
               {
@@ -857,7 +857,7 @@
           {
             "id": "50000519",
             "eligible": true,
-            "group": "MIVIP",
+            "group": "Direct\\MIVIP",
             "lifetimeDeposit": 6200,
             "rates": [
               {
@@ -900,7 +900,7 @@
           {
             "id": "50000642",
             "eligible": true,
-            "group": "VIP1",
+            "group": "Direct\\VIP1",
             "lifetimeDeposit": 1200,
             "rates": [
               {
@@ -938,7 +938,7 @@
           {
             "id": "50000871",
             "eligible": false,
-            "group": "Mini10",
+            "group": "1F\\Direct\\Mini10",
             "lifetimeDeposit": 300,
             "rates": []
           }
@@ -951,7 +951,7 @@
           {
             "id": "50000234",
             "eligible": true,
-            "group": "Mini10",
+            "group": "Direct\\Mini10",
             "lifetimeDeposit": 450,
             "rates": [
               {
@@ -989,7 +989,7 @@
           {
             "id": "50000519",
             "eligible": true,
-            "group": "MIVIP",
+            "group": "Direct\\MIVIP",
             "lifetimeDeposit": 6200,
             "rates": [
               {
@@ -1032,7 +1032,7 @@
           {
             "id": "50000642",
             "eligible": true,
-            "group": "VIP1",
+            "group": "Direct\\VIP1",
             "lifetimeDeposit": 1200,
             "rates": [
               {
@@ -1070,7 +1070,7 @@
           {
             "id": "50000871",
             "eligible": false,
-            "group": "Mini10",
+            "group": "1F\\Direct\\Mini10",
             "lifetimeDeposit": 300,
             "rates": []
           }
@@ -1088,7 +1088,7 @@
           {
             "id": "50000234",
             "eligible": true,
-            "group": "VIP1",
+            "group": "Direct\\VIP1",
             "lifetimeDeposit": 5200,
             "rates": [
               {
@@ -1126,7 +1126,7 @@
           {
             "id": "50000519",
             "eligible": true,
-            "group": "MIVIP",
+            "group": "Direct\\MIVIP",
             "lifetimeDeposit": 6200,
             "rates": [
               {
@@ -1169,7 +1169,7 @@
           {
             "id": "50000642",
             "eligible": true,
-            "group": "VIP1",
+            "group": "Direct\\VIP1",
             "lifetimeDeposit": 1200,
             "rates": [
               {
@@ -1207,7 +1207,7 @@
           {
             "id": "50000871",
             "eligible": false,
-            "group": "Mini10",
+            "group": "1F\\Direct\\Mini10",
             "lifetimeDeposit": 300,
             "rates": []
           }
@@ -1220,7 +1220,7 @@
           {
             "id": "50000234",
             "eligible": true,
-            "group": "Mini50",
+            "group": "1F\\Direct\\Mini10",
             "lifetimeDeposit": 800,
             "rates": [
               {
@@ -1258,7 +1258,7 @@
           {
             "id": "50000519",
             "eligible": true,
-            "group": "MIVIP",
+            "group": "Direct\\MIVIP",
             "lifetimeDeposit": 6200,
             "rates": [
               {
@@ -1301,7 +1301,7 @@
           {
             "id": "50000642",
             "eligible": true,
-            "group": "VIP1",
+            "group": "Direct\\VIP1",
             "lifetimeDeposit": 1200,
             "rates": [
               {
@@ -1339,7 +1339,7 @@
           {
             "id": "50000871",
             "eligible": false,
-            "group": "Mini10",
+            "group": "1F\\Direct\\Mini10",
             "lifetimeDeposit": 300,
             "rates": []
           }

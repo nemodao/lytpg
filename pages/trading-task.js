@@ -51,17 +51,25 @@ const accountName = (item) => ui.esc(item.id);
 const eligibleBadge = (item) =>
   item.eligible ? badge('green', ui.t('badge.eligible')) : badge('neutral', ui.t('badge.notEligible'));
 
-// Account tiers (spec §51). The MT5 group of each account is shown as a tier; this mapping is the only tier logic held
-// by the page. API: `accounts[].group`, `accounts[].lifetimeDeposit` (USD) and `common.tiers` (lowest first: group,
-// minDeposit, rates) come from the proposed tiers endpoint. A group missing from TIER_LABELS (or from `tiers`) shows no
-// tier and no upgrade row.
-const TIER_LABELS = { Mini400: 'micro', Mini10: 'standard', VIP1: 'vip', MIVIP: 'platinum' };
-const tiers = common.tiers ?? [];
-const tierAt = (item) => (TIER_LABELS[item.group] ? tiers.findIndex((tier) => tier.group === item.group) : -1);
-const tierName = (group) => ui.t(`tier.${TIER_LABELS[group]}`);
+// Account tiers (spec §51). API (tradingTask/get): `accounts[].group` is the account's full MT5 group name,
+// `accounts[].lifetimeDeposit` its approved deposits in USD (0 when none), `common.tiers[]` = { group, rates } per group
+// the programme has rates for, unsorted. Only these four groups are tiers, matched exactly (any case): a group such as
+// 1F\Direct\Mini10 is not one and shows no tier and no upgrade row. The order and the deposit thresholds are fixed here
+// (confirmed by product, 20 Oct 2026); the rates always come from the API.
+const TIERS = [
+  { key: 'micro', group: 'Direct\\Mini400', minDeposit: 0 },
+  { key: 'standard', group: 'Direct\\Mini10', minDeposit: 200 },
+  { key: 'vip', group: 'Direct\\VIP1', minDeposit: 1000 },
+  { key: 'platinum', group: 'Direct\\MIVIP', minDeposit: 5000 },
+];
+const sameGroup = (a, b) => String(a ?? '').toLowerCase() === String(b ?? '').toLowerCase();
+// The four tiers in order, each with its rates from the API (null when the programme has none for it).
+const tiers = TIERS.map((tier) => ({ ...tier, rates: (common.tiers ?? []).find((item) => sameGroup(item.group, tier.group))?.rates ?? null }));
+const tierAt = (item) => tiers.findIndex((tier) => sameGroup(item.group, tier.group));
+const tierName = (tier) => ui.t(`tier.${tier.key}`);
 // Right after the account number, for eligible accounts only.
 const tierBadge = (item) => (item.eligible && tierAt(item) >= 0
-  ? `<span class="badge tier tier--${TIER_LABELS[item.group]}">${tierName(item.group)}</span>`
+  ? `<span class="badge tier tier--${tiers[tierAt(item)].key}">${tierName(tiers[tierAt(item)])}</span>`
   : '');
 const maxRate = (rates) => Math.max(0, ...rates.map((rate) => rate.ptsPerLot));
 const usd = (amount) => ui.t('money.usd', { amount: ui.num(Math.ceil(amount)) });
@@ -192,22 +200,24 @@ function upgradeRow(item) {
   const at = tierAt(item);
   if (at < 0 || ended) return '';
   const next = tiers[at + 1];
-  const title = next ? ui.t('upgrade.row.title') : ui.t('upgrade.row.topTitle', { tier: tierName(item.group) });
-  const body = next ? ui.t('upgrade.row.body', { tier: tierName(next.group), max: ui.num(maxRate(next.rates)) }) : ui.t('upgrade.row.topBody');
+  const title = next ? ui.t('upgrade.row.title') : ui.t('upgrade.row.topTitle', { tier: tierName(tiers[at]) });
+  const body = !next ? ui.t('upgrade.row.topBody')
+    : next.rates ? ui.t('upgrade.row.body', { tier: tierName(next), max: ui.num(maxRate(next.rates)) })
+      : ui.t('upgrade.row.bodyNoRate', { tier: tierName(next) });
   return `
-    <button class="upgrade-row${next ? '' : ' upgrade-row--top'}" type="button" data-action="open-upgrade" aria-haspopup="dialog" data-track="loyalty_upgrade_open" data-track-tier="${TIER_LABELS[item.group]}" data-track-next_tier="${next ? TIER_LABELS[next.group] : 'none'}">
+    <button class="upgrade-row${next ? '' : ' upgrade-row--top'}" type="button" data-action="open-upgrade" aria-haspopup="dialog" data-track="loyalty_upgrade_open" data-track-tier="${tiers[at].key}" data-track-next_tier="${next ? next.key : 'none'}">
       <img class="upgrade-row__art" src="../assets/images/earn/${next ? 'money-bag' : 'crown'}.webp" alt="">
       <span class="grow stack stack--tight"><span class="t-body-strong">${title}</span><span class="t-caption c-2 num">${body}</span></span>
       ${ui.icon('right', 'icon--sm')}
     </button>`;
 }
 
-// Coins per lot on every tier (spec §51), with `nowGroup`'s column highlighted ("Now").
+// Coins per lot on every tier the programme has rates for (spec §51), with `nowKey`'s column highlighted ("Now").
 // Rows: every row any tier lists, in the order of the top tier. A tier without that row: its catch-all row for a group
 // row; "—" for a symbol row (e.g. XAUUSD), because the page cannot tell which group a symbol falls in. Too wide for the
 // screen: the first column stays, the tiers scroll (render() brings the "Now" column to the middle).
-function tierTable(nowGroup = null) {
-  const shown = tiers.filter((tier) => TIER_LABELS[tier.group]);
+function tierTable(nowKey = null) {
+  const shown = tiers.filter((tier) => tier.rates);
   const key = (rate) => `${rate.type}:${rate.value}`;
   const rows = [];
   [...shown].reverse().forEach((tier) => tier.rates.forEach((rate) => { if (!rows.some((row) => key(row) === key(rate))) rows.push(rate); }));
@@ -217,7 +227,7 @@ function tierTable(nowGroup = null) {
     if (same) return same.ptsPerLot;
     return row.type === 'symbol' ? null : rates.find((rate) => rate.type === 'any')?.ptsPerLot ?? null;
   };
-  const isNow = (tier) => nowGroup && tier.group === nowGroup;
+  const isNow = (tier) => nowKey && tier.key === nowKey;
   const cell = (tier, row) => {
     const value = valueIn(tier.rates, row);
     return `<td class="num${isNow(tier) ? ' is-now' : ''}">${value == null ? '—' : ui.num(value)}</td>`;
@@ -225,7 +235,7 @@ function tierTable(nowGroup = null) {
   return `
     <div class="tier-table" data-tier-table>
       <table>
-        <thead><tr><th scope="col"><span class="sr-only">${ui.t('upgrade.table.group')}</span></th>${shown.map((tier) => `<th scope="col"${isNow(tier) ? ' class="is-now"' : ''}>${isNow(tier) ? `<span class="tier-table__now">${ui.t('upgrade.table.now')}</span>` : ''}${tierName(tier.group)}</th>`).join('')}</tr></thead>
+        <thead><tr><th scope="col"><span class="sr-only">${ui.t('upgrade.table.group')}</span></th>${shown.map((tier) => `<th scope="col"${isNow(tier) ? ' class="is-now"' : ''}>${isNow(tier) ? `<span class="tier-table__now">${ui.t('upgrade.table.now')}</span>` : ''}${tierName(tier)}</th>`).join('')}</tr></thead>
         <tbody>${rows.map((row) => `<tr><th scope="row">${rateLabel(row)}</th>${shown.map((tier) => cell(tier, row)).join('')}</tr>`).join('')}</tbody>
       </table>
     </div>
@@ -238,12 +248,11 @@ function upgradeSheet() {
   const item = account(selectedId);
   const at = tierAt(item);
   const next = tiers[at + 1];
-  const name = tierName(item.group);
-  const ladder = tiers.filter((tier) => TIER_LABELS[tier.group]).map((tier, index) => {
+  const ladder = tiers.map((tier, index) => {
     const state = index < at ? 'done' : index === at ? 'current' : 'later';
-    return `<li class="ladder__step ladder__step--${state}"${state === 'current' ? ' aria-current="step"' : ''}><span class="ladder__dot">${state === 'current' ? ui.icon('check', 'icon--sm') : ''}</span><span class="ladder__name">${tierName(tier.group)}</span></li>`;
+    return `<li class="ladder__step ladder__step--${state}"${state === 'current' ? ' aria-current="step"' : ''}><span class="ladder__dot">${state === 'current' ? ui.icon('check', 'icon--sm') : ''}</span><span class="ladder__name">${tierName(tier)}</span></li>`;
   }).join('');
-  const table = tierTable(item.group);
+  const table = tierTable(tiers[at].key);
   let body;
   if (next) {
     const deposited = item.lifetimeDeposit;
@@ -256,8 +265,8 @@ function upgradeSheet() {
         <p class="t-caption c-2 num">${ui.t('upgrade.progress', { deposited: usd(deposited), target: usd(next.minDeposit) })}</p>
         <span class="upgrade-progress__bar"><i style="width:${Math.min(100, Math.round((deposited / next.minDeposit) * 100))}%"></i></span>
         <p class="t-body num">${deposited < next.minDeposit
-          ? ui.md('upgrade.need', { amount: usd(next.minDeposit - deposited), tier: tierName(next.group) })
-          : ui.md('upgrade.reached', { tier: tierName(next.group) })}</p>
+          ? ui.md('upgrade.need', { amount: usd(next.minDeposit - deposited), tier: tierName(next) })
+          : ui.md('upgrade.reached', { tier: tierName(next) })}</p>
       </div>`;
     body = `
       ${progress}

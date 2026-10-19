@@ -259,5 +259,6 @@
   "redeemGate.guestBody": "Create your free account to earn coins when you trade and spend them on rewards.",
   "guest.coins.title": "Your coins will show up here",
   "guest.coins.body": "Sign up to earn coins on every lot you trade, then spend them on rewards.",
-  "join.ratesByAccount": "Coins per lot depend on your trading account type."
+  "join.ratesByAccount": "Coins per lot depend on your trading account type.",
+  "upgrade.row.bodyNoRate": "Upgrade to {tier} to earn more coins per lot"
 }

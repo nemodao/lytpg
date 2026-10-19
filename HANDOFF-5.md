@@ -71,8 +71,10 @@ turns light purple.
 ## 4. Earn: account tiers and the way up (spec §51)
 
 - **Tier label** right after the account number (eligible accounts only), in the account field and the account sheet.
-  MT5 group → label, held by the front end: `Mini400` Micro, `Mini10` Standard, `VIP1` VIP, `MIVIP` Platinum. Any other
-  group: no label, no upgrade row.
+  The API sends the full MT5 group name; a tier only when it matches exactly (any case): `Direct\Mini400` Micro,
+  `Direct\Mini10` Standard, `Direct\VIP1` VIP, `Direct\MIVIP` Platinum (`TIERS` in `pages/trading-task.js`, with the
+  order and the deposit thresholds 0 / 200 / 1,000 / 5,000 USD, fixed by product). Any other group, e.g.
+  `1F\Direct\Mini10`: no label, no upgrade row.
 - **Upgrade row** right under the account field: money bag, "Want more coins per lot?" / "Upgrade to {next} and earn up
   to {n} coins per lot". On Platinum it is quiet (crown, no border, grey): "{Platinum}: our highest rates". It opens the
   tier sheet.
@@ -86,9 +88,11 @@ turns light purple.
   rounded up; absent when nothing is missing), so the app's Deposit screen opens on that account with the amount filled
   in. **The parameter names on the app side are to be agreed with the app team.**
 - A symbol row (e.g. XAUUSD) on a tier that does not list it shows "—": the page cannot tell which group a symbol is in.
-- **API (proposed, to agree with the backend):** `tradingTask/getTiers` → `common.tiers[]` (`group`, `minDeposit`,
-  `rates`), and per account `group` and `lifetimeDeposit`, matched by id (`toTiers`, `toAccounts(task, tierInfo)` in
-  `shared/api-adapter.js`; sample `mock/api/tradingTask-getTiers.json`).
+- **API (settled 20 Oct 2026, on UAT when the backend says so):** `tradingTask/get` adds `accounts[].group` (full
+  name), `accounts[].lifetimeDeposit` (USD, 0 when none) and `tiers[]` = `{ group, rates }`, unsorted, no thresholds
+  (`toAccounts(task)`, `toTiers(task)` in `shared/api-adapter.js`; sample `mock/api/tradingTask-get.json`). No separate
+  tiers endpoint. A tier the API sends no rates for is left out of the table; the upgrade row then reads "Upgrade to
+  {tier} to earn more coins per lot".
 
 ## 5. New page: Redemption history (spec §52)
 
@@ -157,6 +161,6 @@ they are). If your token script turns `tokens.json` into a theme, check it accep
 ## Waiting on others
 
 - Backend: the rewards list API (guest and signed-in, same shape), the recent activity API (needs no token; not created
-  yet), the tiers API, the guest trading-task API; for Redemption history, an item count and an image per order
+  yet), the tier fields in tradingTask/get and the guest trading-task API (both requested, on UAT later); for Redemption history, an item count and an image per order
   (optional).
 - App team: the parameter names for the Deposit amount; Back on the Redemption history page.

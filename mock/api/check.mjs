@@ -13,8 +13,8 @@ const mock = (page) => read(`../${page}.json`).default;
 const built = {
   'common.balance': [toBalance(api('coin-summary')), mockCommon.balance],
   'common.program': [toProgram(task, api('signin')), mockCommon.program],
-  'common.accounts': [toAccounts(task, api('tradingTask-getTiers')), mockCommon.accounts],
-  'common.tiers': [toTiers(api('tradingTask-getTiers')), mockCommon.tiers],
+  'common.accounts': [toAccounts(task), mockCommon.accounts],
+  'common.tiers': [toTiers(task), mockCommon.tiers],
   dashboard: [toDashboardPage(task, mock('dashboard')), mock('dashboard')],
   'trading-task': [toTradingTaskPage(task, api('tradingTask-getHistory')), mock('trading-task')],
   'point-balance': [toPointBalancePage(api('coin-listAvailable'), api('coin-listExpired'), api('coin-ledger'), task), mock('point-balance')],

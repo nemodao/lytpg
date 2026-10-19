@@ -4,7 +4,7 @@
 // The six endpoints (all POST, JSON, under /pointSys/app/point/) and what each feeds:
 //   tradingTask/get         -> common.program, common.accounts, Earn today + selected account
 //   tradingTask/getHistory  -> Earn history
-//   tradingTask/getTiers    -> common.tiers, accounts' group and lifetime deposit (proposed endpoint, spec §51)
+//   (tradingTask/get also gives common.tiers and each account's group and lifetime deposit, spec §51)
 //   GET /loyalty/orders     -> Redemption history list; GET /loyalty/orders/{ref} -> one order (HSB backend, spec §52)
 //   coin/summary            -> common.balance
 //   coin/listAvailable      -> Coins, Available tab
@@ -53,27 +53,22 @@ export function toProgram(task, signin) {
   };
 }
 
-// tradingTask/get (+ tradingTask/getTiers) -> common.accounts. Account ids are numbers in the API and text in the UI.
-// API: `group` (MT5 group) and `lifetimeDeposit` (USD) come from the proposed tiers endpoint (spec §51), matched by id;
-// null when it does not know the account.
-export const toAccounts = (task, tierInfo) =>
-  (task?.accounts ?? []).map((account) => {
-    const tier = (tierInfo?.accounts ?? []).find((item) => String(item.id) === String(account.id));
-    return {
-      id: String(account.id),
-      eligible: account.eligible === true,
-      group: tier?.group ?? null,
-      lifetimeDeposit: tier?.lifetimeDeposit ?? null,
-      rates: account.rates ?? [], // { type, value, ptsPerLot }: used as sent
-    };
-  });
+// tradingTask/get -> common.accounts. Account ids are numbers in the API and text in the UI.
+// `group`: the full MT5 group name (e.g. Direct\VIP1), used as sent; the page decides which groups are tiers (spec §51).
+// `lifetimeDeposit`: approved deposits into that account, USD (0 when none).
+export const toAccounts = (task) =>
+  (task?.accounts ?? []).map((account) => ({
+    id: String(account.id),
+    eligible: account.eligible === true,
+    group: account.group ?? null,
+    lifetimeDeposit: account.lifetimeDeposit ?? null,
+    rates: account.rates ?? [], // { type, value, ptsPerLot }: used as sent
+  }));
 
-// tradingTask/getTiers (proposed, spec §51) -> common.tiers: the programme's tiers, lowest first. Each: MT5 group,
-// lifetime deposit needed (USD), rates (same rows as an account's rates). The page labels groups itself (TIER_LABELS).
-export const toTiers = (tierInfo) =>
-  [...(tierInfo?.tiers ?? [])]
-    .sort((a, b) => a.minDeposit - b.minDeposit)
-    .map((tier) => ({ group: tier.group, minDeposit: tier.minDeposit, rates: tier.rates ?? [] }));
+// tradingTask/get -> common.tiers: { group (full MT5 group name), rates } for each group the programme has rates for,
+// unsorted (the page orders them and holds the deposit thresholds). The rates come from the same function as an
+// account's rates, so they always agree. None for guests.
+export const toTiers = (task) => (task?.tiers ?? []).map((tier) => ({ group: tier.group, rates: tier.rates ?? [] }));
 
 // coin/summary -> common.balance. `pending` is sent by the API but never shown (spec §41).
 export const toBalance = (summary) => ({

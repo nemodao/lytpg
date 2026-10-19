@@ -44,16 +44,15 @@ Example file: `mock/common.json`
 | `program.rateRange.max` | number | `100` | Highest coins per lot. One figure is shown when min = max. |
 | `accounts[].id` | string | `"50000234"` | Trading account number, shown as is. The list is empty for users without a live account. |
 | `accounts[].eligible` | boolean | `true` | Whether this account takes part in the programme (false e.g. for an MT5 group that is excluded). |
-| `accounts[].group` | string or null | `"VIP1"` | MT5 group of the account (proposed tiers endpoint, spec §51). Shown as a tier next to Eligible: Mini400 = Micro, Mini10 = Standard, VIP1 = VIP, MIVIP = Platinum (mapping held by the page). Any other value: no tier, no upgrade row. |
-| `accounts[].lifetimeDeposit` | number or null | `2350` | Total ever deposited into this account, USD (proposed tiers endpoint). The tier sheet compares it with the next tier's minDeposit. null: no progress shown. |
+| `accounts[].group` | string | `"Direct\\VIP1"` | Full MT5 group name of the account, e.g. Direct\VIP1 (tradingTask/get, spec §51). A tier only when it is exactly (any case) Direct\Mini400 = Micro, Direct\Mini10 = Standard, Direct\VIP1 = VIP, Direct\MIVIP = Platinum; others (e.g. 1F\Direct\Mini10) show no tier and no upgrade row. |
+| `accounts[].lifetimeDeposit` | number | `2350` | Approved deposits into this account, USD; 0 when none (every account, eligible or not). The tier sheet compares it with the next tier's threshold, fixed in the page: 0, 200, 1,000, 5,000. |
 | `accounts[].rates[].type` | "symbol" | "symbol_group" | "any" | `"symbol_group"` | Kind of rate row. Empty list for an account that is not eligible. |
 | `accounts[].rates[].value` | string or null | `"metal"` | Symbol (shown as is), or group: forex, metal, energy, index, stocks, other (label = copy key rate.<value>). For type "any": "other" or null, shown as "Others". |
 | `accounts[].rates[].ptsPerLot` | number | `100` | Coins earned per lot for that row. Rows come highest first, the "any" row last, never 0. |
-| `tiers[].group` | string | `"Mini400"` | Programme tiers, lowest first (proposed tiers endpoint, spec §51). MT5 group of this tier. |
-| `tiers[].minDeposit` | number | `0` | Lifetime deposit (USD) from which an account is in this tier: 0, 200, 1,000, 5,000. |
-| `tiers[].rates[].type` | "symbol" | "symbol_group" | "any" | `"symbol_group"` | Rates of this tier, same rows as an account's rates. Shown in the tier sheet as the next tier's rates. |
+| `tiers[].group` | string | `"Direct\\VIP1"` | One element per MT5 group the programme has rates for (tradingTask/get, spec §51), unsorted; full group name. The page keeps the four tier groups, in tier order. None for guests. |
+| `tiers[].rates[].type` | "symbol" | "symbol_group" | "any" | `"symbol_group"` | Rates of this group, made by the same function as an account's rates. Shown in the tier sheet's table. |
 | `tiers[].rates[].value` | string or null | `"metal"` | As accounts[].rates[].value. |
-| `tiers[].rates[].ptsPerLot` | number | `70` | Coins per lot on this tier for that row. |
+| `tiers[].rates[].ptsPerLot` | number | `100` | Coins per lot on this tier for that row. |
 | `view` | "loading" | "error", optional |  | PREVIEW ONLY. "loading" or "error" replaces the page content with the loading placeholder or the error message. In the product this comes from the state of the requests, not from data. |
 | `tour.firstVisit` | boolean | `false` | PREVIEW ONLY. Forces the guided tour to open as on a first visit. |
 | `tour.simulatedBalance` | number | `3410` | Figure the balance counts up to in tour step 3 (a simulation). No effect if the real balance is already higher. |
