@@ -4,11 +4,12 @@
   States by part of the page (combine with commas):
     Page: ended
     Participation: needs-kyc, needs-deposit  ("How to start" on the Today card, spec §39)
-    Today trading task: first-trade, credited, delayed, capped, no-trades-today, market-closed
+    Today trading task: first-trade, credited, delayed, capped, no-trades-today
+    Activity: activity-empty
     Trading account: single-account, ineligible-selected
   Example: trading-task.html?state=in-day,capped
     Page status: loading, error  (spec §44)
-  Shared states (empty, needs-kyc, needs-deposit, expiring) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
+  Shared states (empty, needs-kyc, needs-deposit, expiring, activity-empty) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
 -->
 <html lang="en">
 <head>

@@ -15,11 +15,16 @@ Example file: `mock/common.json`
 
 | Field | Type | Example | Meaning |
 |---|---|---|---|
-| `now` | string | `"2026-10-14T14:35:00+07:00"` | Current server time, ISO 8601 with offset. Drives "today", days until expiry, and the live-feed open/closed check. |
+| `now` | string | `"2026-10-14T14:35:00+07:00"` | Current server time, ISO 8601 with offset. Drives "today", days until expiry, and "3m ago" in the recent activity card. |
+| `activity[].type` | "gift" | "coin" | `"coin"` | Recent activity card on Home and Earn (spec §50), one list per session from the backend. Kind of entry: "gift" (a reward was redeemed) or "coin" (coins were earned). |
+| `activity[].client` | string | `"95***356"` | Client of that entry, already masked by the backend, e.g. "95***442". |
+| `activity[].reward` | string | `"iPhone 16 Pro"` | Gift entries: the reward's name. |
+| `activity[].points` | number | `12` | Coin entries: coins earned. |
+| `activity[].at` | string | `"2026-10-14T07:32:00Z"` | When it happened (ISO 8601). The card shows the time since then ("3m ago"). |
 | `balance.available` | number | `3100` | Coins the user can spend now. The big number on Home and Coins. |
 | `balance.expiring` | null or object | `null` | Coins about to expire, or null. When set, the red warning shows under the balance. |
 | `balance.expiring.points` |  |  | How many coins expire within the warning window. |
-| `program.ended` | boolean | `false` | true when the programme is over: Earn shows the end message, no trade button. |
+| `program.ended` | boolean | `false` | true when the programme is over: Earn shows the end message, no trade button; Home hides the "earn coins" card. |
 | `program.creditMode` | "delayed" | "in-day" | `"in-day"` | When earned coins are credited: "delayed" (after creditDelayDays) or "in-day" (through the day). |
 | `program.dailyMaxPoints` | number or null | `2000` | Most coins a user can earn per day, or null for no maximum. Shown in the rules and next to the rate range; null hides both. |
 | `program.minHoldMinutes` | number | `3` | Minimum time a position must be held to earn. Shown in the rules. |
@@ -30,8 +35,8 @@ Example file: `mock/common.json`
 | `program.creditWithinMinutes` | number | `15` | NOT FROM THE API: fixed in the UI. Longest time for coins to arrive after a position is closed. Shown as "Updates within 15 mins" and in the in-day rule. |
 | `program.resetTime` | HH:MM | `"00:00"` | Local time (WIB) at which a new earning day starts. Shown in the rules. |
 | `program.expiryWarningDays` | number | `10` | Size of the "expiring soon" window in days: the balance warning text and the red highlight on lots. |
-| `program.tradingTask` | boolean | `true` | false when the trading task is off or hidden for this user: Home hides the Daily Trading card and the bottom bar drops the Earn tab. |
-| `program.joinRequirement` | null | "kyc" | "deposit" | `null` | NOT SENT BY THE LOYALTY API: derive it from the app sign-in data (kycApproveTime = 0 -> "kyc"; kycApproveTime > 0 and firstDepositTime = 0 -> "deposit"; else null). When set, the Today card on Home and Earn shows "How to start" instead of today's figures, and Earn shows no account picker and no rates table. |
+| `program.tradingTask` | boolean | `true` | false when the trading task is off or hidden for this user: Home hides the "earn coins" card of the rewards grid and the bottom bar drops the Earn tab. |
+| `program.joinRequirement` | null | "kyc" | "deposit" | `null` | NOT SENT BY THE LOYALTY API: derive it from the app sign-in data (kycApproveTime = 0 -> "kyc"; kycApproveTime > 0 and firstDepositTime = 0 -> "deposit"; else null). When set, the Today card on Earn shows "How to start" instead of today's figures, Earn shows no account picker and no rates table, and every Redeem button (Home, Coins) opens the "How to start" sheet instead of Tada. |
 | `program.termsUrl` | URL of a PDF, or null | `"../assets/docs/terms-sample.pdf"` | Address of the Terms & Conditions document. Earn shows a `Terms & Conditions` text button under the How it works rules; it opens this address inside a bottom sheet. The document is a PDF. Null or missing hides the button. The mock points at a sample PDF. |
 | `program.rateRange` | object or null |  | Lowest and highest earning rate of the programme, or null when it has no rate yet. Shown as "70–100 coins per lot" to users without a trading account, and its max in tour step 2. Null hides both. |
 | `program.rateRange.min` | number | `70` | Lowest coins per lot. |
@@ -41,17 +46,6 @@ Example file: `mock/common.json`
 | `accounts[].rates[].type` | "symbol" | "symbol_group" | "any" | `"symbol_group"` | Kind of rate row. Empty list for an account that is not eligible. |
 | `accounts[].rates[].value` | string or null | `"metal"` | Symbol (shown as is), or group: forex, metal, energy, index, stocks, other (label = copy key rate.<value>). For type "any": "other" or null, shown as "Others". |
 | `accounts[].rates[].ptsPerLot` | number | `100` | Coins earned per lot for that row. Rows come highest first, the "any" row last, never 0. |
-| `liveFeed.openUtc.day` | weekday name | `"Sunday"` | Start of the weekly window in which the live activity line shows (UTC). |
-| `liveFeed.openUtc.time` | HH:MM | `"17:00"` | Start time of that window (UTC). |
-| `liveFeed.closeUtc.day` | weekday name | `"Friday"` | End of the weekly window (UTC). |
-| `liveFeed.closeUtc.time` | HH:MM | `"17:00"` | End time of that window (UTC). |
-| `liveFeed.clock` | ISO 8601, optional |  | PREVIEW ONLY. Overrides `now` for the live feed, used by the market-closed state. Not sent by the API. |
-| `liveFeed.clientIdPrefix` | string | `"95"` | DEMO generator: fixed first digits of the masked client id. With a real feed the server sends the masked id. |
-| `liveFeed.points.step` | number | `1` | DEMO generator: step between possible amounts. |
-| `liveFeed.points.bands[].min` | number | `1` | DEMO generator: lowest amount of a band. |
-| `liveFeed.points.bands[].max` | number | `29` | DEMO generator: highest amount of a band. |
-| `liveFeed.points.bands[].weight` | number | `70` | DEMO generator: share of entries drawn from this band. |
-| `liveFeed.intervalSeconds[]` | number | `[1, 2, 3, 4, 5, 6]` | DEMO generator: possible waits between two entries, in seconds. |
 | `view` | "loading" | "error", optional |  | PREVIEW ONLY. "loading" or "error" replaces the page content with the loading placeholder or the error message. In the product this comes from the state of the requests, not from data. |
 | `tour.firstVisit` | boolean | `false` | PREVIEW ONLY. Forces the guided tour to open as on a first visit. |
 | `tour.simulatedBalance` | number | `3410` | Figure the balance counts up to in tour step 3 (a simulation). No effect if the real balance is already higher. |
@@ -62,11 +56,10 @@ Example file: `mock/dashboard.json` (`default`)
 
 | Field | Type | Example | Meaning |
 |---|---|---|---|
-| `task.lotsToday` | number | `3.5` | Lots traded today. "You traded" on the Daily Trading card. |
-| `task.pointsToday` | number | `310` | Coins earned today. "Coins earned" on the Daily Trading card. |
-| `task.capped` | boolean | `false` | true when today's maximum is reached: the capped message shows in the Today panel. |
-| `rewards[].image` | string | `"../assets/images/rewards/reward-1.webp"` | Image of a reward tile on Home (three tiles). Path or URL. |
-| `rewards[].alt` | string | `"Wireless earbuds and a smartphone"` | Text alternative of that image. |
+| `rewards[].id` | string | `"gift-01"` | Reward id. Sent with the `reward` intent (data-reward) so the app opens that reward in Tada, and as `reward_id` in loyalty_reward_click. |
+| `rewards[].name` | string | `"iPhone 16 Pro"` | Reward name on its card in the rewards grid (two lines at most). |
+| `rewards[].points` | number | `95000` | Price in coins on the card. |
+| `rewards[].image` | string | `"../assets/images/rewards/gift-01.webp"` | Image of the reward on its card. Path or URL; square, transparent background, product centred with room around it (shown whole). |
 | `checkIn.enabled` | boolean | `false` | Shows the daily check-in card (future feature, off by default). |
 | `checkIn.rewards[]` | number | `[10, 10, 20, 20, 30, 50, 100]` | Coins for each of the seven check-in days, in order. |
 | `checkIn.checkedDays` | number | `3` | How many days in a row the user has checked in. |

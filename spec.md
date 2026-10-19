@@ -610,3 +610,34 @@ New preview state on Home: `ended`.
 - **The tapping finger** under the "How to start" button stays above the cards that follow it; it is never hidden behind them.
 - **The glow around the large balance coin** is drawn as a soft gradient behind the coin, not as a CSS shadow filter, which some phones painted as a square box.
 - **Dates always carry the year** (decided 14 Oct 2026, replaces the §47 rule "year only when not the current year"): "19 Oct 2026", "Expires 21 Mar 2027", day titles of the coin history "13 Oct 2026", lot lines "Trading · 22 Sep 2026", date filter chip "1 Oct 2026 – 14 Oct 2026".
+
+## 49. Home with a rewards grid, Redeem asks for KYC and first deposit (decided 16 Oct 2026, phase 3)
+
+Asked for by business users. First part of a larger update; the Earn tiers (account label from the MT5 group and an upgrade sheet) and the guided tour come later.
+
+- **The Daily Trading card is removed from Home,** with everything in it: today's figures, the live "Trader … just earned" line, `Trade now`, `Details`, the capped message, "How to start" and "This program has ended". Earn keeps all of these.
+- **Rewards grid** in place of the three image tiles: up to 10 cells, 2 per row, under the existing title "Redeem coins for rewards".
+  - A reward card shows the reward's image, name, price in coins and a `Redeem` button. The whole card can be tapped and opens that reward in Tada (intent `reward`, with the reward's id).
+  - Behind each reward image: a soft, even purple backdrop, low in contrast (decided 19 Oct 2026).
+  - A card looks the same whether or not the balance covers the price; Tada handles a balance that is too low.
+  - The price and a small `Redeem` share the bottom row of the card. When a price is too long for that (about 6 digits and up on a 375px screen), `Redeem` moves under the price, at the right, on **every** card of the grid, so all cards keep the same layout. The number is never cut or shortened (decided 19 Oct 2026).
+  - The 3rd cell is an "earn coins" card that opens Earn. It is hidden when the user has no trading task or the programme has ended; the grid then shows rewards only.
+  - API: the rewards come from an HSB API (a fixed list). The fields and the mapping come later; the mock data and images are placeholders until the owner supplies them.
+- **"Looking for something else?" card** under the grid, full width (decided 19 Oct 2026): a blue gift box image, the title, one line ("You have 3,100 coins to spend. Browse every voucher, gadget and trip in the rewards store."; without coins, only the second sentence) and an `Explore all rewards` button to Tada (intent `redeem`, the store). Gated like every Redeem.
+- **Redeem asks for KYC and a first deposit first.** On every Redeem button (the balance block on Home and Coins, every reward card): a user who still needs KYC or a first deposit gets a bottom sheet with "How to start" (the same steps, rate line and button as on Earn, §39) instead of going to Tada. A user who has made a first deposit goes to Tada as before.
+- **Events** (existing names kept): reward cards send `loyalty_reward_click` with `position` (1–10, the cell in the grid) and `reward_id`; the "earn coins" card sends `loyalty_card_click` with `target` = `earn`, and `Explore all rewards` sends it with `target` = `rewards`; the sheet sends `loyalty_join_card_view` with `source` = `redeem` (the card on Earn sends `source` = `card`), then `loyalty_kyc_click` / `loyalty_deposit_click` as before. `loyalty_trade_click` and `loyalty_daily_cap_view` are no longer sent from Home.
+
+Home preview states removed: `capped`, `no-trades-today`, `market-closed`. Coins gets `needs-kyc` and `needs-deposit`.
+
+## 50. Recent activity card on Home (decided 19 Oct 2026, phase 3)
+
+- A small card between the balance and "Redeem coins for rewards" on Home, and the same card on Earn under the Today card (not when the programme has ended). One entry at a time: an icon, the message, the time since it happened.
+- Home and Earn are linked: one list and one place in the loop for the session, so switching tabs goes on with the next entry. It replaces the live "Trader … just earned" line of §31 on Earn (that line and its demo generator are removed; preview state `market-closed` is gone).
+  - Reward redeemed: gold gift box, "Trader 95***442 just redeemed iPhone 16 Pro", "3d ago". While a reward entry is on screen, the card takes a light purple tint so it stands out (option under review, 19 Oct 2026).
+  - Coins earned: coin, "Trader 95***356 just earned 12 coins", "3m ago".
+  - Time, short: "Now", "3m ago", "2h ago", "3d ago".
+- Data: a list from the backend (new API, to be defined). The page asks for it once per session, keeps it for the session and loops over it. Each entry: kind (gift or coin), the client (masked by the backend), the reward name or the coins, the time.
+- Order: newest first within each kind. The two kinds take turns in rounds of 1 coin entry : 1 reward, 2 : 1, 3 : 1 and 3 : 2 (the rewards of a round come first), played in a shuffled order, one round of each, then shuffled again, so rewards come thicker in some stretches and thinner in others (decided 19 Oct 2026). Each kind loops on its own when it runs out; if one kind is missing, the other loops alone.
+- Draft choices to confirm: a new entry every 4 seconds; a message takes two lines at most and the card always keeps room for two lines, so its height never changes; with an empty list the card is hidden.
+
+New preview state on Home and Earn (shared): `activity-empty`.

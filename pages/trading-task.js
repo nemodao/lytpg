@@ -1,7 +1,7 @@
 // Trading Task (spec §4, §15): header, today's progress, account + rates + trade button, then rules and history as tabs.
 import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
-import { createLiveFeed } from '../shared/live-feed.js';
+import { createActivityFeed } from '../shared/activity-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { initTracking, trackView } from '../shared/tracking.js';
 import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList, showStatus } from '../shared/components.js';
@@ -62,7 +62,8 @@ const endedCard = () => `
     </div>
   </section>`;
 
-const feed = createLiveFeed(ui, common);
+// Recent activity card (spec §50), the same as on Home and linked to it: one list and one place in the loop per session.
+const feed = createActivityFeed(ui, common, common.activity);
 
 // Not yet allowed to take part (KYC or first deposit missing): "How to start" in place of today's progress (spec §39).
 const joinCard = () => `
@@ -101,7 +102,6 @@ function progressCard() {
         </div>
         ${footer}
       </div>
-      ${feed.html()}
     </section>`;
 }
 
@@ -273,7 +273,7 @@ function render() {
         ${ended ? '' : '<img class="hero-hot" src="../assets/images/hot-badge.png" alt="">'}
       </div>
     </div>
-    ${ended ? endedCard() : `${progressCard()}${accountsCard()}${infoCard()}`}
+    ${ended ? endedCard() : `${progressCard()}${feed.html()}${accountsCard()}${infoCard()}`}
     ${sheetOpen ? sheet() : ''}
     ${termsOpen ? termsSheet() : ''}
     ${historyFilter.sheet()}`;

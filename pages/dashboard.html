@@ -3,13 +3,14 @@
   Loyalty · Dashboard
   States by part of the page (combine with commas):
     Page: first-visit, no-task-trading, ended
-    Participation: needs-kyc, needs-deposit  ("How to start" on the Today card, spec §39)
+    Participation: needs-kyc, needs-deposit  (Redeem opens the "How to start" sheet, spec §49)
     Coin Balance: empty, expiring
-    Today trading task: capped, no-trades-today, market-closed
+    Activity: activity-empty
+    Rewards grid: big-prices
     Daily check-in (future): check-in
-  Example: dashboard.html?state=expiring,capped
+  Example: dashboard.html?state=expiring,needs-kyc
     Page status: loading, error  (spec §44)
-  Shared states (empty, needs-kyc, needs-deposit, expiring) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
+  Shared states (empty, needs-kyc, needs-deposit, expiring, activity-empty) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
 -->
 <html lang="en">
 <head>

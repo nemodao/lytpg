@@ -200,6 +200,10 @@
 }
 .sheet__grab { align-self: center; width: var(--spacing-40); height: var(--spacing-4); border-radius: var(--radius-pill); background: var(--ui-surface-soft); }
 
+/* "How to start" sheet that Redeem opens (spec §49): blend-pale-theme gives the step marks their colours, as on the
+   Earn card; room under the button for the tapping finger, which would otherwise be cut by the sheet's edge. */
+.sheet--join .join__cta { margin-bottom: var(--size-control-lg); }
+
 /* Document sheet (Terms & Conditions): fixed height, title row with a close button, and the document in a frame that
    scrolls by itself. The document is served by the backend and keeps its own (light) look in both themes. */
 .sheet--doc { height: var(--size-sheet-max-height); overflow: hidden; }
@@ -278,11 +282,19 @@
 /* ---- Live activity line on the Daily Trading cards (Dashboard, Trading Task) ---- */
 /* A small translucent box tinted with the card's text colour, so it reads as a slightly deeper shade of the card in
    both themes. */
-.live-feed { align-self: center; display: flex; align-items: center; justify-content: center; gap: var(--spacing-6); margin-bottom: calc(var(--spacing-4) * -1); padding: var(--spacing-6) var(--spacing-12); border-radius: var(--radius-pill); background: color-mix(in srgb, var(--blend-fg) 7%, transparent); color: color-mix(in srgb, var(--blend-fg) 82%, transparent); }
-.live-feed__dot { flex: none; width: var(--spacing-6); height: var(--spacing-6); border-radius: var(--radius-pill); background: var(--ui-icon-green); box-shadow: 0 0 0 var(--spacing-2) color-mix(in srgb, var(--ui-icon-green) 30%, transparent); }
-.live-feed__in { animation: live-feed-in 0.4s ease-out; }
-@keyframes live-feed-in { from { opacity: 0; transform: translateY(var(--spacing-4)); } }
-@media (prefers-reduced-motion: reduce) { .live-feed__in { animation: none; } }
+/* Recent activity card on Home (spec §50): icon, message (two lines at most), time. Each new entry fades in. */
+.activity { flex-direction: row; padding: var(--spacing-10) var(--spacing-12); border-radius: var(--radius-card-inner); transition: background-color 0.4s ease, border-color 0.4s ease; }
+/* A reward entry: the card turns a light purple (brand purple mixed into the card surface, so it follows the theme). */
+.activity--gift { background: color-mix(in srgb, var(--color-purple-main) 10%, var(--card-surface)); border-color: color-mix(in srgb, var(--color-purple-main) 28%, var(--card-stroke)); }
+.activity__row { display: flex; align-items: center; gap: var(--spacing-10); width: 100%; min-width: 0; }
+.activity__icon { flex: none; width: var(--size-icon-lg); height: var(--size-icon-lg); object-fit: contain; }
+/* Room for two lines always, so the card keeps its height as one- and two-line entries take turns. */
+.activity__text { flex: 1; min-width: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2lh; align-content: center; font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.activity__time { flex: none; font: var(--font-x-small-regular); color: var(--ui-text-tertiary); white-space: nowrap; }
+.activity__in { animation: activity-in 0.4s ease-out; }
+@media (prefers-reduced-motion: reduce) { .activity__in { animation: none; } }
+
+@keyframes activity-in { from { opacity: 0; transform: translateY(var(--spacing-4)); } }
 
 /* Small "Details ›" style link. */
 .details { display: inline-flex; align-items: center; gap: var(--spacing-2); font: var(--font-small-medium); color: var(--ui-text-tertiary); }

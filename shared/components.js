@@ -45,11 +45,13 @@ export const joinIntent = (common) => common.program.joinRequirement || null;
 // API: `program.joinRequirement` ("kyc" | "deposit" | null) is not sent by the loyalty API. Derive it from the app's
 // sign-in data: kycApproveTime = 0 -> "kyc"; kycApproveTime > 0 and firstDepositTime = 0 -> "deposit"; else null.
 // The button carries data-intent "kyc" or "deposit": the host app attaches the KYC / Deposit deeplink.
+// `source` says where the panel is shown: "card" (the Today card on Earn) or "redeem" (the sheet that Redeem opens,
+// joinSheet below); it is sent with loyalty_join_card_view.
 const JOIN_NUDGE_AFTER = 3;
-export function joinPanel(ui, common, { flat = false, nudged = false } = {}) {
+export function joinPanel(ui, common, { flat = false, nudged = false, source = 'card' } = {}) {
   const { program } = common;
   const current = ['kyc', 'deposit'].indexOf(program.joinRequirement);
-  trackView('loyalty_join_card_view', { step: program.joinRequirement });
+  trackView('loyalty_join_card_view', { step: program.joinRequirement, source }, source);
   const steps = ['kyc', 'deposit', 'trade'].map((id, index) => {
     const state = index < current ? 'done' : index === current ? 'current' : 'later';
     const mark = state === 'done' ? ui.icon('check', 'icon--sm') : index + 1;
@@ -65,6 +67,44 @@ export function joinPanel(ui, common, { flat = false, nudged = false } = {}) {
       <button class="btn btn--primary btn--lg btn--block" type="button" data-intent="${joinIntent(common)}" data-track="loyalty_${joinIntent(common)}_click">${joinLabel(ui, common)}</button>
       <img class="join__finger" src="../assets/tour/finger.webp" alt="">
     </div>`;
+}
+
+// Redeem buttons (spec §49): the balance block's Redeem and every reward card. A user who still needs KYC or a first
+// deposit cannot redeem yet: the button opens the "How to start" sheet (mountJoinSheet) instead of going to Tada.
+// Everyone else gets the Tada intent (`redeem` = the store, `reward` = one reward).
+export const redeemAttrs = (common, intent) =>
+  joinIntent(common) ? 'data-action="join-sheet" aria-haspopup="dialog"' : `data-intent="${intent}"`;
+
+// The sheet Redeem opens for those users: a title, one line on why, then "How to start" as on Earn (steps, rate line,
+// the button for the current step with its tapping finger). The scrim, the close button and Esc close it.
+// Call once per page, after the page's markup is in place; it does nothing for users who can already redeem.
+export function mountJoinSheet(ui, common, app) {
+  if (!joinIntent(common)) return;
+  const close = () => app.querySelector('[data-join-sheet]')?.remove();
+  const open = () => {
+    close();
+    app.insertAdjacentHTML('beforeend', `
+      <div class="scrim" data-join-sheet data-action="close-join-sheet">
+        <div class="sheet sheet--join blend-pale-theme" role="dialog" aria-modal="true" aria-label="${ui.t('redeemGate.title')}">
+          <span class="sheet__grab"></span>
+          <div class="sheet__head">
+            <h2 class="t-title-s grow">${ui.t('redeemGate.title')}</h2>
+            <button class="header-action" type="button" data-action="close-join-sheet" aria-label="${ui.t('common.close')}">${ui.icon('close')}</button>
+          </div>
+          <p class="t-body c-2">${ui.t('redeemGate.body')}</p>
+          ${joinPanel(ui, common, { flat: true, source: 'redeem' })}
+        </div>
+      </div>`);
+  };
+  app.addEventListener('click', (event) => {
+    const target = event.target.closest('[data-action="join-sheet"], [data-action="close-join-sheet"]');
+    if (!target) return;
+    // Opened after this click has been tracked, so loyalty_redeem_click / loyalty_reward_click comes before the view.
+    if (target.dataset.action === 'join-sheet') { event.preventDefault(); setTimeout(open); return; }
+    if (target.classList.contains('scrim') && event.target !== target) return; // taps inside the sheet do not close it
+    close();
+  });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(); });
 }
 
 // "70–100 coins per lot · up to 2,000 a day": the programme's lowest and highest rate and its daily maximum. Shown to
@@ -152,7 +192,7 @@ export function balanceBlock(ui, common, { href = '', card = false } = {}) {
         <p class="balance-number num">${ui.num(available)}</p>
       </div>
       <div class="balance-side">
-        <button class="btn btn--sm btn--mono above" type="button" data-intent="redeem" data-tour="redeem" data-track="loyalty_redeem_click">${ui.t('balance.redeem')}${ui.icon('gift', 'icon--sm')}</button>
+        <button class="btn btn--sm btn--mono above" type="button" ${redeemAttrs(common, 'redeem')} data-tour="redeem" data-track="loyalty_redeem_click">${ui.t('balance.redeem')}${ui.icon('gift', 'icon--sm')}</button>
       </div>
     </div>
     ${expiring ? `<div class="notice notice--danger">${ui.icon('clock')}<p class="num">${expiringText(ui, common)}</p></div>` : ''}

@@ -44,10 +44,22 @@ const result = (endpoint, body) => request(endpoint, body).then((answer) => answ
 // API: the app already holds the sign-in answer (/app/signin); only kycApproveTime and firstDepositTime are read.
 const signin = () => getJSON('../mock/api/signin.json').then((answer) => answer.result);
 
-// Not sent by the loyalty API: the live-feed generator settings and the tour's simulated balance (UI constants),
-// the reward tiles on Home (static images) and the check-in card (its own API, off for now).
+// Not sent by the loyalty API: the tour's simulated balance (a UI constant),
+// the rewards grid on Home (HSB's rewards API, to be mapped; mock until then) and the check-in card (its own API, off
+// for now).
 const uiOnly = () => Promise.all([getJSON('../mock/common.json'), getJSON('../mock/dashboard.json')])
-  .then(([common, dashboard]) => ({ liveFeed: common.liveFeed, tour: common.tour, rewards: dashboard.default.rewards, checkIn: dashboard.default.checkIn }));
+  .then(([common, dashboard]) => ({ tour: common.tour, rewards: dashboard.default.rewards, checkIn: dashboard.default.checkIn }));
+
+// A list asked for once per session and kept in sessionStorage for the rest of it (spec §50: the recent activity on
+// Home). Without storage (private mode), it is simply asked for again.
+async function sessionCached(key, loader) {
+  try { const kept = sessionStorage.getItem(key); if (kept) return JSON.parse(kept); } catch { /* ask again */ }
+  const value = await loader();
+  try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* not kept */ }
+  return value;
+}
+// API: the recent activity list (endpoint to be defined by the backend). The demo reads the mock.
+const activityList = () => sessionCached('hsb-loyalty-activity-v3', () => getJSON('../mock/common.json').then((common) => common.activity));
 
 // Date ranges and paging. API: the three list endpoints take from / to (at most 30 days) and pageNo / pageSize;
 // send the range of the date filter and ask for the next page as the user scrolls (spec §43, §44). The demo asks
@@ -62,7 +74,7 @@ async function commonFromApi() {
     balance: toBalance(summary),
     program: toProgram(task, user),
     accounts: toAccounts(task),
-    liveFeed: ui.liveFeed,
+    activity: await activityList(),
     tour: ui.tour,
   };
 }

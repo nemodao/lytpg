@@ -30,18 +30,18 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 
 | Event | Sent when | Extra parameters | Where |
 |---|---|---|---|
-| `loyalty_join_card_view` | The "How to start" card is shown | `step`: `kyc` \| `deposit` | `joinPanel` in `shared/components.js` |
+| `loyalty_join_card_view` | "How to start" is shown: on the Today card on Earn, or in the sheet that Redeem opens for users who still need KYC or a first deposit | `step`: `kyc` \| `deposit`; `source`: `card` \| `redeem` | `joinPanel`, `mountJoinSheet` in `shared/components.js` |
 | `loyalty_kyc_click` | `Verify my account` is tapped | | button in `joinPanel` |
 | `loyalty_deposit_click` | `Deposit now` is tapped | | button in `joinPanel` |
 | `loyalty_open_account_click` | `Open a trading account` is tapped | | `pages/trading-task.js` |
-| `loyalty_trade_click` | `Trade now` / `Trade with account …` is tapped | `capped`: `true` \| `false` | `pages/dashboard.js`, `pages/trading-task.js` |
+| `loyalty_trade_click` | `Trade now` / `Trade with account …` is tapped | `capped`: `true` \| `false` | `pages/trading-task.js` |
 
 ### B. Interest in rewards
 
 | Event | Sent when | Extra parameters | Where |
 |---|---|---|---|
-| `loyalty_redeem_click` | `Redeem` on the balance card is tapped | | `balanceBlock` in `shared/components.js` |
-| `loyalty_reward_click` | A reward tile's `Redeem` on Home is tapped | `position`: `1` \| `2` \| `3` | `pages/dashboard.js` |
+| `loyalty_redeem_click` | `Redeem` on the balance card is tapped (Home, Coins); also when it opens the "How to start" sheet | | `balanceBlock` in `shared/components.js` |
+| `loyalty_reward_click` | A reward card in the rewards grid on Home is tapped (anywhere on the card); also when it opens the "How to start" sheet | `position`: `1`–`10` (the cell in the grid); `reward_id` | `pages/dashboard.js` |
 | `loyalty_expiring_notice_view` | The "coins expire within 10 days" warning is shown | | `balanceBlock` |
 
 ### C. Use of the pages
@@ -50,12 +50,12 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 |---|---|---|---|
 | `loyalty_page_view` | A page opens | | `initTracking` |
 | `loyalty_nav_click` | A tab of the bottom bar, or its exit button, is tapped | `target`: `home` \| `earn` \| `coins` \| `exit` | `shared/nav.js` |
-| `loyalty_card_click` | On Home, the balance (goes to Coins) or the Daily Trading card / `Details` (goes to Earn) is tapped | `target`: `coins` \| `earn` | `balanceBlock`, `pages/dashboard.js` |
+| `loyalty_card_click` | On Home, the balance (goes to Coins), the "earn coins" card of the rewards grid (goes to Earn) or `Explore all rewards` under the grid (goes to Tada, or opens the "How to start" sheet) is tapped | `target`: `coins` \| `earn` \| `rewards` | `balanceBlock`, `pages/dashboard.js` |
 | `loyalty_tab_click` | A tab inside a page is tapped | `tab`: `rules` \| `history` (Earn); `available` \| `expired` \| `history` (Coins) | `pages/trading-task.js`, `pages/point-balance.js` |
 | `loyalty_date_filter_apply` | A date range is chosen (a preset chip, or `Apply` in the calendar) | `tab`: `history` \| `expired`; `range`: `7` \| `30` \| `custom` | `shared/date-filter.js` |
 | `loyalty_account_select` | A trading account is chosen in the account sheet | `eligible`: `true` \| `false` | `pages/trading-task.js` |
 | `loyalty_terms_open` | `Terms & Conditions` is tapped | | `pages/trading-task.js` |
-| `loyalty_daily_cap_view` | The "reached today's maximum" message is shown | | `pages/dashboard.js`, `pages/trading-task.js` |
+| `loyalty_daily_cap_view` | The "reached today's maximum" message is shown | | `pages/trading-task.js` |
 
 ### D. Guided tour
 
@@ -79,10 +79,10 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 
 | Question | Read it from |
 |---|---|
-| How many users who see "How to start" go on to KYC, and to deposit? | `loyalty_join_card_view` (by `step`) → `loyalty_kyc_click`, `loyalty_deposit_click` |
+| How many users who see "How to start" go on to KYC, and to deposit? | `loyalty_join_card_view` (by `step`, and `source` = `redeem` for those who first tried to redeem) → `loyalty_kyc_click`, `loyalty_deposit_click` |
 | Do the pages send users to trade? | `loyalty_page_view` → `loyalty_trade_click`, split by `page` |
 | Does reaching the daily maximum stop users trading? | `loyalty_daily_cap_view` → `loyalty_trade_click` with `capped = true` |
-| How strong is the interest in rewards, and from which balance? | `loyalty_redeem_click`, `loyalty_reward_click`, split by `balance_range` |
+| How strong is the interest in rewards, and from which balance? Which rewards? | `loyalty_redeem_click`, `loyalty_reward_click`, split by `balance_range`; `reward_id` and `position` |
 | Does the expiry warning push users to redeem? | `loyalty_expiring_notice_view` → `loyalty_redeem_click` |
 | Which pages and tabs are used? | `loyalty_page_view`, `loyalty_nav_click`, `loyalty_card_click`, `loyalty_tab_click`, `loyalty_date_filter_apply` |
 | Do users finish the tour, and where do they leave it? | `loyalty_tour_start` → `loyalty_tour_step_view` by `step` → `loyalty_tour_finish` / `loyalty_tour_skip` |
@@ -94,7 +94,7 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 2. One GA4 Event tag using that trigger, event name `{{Event}}`.
 3. Create a Data Layer Variable for each parameter above and add them to the tag as event parameters.
 4. In GA4, register the parameters you want to break reports down by as custom dimensions (`page`, `join_step`,
-   `step`, `target`, `tab`, `range`, `trigger`, `balance_range`, `capped`).
+   `step`, `target`, `tab`, `range`, `trigger`, `balance_range`, `capped`, `source`, `reward_id`).
 
 Notes:
 

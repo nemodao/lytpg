@@ -1,7 +1,5 @@
 /* Dashboard-only styles. Layout follows the wireframe in spec §10. */
 
-/* Dashed separator between the balance and the task card. */
-.dash-divider { width: 100%; height: 0; margin: 0; border: 0; border-top: var(--size-stroke) dashed color-mix(in srgb, var(--ui-line-dark) 28%, transparent); }
 
 /* ---- Daily check-in (future feature): the "Keep it up" streak card style from the review mockup ---- */
 .checkin { position: relative; overflow: hidden; background: var(--surface-streak); }
@@ -25,30 +23,59 @@
 .checkin__day--today { background: var(--ui-tab-surface-blue); border-color: var(--ui-stroke-brand); }
 .checkin + .task { margin-top: var(--spacing-40); }
 
-/* ---- Daily Trading card: "Partner Plus" style from the review mockup, on a vivid blend ---- */
-.task { margin-top: var(--spacing-32); --cup-size: calc(var(--size-avatar-lg) + var(--spacing-8)); }
-/* Trophy image sticking out of the card's top-left corner. */
-.task__icon { position: absolute; top: calc(var(--spacing-40) * -1); left: var(--spacing-2); width: var(--cup-size); height: var(--cup-size); object-fit: contain; }
-.task__head { display: flex; align-items: center; gap: var(--spacing-8); padding-left: calc(var(--cup-size) - var(--spacing-16)); min-height: var(--size-control-sm); }
-.task .details { color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
-
-.task__cta { align-self: center; min-width: 60%; }
-/* Programme over: one message line in place of today's progress. */
-.task-ended { display: flex; align-items: center; gap: var(--spacing-12); padding: var(--spacing-12); border-radius: var(--radius-card-inner); background: var(--blend-glass); }
-.task-ended__icon { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--blend-glass); }
-
-
-/* ---- Rewards mosaic: one tall tile on the left, two stacked on the right ---- */
+/* ---- Rewards grid (spec §49): two cards per row; the 3rd cell is the "earn coins" card ---- */
 .rewards-head { display: flex; flex-direction: column; gap: var(--spacing-2); margin-top: var(--spacing-8); }
-.mosaic { display: grid; grid-template-columns: 1.15fr 1fr; grid-template-rows: 3fr 2fr; gap: var(--spacing-12); height: var(--size-rewards-height); }
-/* Reward tiles on a vivid blend (hue set by the .blend-* class on the mosaic). No border, so the light rim sits on the edge. */
-.reward { position: relative; overflow: hidden; border-radius: var(--radius-card); min-width: 0; background: var(--blend-bg); box-shadow: var(--blend-stroke); }
-.reward:first-child { grid-row: 1 / span 2; }
-/* Small, quiet Redeem button in each tile's bottom corner. */
-.reward__cta { position: absolute; right: var(--spacing-10); bottom: var(--spacing-10); }
-/* Tall tile: the product fills the bottom-right, so its button sits bottom-left on the open background. */
-.reward:first-child .reward__cta { right: auto; left: var(--spacing-10); }
-/* Artwork is cut out on a transparent background and bleeds off the right and bottom edges. */
-.reward img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: right bottom; }
-/* Soft shadow that follows each product's outline, so it lifts off the blend. */
-.reward img { filter: drop-shadow(0 var(--spacing-6) var(--spacing-10) color-mix(in srgb, var(--vivid-shade) 32%, transparent)); }
+.reward-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-12); }
+/* The whole card is the button (or the link, for the earn card). Cards in a row share a height; the price row sits at the bottom. */
+.reward-card { gap: var(--spacing-6); padding: var(--spacing-8) var(--spacing-8) var(--spacing-12); font: inherit; color: inherit; text-align: left; text-decoration: none; cursor: pointer; }
+/* A calm, even purple backdrop for the product: a little of the brand purple mixed into the card surface, a touch
+   stronger at the top left, so it follows the theme on its own. Low in contrast, so the item reads easily and nothing
+   glares (decided 19 Oct 2026). */
+.reward-card__art { display: block; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-card-inner); background: linear-gradient(160deg, color-mix(in srgb, var(--color-purple-main) 16%, var(--card-surface)), color-mix(in srgb, var(--color-purple-main) 6%, var(--card-surface))); }
+/* Reward images are square, cut out on a transparent background with room around the product: shown whole, centred. */
+.reward-card__art img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+.reward-card__name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: var(--spacing-2); font: var(--font-small-semibold); color: var(--ui-text-primary); }
+.reward-card__price { display: flex; align-items: center; gap: var(--spacing-4); font: var(--font-small-semibold); color: var(--ui-text-brand); }
+.reward-card__note { color: var(--ui-text-secondary); }
+.reward-card__cta { margin-top: auto; }
+/* Price and a small Redeem on one row, at the bottom of the card. */
+/* A price too long to share the row (about 7 digits and up) pushes Redeem onto its own line, at the right. The number is
+   never cut or shortened. */
+.reward-card__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-6); margin-top: auto; }
+.reward-card__price { white-space: nowrap; }
+.reward-card__foot .btn { margin-left: auto; }
+/* One card's price did not fit: every card puts Redeem under its price (set by fitPrices in dashboard.js). */
+.reward-grid--stacked .reward-card__price { flex-basis: 100%; }
+/* Earn card: yellow blend. It takes the height of the reward card next to it: its text and button keep their size and
+   the cup scales into the space left (the art has no height of its own, so it never makes the row taller). */
+.reward-card--earn .reward-card__art { flex: 1 1 0; min-height: var(--size-control-lg); aspect-ratio: auto; background: none; }
+.reward-card--earn .reward-card__art img { object-fit: contain; object-position: center; }
+.reward-card--earn .reward-card__name { color: var(--blend-fg); }
+.reward-card--earn .reward-card__note { color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
+/* "Looking for something else?" card under the grid: the blue gift box, then the text with a small button to the rewards store under it. */
+.rewards-more__head { display: flex; align-items: flex-start; gap: var(--spacing-12); }
+.rewards-more__cta { align-self: flex-start; margin-top: var(--spacing-8); }
+.rewards-more__art { flex: none; width: var(--size-control-lg); height: var(--size-control-lg); object-fit: contain; }
+
+/* Green plus signs around the coins ("earn more"), drawn as two rounded bars so they stay bold at any size. The card
+   is yellow in both themes, so the green is a fixed shade that reads on yellow, with a light halo. Each one twinkles on
+   its own beat. --plus sets a sign's size. */
+.reward-card--earn .reward-card__art { position: relative; overflow: visible; }
+.earn-plus i {
+  --plus: var(--spacing-16);
+  position: absolute; width: var(--plus); height: var(--plus);
+  filter: drop-shadow(0 0 var(--spacing-2) color-mix(in srgb, var(--color-neutral-0) 90%, transparent));
+  animation: earn-plus 2.4s ease-in-out infinite;
+}
+.earn-plus i::before, .earn-plus i::after {
+  content: ''; position: absolute; inset: 0; margin: auto; border-radius: var(--radius-pill); background: var(--color-green-500);
+  width: 100%; height: calc(var(--plus) * 0.3);
+}
+.earn-plus i::after { width: calc(var(--plus) * 0.3); height: 100%; }
+.earn-plus i:nth-child(1) { --plus: var(--spacing-24); top: 8%; left: 6%; animation-delay: 0s; }
+.earn-plus i:nth-child(2) { --plus: var(--spacing-14); top: 0; right: 14%; animation-delay: 0.5s; }
+.earn-plus i:nth-child(3) { --plus: var(--spacing-20); top: 44%; right: 0; animation-delay: 1s; }
+.earn-plus i:nth-child(4) { --plus: var(--spacing-14); bottom: 4%; left: 2%; animation-delay: 1.5s; }
+.earn-plus i:nth-child(5) { --plus: var(--spacing-10); top: 2%; left: 34%; animation-delay: 2s; }
+@keyframes earn-plus { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
+@media (prefers-reduced-motion: reduce) { .earn-plus i { animation: none; } }

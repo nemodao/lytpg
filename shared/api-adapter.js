@@ -2,7 +2,7 @@
 // Pure functions: no fetch, no DOM. `shared/data-source.js` calls them; pages never see an API field name.
 //
 // The six endpoints (all POST, JSON, under /pointSys/app/point/) and what each feeds:
-//   tradingTask/get         -> common.program, common.accounts, Home task card, Earn today + selected account
+//   tradingTask/get         -> common.program, common.accounts, Earn today + selected account
 //   tradingTask/getHistory  -> Earn history
 //   coin/summary            -> common.balance
 //   coin/listAvailable      -> Coins, Available tab
@@ -72,11 +72,11 @@ const toToday = (task) => {
   return { lots: today.lotsValid ?? 0, points: today.points ?? 0, status: today.status ?? 'not_started', capped: today.capped === true };
 };
 
-// tradingTask/get -> the Home page's data. `rewards` and `checkIn` are not part of these endpoints: pass what the
-// page should show (static reward tiles; the check-in card has its own API and is off for now).
+// The Home page's data (spec §49). Nothing on Home comes from tradingTask/get any more. `rewards` will come from
+// HSB's rewards API (fields and mapping to be confirmed) and `checkIn` has its own API (off for now): pass what the
+// page should show.
 export function toDashboardPage(task, { rewards, checkIn }) {
-  const today = toToday(task);
-  return { task: { lotsToday: today.lots, pointsToday: today.points, capped: today.capped }, rewards, checkIn };
+  return { rewards, checkIn };
 }
 
 // tradingTask/get + tradingTask/getHistory -> the Earn page's data.

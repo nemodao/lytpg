@@ -57,7 +57,7 @@ pages/<page>.js
 | Date filter (chips + calendar sheet) | `shared/date-filter.js` | Used by Earn history and Coins Expired/History |
 | Live activity line | `shared/live-feed.js` | See §5 |
 | Guided tour | `shared/tour.js` | Steps declared in the `STEPS` array; spec §38 |
-| Home | `pages/dashboard.js` | `taskCard`, `checkInCard` (future, off), `reward` tiles |
+| Home | `pages/dashboard.js` | `rewardsGrid` (`rewardCard`, `earnCard`), `checkInCard` (future, off) |
 | Earn | `pages/trading-task.js` | `streakField` (decorative hero), `progressCard` / `endedCard`, `accountsCard`, `tradeButton`, `infoCard` (rules/history tabs), `sheet` (account picker) |
 | Coins | `pages/point-balance.js` | `availableTab`, `expiredTab`, `historyTab`, `itemRow` |
 
@@ -122,7 +122,7 @@ empty: `rateRange` null (no rate range line), `termsUrl` null or an empty string
 | `data-intent` | Destination |
 |---|---|
 | `redeem` | Tada (rewards store) |
-| `reward` | That reward in Tada |
+| `reward` | That reward in Tada (its id is in `data-reward`) |
 | `trade` | Market screen, current trading account |
 | `trade-account` (+ `data-account`) | Market screen, switched to that account |
 | `kyc` | KYC screen in the app |

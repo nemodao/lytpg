@@ -93,50 +93,92 @@
       "rates": []
     }
   ],
-  "liveFeed": {
-    "openUtc": {
-      "day": "Sunday",
-      "time": "17:00"
+  "activity": [
+    {
+      "type": "coin",
+      "client": "95***356",
+      "points": 12,
+      "at": "2026-10-14T07:32:00Z"
     },
-    "closeUtc": {
-      "day": "Friday",
-      "time": "17:00"
+    {
+      "type": "gift",
+      "client": "95***442",
+      "reward": "iPhone 16 Pro",
+      "at": "2026-10-11T09:10:00Z"
     },
-    "clientIdPrefix": "95",
-    "points": {
-      "step": 1,
-      "bands": [
-        {
-          "min": 1,
-          "max": 29,
-          "weight": 70
-        },
-        {
-          "min": 30,
-          "max": 99,
-          "weight": 23
-        },
-        {
-          "min": 100,
-          "max": 200,
-          "weight": 4
-        },
-        {
-          "min": 201,
-          "max": 700,
-          "weight": 3
-        }
-      ]
+    {
+      "type": "coin",
+      "client": "95***081",
+      "points": 40,
+      "at": "2026-10-14T07:28:00Z"
     },
-    "intervalSeconds": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-    ]
-  },
+    {
+      "type": "coin",
+      "client": "95***907",
+      "points": 1,
+      "at": "2026-10-14T07:20:00Z"
+    },
+    {
+      "type": "gift",
+      "client": "95***128",
+      "reward": "AirPods Pro 2",
+      "at": "2026-10-14T05:35:00Z"
+    },
+    {
+      "type": "coin",
+      "client": "95***615",
+      "points": 150,
+      "at": "2026-10-14T06:50:00Z"
+    },
+    {
+      "type": "coin",
+      "client": "95***733",
+      "points": 25,
+      "at": "2026-10-14T05:10:00Z"
+    },
+    {
+      "type": "coin",
+      "client": "95***264",
+      "points": 8,
+      "at": "2026-10-14T03:35:00Z"
+    },
+    {
+      "type": "gift",
+      "client": "95***590",
+      "reward": "Starbucks gift card",
+      "at": "2026-10-13T10:00:00Z"
+    },
+    {
+      "type": "coin",
+      "client": "95***019",
+      "points": 300,
+      "at": "2026-10-13T08:00:00Z"
+    },
+    {
+      "type": "coin",
+      "client": "95***846",
+      "points": 60,
+      "at": "2026-10-12T12:00:00Z"
+    },
+    {
+      "type": "gift",
+      "client": "95***375",
+      "reward": "PlayStation 5",
+      "at": "2026-10-09T03:00:00Z"
+    },
+    {
+      "type": "coin",
+      "client": "95***552",
+      "points": 18,
+      "at": "2026-10-10T02:00:00Z"
+    },
+    {
+      "type": "coin",
+      "client": "95***694",
+      "points": 90,
+      "at": "2026-10-08T05:00:00Z"
+    }
+  ],
   "tour": {
     "firstVisit": false,
     "simulatedBalance": 3410

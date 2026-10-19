@@ -12,6 +12,17 @@
       }
     },
     {
+      "title": "Participation",
+      "states": [
+        "needs-kyc",
+        "needs-deposit"
+      ],
+      "descriptions": {
+        "needs-kyc": "User has not passed KYC yet. Redeem opens a sheet with “How to start” (button “Verify my account”) instead of going to Tada.",
+        "needs-deposit": "User passed KYC but has not made a first deposit. Redeem opens a sheet with “How to start” (button “Deposit now”) instead of going to Tada."
+      }
+    },
+    {
       "title": "Coin Balance",
       "states": [
         "empty",
@@ -491,6 +502,20 @@
     "more-error": {
       "page": {
         "loadMoreError": true
+      }
+    },
+    "needs-kyc": {
+      "common": {
+        "program": {
+          "joinRequirement": "kyc"
+        }
+      }
+    },
+    "needs-deposit": {
+      "common": {
+        "program": {
+          "joinRequirement": "deposit"
+        }
       }
     }
   }

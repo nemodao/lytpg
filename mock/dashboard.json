@@ -14,11 +14,11 @@
         "first-visit": "First visit (tour)"
       },
       "descriptions": {
-        "no-task-trading": "The Trading Task is not shown to this user, because: (1) the Trading Task has been turned off; (2) the Trading Task has been blocked for this user (reason set in config, e.g. blacklist, A-Book); or (3) the Trading Task has been hidden from all users. The Daily Trading card and the Earn tab are hidden.",
+        "no-task-trading": "The Trading Task is not shown to this user, because: (1) the Trading Task has been turned off; (2) the Trading Task has been blocked for this user (reason set in config, e.g. blacklist, A-Book); or (3) the Trading Task has been hidden from all users. The “earn coins” card in the rewards grid and the Earn tab are hidden.",
         "first-visit": "Treats this as the first time Home is opened on the device: the guided tour opens by itself. Without it, the tour opens only once per device, or from the help button in the header.",
         "loading": "The page is waiting for its data: the header and grey placeholder cards.",
         "error": "The data could not be loaded: a message and “Try again”.",
-        "ended": "The programme is over: the Daily Trading card only says “This program has ended”; it is not a link and has no button."
+        "ended": "The programme is over: the “earn coins” card in the rewards grid is hidden; the grid shows rewards only."
       }
     },
     {
@@ -28,8 +28,8 @@
         "needs-deposit"
       ],
       "descriptions": {
-        "needs-kyc": "User has not passed KYC yet. The Daily Trading card shows “How to start” (step 1 is the one to do) instead of today’s figures; the button reads “Verify my account”.",
-        "needs-deposit": "User passed KYC but has not made a first deposit. The Daily Trading card shows “How to start” (step 1 checked, step 2 is the one to do) instead of today’s figures; the button reads “Deposit now”."
+        "needs-kyc": "User has not passed KYC yet. Redeem (balance and reward cards) opens a sheet with “How to start” (step 1 is the one to do, button “Verify my account”) instead of going to Tada.",
+        "needs-deposit": "User passed KYC but has not made a first deposit. Redeem (balance and reward cards) opens a sheet with “How to start” (step 1 checked, step 2 is the one to do, button “Deposit now”) instead of going to Tada."
       }
     },
     {
@@ -44,16 +44,24 @@
       }
     },
     {
-      "title": "Today trading task",
+      "title": "Activity",
       "states": [
-        "capped",
-        "no-trades-today",
-        "market-closed"
+        "activity-empty"
       ],
       "descriptions": {
-        "capped": "Today's max coins reached: the Today panel gets a footer with the capped message.",
-        "no-trades-today": "No trades yet today: 0 lots and 0 coins.",
-        "market-closed": "Weekend (markets closed): the live “Trader … just earned … coins” line is hidden. It runs Sunday 17:00 to Friday 17:00 UTC (Monday to Friday, GMT+7)."
+        "activity-empty": "The backend sent no recent activity: the “Trader … just redeemed / earned” card is hidden (Home and Earn)."
+      }
+    },
+    {
+      "title": "Rewards grid",
+      "states": [
+        "big-prices"
+      ],
+      "labels": {
+        "big-prices": "Big prices"
+      },
+      "descriptions": {
+        "big-prices": "Some rewards cost a lot of coins (99,999 to 12,500,000). When one price and its Redeem do not fit on one row (about 6 digits and up), Redeem moves under the price, at the right, on every card of the grid; the number is never cut."
       }
     },
     {
@@ -67,23 +75,60 @@
     }
   ],
   "default": {
-    "task": {
-      "lotsToday": 3.5,
-      "pointsToday": 310,
-      "capped": false
-    },
     "rewards": [
       {
-        "image": "../assets/images/rewards/reward-1.webp",
-        "alt": "Wireless earbuds and a smartphone"
+        "id": "gift-01",
+        "name": "iPhone 16 Pro",
+        "points": 95000,
+        "image": "../assets/images/rewards/gift-01.webp"
       },
       {
-        "image": "../assets/images/rewards/reward-2.webp",
-        "alt": "Laptops"
+        "id": "gift-02",
+        "name": "AirPods Pro 2",
+        "points": 18000,
+        "image": "../assets/images/rewards/gift-02.webp"
       },
       {
-        "image": "../assets/images/rewards/reward-3.webp",
-        "alt": "Suitcase and an airplane"
+        "id": "gift-03",
+        "name": "MacBook Air 13-inch",
+        "points": 85000,
+        "image": "../assets/images/rewards/gift-03.webp"
+      },
+      {
+        "id": "gift-04",
+        "name": "Travel voucher",
+        "points": 60000,
+        "image": "../assets/images/rewards/gift-04.webp"
+      },
+      {
+        "id": "gift-05",
+        "name": "Galaxy Z Fold",
+        "points": 90000,
+        "image": "../assets/images/rewards/gift-05.webp"
+      },
+      {
+        "id": "gift-06",
+        "name": "Nintendo Switch",
+        "points": 30000,
+        "image": "../assets/images/rewards/gift-06.webp"
+      },
+      {
+        "id": "gift-07",
+        "name": "PlayStation 5",
+        "points": 45000,
+        "image": "../assets/images/rewards/gift-07.webp"
+      },
+      {
+        "id": "gift-08",
+        "name": "Starbucks gift card",
+        "points": 2000,
+        "image": "../assets/images/rewards/gift-08.webp"
+      },
+      {
+        "id": "gift-09",
+        "name": "Adidas Campus 00s",
+        "points": 8000,
+        "image": "../assets/images/rewards/gift-09.webp"
       }
     ],
     "checkIn": {
@@ -147,30 +192,6 @@
         }
       }
     },
-    "capped": {
-      "page": {
-        "task": {
-          "capped": true,
-          "lotsToday": 23.8,
-          "pointsToday": 2000
-        }
-      }
-    },
-    "no-trades-today": {
-      "page": {
-        "task": {
-          "lotsToday": 0,
-          "pointsToday": 0
-        }
-      }
-    },
-    "market-closed": {
-      "common": {
-        "liveFeed": {
-          "clock": "2026-10-17T10:00:00+07:00"
-        }
-      }
-    },
     "check-in": {
       "page": {
         "checkIn": {
@@ -193,6 +214,71 @@
         "program": {
           "ended": true
         }
+      }
+    },
+    "big-prices": {
+      "page": {
+        "rewards": [
+          {
+            "id": "gift-01",
+            "name": "iPhone 16 Pro",
+            "points": 1500000,
+            "image": "../assets/images/rewards/gift-01.webp"
+          },
+          {
+            "id": "gift-02",
+            "name": "AirPods Pro 2",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-02.webp"
+          },
+          {
+            "id": "gift-03",
+            "name": "MacBook Air 13-inch",
+            "points": 12500000,
+            "image": "../assets/images/rewards/gift-03.webp"
+          },
+          {
+            "id": "gift-04",
+            "name": "Travel voucher",
+            "points": 150000,
+            "image": "../assets/images/rewards/gift-04.webp"
+          },
+          {
+            "id": "gift-05",
+            "name": "Galaxy Z Fold",
+            "points": 99999,
+            "image": "../assets/images/rewards/gift-05.webp"
+          },
+          {
+            "id": "gift-06",
+            "name": "Nintendo Switch",
+            "points": 2500000,
+            "image": "../assets/images/rewards/gift-06.webp"
+          },
+          {
+            "id": "gift-07",
+            "name": "PlayStation 5",
+            "points": 3000,
+            "image": "../assets/images/rewards/gift-07.webp"
+          },
+          {
+            "id": "gift-08",
+            "name": "Starbucks gift card",
+            "points": 250000,
+            "image": "../assets/images/rewards/gift-08.webp"
+          },
+          {
+            "id": "gift-09",
+            "name": "Adidas Campus 00s",
+            "points": 45000,
+            "image": "../assets/images/rewards/gift-09.webp"
+          }
+        ]
+      }
+    },
+    "activity-empty": {
+      "common": {
+        "activity": []
       }
     }
   }
