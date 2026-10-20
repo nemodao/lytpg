@@ -42,7 +42,7 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
   `tier` and `next_tier`.
 - **Redemption history** (`pages/redemptions.js`): `view` on every event; `item_type` and `status` on Show, Copy and
   Open voucher; a failed order sends `loyalty_error_view` with `error_scope` = `order`, a failed "load more" with
-  `more` (`showStatus` takes the scope).
+  `more`, once per page load like Coins (`showStatus` takes the scope).
 - **Coins:** a failed "load more" sends `loyalty_error_view` (`error_scope` = `more`).
 - **Tour** (`shared/tour.js`): `step` → `tour_step`; `step_count` on start, step view, skip and finish.
 - **New check:** `tools/check-tracking.mjs` runs the pages (Playwright) and checks every rule and scenario. Running

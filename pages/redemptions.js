@@ -3,7 +3,7 @@
 // the list from an order.
 import { load } from '../shared/app.js';
 import { fetchMoreOrders, fetchOrder } from '../shared/data-source.js';
-import { initTracking, track } from '../shared/tracking.js';
+import { initTracking, trackView } from '../shared/tracking.js';
 import { appHeader, badge, coin, loadMoreRow, mountJoinSheet, notice, redeemAttrs, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('redemptions');
@@ -64,7 +64,7 @@ async function loadMore() {
     nextPage += 1;
     page.orders.push(...orders);
     if (!orders.length) page.total = page.orders.length; // nothing more after all
-  } catch { moreFailed = true; track('loyalty_error_view', { error_scope: 'more' }); }
+  } catch { moreFailed = true; trackView('loyalty_error_view', { error_scope: 'more' }, 'more'); } // once per page load, as on Coins
   loadingMore = false;
   render();
 }

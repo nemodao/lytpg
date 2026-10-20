@@ -723,7 +723,7 @@ Every screen was reviewed by three reviewers (funnels, a run of every state, the
   - `loyalty_reward_click`: `position` is the rank among the rewards (the "earn coins" card is not counted); `reward_name`; `affordable`.
   - The tier sheet's `Deposit now` and `Trade with account …`: `tier`, `next_tier`.
   - Redemption history: `view` (`list` | `empty` | `detail`) on every event of the page; `item_type` and `status` on Show, Copy and Open voucher.
-  - `loyalty_error_view`: `error_scope` (`page` | `order` | `more`); a failed "load more" now sends it.
+  - `loyalty_error_view`: `error_scope` (`page` | `order` | `more`); a failed "load more" now sends it, once per page load on Coins and on Redemption history alike (decided 20 Oct 2026).
   - Every event: `loyalty_tier`, the highest tier among the user's eligible accounts (`none` if none; not sent for guests), set by GTM as a GA4 user property. The tier table moves to `shared/tiers.js`.
 - **Guests:** tapping the balance sends `loyalty_card_click` (`coins`) and `Redemption history` sends `loyalty_orders_open`, as for signed-in users; the Coins sign-up card sends `loyalty_join_card_view` (`source` = `card`).
 - **Not added:** a programme-state parameter, a theme fix, a user-state user property, a load-reason parameter, and the optional ones (closing sheets, the account picker, tab and chip repeats, paging depth, the nudge, the host entry point).

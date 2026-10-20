@@ -110,7 +110,7 @@ opening: count one or the other, never both added together. Guests' events carry
 
 | Event | Sent when | Extra parameters | Where |
 |---|---|---|---|
-| `loyalty_error_view` | Something could not be loaded | `error_scope`: `page` (the "Couldn’t load this page" card), `order` (one order could not be opened: unknown, or not the user's), `more` (the next page of a list: "Couldn't load more. Try again") | `showStatus` in `shared/components.js`; `pages/point-balance.js`, `pages/redemptions.js` |
+| `loyalty_error_view` | Something could not be loaded | `error_scope`: `page` (the "Couldn’t load this page" card), `order` (one order could not be opened: unknown, or not the user's), `more` (the next page of a list: "Couldn't load more. Try again"; once per page load, like every view) | `showStatus` in `shared/components.js`; `pages/point-balance.js`, `pages/redemptions.js` |
 | `loyalty_retry_click` | `Try again` on that card is tapped | | `showStatus` |
 
 33 events in all.
