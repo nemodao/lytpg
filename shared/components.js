@@ -18,12 +18,32 @@ export const notice = (ui, { icon = 'info', tone = 'neutral', text }) =>
 // Header used on every page: centred title. The tab pages have no back button: leaving the webview is the bottom bar's
 // X (spec §29). `back` (a link) adds one on the left, for pages opened from a tab (Redemption history, spec §52).
 // `action` is optional markup for the right edge (Home: the help button that reopens the tour).
-export const appHeader = (ui, { title, action = '', back = '' }) => `
+export const appHeader = (ui, { title, action = '', back = '' }) => (requestAnimationFrame(watchHeader), `
   <header class="app-header">
     ${back ? `<a class="header-action" href="${back}" aria-label="${ui.t('orders.back')}" data-back>${ui.icon('back')}</a>` : '<span></span>'}
     <h1>${title}</h1>
     ${action || (back ? '<span></span>' : '')}
-  </header>`;
+  </header>`);
+
+// Sticky header (CSS .app-header): .is-stuck once the page has scrolled (the title pill shrinks and turns solid; a
+// little hysteresis so it does not flicker at the threshold). On Earn the title starts on the dark night sky
+// ([data-header-dark], the sky layer): the header takes the dark theme while it is over the sky, and the page's
+// theme once the sky has scrolled away under it.
+const HEADER_STICK_AT = 8;
+function watchHeader() {
+  const header = document.querySelector('.app-header');
+  if (!header) return;
+  const stuck = header.classList.contains('is-stuck') ? window.scrollY > HEADER_STICK_AT / 2 : window.scrollY > HEADER_STICK_AT;
+  header.classList.toggle('is-stuck', stuck);
+  const sky = document.querySelector('[data-header-dark]');
+  const overSky = sky && sky.getBoundingClientRect().bottom > header.getBoundingClientRect().bottom;
+  if (overSky) header.dataset.theme = 'dark';
+  else header.removeAttribute('data-theme');
+}
+let headerFrame = 0;
+addEventListener('scroll', () => {
+  if (!headerFrame) headerFrame = requestAnimationFrame(() => { headerFrame = 0; watchHeader(); });
+}, { passive: true });
 
 // Round help button for the header: reopens the guided tour.
 export const tourButton = (ui) =>

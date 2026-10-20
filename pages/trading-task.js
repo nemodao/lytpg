@@ -28,7 +28,7 @@ function streakField(count = 90) {
     const style = `left:${(rand() * 100).toFixed(1)}%;top:${(rand() * 55).toFixed(1)}%;height:${(25 + rand() * 45).toFixed(1)}%;opacity:${(key ? 0.75 + rand() * 0.25 : 0.12 + rand() * 0.23).toFixed(2)}`;
     return `<i class="streak streak--${width}" style="${style}"></i>`;
   });
-  return `<div class="hero-bg" data-theme="dark" aria-hidden="true"><div class="streaks-fade"><div class="streaks">${streaks.join('')}</div></div></div>`;
+  return `<div class="hero-bg" data-theme="dark" data-header-dark aria-hidden="true"><div class="streaks-fade"><div class="streaks">${streaks.join('')}</div></div></div>`;
 }
 const heroBg = streakField();
 
@@ -398,9 +398,9 @@ function sheet() {
 
 function render() {
   app.innerHTML = `
+    ${appHeader(ui, { title: ui.t('task.title') })}
     <div class="hero">
       ${heroBg}
-      ${appHeader(ui, { title: ui.t('task.title') })}
       <div class="today-cup-wrap">
         <img class="today-cup" src="../assets/images/cups/purple-chart.webp" alt="">
         ${ended ? '' : '<img class="hero-hot" src="../assets/images/hot-badge.png" alt="">'}
@@ -450,7 +450,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 // Loading or failed to load: the header on its sky and a placeholder, nothing else (spec §44).
-if (!showStatus(ui, common, app, `<div class="hero">${heroBg}${appHeader(ui, { title: ui.t('task.title') })}</div>`)) {
+if (!showStatus(ui, common, app, `${appHeader(ui, { title: ui.t('task.title') })}<div class="hero">${heroBg}</div>`)) {
   render();
   // Opened from the tier label on Home or Coins (?focus=account, spec §55): bring the account field into view.
   if (new URLSearchParams(location.search).get('focus') === 'account') app.querySelector('[data-account-card]')?.scrollIntoView({ block: 'start' });

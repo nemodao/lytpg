@@ -7,11 +7,11 @@
 .app { isolation: isolate; --sky-light: color-mix(in srgb, var(--bg-blend) 60%, var(--color-blue-300)); }
 .hero-bg, .hero-card { --sky: color-mix(in srgb, var(--color-blue-500) 20%, var(--ui-surface-weak)); --sky-base: var(--ui-surface-weak); }
 .hero { position: relative; display: flex; flex-direction: column; gap: var(--spacing-section); }
-/* The title sits on the dark sky in both themes. */
-.app-header h1 { color: var(--on-brand); }
 .hero-bg {
   position: absolute; z-index: -1; overflow: hidden; pointer-events: none;
-  top: calc(-1 * (env(safe-area-inset-top, 0px) + var(--spacing-12))); left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); bottom: calc(-1 * var(--spacing-section));
+  /* Up to the top of the screen: over the page's top padding and the sticky header, which sits just above .hero
+     (outside it, so it can stay stuck while the page scrolls). */
+  top: calc(-1 * (env(safe-area-inset-top, 0px) + var(--spacing-12) + var(--size-icon-button) + var(--spacing-section))); left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); bottom: calc(-1 * var(--spacing-section));
   background: linear-gradient(to bottom, var(--sky) 25%, var(--sky-base) 92%);
 }
 .hero-card { position: relative; }
@@ -83,7 +83,8 @@
 
 /* ---- Account tiers (spec §51) ---- */
 /* The tier badge colours (.tier--*) are in shared/components.css: Home and Coins show the badge too (spec §55). */
-[data-account-card] { scroll-margin-top: var(--spacing-section); }
+/* ?focus=account scrolls here: stop below the sticky header. */
+[data-account-card] { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + var(--spacing-8) + var(--size-icon-button) + var(--spacing-section)); }
 
 /* Upgrade row under the rates table: a light purple strip, icon, two lines, chevron; the whole row opens the sheet. */
 .upgrade-row {

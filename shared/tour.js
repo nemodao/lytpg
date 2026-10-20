@@ -255,7 +255,9 @@ export function mountTour(ui, common, page) {
     const target = step.target ? app.querySelector(step.target) : null;
 
     // Bring the highlighted part near the top, then stop the page from scrolling under the tour.
-    if (target) window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - 48)); // room above the highlight for effects that pop around it
+    // Room above the highlight for effects that pop around it, and below the sticky header so it does not cover it.
+    const headerBottom = app.querySelector('.app-header')?.getBoundingClientRect().bottom ?? 0;
+    if (target) window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - Math.max(48, headerBottom + 16)));
     else window.scrollTo(0, 0);
     document.documentElement.classList.add('tour-open');
 

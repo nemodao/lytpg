@@ -88,3 +88,16 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
   behind the X over `--ui-nav-surface`, so the button stays black. Background only, no shadow.
 - New token `--ui-nav-exit-glow` (transparent in light, so light mode looks as before) and the composed
   `--nav-exit-surface` (`tokens/tokens.json`, `tokens.css` rebuilt).
+
+## 5. Page title in a sticky pill (spec §57)
+
+- `appHeader` markup is unchanged. `.app-header` (`shared/components.css`) is now `position: sticky` and the `h1` is a
+  glass pill (`--ui-nav-surface` / `--ui-nav-stroke` / `--ui-button-glass-blur`, like the bottom bar). The class
+  `is-stuck` (set once the page has scrolled 8px) shrinks it (`--header-scale`) and makes it solid (`--header-fill`);
+  CSS transitions do the easing.
+- `watchHeader()` in `shared/components.js` sets `is-stuck` on scroll (one listener, once per frame) and, on Earn,
+  `data-theme="dark"` on the header while it is over the night sky (`.hero-bg`, marked `data-header-dark`).
+- Earn (`pages/trading-task.js`): the header moved out of `.hero` to just above it, so it can stay stuck; `.hero-bg`
+  reaches further up to still cover it. The rule giving Earn's title `--on-brand` is gone (the dark header gives it).
+- Scroll targets stop below the header: `[data-account-card]` `scroll-margin-top`, and the tour's scroll in
+  `shared/tour.js`.

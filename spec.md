@@ -746,3 +746,10 @@ Asked for by business users.
 
 - In dark mode the Close (X) button of the bottom bar stays black with a faint red sheen just around the X, part of its own background, fading into the bar colour within the button. Not a shadow and no glow outside the button. It makes Close stand a little off the near-black bar so users find it more easily (first version too strong and too wide, toned down by the user the same day).
 - Light mode is unchanged.
+
+## 57. Page title in a sticky pill (decided 20 Oct 2026, handoff 6)
+
+- On every page the title ("HSB Loyalty", "Daily Trading", "Coin Balance", "Redemption history") sits in a pill of the bottom bar's glass material, partly see-through at the top of the page.
+- Once the page scrolls, the pill shrinks a little (to 86%) and turns almost solid, both eased, and the header stays stuck at the top of the screen. The help button (Home) and the back button (Redemption history) stay with it.
+- Earn: while the title is over the dark night sky the pill is dark in both themes; once the sky has scrolled away under it, it takes the page's theme.
+- Anything the pages scroll to (the account field from the tier label, the tour's highlights) stops below the header.
