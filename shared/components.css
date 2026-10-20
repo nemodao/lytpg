@@ -277,6 +277,9 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* Close sits flush against the left screen edge: square on that side, no border there, rounded on the right. */
 .nav__exit { border-left: 0; border-radius: 0 var(--radius-pill) var(--radius-pill) 0; padding-left: var(--spacing-8); }
 .nav__exit { flex: none; width: calc(var(--nav-height) + var(--spacing-8)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-2); font: var(--font-x-small-medium); color: var(--ui-text-secondary); }
+/* Dark mode: a faint red blend inside the button's own background (not a shadow), so Close stands a little off the
+   near-black bar. Light mode keeps the plain bar (the glow tokens are transparent there). */
+.nav__exit { background: var(--nav-exit-surface); }
 /* The X is red and a little heavier than other line icons. */
 .nav__exit .icon { color: var(--ui-icon-red); stroke-width: 2.4; }
 .nav__tabs { flex: 1; display: flex; gap: var(--spacing-4); padding: var(--spacing-4); }

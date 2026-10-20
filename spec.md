@@ -741,3 +741,8 @@ Asked for by business users.
 - **Tap:** opens Earn scrolled to the account field (`trading-task.html?focus=account`).
 - **Event:** `loyalty_tier_badge_click` with `tier`.
 - Preview: Earn's tier and `ineligible-selected` states pin their account (`previewAccountId`, PREVIEW ONLY), as if the user had picked it.
+
+## 56. Close button in the bottom bar: faint red blend in dark mode (decided 20 Oct 2026, handoff 6)
+
+- In dark mode the Close (X) button of the bottom bar has a faint red blend in its own background: a soft red core behind the X and a touch of warm orange towards the lower right, fading into the bar colour. Not a shadow and no glow outside the button. It makes Close stand a little off the near-black bar so users find it more easily.
+- Light mode is unchanged.

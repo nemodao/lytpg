@@ -82,3 +82,9 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
   account on every tier: 50000387 Micro (`Direct\Mini400`, $80 deposited) and 50000455 Standard (`Direct\Mini10`, $450).
 - **Preview only:** Earn's tier states and `ineligible-selected` set `page.previewAccountId` to keep their account.
 
+## 4. Close button in the bottom bar: red blend in dark mode (spec §56)
+
+- `.nav__exit` (`shared/components.css`) now paints `--nav-exit-surface`: two soft radial gradients (red behind the X,
+  warm orange at the lower right) over `--ui-nav-surface`. Background only, no shadow.
+- New tokens `--ui-nav-exit-glow` and `--ui-nav-exit-glow-warm` (transparent in light, so light mode looks as before)
+  and the composed `--nav-exit-surface` (`tokens/tokens.json`, `tokens.css` rebuilt).
