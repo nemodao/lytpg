@@ -49,16 +49,21 @@ export const joinIntent = (common) => common.program.joinRequirement || null;
 // sign-in data: kycApproveTime = 0 -> "kyc"; kycApproveTime > 0 and firstDepositTime = 0 -> "deposit"; else null.
 // The button carries data-intent "kyc" or "deposit": the host app attaches the KYC / Deposit deeplink.
 // `source` says where the panel is shown: "card" (the Today card on Earn) or "redeem" (the sheet that Redeem opens,
-// joinSheet below); it is sent with loyalty_join_card_view.
+// mountJoinSheet below); `from` (sheet only) names the button that opened the sheet. Both go with
+// loyalty_join_card_view and with the panel's buttons (kyc / deposit / signup / login clicks), so a funnel can be
+// followed from the button tapped to the step taken. The card's view is sent once per page load; the sheet's on every
+// opening.
 const JOIN_NUDGE_AFTER = 3;
 // Guests see four steps, "Create your free account" first, and under the button "Already have an account? Log in"
 // (intent `login`, app screen /login).
-export function joinPanel(ui, common, { flat = false, nudged = false, source = 'card' } = {}) {
+export function joinPanel(ui, common, { flat = false, nudged = false, source = 'card', from } = {}) {
   const { program } = common;
   const guest = program.joinRequirement === 'signup';
   const ids = guest ? ['signup', 'kyc', 'deposit', 'trade'] : ['kyc', 'deposit', 'trade'];
   const current = ids.indexOf(program.joinRequirement);
-  trackView('loyalty_join_card_view', { step: program.joinRequirement, source }, source);
+  if (source === 'redeem') track('loyalty_join_card_view', { source, from });
+  else trackView('loyalty_join_card_view', { source }, source);
+  const where = `data-track-source="${source}"${from ? ` data-track-from="${from}"` : ''}`;
   const steps = ids.map((id, index) => {
     const state = index < current ? 'done' : index === current ? 'current' : 'later';
     const mark = state === 'done' ? ui.icon('check', 'icon--sm') : index + 1;
@@ -72,16 +77,17 @@ export function joinPanel(ui, common, { flat = false, nudged = false, source = '
     ${rateRangeLine(ui, common)}
     ${guest ? `<p class="t-caption c-3">${ui.t('join.ratesByAccount')}</p>` : ''}
     <div class="join__cta above${nudged ? ' join__cta--nudged' : ''}" style="--nudge-after:${JOIN_NUDGE_AFTER}s">
-      <button class="btn btn--primary btn--lg btn--block" type="button" data-intent="${joinIntent(common)}" data-track="loyalty_${joinIntent(common)}_click"${guest ? ` data-track-source="${source}"` : ''}>${joinLabel(ui, common)}</button>
+      <button class="btn btn--primary btn--lg btn--block" type="button" data-intent="${joinIntent(common)}" data-track="loyalty_${joinIntent(common)}_click" ${where}>${joinLabel(ui, common)}</button>
       <img class="join__finger" src="../assets/tour/finger.webp" alt="">
     </div>
-    ${guest ? `<button class="text-btn join__login" type="button" data-intent="login" data-track="loyalty_login_click" data-track-source="${source}">${ui.md('join.login')}</button>` : ''}`;
+    ${guest ? `<button class="text-btn join__login" type="button" data-intent="login" data-track="loyalty_login_click" ${where}>${ui.md('join.login')}</button>` : ''}`;
 }
 
 // Redeem buttons (spec §49): the balance block's Redeem and every reward card. A user who still needs KYC or a first
 // deposit cannot redeem yet: the button opens the "How to start" sheet (mountJoinSheet) instead of going to Tada.
 // Everyone else gets the Tada intent (`redeem` = the store, `reward` = one reward).
-// `from` names the button, sent with loyalty_login_prompt_view when a guest gets the sheet.
+// `from` names the button (redeem | balance | reward | explore | history), sent with the sheet's loyalty_join_card_view
+// (and loyalty_login_prompt_view for guests) and with the buttons inside it.
 export const redeemAttrs = (common, intent, from = intent) =>
   joinIntent(common) ? `data-action="join-sheet" data-from="${from}" aria-haspopup="dialog"` : `data-intent="${intent}"`;
 
@@ -107,7 +113,7 @@ export function mountJoinSheet(ui, common, app) {
             <button class="header-action" type="button" data-action="close-join-sheet" aria-label="${ui.t('common.close')}">${ui.icon('close')}</button>
           </div>
           <p class="t-body c-2">${ui.t(guest ? 'redeemGate.guestBody' : 'redeemGate.body')}</p>
-          ${joinPanel(ui, common, { flat: true, source: 'redeem' })}
+          ${joinPanel(ui, common, { flat: true, source: 'redeem', from })}
         </div>
       </div>`);
   };
@@ -142,7 +148,8 @@ export function rateRangeLine(ui, common) {
 // answered; "error" when any of them fails (no network, HTTP error, or a response without success = true). In this
 // demo `common.view` is set by the `loading` and `error` preview states, and "Try again" simply reloads the page;
 // with the API it repeats the page's requests.
-export function showStatus(ui, common, app, header) {
+// `scope` goes with loyalty_error_view as error_scope: 'page' (the page's data), or 'order' (one order, Redemption history).
+export function showStatus(ui, common, app, header, scope = 'page') {
   if (!common.view) return false;
   const bar = (size) => `<span class="skeleton__bar skeleton__bar--${size}"></span>`;
   const loading = `
@@ -161,7 +168,7 @@ export function showStatus(ui, common, app, header) {
       <button class="btn btn--primary btn--lg btn--block" type="button" data-action="retry" data-track="loyalty_retry_click">${ui.t('common.retry')}</button>
     </section>`;
   app.innerHTML = header + (common.view === 'loading' ? loading : error);
-  if (common.view === 'error') trackView('loyalty_error_view');
+  if (common.view === 'error') trackView('loyalty_error_view', { error_scope: scope });
   app.addEventListener('click', (event) => { if (event.target.closest('[data-action="retry"]')) location.reload(); });
   return true;
 }
@@ -201,7 +208,7 @@ export function balanceBlock(ui, common, { href = '', card = false, history = ''
   return `
   <section class="balance ${card ? 'card card--soft' : ''}" data-tour="balance">
     ${href ? (common.program.joinRequirement === 'signup'
-      ? `<button class="card-link" type="button" ${redeemAttrs(common, 'redeem', 'balance')} aria-label="${ui.t('balance.title')}"></button>`
+      ? `<button class="card-link" type="button" ${redeemAttrs(common, 'redeem', 'balance')} aria-label="${ui.t('balance.title')}" data-track="loyalty_card_click" data-track-target="coins"></button>`
       : `<a class="card-link" href="${href}" aria-label="${ui.t('balance.title')}" data-track="loyalty_card_click" data-track-target="coins"></a>`) : ''}
     <div class="balance-row">
       <span class="coin-glow">${coin('coin--lg')}</span>
@@ -212,7 +219,7 @@ export function balanceBlock(ui, common, { href = '', card = false, history = ''
       <div class="balance-side">
         <button class="btn btn--sm btn--mono above" type="button" ${redeemAttrs(common, 'redeem')} data-tour="redeem" data-track="loyalty_redeem_click">${ui.t('balance.redeem')}${ui.icon('gift', 'icon--sm')}</button>
         ${history ? (common.program.joinRequirement === 'signup'
-          ? `<button class="text-btn balance-history above" type="button" ${redeemAttrs(common, 'redeem', 'history')}>${ui.t('orders.button')}${ui.icon('right', 'icon--sm')}</button>`
+          ? `<button class="text-btn balance-history above" type="button" ${redeemAttrs(common, 'redeem', 'history')} data-track="loyalty_orders_open">${ui.t('orders.button')}${ui.icon('right', 'icon--sm')}</button>`
           : `<a class="text-btn balance-history above" href="${history}" data-track="loyalty_orders_open">${ui.t('orders.button')}${ui.icon('right', 'icon--sm')}</a>`) : ''}
       </div>
     </div>

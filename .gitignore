@@ -16,3 +16,6 @@ pages/_*
 
 # QA reports received from the developer (large screenshot sets)
 /QA Document/
+
+# Playwright for tools/check-tracking.mjs (npm install --no-save playwright)
+node_modules/

@@ -3,11 +3,12 @@
 // the list from an order.
 import { load } from '../shared/app.js';
 import { fetchMoreOrders, fetchOrder } from '../shared/data-source.js';
-import { initTracking } from '../shared/tracking.js';
+import { initTracking, track } from '../shared/tracking.js';
 import { appHeader, badge, coin, loadMoreRow, mountJoinSheet, notice, redeemAttrs, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('redemptions');
-initTracking('orders', common);
+// `view` goes with every event of this page: 'list' (orders to show), 'empty' (none yet) or 'detail' (one order).
+initTracking('orders', common, { view: new URLSearchParams(location.search).get('order') ? 'detail' : page.orders.length ? 'list' : 'empty' });
 const app = document.getElementById('app');
 const ref = new URLSearchParams(location.search).get('order');
 
@@ -63,7 +64,7 @@ async function loadMore() {
     nextPage += 1;
     page.orders.push(...orders);
     if (!orders.length) page.total = page.orders.length; // nothing more after all
-  } catch { moreFailed = true; }
+  } catch { moreFailed = true; track('loyalty_error_view', { error_scope: 'more' }); }
   loadingMore = false;
   render();
 }
@@ -81,7 +82,11 @@ function watchEnd() {
 // copied. `revealed` holds the keys shown so far ("<item>:code", "<item>:pin", "<item>:serial").
 const revealed = new Set();
 const values = new Map(); // key -> text, for Copy
-function secret(key, kind, label, value) {
+// `about`: data-track attributes naming the item's kind and the order's status (item_type, status), for the Show, Copy
+// and Open voucher events.
+const ITEM_TYPES = ['egift', 'physical', 'pln', 'pulsa'];
+const about = (order, item) => `${item ? ` data-track-item_type="${ITEM_TYPES.includes(item.type) ? item.type : 'other'}"` : ''} data-track-status="${ui.esc(order.status)}"`;
+function secret(key, kind, label, value, extra = '') {
   values.set(key, value);
   const shown = revealed.has(key);
   return `
@@ -90,20 +95,20 @@ function secret(key, kind, label, value) {
       <div class="fact__value">
         <span class="t-body-strong num secret${shown ? '' : ' secret--hidden'}">${shown ? ui.esc(value) : '••••••••'}</span>
         ${shown
-          ? `<button class="text-btn" type="button" data-action="copy" data-key="${key}" data-track="loyalty_code_copy" data-track-kind="${kind}">${ui.t('orders.copy')}</button>`
-          : `<button class="text-btn" type="button" data-action="reveal" data-key="${key}" data-track="loyalty_code_reveal" data-track-kind="${kind}">${ui.t('orders.show')}</button>`}
+          ? `<button class="text-btn" type="button" data-action="copy" data-key="${key}" data-track="loyalty_code_copy" data-track-kind="${kind}"${extra}>${ui.t('orders.copy')}</button>`
+          : `<button class="text-btn" type="button" data-action="reveal" data-key="${key}" data-track="loyalty_code_reveal" data-track-kind="${kind}"${extra}>${ui.t('orders.show')}</button>`}
       </div>
     </div>`;
 }
 // A plain value that can be copied (order number, AWB number).
-function copyable(key, kind, label, value) {
+function copyable(key, kind, label, value, extra = '') {
   values.set(key, value);
   return `
     <div class="fact">
       <span class="t-caption c-3">${label}</span>
       <div class="fact__value">
         <span class="t-body-strong num">${ui.esc(value)}</span>
-        <button class="text-btn" type="button" data-action="copy" data-key="${key}" data-track="loyalty_code_copy" data-track-kind="${kind}">${ui.t('orders.copy')}</button>
+        <button class="text-btn" type="button" data-action="copy" data-key="${key}" data-track="loyalty_code_copy" data-track-kind="${kind}"${extra}>${ui.t('orders.copy')}</button>
       </div>
     </div>`;
 }
@@ -112,23 +117,24 @@ const typeLabel = (type) => ui.t(['egift', 'physical', 'pln', 'pulsa'].includes(
 
 // One item: name, kind, quantity, then the one block its kind carries (spec §52).
 function itemCard(item, index, order) {
+  const extra = about(order, item);
   let block = '';
   if (item.evoucher) {
     const { code, pin, link, expiredDate } = item.evoucher;
     block = `
-      ${code ? secret(`${index}:code`, 'code', ui.t('orders.code'), code) : ''}
-      ${pin ? secret(`${index}:pin`, 'pin', ui.t('orders.pin'), pin) : ''}
+      ${code ? secret(`${index}:code`, 'code', ui.t('orders.code'), code, extra) : ''}
+      ${pin ? secret(`${index}:pin`, 'pin', ui.t('orders.pin'), pin, extra) : ''}
       ${expiredDate ? `<p class="t-caption c-3 num">${ui.t('orders.validUntil', { date: ui.date(expiredDate) })}</p>` : ''}
-      ${link ? `<button class="btn btn--stroke btn--sm btn--block" type="button" data-intent="voucher" data-url="${ui.esc(link)}" data-track="loyalty_voucher_open">${ui.t('orders.openVoucher')}${ui.icon('right', 'icon--sm')}</button>` : ''}`;
+      ${link ? `<button class="btn btn--stroke btn--sm btn--block" type="button" data-intent="voucher" data-url="${ui.esc(link)}" data-track="loyalty_voucher_open"${extra}>${ui.t('orders.openVoucher')}${ui.icon('right', 'icon--sm')}</button>` : ''}`;
   } else if (item.token) {
     block = `
-      ${item.token.serialNumber ? secret(`${index}:serial`, 'serial', ui.t('orders.serial'), item.token.serialNumber) : ''}
+      ${item.token.serialNumber ? secret(`${index}:serial`, 'serial', ui.t('orders.serial'), item.token.serialNumber, extra) : ''}
       ${item.token.message ? `<p class="t-body c-2 num">${ui.esc(item.token.message)}</p>` : ''}`;
   } else if (item.tracking) {
     const { shippingCompany, awbNumber, trackingNumber } = item.tracking;
     block = `
       ${shippingCompany ? fact(ui.t('orders.courier'), ui.esc(shippingCompany)) : ''}
-      ${awbNumber ? copyable(`${index}:awb`, 'awb', ui.t('orders.awb'), awbNumber) : ''}
+      ${awbNumber ? copyable(`${index}:awb`, 'awb', ui.t('orders.awb'), awbNumber, extra) : ''}
       ${trackingNumber ? fact(ui.t('orders.trackingNumber'), ui.esc(trackingNumber)) : ''}`;
   } else if (item.type === 'physical' && ['new', 'on process'].includes(order.status)) {
     block = `<p class="t-body c-3">${ui.t('orders.noTracking')}</p>`;
@@ -157,7 +163,7 @@ function orderView(order) {
       <h2 class="t-title-s">${title}</h2>
       ${order.refunded ? notice(ui, { icon: 'check', tone: 'success', text: ui.t('orders.refunded', { points: ui.num(order.coinSpent) }) }) : ''}
       <div class="facts">
-        ${copyable('order', 'order', ui.t('orders.number'), order.orderNumber)}
+        ${copyable('order', 'order', ui.t('orders.number'), order.orderNumber, about(order))}
         ${fact(ui.t('orders.date'), `${ui.date(order.orderDate)}, ${ui.time(order.orderDate)}`)}
         ${fact(ui.t('orders.coins'), coins(order.coinSpent))}
       </div>
@@ -204,7 +210,7 @@ const header = appHeader(ui, { title: ui.t(ref ? 'orders.detailTitle' : 'orders.
 if (!showStatus(ui, common, app, header)) {
   if (ref) {
     order = await fetchOrder(ref).catch(() => null);
-    if (!order) showStatus(ui, { ...common, view: 'error' }, app, header);
+    if (!order) showStatus(ui, { ...common, view: 'error' }, app, header, 'order');
     else render();
   } else render();
   mountJoinSheet(ui, common, app);

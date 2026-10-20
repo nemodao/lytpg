@@ -708,3 +708,24 @@ Users who have not signed in can open the loyalty pages to see the rewards and h
 - **Open item:** the recent activity API (§50) does not exist yet; the guest version needs no token.
 
 Preview state, on every page (shared): `guest`.
+
+## 54. Event tracking review (decided 20 Oct 2026, handoff 6)
+
+Every screen was reviewed by three reviewers (funnels, a run of every state, the GA4 data model) and cross-checked. Decided by the owner; `TRACKING.md` is the full list (33 events).
+
+- **Fixes:**
+  - `loyalty_kyc_click`, `loyalty_deposit_click` (and `signup` / `login`) always carry `source` = `card` | `redeem`, plus `from` (the button that opened the sheet) inside the "How to start" sheet. The sheet's `loyalty_join_card_view` is sent on every opening, with `source` and `from`; its `step` parameter is dropped (`join_step` says the same).
+  - Each push clears every event parameter first, so GTM never carries one into a later event; every value is sent as text.
+  - The tour's `step` becomes `tour_step`; tour events add `step_count` (5; 4 for guests or without a trading task; 3 when both).
+  - Not changed (owner's decision): a failed real API load still shows no error card and sends nothing.
+- **New events:** `loyalty_rewards_view` (`reward_count`, `has_earn_card`; the grid's first card half on screen, or at once with 0 rewards) and `loyalty_upgrade_row_view` (`tier`, `next_tier`).
+- **New parameters:**
+  - `loyalty_reward_click`: `position` is the rank among the rewards (the "earn coins" card is not counted); `reward_name`; `affordable`.
+  - The tier sheet's `Deposit now` and `Trade with account …`: `tier`, `next_tier`.
+  - Redemption history: `view` (`list` | `empty` | `detail`) on every event of the page; `item_type` and `status` on Show, Copy and Open voucher.
+  - `loyalty_error_view`: `error_scope` (`page` | `order` | `more`); a failed "load more" now sends it.
+  - Every event: `loyalty_tier`, the highest tier among the user's eligible accounts (`none` if none; not sent for guests), set by GTM as a GA4 user property. The tier table moves to `shared/tiers.js`.
+- **Guests:** tapping the balance sends `loyalty_card_click` (`coins`) and `Redemption history` sends `loyalty_orders_open`, as for signed-in users; the Coins sign-up card sends `loyalty_join_card_view` (`source` = `card`).
+- **Not added:** a programme-state parameter, a theme fix, a user-state user property, a load-reason parameter, and the optional ones (closing sheets, the account picker, tab and chip repeats, paging depth, the nudge, the host entry point).
+- **Check:** `node tools/check-tracking.mjs` (Playwright) uses the pages and fails on any break of `TRACKING.md`.
+- **GA4 settings** (owner, in GA4): retention 14 months; register the custom dimensions before launch; turn off history-based page views; key events `kyc_click`, `deposit_click`, `signup_click`, `trade_click`, `redeem_click`.

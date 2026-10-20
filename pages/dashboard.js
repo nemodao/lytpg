@@ -4,7 +4,7 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { mountTour } from '../shared/tour.js';
 import { createActivityFeed } from '../shared/activity-feed.js';
-import { initTracking } from '../shared/tracking.js';
+import { initTracking, trackView } from '../shared/tracking.js';
 import { appHeader, balanceBlock, coin, mountJoinSheet, redeemAttrs, showStatus, tourButton } from '../shared/components.js';
 
 const { common, page, ui } = await load('dashboard');
@@ -48,8 +48,11 @@ function checkInCard() {
 // treats `reward` like `redeem` (the Tada catalog).
 const GRID_CELLS = 10;
 const EARN_CELL = 3; // the "earn coins" card is the 3rd cell
+// Tracking (loyalty_reward_click): `position` is the reward's rank among the rewards (1–9, the "earn coins" card is not
+// counted), `reward_id` and `reward_name` as HSB sends them, `affordable` whether the balance covers the price (no
+// amount is sent).
 const rewardCard = (item, position) => `
-  <button class="card reward-card" type="button" ${redeemAttrs(common, 'reward', 'reward')} data-reward="${ui.esc(item.id)}" data-track="loyalty_reward_click" data-track-position="${position}" data-track-reward_id="${ui.esc(item.id)}">
+  <button class="card reward-card" type="button" ${redeemAttrs(common, 'reward', 'reward')} data-reward="${ui.esc(item.id)}" data-track="loyalty_reward_click" data-track-position="${position}" data-track-reward_id="${ui.esc(item.id)}" data-track-reward_name="${ui.esc(item.name)}" data-track-affordable="${common.balance.available >= item.points}">
     <span class="reward-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</span>
     <span class="reward-card__name">${ui.esc(item.name)}</span>
     <span class="reward-card__foot">
@@ -90,11 +93,24 @@ const moreCard = () => {
   </section>`;
 };
 
+const withEarn = hasTask && !common.program.ended;
+const shownRewards = rewards.slice(0, withEarn ? GRID_CELLS - 1 : GRID_CELLS);
 function rewardsGrid() {
-  const withEarn = hasTask && !common.program.ended;
-  const cells = rewards.slice(0, withEarn ? GRID_CELLS - 1 : GRID_CELLS).map((item) => ({ item }));
+  const cells = shownRewards.map((item, index) => ({ item, position: index + 1 }));
   if (withEarn) cells.splice(Math.min(EARN_CELL - 1, cells.length), 0, { earn: true });
-  return `<div class="reward-grid">${cells.map((cell, index) => (cell.earn ? earnCard() : rewardCard(cell.item, index + 1))).join('')}</div>`;
+  return `<div class="reward-grid">${cells.map((cell) => (cell.earn ? earnCard() : rewardCard(cell.item, cell.position))).join('')}</div>`;
+}
+
+// loyalty_rewards_view: the grid was seen (its first card at least half on screen; the whole grid can be taller than
+// the screen), once per page load; the denominator of the reward clicks. With no rewards (empty catalog, or it failed)
+// it is sent at once with reward_count 0.
+function watchRewards() {
+  const params = { reward_count: shownRewards.length, has_earn_card: withEarn && shownRewards.length > 0 };
+  const grid = app.querySelector('.reward-grid');
+  if (!grid) { trackView('loyalty_rewards_view', params); return; }
+  new IntersectionObserver((entries, observer) => {
+    if (entries.some((entry) => entry.isIntersecting)) { observer.disconnect(); trackView('loyalty_rewards_view', params); }
+  }, { threshold: 0.5 }).observe(grid.firstElementChild);
 }
 
 // A price too long to share its row with Redeem pushes Redeem onto its own line. When that happens on one card, every
@@ -130,6 +146,7 @@ if (showStatus(ui, common, app, header)) {
     ${moreCard()}`;
 
   feed.start(app);
+  watchRewards();
   fitPrices();
   document.fonts.ready.then(fitPrices);
   let width = innerWidth;

@@ -10,6 +10,8 @@
 
 import { rulesList } from './components.js';
 
+// Tracking: `tour_step` is the step's id (1–5), not its place in this run; `step_count` is how many steps this run has
+// (5; 4 for guests, who have no step 5, or without a trading task, which skips step 2; 3 when both).
 import { track, trackView } from './tracking.js';
 
 const STEPS = [
@@ -239,7 +241,7 @@ export function mountTour(ui, common, page) {
     Promise.race([preload(assetsFor(step)), new Promise((done) => setTimeout(done, PRELOAD_LIMIT_MS))]).then(() => {
       if (ticket !== opening) return;
       show(step);
-      trackView('loyalty_tour_step_view', { step: step.id }, step.id);
+      trackView('loyalty_tour_step_view', { tour_step: step.id, step_count: steps.length }, step.id);
       const next = steps[steps.indexOf(step) + 1];
       if (next) preload(assetsFor(next));
     });
@@ -354,9 +356,9 @@ export function mountTour(ui, common, page) {
     if (!button) return;
     const index = steps.indexOf(current);
     const action = button.dataset.tourAction;
-    if (action === 'skip') { track('loyalty_tour_skip', { step: current.id }); end({ home: false }); }
+    if (action === 'skip') { track('loyalty_tour_skip', { tour_step: current.id, step_count: steps.length }); end({ home: false }); }
     else if (action === 'back') go(steps[index - 1]);
-    else if (index === steps.length - 1) { track('loyalty_tour_finish'); end({ home: true }); }
+    else if (index === steps.length - 1) { track('loyalty_tour_finish', { tour_step: current.id, step_count: steps.length }); end({ home: true }); }
     else go(steps[index + 1]);
   });
 
@@ -364,7 +366,7 @@ export function mountTour(ui, common, page) {
   window.addEventListener('resize', () => { if (current) show(current); });
 
   // Called with a click event from the help button, and with nothing when the tour opens by itself.
-  const start = (event) => { track('loyalty_tour_start', { trigger: event ? 'help_button' : 'auto' }); go(steps[0]); };
+  const start = (event) => { track('loyalty_tour_start', { trigger: event ? 'help_button' : 'auto', step_count: steps.length }); go(steps[0]); };
 
   // Resume the step named in the URL, or open the tour on the first visit to Home. `?tour=off` never opens it.
   const wanted = params.get('tour');

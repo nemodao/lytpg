@@ -4,6 +4,7 @@ import { mountNav } from '../shared/nav.js';
 import { createActivityFeed } from '../shared/activity-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { initTracking, trackView } from '../shared/tracking.js';
+import { TIERS, sameGroup } from '../shared/tiers.js';
 import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('trading-task');
@@ -51,18 +52,7 @@ const accountName = (item) => ui.esc(item.id);
 const eligibleBadge = (item) =>
   item.eligible ? badge('green', ui.t('badge.eligible')) : badge('neutral', ui.t('badge.notEligible'));
 
-// Account tiers (spec §51). API (tradingTask/get): `accounts[].group` is the account's full MT5 group name,
-// `accounts[].lifetimeDeposit` its approved deposits in USD (0 when none), `common.tiers[]` = { group, rates } per group
-// the programme has rates for, unsorted. Only these four groups are tiers, matched exactly (any case): a group such as
-// 1F\Direct\Mini10 is not one and shows no tier and no upgrade row. The order and the deposit thresholds are fixed here
-// (confirmed by product, 20 Oct 2026); the rates always come from the API.
-const TIERS = [
-  { key: 'micro', group: 'Direct\\Mini400', minDeposit: 0 },
-  { key: 'standard', group: 'Direct\\Mini10', minDeposit: 200 },
-  { key: 'vip', group: 'Direct\\VIP1', minDeposit: 1000 },
-  { key: 'platinum', group: 'Direct\\MIVIP', minDeposit: 5000 },
-];
-const sameGroup = (a, b) => String(a ?? '').toLowerCase() === String(b ?? '').toLowerCase();
+// Account tiers (spec §51): TIERS and sameGroup live in shared/tiers.js (the user's tier is also sent with events).
 // The four tiers in order, each with its rates from the API (null when the programme has none for it).
 const tiers = TIERS.map((tier) => ({ ...tier, rates: (common.tiers ?? []).find((item) => sameGroup(item.group, tier.group))?.rates ?? null }));
 const tierAt = (item) => tiers.findIndex((tier) => sameGroup(item.group, tier.group));
@@ -193,7 +183,6 @@ function accountsCard() {
     </section>`;
 }
 
-// Under the account field: the way to a higher tier, or, on the top tier, a look at it. Opens the tier sheet.
 // Under the account field: the way to a higher tier, or, on the top tier, a quiet look at it (no border, muted, since
 // there is nothing left to upgrade). Opens the tier sheet.
 function upgradeRow(item) {
@@ -204,6 +193,9 @@ function upgradeRow(item) {
   const body = !next ? ui.t('upgrade.row.topBody')
     : next.rates ? ui.t('upgrade.row.body', { tier: tierName(next), max: ui.num(maxRate(next.rates)) })
       : ui.t('upgrade.row.bodyNoRate', { tier: tierName(next) });
+  // Seen: once per page load for each tier shown (the row changes with the selected account); the denominator of
+  // loyalty_upgrade_open.
+  trackView('loyalty_upgrade_row_view', { tier: tiers[at].key, next_tier: next ? next.key : 'none' }, tiers[at].key);
   return `
     <button class="upgrade-row${next ? '' : ' upgrade-row--top'}" type="button" data-action="open-upgrade" aria-haspopup="dialog" data-track="loyalty_upgrade_open" data-track-tier="${tiers[at].key}" data-track-next_tier="${next ? next.key : 'none'}">
       <img class="upgrade-row__art" src="../assets/images/earn/${next ? 'money-bag' : 'crown'}.webp" alt="">
@@ -272,13 +264,13 @@ function upgradeSheet() {
       ${progress}
       ${table}
       <p class="t-caption c-3">${ui.t('upgrade.note')}</p>
-      <div class="sheet__sticky"><button class="btn btn--primary btn--lg btn--block" type="button" data-intent="deposit" data-account="${ui.esc(item.id)}"${missing > 0 ? ` data-amount="${missing}"` : ''} data-track="loyalty_deposit_click" data-track-source="upgrade">${ui.t('upgrade.deposit')}</button></div>`;
+      <div class="sheet__sticky"><button class="btn btn--primary btn--lg btn--block" type="button" data-intent="deposit" data-account="${ui.esc(item.id)}"${missing > 0 ? ` data-amount="${missing}"` : ''} data-track="loyalty_deposit_click" data-track-source="upgrade" data-track-tier="${tiers[at].key}" data-track-next_tier="${next.key}">${ui.t('upgrade.deposit')}</button></div>`;
   } else {
     body = `
       <p class="t-body c-2 num">${ui.md('upgrade.topBody', { max: ui.num(maxRate(item.rates)) })}</p>
       ${table}
       <p class="t-caption c-3">${ui.t('upgrade.note')}</p>
-      <div class="sheet__sticky">${tradeButton('upgrade')}</div>`;
+      <div class="sheet__sticky">${tradeButton('upgrade', tiers[at].key)}</div>`;
   }
   return `
     <div class="scrim" data-action="close-sheet">
@@ -295,8 +287,9 @@ function upgradeSheet() {
     </div>`;
 }
 
-// `source`: 'upgrade' when the button sits in the tier sheet (sent with loyalty_trade_click, like Deposit now there).
-function tradeButton(source) {
+// `source`: 'upgrade' when the button sits in the tier sheet, with the account's `tier` (sent with loyalty_trade_click,
+// like Deposit now there; on Platinum next_tier is 'none').
+function tradeButton(source, tier) {
   if (ended) return '';
   const selected = account(selectedId);
   if (!selected.eligible) {
@@ -304,7 +297,7 @@ function tradeButton(source) {
   }
   // Capped: plain wording, nothing about earning points (spec §4 states).
   const label = today.capped ? ui.t('task.trade') : ui.t('tt.trade.account', { account: ui.esc(selected.id) });
-  return `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="trade-account" data-account="${ui.esc(selected.id)}" data-track="loyalty_trade_click" data-track-capped="${today.capped}"${source ? ` data-track-source="${source}"` : ''}>${label}</button>`;
+  return `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="trade-account" data-account="${ui.esc(selected.id)}" data-track="loyalty_trade_click" data-track-capped="${today.capped}"${source ? ` data-track-source="${source}" data-track-tier="${tier}" data-track-next_tier="none"` : ''}>${label}</button>`;
 }
 
 

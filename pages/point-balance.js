@@ -3,7 +3,7 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { mountTour } from '../shared/tour.js';
-import { initTracking } from '../shared/tracking.js';
+import { initTracking, trackView } from '../shared/tracking.js';
 import { appHeader, badge, balanceBlock, coin, loadMoreRow, mountJoinSheet, notice, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('point-balance');
@@ -37,6 +37,8 @@ const PAGE_SIZE = 15;
 const LOAD_DELAY_MS = 700; // DEMO: stands in for the request
 const shown = { available: PAGE_SIZE, expired: PAGE_SIZE, history: PAGE_SIZE };
 let loadFailed = Boolean(page.loadMoreError); // PREVIEW ONLY: the `more-error` state shows the failed-to-load row
+// API: send this when a request for the next page fails (error_scope 'more'), as the preview does here.
+if (loadFailed) trackView('loyalty_error_view', { error_scope: 'more' }, 'more');
 const moreRow = (total) => (total > shown[tab] ? loadMoreRow(ui, loadFailed) : '');
 
 const source = (item) => (['trading', 'daily_checkin', 'adjust'].includes(item.source) ? ui.t(`pb.source.${item.source}`) : ui.esc(item.source));
@@ -168,6 +170,7 @@ const guestCard = () => `
   </section>`;
 
 function render() {
+  if (common.guest) trackView('loyalty_join_card_view', { source: 'card' }, 'card'); // the sign-up card was seen
   app.innerHTML = `
     ${appHeader(ui, { title: ui.t('pb.title') })}
     ${balanceBlock(ui, common, { card: true, history: ui.href('redemptions.html') })}
