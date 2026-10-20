@@ -363,8 +363,13 @@ export function mountTour(ui, common, page) {
   // Keep the highlight in place when the screen size changes.
   window.addEventListener('resize', () => { if (current) show(current); });
 
-  // Called with a click event from the help button, and with nothing when the tour opens by itself.
-  const start = (event) => { track('loyalty_tour_start', { trigger: event ? 'help_button' : 'auto' }); go(steps[0]); };
+  // Called with a click event from the help button, and with nothing when the tour opens by itself. Opening by itself
+  // counts as seen at once (spec §38): on this device it never opens by itself again, even if the user leaves mid-tour.
+  const start = (event) => {
+    if (!event) markSeen();
+    track('loyalty_tour_start', { trigger: event ? 'help_button' : 'auto' });
+    go(steps[0]);
+  };
 
   // Resume the step named in the URL, or open the tour on the first visit to Home. `?tour=off` never opens it.
   const wanted = params.get('tour');
