@@ -18,8 +18,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'dist' / 'handoff'
-INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'HANDOFF.md', 'HANDOFF-2.md', 'HANDOFF-3.md', 'HANDOFF-4.md', 'HANDOFF-5.md', 'HANDOFF-6.md', 'TRACKING.md', 'tools/check-tracking.mjs', 'CHANGELOG.md', 'DATA.md', 'STATES.md', 'spec.md']
+INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'HANDOFF.md', 'HANDOFF-2.md', 'HANDOFF-3.md', 'HANDOFF-4.md', 'HANDOFF-6.md', 'TRACKING.md', 'tools/check-tracking.mjs', 'CHANGELOG.md', 'DATA.md', 'STATES.md', 'spec.md']
 SKIP = shutil.ignore_patterns('.DS_Store', '_*', 'coin-hex.png', '__pycache__')
+# A handoff that replaces the one before it (sent but never converted) is compared with the one before that:
+# handoff 6 holds all of handoff 5, so its diff and its "read this" note start from handoff 4. HANDOFF-5.md stays in
+# the repository but is not in INCLUDE.
+DIFF_FROM = {6: 4}
 DEMO_BLOCK = re.compile(r'\n[ \t]*<!-- DEMO ONLY: start.*?<!-- DEMO ONLY: end -->[ \t]*', re.S)
 FORBIDDEN = ['demo/', 'intents.en.json', 'Internal Explanation', 'DEMO ONLY', 'tracklog']
 
@@ -58,9 +62,9 @@ def main():
     version = int((ROOT / 'HANDOFF_VERSION').read_text().strip())
     commit = subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     update = f'HANDOFF-{version}.md'
-    start = f'Already converted handoff {version - 1}? Read {update} only. First conversion? Start with HANDOFF.md.' if (ROOT / update).exists() else 'Start with HANDOFF.md'
+    start = f'Already converted handoff {DIFF_FROM.get(version, version - 1)}? Read {update} only. First conversion? Start with HANDOFF.md.' if (ROOT / update).exists() else 'Start with HANDOFF.md'
     (OUT / 'VERSION.txt').write_text(f'Handoff {version}\nBuilt {datetime.date.today().isoformat()} from commit {commit}\n{start}\n', encoding='utf-8')
-    previous = f'handoff-{version - 1}'
+    previous = f'handoff-{DIFF_FROM.get(version, version - 1)}'
     if version > 1 and subprocess.run(['git', 'rev-parse', '-q', '--verify', previous], cwd=ROOT, capture_output=True).returncode == 0:
         diff = subprocess.run(['git', 'diff', previous, 'HEAD', '--', *INCLUDE, ':(exclude)assets'], cwd=ROOT, capture_output=True, text=True).stdout
         (OUT / f'CHANGES-since-{previous}.diff').write_text(diff, encoding='utf-8')

@@ -1,5 +1,8 @@
 # Handoff 5 — what changed since handoff 4
 
+> **Replaced by `HANDOFF-6.md`.** This package was sent but never converted; handoff 6 holds all of it plus the later
+> changes and is the one to apply. Kept here for the record; not in the handoff package.
+
 **Who this is for:** developers (and their AI assistants) who have already applied handoff 4. Everything not named here
 is unchanged. Behaviour: `spec.md` §49–§53. Exact line changes: `CHANGES-since-handoff-4.diff` in the package.
 
