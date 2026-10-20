@@ -179,15 +179,16 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* The badge shrinks as a whole (text, padding, pill) to stay on the line: --tier-fit is set by fitBalanceTier() in
    components.js. Below the smallest scale it goes under "Coin Balance" instead. */
 .balance-tier { text-decoration: none; zoom: var(--tier-fit, 1); }
-/* Coins: on the card's top edge, middle on the border, lined up with "Coin Balance" (after the coin and the gap). */
-.balance-tier--edge { position: absolute; z-index: 1; top: calc(var(--size-stroke) / -2); left: calc(var(--spacing-card) + var(--size-control-lg) + var(--spacing-12)); transform: translateY(-50%);
-  background: linear-gradient(var(--tier-bg), var(--tier-bg)), var(--surface-brand-soft); } /* tints laid on the card's own colour: the border must not show through */
-/* Tier badge (spec §51, §55): grey Micro, blue Standard, purple VIP, inverted Platinum (the top). */
-.tier { background: var(--tier-bg); }
-.tier--micro { --tier-bg: var(--ui-surface-soft); color: var(--ui-text-secondary); }
-.tier--standard { --tier-bg: var(--ui-badge-blue); color: var(--ui-text-brand); }
-.tier--vip { --tier-bg: color-mix(in srgb, var(--color-purple-main) 14%, transparent); color: color-mix(in srgb, var(--color-purple-main) 72%, var(--ui-text-primary)); }
-.tier--platinum { --tier-bg: var(--ui-text-primary); color: var(--card-surface); }
+/* Coins: on the card's top edge, middle on the border, at the card's left padding (above the coin). */
+.balance-tier--edge { position: absolute; z-index: 1; top: calc(var(--size-stroke) / -2); left: var(--spacing-card); transform: translateY(-50%); }
+/* Tier badge (spec §51, §55): one style for the four tiers, a pale tint of the tier's hue with the text in that hue,
+   so no tier looks like a main button. The tint is laid on the card colour, so the badge is opaque: on Coins it sits
+   across the card border, which must not show through. Grey Micro, blue Standard, purple VIP, gold Platinum. */
+.tier { background: color-mix(in srgb, var(--tier-hue) 14%, var(--card-surface)); color: color-mix(in srgb, var(--tier-hue) 72%, var(--ui-text-primary)); }
+.tier--micro { --tier-hue: var(--color-neutral-500); }
+.tier--standard { --tier-hue: var(--color-brand-500); }
+.tier--vip { --tier-hue: var(--color-purple-main); }
+.tier--platinum { --tier-hue: var(--color-yellow-500); }
 .balance-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-8); }
 .balance.card { margin-block: 0; }
 

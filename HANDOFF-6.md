@@ -69,10 +69,12 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
   measures the room left and sets `--tier-fit` (CSS `zoom`, so text, padding and pill shrink together) down to
   `TIER_MIN_FIT` (0.75); below that it wraps under the label. A `ResizeObserver` measures again on rotation and once
   the web font has loaded. On Coins (`balanceBlock(…, { card: true })`) the badge is not on that line: it hangs on
-  the card's top edge (`.balance-tier--edge`, middle on the border, lined up with "Coin Balance"), over an opaque
-  base so the border does not show through the translucent tints. For that the `.tier--*` classes now set
-  `--tier-bg` and `.tier` paints it (same colours as before). The `.tier--*` colours moved from `pages/trading-task.css` to
-  `shared/components.css`.
+  the card's top edge (`.balance-tier--edge`, middle on the border, on the left above the coin).
+- **Tier badge colours changed (Earn too):** the `.tier--*` classes moved from `pages/trading-task.css` to
+  `shared/components.css` and now only set `--tier-hue`; `.tier` paints every tier the way VIP was painted: a 14% tint
+  of the hue laid on `--card-surface` (opaque, so the Coins card border does not show through) with the text at 72%
+  of the hue. Hues: Micro `--color-neutral-500`, Standard `--color-brand-500`, VIP `--color-purple-main`, Platinum
+  `--color-yellow-500`. Platinum is no longer black/white, which looked like the main buttons.
 - **Data:** `common.selectedAccountId` (the account the app trades with, from `tradingTask/get`; null for guests) so
   Home and Coins pick the same default as Earn. `DATA.md` updated.
 - **Event:** `loyalty_tier_badge_click` with `tier` (`TRACKING.md`, now 34 events; covered by `tools/check-tracking.mjs`).
