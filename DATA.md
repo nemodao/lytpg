@@ -46,6 +46,7 @@ Example file: `mock/common.json`
 | `accounts[].eligible` | boolean | `true` | Whether this account takes part in the programme (false e.g. for an MT5 group that is excluded). |
 | `accounts[].group` | string | `"Direct\\VIP1"` | Full MT5 group name of the account, e.g. Direct\VIP1 (tradingTask/get, spec §51). A tier only when it is exactly (any case) Direct\Mini400 = Micro, Direct\Mini10 = Standard, Direct\VIP1 = VIP, Direct\MIVIP = Platinum; others (e.g. 1F\Direct\Mini10) show no tier and no upgrade row. |
 | `accounts[].lifetimeDeposit` | number | `2350` | Approved deposits into this account, USD; 0 when none (every account, eligible or not). The tier sheet compares it with the next tier's threshold, fixed in the page: 0, 200, 1,000, 5,000. |
+| `selectedAccountId` | string | null | `"50000234"` | The trading account the app currently trades with (tradingTask/get `selectedAccountId`); null for guests. Used only as a tie-break: the pages show the eligible account on the highest tier, and among several on that tier this one (spec §55). |
 | `accounts[].rates[].type` | "symbol" | "symbol_group" | "any" | `"symbol_group"` | Kind of rate row. Empty list for an account that is not eligible. |
 | `accounts[].rates[].value` | string or null | `"metal"` | Symbol (shown as is), or group: forex, metal, energy, index, stocks, other (label = copy key rate.<value>). For type "any": "other" or null, shown as "Others". |
 | `accounts[].rates[].ptsPerLot` | number | `100` | Coins earned per lot for that row. Rows come highest first, the "any" row last, never 0. |

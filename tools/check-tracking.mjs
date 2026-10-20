@@ -70,6 +70,7 @@ async function run(name, path, steps = [], expect = [], { tour = false } = {}) {
   for (const step of steps) {
     if (step === 'scroll') await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     else if (step === 'close') await page.evaluate(() => document.querySelector('[data-action^="close"]')?.click());
+    else if (step === 'stay') await page.evaluate(() => document.addEventListener('click', (event) => event.preventDefault(), true)); // links do not navigate away
     else await page.evaluate((selector) => { const element = document.querySelector(selector); if (!element) throw new Error(`no ${selector}`); element.click(); }, step)
       .catch((error) => fail(name, error.message));
     await page.waitForTimeout(450);
@@ -108,14 +109,18 @@ await run('home: guest', 'dashboard.html?state=guest', ['.balance .card-link'], 
   ['loyalty_login_prompt_view', { from: 'balance' }],
   ['loyalty_join_card_view', { source: 'redeem', from: 'balance' }],
 ]);
+await run('home: tier label (highest tier by default)', 'dashboard.html', ['stay', '.balance-tier'], [
+  ['loyalty_tier_badge_click', { tier: 'platinum', target: undefined }],
+]);
 await run('home: page error', 'dashboard.html?state=error', [], [['loyalty_error_view', { error_scope: 'page' }]]);
 await run('home: tour', 'dashboard.html', [], [
   ['loyalty_tour_start', { trigger: 'auto', step_count: '5' }],
   ['loyalty_tour_step_view', { tour_step: '1', step_count: '5', step: undefined }],
 ], { tour: true });
 
+await run('earn: opens on the highest tier', 'trading-task.html', [], [['loyalty_upgrade_row_view', { tier: 'platinum', next_tier: 'none' }]]);
 await run('earn: tier sheet, then trade on Earn', 'trading-task.html', [
-  '[data-track="loyalty_upgrade_open"]', '.sheet [data-intent="deposit"]', 'close', '[data-track="loyalty_trade_click"]',
+  '[data-action="open-sheet"]', '[data-action="select-account"][data-id="50000234"]', '[data-track="loyalty_upgrade_open"]', '.sheet [data-intent="deposit"]', 'close', '[data-track="loyalty_trade_click"]',
 ], [
   ['loyalty_upgrade_row_view', { tier: 'vip', next_tier: 'platinum' }],
   ['loyalty_upgrade_open', { tier: 'vip', next_tier: 'platinum' }],

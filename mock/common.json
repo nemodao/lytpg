@@ -153,6 +153,7 @@
       "rates": []
     }
   ],
+  "selectedAccountId": "50000234",
   "tiers": [
     {
       "group": "Direct\\VIP1",

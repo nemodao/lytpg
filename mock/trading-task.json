@@ -643,7 +643,8 @@
     },
     "ineligible-selected": {
       "page": {
-        "selectedAccountId": "50000871"
+        "selectedAccountId": "50000871",
+        "previewAccountId": "50000871"
       }
     },
     "no-account": {
@@ -943,6 +944,9 @@
             "rates": []
           }
         ]
+      },
+      "page": {
+        "previewAccountId": "50000234"
       }
     },
     "tier-standard": {
@@ -1075,11 +1079,15 @@
             "rates": []
           }
         ]
+      },
+      "page": {
+        "previewAccountId": "50000234"
       }
     },
     "tier-top": {
       "page": {
-        "selectedAccountId": "50000519"
+        "selectedAccountId": "50000519",
+        "previewAccountId": "50000519"
       }
     },
     "tier-reached": {
@@ -1212,6 +1220,9 @@
             "rates": []
           }
         ]
+      },
+      "page": {
+        "previewAccountId": "50000234"
       }
     },
     "tier-unknown": {
@@ -1344,6 +1355,9 @@
             "rates": []
           }
         ]
+      },
+      "page": {
+        "previewAccountId": "50000234"
       }
     },
     "guest": {

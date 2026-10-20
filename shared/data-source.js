@@ -97,6 +97,7 @@ async function commonFromApi() {
       balance: { available: 0, expiring: null },
       program: { ...toProgram(task, null), joinRequirement: 'signup' },
       accounts: toAccounts(task),
+      selectedAccountId: null,
       tiers: [],
       activity: await activity, // the recent activity API needs no token (spec §53)
       tour: ui.tour,
@@ -110,6 +111,7 @@ async function commonFromApi() {
     balance: toBalance(summary),
     program: toProgram(task, user),
     accounts: toAccounts(task),
+    selectedAccountId: task.selectedAccountId != null ? String(task.selectedAccountId) : null, // the account the app trades with
     tiers: toTiers(task),
     activity: await activity,
     tour: ui.tour,

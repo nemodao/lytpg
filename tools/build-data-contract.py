@@ -47,6 +47,7 @@ FIELDS = {
         'accounts[].eligible': ('Whether this account takes part in the programme (false e.g. for an MT5 group that is excluded).', ''),
         'accounts[].group': ('Full MT5 group name of the account, e.g. Direct\\VIP1 (tradingTask/get, spec §51). A tier only when it is exactly (any case) Direct\\Mini400 = Micro, Direct\\Mini10 = Standard, Direct\\VIP1 = VIP, Direct\\MIVIP = Platinum; others (e.g. 1F\\Direct\\Mini10) show no tier and no upgrade row.', ''),
         'accounts[].lifetimeDeposit': ('Approved deposits into this account, USD; 0 when none (every account, eligible or not). The tier sheet compares it with the next tier\'s threshold, fixed in the page: 0, 200, 1,000, 5,000.', 'number'),
+        'selectedAccountId': ('The trading account the app currently trades with (tradingTask/get `selectedAccountId`); null for guests. Used only as a tie-break: the pages show the eligible account on the highest tier, and among several on that tier this one (spec §55).', 'string | null'),
         'accounts[].rates[].type': ('Kind of rate row. Empty list for an account that is not eligible.', '"symbol" | "symbol_group" | "any"'),
         'accounts[].rates[].value': ('Symbol (shown as is), or group: forex, metal, energy, index, stocks, other (label = copy key rate.<value>). For type "any": "other" or null, shown as "Others".', 'string or null'),
         'accounts[].rates[].ptsPerLot': ('Coins earned per lot for that row. Rows come highest first, the "any" row last, never 0.', ''),

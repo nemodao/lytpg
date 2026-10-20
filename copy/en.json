@@ -39,6 +39,7 @@
   "tier.standard": "Standard",
   "tier.vip": "VIP",
   "tier.platinum": "Platinum",
+  "balance.tierLink": "{tier} account tier. Open it on Earn",
   "upgrade.row.title": "Want more coins per lot?",
   "upgrade.row.body": "Upgrade to {tier} and earn up to {max} coins per lot",
   "upgrade.row.topTitle": "{tier}: our highest rates",

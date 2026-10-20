@@ -82,11 +82,8 @@
 .radio--on::after { content: ""; width: 70%; height: 70%; border-radius: var(--radius-pill); background: var(--accent-surface-brand); }
 
 /* ---- Account tiers (spec §51) ---- */
-/* Tier badge next to Eligible: grey Micro, blue Standard, purple VIP, inverted Platinum (the top). */
-.tier--micro { background: var(--ui-surface-soft); color: var(--ui-text-secondary); }
-.tier--standard { background: var(--ui-badge-blue); color: var(--ui-text-brand); }
-.tier--vip { background: color-mix(in srgb, var(--color-purple-main) 14%, transparent); color: color-mix(in srgb, var(--color-purple-main) 72%, var(--ui-text-primary)); }
-.tier--platinum { background: var(--ui-text-primary); color: var(--card-surface); }
+/* The tier badge colours (.tier--*) are in shared/components.css: Home and Coins show the badge too (spec §55). */
+[data-account-card] { scroll-margin-top: var(--spacing-section); }
 
 /* Upgrade row under the rates table: a light purple strip, icon, two lines, chevron; the whole row opens the sheet. */
 .upgrade-row {

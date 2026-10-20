@@ -4,7 +4,7 @@ import { mountNav } from '../shared/nav.js';
 import { createActivityFeed } from '../shared/activity-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { initTracking, trackView } from '../shared/tracking.js';
-import { TIERS, sameGroup } from '../shared/tiers.js';
+import { TIERS, chosenAccountId, rememberAccount, sameGroup } from '../shared/tiers.js';
 import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('trading-task');
@@ -33,8 +33,11 @@ function streakField(count = 90) {
 const heroBg = streakField();
 
 // The only piece of state that changes without a reload: which account is selected.
-// API: `selectedAccountId` is the account the app currently trades with; changing it here is local to this page.
-let selectedId = page.selectedAccountId;
+// It opens on the account chosen for the session (spec §55, shared/tiers.js): the one picked earlier, else the eligible
+// account on the highest tier. API: `selectedAccountId` is the account the app currently trades with (the tie-break,
+// and the account shown when none is on a tier); picking another one here does not change the app's account.
+// PREVIEW ONLY: `previewAccountId` lets a state show one account in particular.
+let selectedId = chosenAccountId(common.accounts, page.selectedAccountId, page.previewAccountId);
 let sheetOpen = false;
 let termsOpen = false; // Terms & Conditions sheet
 let upgradeOpen = false; // tier sheet (spec §51)
@@ -169,7 +172,7 @@ function accountsCard() {
     ? `<div class="select select--static"><span class="grow account-name">${accountName(selected)}${tierBadge(selected)}</span>${eligibleBadge(selected)}</div>`
     : `<button class="select" type="button" data-action="open-sheet" aria-haspopup="dialog"><span class="grow account-name">${accountName(selected)}${tierBadge(selected)}</span>${eligibleBadge(selected)}${ui.icon('down')}</button>`;
   return `
-    <section class="card">
+    <section class="card" data-account-card>
       <div class="stack stack--tight">
         <h2 class="t-title-s">${ui.t('tt.accounts.label')}</h2>
         ${single ? '' : `<p class="t-body c-3 num">${ui.t('tt.accounts.summary', { eligible: eligibleCount, total: accounts.length })}</p>`}
@@ -432,7 +435,7 @@ app.addEventListener('click', (event) => {
   else if (action === 'open-upgrade') upgradeOpen = true;
   else if (action === 'close-upgrade') upgradeOpen = false;
   else if (action === 'tab') tab = target.dataset.tab;
-  else if (action === 'select-account') { selectedId = target.dataset.id; sheetOpen = false; }
+  else if (action === 'select-account') { selectedId = target.dataset.id; rememberAccount(selectedId); sheetOpen = false; }
   else if (action === 'close-sheet') {
     if (event.target !== target) return; // taps inside the sheet do not close it
     sheetOpen = false;
@@ -447,5 +450,9 @@ document.addEventListener('keydown', (event) => {
 });
 
 // Loading or failed to load: the header on its sky and a placeholder, nothing else (spec §44).
-if (!showStatus(ui, common, app, `<div class="hero">${heroBg}${appHeader(ui, { title: ui.t('task.title') })}</div>`)) render();
+if (!showStatus(ui, common, app, `<div class="hero">${heroBg}${appHeader(ui, { title: ui.t('task.title') })}</div>`)) {
+  render();
+  // Opened from the tier label on Home or Coins (?focus=account, spec §55): bring the account field into view.
+  if (new URLSearchParams(location.search).get('focus') === 'account') app.querySelector('[data-account-card]')?.scrollIntoView({ block: 'start' });
+}
 mountNav(ui, common, 'earn');

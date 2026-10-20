@@ -729,3 +729,14 @@ Every screen was reviewed by three reviewers (funnels, a run of every state, the
 - **Not added:** a programme-state parameter, a theme fix, a user-state user property, a load-reason parameter, and the optional ones (closing sheets, the account picker, tab and chip repeats, paging depth, the nudge, the host entry point).
 - **Check:** `node tools/check-tracking.mjs` (Playwright) uses the pages and fails on any break of `TRACKING.md`.
 - **GA4 settings** (owner, in GA4): retention 14 months; register the custom dimensions before launch; turn off history-based page views; key events `kyc_click`, `deposit_click`, `signup_click`, `trade_click`, `redeem_click`.
+
+## 55. Tier label next to "Coin Balance" on Home and Coins (decided 20 Oct 2026, handoff 6)
+
+Asked for by business users.
+
+- **One account for the session:** the trading account Earn shows is also the one whose tier Home and Coins show. Picking an account on Earn changes it for the three pages, until the programme is closed (sessionStorage); a new session starts again from the default.
+- **Default (Earn too, from the first visit):** the eligible account on the highest tier (Platinum > VIP > Standard > Micro). Several on that tier: the account the app trades with (API `selectedAccountId`) if it is one of them, else the first in the API's order. No eligible account on a tier: Earn opens on the app's account, as before, and Home and Coins show no label.
+- **The label:** the same tier badge as on Earn, next to "Coin Balance" (the badge moves under it when the column is too narrow; "Coin Balance" never breaks). Shown only when Earn shows a tier for that account: the user has a trading task, the programme runs, the account is eligible and on one of the four tiers. Not for guests.
+- **Tap:** opens Earn scrolled to the account field (`trading-task.html?focus=account`).
+- **Event:** `loyalty_tier_badge_click` with `tier`.
+- Preview: Earn's tier and `ineligible-selected` states pin their account (`previewAccountId`, PREVIEW ONLY), as if the user had picked it.

@@ -173,6 +173,15 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .coin-glow { position: relative; display: grid; place-items: center; flex: none; }
 .coin-glow::before { content: ""; position: absolute; inset: calc(var(--spacing-10) * -1); border-radius: var(--radius-pill); background: radial-gradient(closest-side, color-mix(in srgb, var(--bg-blend) 60%, transparent), transparent); pointer-events: none; }
 .balance-number { font: var(--font-display-m); }
+/* Tier of the chosen trading account next to "Coin Balance" (spec §55); tapping it opens Earn on the account field. */
+.balance-label { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-6); }
+.balance-label > span { white-space: nowrap; } /* "Coin Balance" never breaks; the badge goes under it when the column is narrow */
+.balance-tier { text-decoration: none; }
+/* Tier badge (spec §51, §55): grey Micro, blue Standard, purple VIP, inverted Platinum (the top). */
+.tier--micro { background: var(--ui-surface-soft); color: var(--ui-text-secondary); }
+.tier--standard { background: var(--ui-badge-blue); color: var(--ui-text-brand); }
+.tier--vip { background: color-mix(in srgb, var(--color-purple-main) 14%, transparent); color: color-mix(in srgb, var(--color-purple-main) 72%, var(--ui-text-primary)); }
+.tier--platinum { background: var(--ui-text-primary); color: var(--card-surface); }
 .balance-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-8); }
 .balance.card { margin-block: 0; }
 

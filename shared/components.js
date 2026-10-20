@@ -1,4 +1,5 @@
 import { track, trackView } from './tracking.js';
+import { TIERS, chosenAccountId, tierIndex } from './tiers.js';
 
 // Markup for components used on more than one page. Styles live in components.css.
 
@@ -197,6 +198,21 @@ export function rulesList(ui, common) {
     </ul>`;
 }
 
+// Tier label next to "Coin Balance" on Home and Coins (spec §55): the tier of the account chosen for the session
+// (shared/tiers.js: the one picked on Earn, else the eligible account on the highest tier). Shown only when Earn would
+// show a tier for it: the user has a trading task, the programme runs, and that account is eligible and on one of the
+// four tiers. Tapping it opens Earn on the account field (?focus=account).
+function balanceTier(ui, common) {
+  const { accounts = [], program } = common;
+  if (common.guest || program.tradingTask === false || program.ended) return '';
+  const id = chosenAccountId(accounts, common.selectedAccountId);
+  const at = tierIndex(accounts.find((item) => item.id === id));
+  if (at < 0) return '';
+  const { key } = TIERS[at];
+  const href = ui.href('trading-task.html');
+  return `<a class="badge tier tier--${key} balance-tier above" href="${href}${href.includes('?') ? '&' : '?'}focus=account" aria-label="${ui.t('balance.tierLink', { tier: ui.t(`tier.${key}`) })}" data-track="loyalty_tier_badge_click" data-track-tier="${key}">${ui.t(`tier.${key}`)}</a>`;
+}
+
 // Balance block: coin, label, number, Redeem button and the expiry warning. Coins that are not credited yet are never
 // shown (spec §41), so the API's `pending` total is not used.
 // Dashboard: bare on the page background, the whole block links to Point Balance (href).
@@ -205,6 +221,7 @@ export function rulesList(ui, common) {
 export function balanceBlock(ui, common, { href = '', card = false, history = '' } = {}) {
   const { available, expiring } = common.balance;
   if (expiring) trackView('loyalty_expiring_notice_view');
+  const tier = balanceTier(ui, common);
   return `
   <section class="balance ${card ? 'card card--soft' : ''}" data-tour="balance">
     ${href ? (common.program.joinRequirement === 'signup'
@@ -213,7 +230,7 @@ export function balanceBlock(ui, common, { href = '', card = false, history = ''
     <div class="balance-row">
       <span class="coin-glow">${coin('coin--lg')}</span>
       <div class="grow">
-        <p class="t-label c-3">${ui.t('balance.title')}</p>
+        <p class="t-label c-3 balance-label"><span>${ui.t('balance.title')}</span>${tier}</p>
         <p class="balance-number num">${ui.num(available)}</p>
       </div>
       <div class="balance-side">

@@ -64,6 +64,7 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 | `loyalty_tab_click` | A tab inside a page is tapped | `tab`: `rules` \| `history` (Earn); `available` \| `expired` \| `history` (Coins) | `pages/trading-task.js`, `pages/point-balance.js` |
 | `loyalty_date_filter_apply` | A date range is chosen (a preset chip, or `Apply` in the calendar) | `tab`: `history` \| `expired`; `range`: `7` \| `30` \| `custom` | `shared/date-filter.js` |
 | `loyalty_account_select` | A trading account is chosen in the account sheet | `eligible`: `true` \| `false` | `pages/trading-task.js` |
+| `loyalty_tier_badge_click` | The tier label next to "Coin Balance" on Home or Coins is tapped (goes to Earn, scrolled to the account field) | `tier`: `micro` \| `standard` \| `vip` \| `platinum` (the tier shown: the account chosen for the session, spec §55) | `balanceBlock` in `shared/components.js` |
 | `loyalty_upgrade_row_view` | The upgrade row under the account field on Earn is shown, once per page load for each tier (it changes with the selected account) | `tier`, `next_tier`: as below | `pages/trading-task.js` |
 | `loyalty_upgrade_open` | The upgrade row under the account field on Earn is tapped (opens the tier sheet) | `tier`: `micro` \| `standard` \| `vip` \| `platinum` (the selected account's); `next_tier`: the next one, or `none` on Platinum | `pages/trading-task.js` |
 | `loyalty_terms_open` | `Terms & Conditions` is tapped | | `pages/trading-task.js` |
@@ -113,7 +114,7 @@ opening: count one or the other, never both added together. Guests' events carry
 | `loyalty_error_view` | Something could not be loaded | `error_scope`: `page` (the "Couldn’t load this page" card), `order` (one order could not be opened: unknown, or not the user's), `more` (the next page of a list: "Couldn't load more. Try again"; once per page load, like every view) | `showStatus` in `shared/components.js`; `pages/point-balance.js`, `pages/redemptions.js` |
 | `loyalty_retry_click` | `Try again` on that card is tapped | | `showStatus` |
 
-33 events in all.
+34 events in all.
 
 ## Questions these events answer
 

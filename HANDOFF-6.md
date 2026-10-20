@@ -53,3 +53,22 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
   parameter value explained; English, Chinese, Vietnamese).
 - **GTM / GA4** (`TRACKING.md`, "Setting up GTM and GA4"): Data Layer Variables for the new parameters,
   `loyalty_tier` as a user property, custom dimensions, retention, key events, history-based page views off.
+
+## 3. Tier label next to "Coin Balance" on Home and Coins (spec §55)
+
+- **New in `shared/tiers.js`:** `tierIndex`, `defaultAccountId`, `chosenAccountId`, `rememberAccount`. The account the
+  pages show is chosen once for the session (sessionStorage key `hsb-loyalty-account-v1`): the one picked on Earn,
+  else the eligible account on the highest tier (several on that tier: the app's own account if it is one of them,
+  else the first in the API's order), else the app's account.
+- **Earn** (`pages/trading-task.js`) now opens on that account instead of the app's account, and remembers a pick
+  (`select-account`). With `?focus=account` it scrolls to the account card (`data-account-card`).
+- **Home and Coins** (`balanceBlock` in `shared/components.js`): a tier badge next to "Coin Balance"
+  (`balanceTier`), linking to `trading-task.html?focus=account`; only when Earn would show a tier for that account
+  (trading task on, programme running, account eligible and on one of the four tiers; never for guests). New copy key
+  `balance.tierLink` (its label for screen readers). The `.tier--*` colours moved from `pages/trading-task.css` to
+  `shared/components.css`.
+- **Data:** `common.selectedAccountId` (the account the app trades with, from `tradingTask/get`; null for guests) so
+  Home and Coins pick the same default as Earn. `DATA.md` updated.
+- **Event:** `loyalty_tier_badge_click` with `tier` (`TRACKING.md`, now 34 events; covered by `tools/check-tracking.mjs`).
+- **Preview only:** Earn's tier states and `ineligible-selected` set `page.previewAccountId` to keep their account.
+
