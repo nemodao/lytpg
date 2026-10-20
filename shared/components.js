@@ -25,20 +25,14 @@ export const appHeader = (ui, { title, action = '', back = '' }) => (requestAnim
     ${action || (back ? '<span></span>' : '')}
   </header>`);
 
-// Sticky header (CSS .app-header): .is-stuck once the page has scrolled (the title pill shrinks and turns solid; a
-// little hysteresis so it does not flicker at the threshold). On Earn the title starts on the dark night sky
-// ([data-header-dark], the sky layer): the header takes the dark theme while it is over the sky, and the page's
-// theme once the sky has scrolled away under it.
+// Sticky header (CSS .app-header): .is-stuck once the page has scrolled, which shrinks the title pill and the header
+// buttons together (a little hysteresis so it does not flicker at the threshold).
 const HEADER_STICK_AT = 8;
 function watchHeader() {
   const header = document.querySelector('.app-header');
   if (!header) return;
   const stuck = header.classList.contains('is-stuck') ? window.scrollY > HEADER_STICK_AT / 2 : window.scrollY > HEADER_STICK_AT;
   header.classList.toggle('is-stuck', stuck);
-  const sky = document.querySelector('[data-header-dark]');
-  const overSky = sky && sky.getBoundingClientRect().bottom > header.getBoundingClientRect().bottom;
-  if (overSky) header.dataset.theme = 'dark';
-  else header.removeAttribute('data-theme');
 }
 let headerFrame = 0;
 addEventListener('scroll', () => {

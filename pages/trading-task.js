@@ -28,7 +28,7 @@ function streakField(count = 90) {
     const style = `left:${(rand() * 100).toFixed(1)}%;top:${(rand() * 55).toFixed(1)}%;height:${(25 + rand() * 45).toFixed(1)}%;opacity:${(key ? 0.75 + rand() * 0.25 : 0.12 + rand() * 0.23).toFixed(2)}`;
     return `<i class="streak streak--${width}" style="${style}"></i>`;
   });
-  return `<div class="hero-bg" data-theme="dark" data-header-dark aria-hidden="true"><div class="streaks-fade"><div class="streaks">${streaks.join('')}</div></div></div>`;
+  return `<div class="hero-bg" data-theme="dark" aria-hidden="true"><div class="streaks-fade"><div class="streaks">${streaks.join('')}</div></div></div>`;
 }
 const heroBg = streakField();
 
