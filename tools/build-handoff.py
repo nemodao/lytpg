@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'dist' / 'handoff'
-INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'HANDOFF.md', 'HANDOFF-2.md', 'HANDOFF-3.md', 'HANDOFF-4.md', 'HANDOFF-5.md', 'HANDOFF-6.md', 'TRACKING.md', 'CHANGELOG.md', 'DATA.md', 'STATES.md', 'spec.md']
+INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'HANDOFF.md', 'HANDOFF-2.md', 'HANDOFF-3.md', 'HANDOFF-4.md', 'HANDOFF-5.md', 'HANDOFF-6.md', 'TRACKING.md', 'tools/check-tracking.mjs', 'CHANGELOG.md', 'DATA.md', 'STATES.md', 'spec.md']
 SKIP = shutil.ignore_patterns('.DS_Store', '_*', 'coin-hex.png', '__pycache__')
 DEMO_BLOCK = re.compile(r'\n[ \t]*<!-- DEMO ONLY: start.*?<!-- DEMO ONLY: end -->[ \t]*', re.S)
 FORBIDDEN = ['demo/', 'intents.en.json', 'Internal Explanation', 'DEMO ONLY', 'tracklog']
@@ -33,6 +33,7 @@ def main():
         if src.is_dir():
             shutil.copytree(src, OUT / name, ignore=SKIP)
         else:
+            (OUT / name).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, OUT / name)
 
     for html in (OUT / 'pages').glob('*.html'):

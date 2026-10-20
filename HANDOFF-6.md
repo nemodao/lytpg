@@ -16,8 +16,8 @@ unchanged (no `source`).
 
 - `pages/trading-task.js`: `tradeButton(source)` adds `data-track-source` when given; the sheet calls
   `tradeButton('upgrade')`.
-- `TRACKING.md`: `source` listed on `loyalty_trade_click`. Still 31 events; GTM reads it through the same `source`
-  variable as the other events.
+- `TRACKING.md`: `source` listed on `loyalty_trade_click`; GTM reads it through the same `source` variable as the
+  other events. (§2 then brings the total to 33 events.)
 
 ## 2. Event tracking review (spec §54)
 
@@ -45,7 +45,11 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
   `more`, once per page load like Coins (`showStatus` takes the scope).
 - **Coins:** a failed "load more" sends `loyalty_error_view` (`error_scope` = `more`).
 - **Tour** (`shared/tour.js`): `step` → `tour_step`; `step_count` on start, step view, skip and finish.
-- **New check:** `tools/check-tracking.mjs` runs the pages (Playwright) and checks every rule and scenario. Running
-  the same scenarios against the Next.js app is the quickest way to confirm the conversion.
+- **New check:** `tools/check-tracking.mjs` (now in the package) runs the pages (Playwright) and checks every rule and
+  scenario: serve the package folder on port 8000 (e.g. `python3 -m http.server 8000`), run
+  `npm install --no-save playwright@1.64.0` once, then `node tools/check-tracking.mjs` (`BASE` points it elsewhere). Running the same scenarios against the Next.js app is the quickest way to confirm
+  the conversion.
+- **Event documentation for data and marketing:** https://nemodao.github.io/lytpg_events/ (the same 33 events, every
+  parameter value explained; English, Chinese, Vietnamese).
 - **GTM / GA4** (`TRACKING.md`, "Setting up GTM and GA4"): Data Layer Variables for the new parameters,
   `loyalty_tier` as a user property, custom dimensions, retention, key events, history-based page views off.
