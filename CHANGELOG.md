@@ -3,6 +3,20 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 5 — phase 3: rewards on Home, account tiers, Redemption history, guest mode (20 Oct 2026)
+
+**Full description for developers: `HANDOFF-5.md`.** Spec §49–§53.
+
+- Home: a rewards grid (with an "Earn more coins" card) replaces the Daily Trading card; a "Looking for something else?" card under it.
+- Every Redeem asks users who still need KYC or a first deposit to do that first, in a bottom sheet.
+- Recent activity card ("Trader … just redeemed / earned") on Home and Earn, from a new API; hidden when it has no data.
+- Earn: account tier label, an upgrade row and a tier sheet with the deposit still needed and the rates of every tier.
+- New page: Redemption history (list and order details), from Coins.
+- Guest mode: the pages work without a token and ask the user to sign up or log in.
+- Bottom sheets grow up to 80% of the screen; the tour skips the Coins tabs step for guests.
+- Events: 31 (9 new). New intents for the app: `voucher`, `signup`, `login`; `deposit` carries an account and amount.
+- `DATA.md` and `STATES.md` changed (see `HANDOFF-5.md` §9).
+
 ## Handoff 4 — fixes from the owner's manual test (14 Oct 2026)
 
 **Full description for developers: `HANDOFF-4.md`.** Spec §48.

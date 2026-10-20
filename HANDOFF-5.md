@@ -1,7 +1,5 @@
 # Handoff 5 — what changed since handoff 4
 
-> **Status: in progress.** This file grows until the round is handed off; read it again then.
-
 **Who this is for:** developers (and their AI assistants) who have already applied handoff 4. Everything not named here
 is unchanged. Behaviour: `spec.md` §49–§53. Exact line changes: `CHANGES-since-handoff-4.diff` in the package.
 
@@ -170,7 +168,7 @@ they are). If your token script turns `tokens.json` into a theme, check it accep
 
 - `DATA.md`: `common.guest`, `program.joinRequirement` may be `signup`, `common.activity[]`, `common.tiers[]`, `accounts[].group` and `lifetimeDeposit`, Home `rewards[]` (`id`,
   `name`, `points`, `image`), the new `redemptions` page; removed Home `task`, `rewards[].alt` and `common.liveFeed`.
-- `STATES.md`: Home drops `capped`, `no-trades-today`, `market-closed`; adds `big-prices`, `activity-empty`. Earn drops
+- `STATES.md`: Home drops `capped`, `no-trades-today`, `market-closed`; adds `big-prices`, `rewards-empty`, `activity-empty`. Earn drops
   `market-closed`; adds `activity-empty`, `tier-micro`, `tier-standard`, `tier-top`, `tier-reached`, `tier-unknown`.
   Coins adds `needs-kyc`, `needs-deposit`. All three add `guest` (shared). New page `redemptions`: `orders-empty`, `orders-more`, `loading`, `error`.
 
@@ -186,7 +184,15 @@ The tour was reviewed against the new pages, signed in and as a guest; its steps
 
 ## Waiting on others
 
-- Backend: the rewards list API (guest and signed-in, same shape), the recent activity API (`GET /loyalty/activity`, planned,
-  on UAT later), the tier fields in tradingTask/get and the guest trading-task API (both requested, on UAT later); for Redemption history, an item count and an image per order
-  (optional).
-- App team: the parameter names for the Deposit amount; Back on the Redemption history page.
+The pages already read every API below from its sample answer in `mock/api/`; nothing in the UI waits on them.
+
+- **Backend, settled, on UAT when the backend says so:** the tier fields in `tradingTask/get` (§4), the guest
+  trading-task API (§6), the rewards catalog (§1), the recent activity API (§3).
+- **Backend, later:** a Tada link per reward, so a reward card opens that reward rather than the catalog (§1);
+  optionally an item count and an image per order in the Redemption history list (§5).
+- **App team:**
+  - `redeem` / `reward`: call `POST /loyalty/redeem/session` and open `result.url` in the in-app webview (§1).
+  - Open the webview without a token for guests, and the `/sign-up` and `/login` screens for `signup` / `login` (§6).
+  - The parameter names for the Deposit screen's account and amount (§4).
+  - `voucher`: open `data-url` in the app's link viewer, like `terms` (§5).
+  - Back on the Redemption history page: order → list, list → Coins (§5).

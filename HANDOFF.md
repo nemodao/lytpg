@@ -137,7 +137,8 @@ empty: `rateRange` null (no rate range line), `termsUrl` null or an empty string
 ## 7. Receiving the next drop
 
 **Already converted an earlier handoff? Read the `HANDOFF-<n>.md` files after yours instead of this file:** each
-lists only what changed since the handoff before it (`HANDOFF-2.md`, `HANDOFF-3.md`, `HANDOFF-4.md`).
+lists only what changed since the handoff before it (`HANDOFF-2.md`, `HANDOFF-3.md`, `HANDOFF-4.md`,
+`HANDOFF-5.md`).
 
 Each drop is a complete copy of this folder with a higher number in `VERSION.txt`.
 
