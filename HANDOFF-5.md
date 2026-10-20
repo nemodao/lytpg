@@ -62,9 +62,16 @@ One small card, the same on both pages: [icon] "Trader 95***442 just redeemed iP
 [coin] "Trader 95***356 just earned 12 coins" [3m ago]. A new entry every 4 s. While a reward entry shows, the card
 turns light purple.
 
-- **Data:** a list from the backend (endpoint to be defined), asked for **once per session** and kept in
-  `sessionStorage` (`sessionCached` in `shared/data-source.js`). Shape in `DATA.md`: `common.activity[]` = `type`
-  (`gift` | `coin`), `client` (masked by the backend), `reward` or `points`, `at`.
+- **Data:** a list from the backend, asked for **once per session** and kept in `sessionStorage` (`sessionCached` in
+  `shared/data-source.js`). Shape in `DATA.md`: `common.activity[]` = `type` (`gift` | `coin`), `client` (masked by the
+  backend), `reward` or `points`, `at`.
+- **API (settled 20 Oct 2026):** `GET /loyalty/activity`, from HSB (the Tada integration): **no Authorization, no
+  `clientId`**, only `x-auth-key`, the same call for guests and signed-in users. `{ success, result: { activity } }`;
+  gift entries `{ type, client, reward, at }`, coin entries `{ type, client, points, at }`, `at` ISO 8601 UTC. The
+  backend sends at most N of each kind, newest first (its config; 700 coin and 300 gift entries for now): coin entries
+  are trading coins only, gift entries are one per redemption (first item's name) that still holds its coins. Adapter
+  `toActivity` (`shared/api-adapter.js`), sample `mock/api/loyalty-activity.json`. When the call fails the card is
+  hidden and nothing is kept, so the next session asks again.
 - **Order:** newest first within each kind; the kinds take turns in rounds of 1:1, 2:1, 3:1 and 3:2 (coin entries :
   rewards, rewards first), played in a shuffled order, then shuffled again. Each kind loops on its own.
 - **Linked:** Home and Earn share the list and the place in the loop for the session (`sessionStorage`), so switching
@@ -176,7 +183,7 @@ The tour was reviewed against the new pages, signed in and as a guest; its steps
 
 ## Waiting on others
 
-- Backend: the rewards list API (guest and signed-in, same shape), the recent activity API (needs no token; not created
-  yet), the tier fields in tradingTask/get and the guest trading-task API (both requested, on UAT later); for Redemption history, an item count and an image per order
+- Backend: the rewards list API (guest and signed-in, same shape), the recent activity API (`GET /loyalty/activity`, planned,
+  on UAT later), the tier fields in tradingTask/get and the guest trading-task API (both requested, on UAT later); for Redemption history, an item count and an image per order
   (optional).
 - App team: the parameter names for the Deposit amount; Back on the Redemption history page.

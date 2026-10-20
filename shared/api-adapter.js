@@ -192,3 +192,15 @@ export const toRewards = (catalog) =>
     points: reward.points ?? 0,
     image: reward.image ?? '',
   }));
+
+// GET /loyalty/activity (no token, no clientId; x-auth-key only) -> common.activity (spec §50). One list for everyone,
+// guests included: the latest trading-coin credits and the latest redemptions, each kind at most N (backend config),
+// newest first; the page sorts and interleaves them itself. Gift: { type, client, reward, at }; coin: { type, client,
+// points, at }; `client` masked by the backend, `at` ISO 8601 UTC. Entries of another kind, or missing a field, are dropped.
+export const toActivity = (answer) =>
+  (answer?.activity ?? []).flatMap((item) => {
+    if (!item?.client || !item.at) return [];
+    if (item.type === 'gift' && item.reward) return [{ type: 'gift', client: item.client, reward: item.reward, at: item.at }];
+    if (item.type === 'coin' && item.points > 0) return [{ type: 'coin', client: item.client, points: item.points, at: item.at }];
+    return [];
+  });

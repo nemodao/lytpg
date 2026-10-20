@@ -17,7 +17,7 @@
 // TO CONNECT THE REAL API: make `USE_API` true and replace the body of `request()` with the real call. Everything
 // else in this file, in the adapter and in the pages stays as it is.
 
-import { joinRequirementFrom, toAccounts, toBalance, toDashboardPage, toOrder, toOrdersPage, toPointBalancePage, toProgram, toRewards, toTiers, toTradingTaskPage } from './api-adapter.js';
+import { joinRequirementFrom, toAccounts, toActivity, toBalance, toDashboardPage, toOrder, toOrdersPage, toPointBalancePage, toProgram, toRewards, toTiers, toTradingTaskPage } from './api-adapter.js';
 
 const USE_API = new URLSearchParams(location.search).get('source') === 'api';
 
@@ -60,8 +60,15 @@ async function sessionCached(key, loader) {
   try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* not kept */ }
   return value;
 }
-// API: the recent activity list (endpoint to be defined by the backend). The demo reads the mock.
-const activityList = () => sessionCached('hsb-loyalty-activity-v3', () => getJSON('../mock/common.json').then((common) => common.activity));
+// API: the recent activity list (spec §50), from HSB (the Tada integration): GET /loyalty/activity, no Authorization and
+// no clientId, only the x-auth-key header, for guests and signed-in users alike; { success, result: { activity } }.
+// Asked for once per session. When it fails the card is hidden (activity = []) and it is asked for again next time.
+// Here: mock/api/loyalty-activity.json (API mode) or mock/common.json.
+const activityList = () => (USE_API
+  ? sessionCached('hsb-loyalty-activity-api-v1', () => getJSON('../mock/api/loyalty-activity.json')
+    .then((answer) => { if (answer.success !== true) throw new Error(`loyalty/activity: ${answer.message}`); return toActivity(answer.result); }))
+    .catch(() => [])
+  : sessionCached('hsb-loyalty-activity-v3', () => getJSON('../mock/common.json').then((common) => common.activity)));
 
 // Date ranges and paging. API: the three list endpoints take from / to (at most 30 days) and pageNo / pageSize;
 // send the range of the date filter and ask for the next page as the user scrolls (spec §43, §44). The demo asks
@@ -85,7 +92,7 @@ async function commonFromApi() {
       program: { ...toProgram(task, null), joinRequirement: 'signup' },
       accounts: toAccounts(task),
       tiers: [],
-      activity: await activityList(), // API: the recent activity API needs no token (spec §53); not created yet
+      activity: await activityList(), // the recent activity API needs no token (spec §53)
       tour: ui.tour,
     };
   }
