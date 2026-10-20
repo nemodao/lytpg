@@ -34,7 +34,7 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 | `loyalty_kyc_click` | `Verify my account` is tapped | | button in `joinPanel` |
 | `loyalty_deposit_click` | `Deposit now` is tapped | `source`: `upgrade` when it is the tier sheet's button (none from "How to start") | button in `joinPanel`; tier sheet in `pages/trading-task.js` |
 | `loyalty_open_account_click` | `Open a trading account` is tapped | | `pages/trading-task.js` |
-| `loyalty_trade_click` | `Trade now` / `Trade with account …` is tapped | `capped`: `true` \| `false` | `pages/trading-task.js` |
+| `loyalty_trade_click` | `Trade now` / `Trade with account …` is tapped | `capped`: `true` \| `false`; `source`: `upgrade` when it is the tier sheet's button on Platinum (none on Earn) | `pages/trading-task.js` |
 
 ### B. Interest in rewards
 

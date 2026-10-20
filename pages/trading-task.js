@@ -278,7 +278,7 @@ function upgradeSheet() {
       <p class="t-body c-2 num">${ui.md('upgrade.topBody', { max: ui.num(maxRate(item.rates)) })}</p>
       ${table}
       <p class="t-caption c-3">${ui.t('upgrade.note')}</p>
-      <div class="sheet__sticky">${tradeButton()}</div>`;
+      <div class="sheet__sticky">${tradeButton('upgrade')}</div>`;
   }
   return `
     <div class="scrim" data-action="close-sheet">
@@ -295,7 +295,8 @@ function upgradeSheet() {
     </div>`;
 }
 
-function tradeButton() {
+// `source`: 'upgrade' when the button sits in the tier sheet (sent with loyalty_trade_click, like Deposit now there).
+function tradeButton(source) {
   if (ended) return '';
   const selected = account(selectedId);
   if (!selected.eligible) {
@@ -303,7 +304,7 @@ function tradeButton() {
   }
   // Capped: plain wording, nothing about earning points (spec §4 states).
   const label = today.capped ? ui.t('task.trade') : ui.t('tt.trade.account', { account: ui.esc(selected.id) });
-  return `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="trade-account" data-account="${ui.esc(selected.id)}" data-track="loyalty_trade_click" data-track-capped="${today.capped}">${label}</button>`;
+  return `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="trade-account" data-account="${ui.esc(selected.id)}" data-track="loyalty_trade_click" data-track-capped="${today.capped}"${source ? ` data-track-source="${source}"` : ''}>${label}</button>`;
 }
 
 

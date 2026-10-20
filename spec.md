@@ -666,7 +666,7 @@ Asked for by business users: give users a reason to deposit more into an account
   - The sheet's button stays visible at its bottom edge while the rest scrolls. In the table, a symbol row (e.g. XAUUSD) on a tier that does not list it shows "—" for now: the page cannot tell which group a symbol falls in.
   - A note: tiers depend on the total deposited into that account.
 - **API** (settled with the backend 20 Oct 2026; on UAT when the backend says so): `tradingTask/get` adds, per account, `group` (full MT5 group name) and `lifetimeDeposit` (USD, 0 when none, on every account), and `tiers[]` = `{ group, rates }` for each group the programme has rates for, unsorted, made by the same function as the accounts' rates. No separate tiers endpoint. The front end holds the four tier names, their order and their thresholds; the rates always come from the API. Guests get no tiers. The dealing team changes groups by hand, so a deposit can pass the next threshold before the group changes: the sheet then says the upgrade is on its way.
-- **Events:** tapping the upgrade row sends `loyalty_upgrade_open` with `tier` (current) and `next_tier` (none on Platinum); `Deposit now` in the sheet sends `loyalty_deposit_click` with `source` = `upgrade`.
+- **Events:** tapping the upgrade row sends `loyalty_upgrade_open` with `tier` (current) and `next_tier` (none on Platinum); `Deposit now` in the sheet sends `loyalty_deposit_click` with `source` = `upgrade`. On Platinum, the sheet's `Trade with account …` sends `loyalty_trade_click` with `source` = `upgrade` too (added 20 Oct 2026, handoff 6); the one on Earn sends no `source`.
 
 New preview states on Earn: `tier-micro`, `tier-standard`, `tier-top`, `tier-reached`, `tier-unknown`.
 
