@@ -78,5 +78,7 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
 - **Data:** `common.selectedAccountId` (the account the app trades with, from `tradingTask/get`; null for guests) so
   Home and Coins pick the same default as Earn. `DATA.md` updated.
 - **Event:** `loyalty_tier_badge_click` with `tier` (`TRACKING.md`, now 34 events; covered by `tools/check-tracking.mjs`).
+- **Mock:** two more accounts in `mock/common.json` and `mock/api/tradingTask-get.json`, so the default data has one
+  account on every tier: 50000387 Micro (`Direct\\Mini400`, $80 deposited) and 50000455 Standard (`Direct\\Mini10`, $450).
 - **Preview only:** Earn's tier states and `ineligible-selected` set `page.previewAccountId` to keep their account.
 
