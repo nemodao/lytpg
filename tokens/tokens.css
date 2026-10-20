@@ -397,7 +397,7 @@
   --ui-button-glass-surface: var(--glass-surface);
   --ui-button-glass-pressed: color-mix(in srgb, var(--glass-tint) calc(var(--glass-fill-opacity) * 2), transparent);
   --ui-button-glass-blur: blur(var(--glass-blur));
-  --nav-exit-surface: radial-gradient(40% 45% at calc(50% + var(--spacing-8) / 2) 50%, var(--ui-nav-exit-glow), transparent), var(--ui-nav-surface);
+  --nav-exit-surface: radial-gradient(60% 65% at calc(50% + var(--spacing-8) / 2) 50%, var(--ui-nav-exit-glow), color-mix(in srgb, var(--ui-nav-exit-glow) 82%, transparent) 15%, color-mix(in srgb, var(--ui-nav-exit-glow) 55%, transparent) 32%, color-mix(in srgb, var(--ui-nav-exit-glow) 30%, transparent) 50%, color-mix(in srgb, var(--ui-nav-exit-glow) 13%, transparent) 68%, color-mix(in srgb, var(--ui-nav-exit-glow) 4%, transparent) 85%, transparent), var(--ui-nav-surface);
   --blend-theme-bg: radial-gradient(90% 80% at 100% 105%, color-mix(in srgb, var(--accent-surface-brand) 45%, #fff) 0%, transparent 70%), radial-gradient(70% 70% at 90% -10%, var(--blend-theme-shade) 0%, transparent 70%), linear-gradient(160deg, color-mix(in srgb, var(--accent-surface-brand) 78%, var(--blend-theme-shade)), var(--accent-surface-brand));
   --blend-theme-fg: #ffffff;
   --blend-theme-ink: var(--accent-text-brand);

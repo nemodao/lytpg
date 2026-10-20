@@ -85,7 +85,8 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
 ## 4. Close button in the bottom bar: red blend in dark mode (spec §56)
 
 - `.nav__exit` (`shared/components.css`) now paints `--nav-exit-surface`: one small soft radial gradient of red
-  behind the X over `--ui-nav-surface`, so the button stays black. Background only, no shadow.
+  behind the X over `--ui-nav-surface`, so the button stays black. The red fades out through several stops on an
+  eased curve, so it has no visible edge. Background only, no shadow.
 - New token `--ui-nav-exit-glow` (transparent in light, so light mode looks as before) and the composed
   `--nav-exit-surface` (`tokens/tokens.json`, `tokens.css` rebuilt).
 
