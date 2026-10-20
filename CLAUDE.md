@@ -36,6 +36,7 @@ Token theo vai trò nên dùng trước khi tìm tới primitive:
 | Field | `--ui-field-surface`, `--ui-field-surface-locked`, `--size-field`, `--radius-control` |
 | Khoảng cách | `--spacing-gutter`, `--spacing-card`, `--spacing-section`, `--spacing-stack`, thang `--spacing-*` |
 | Lớp phủ sau sheet, dialog | `--ui-overlay-scrim` |
+| Nhãn hạng tài khoản (Micro, Standard, VIP, Platinum) | `--ui-tier-<hạng>-surface`, `--ui-tier-<hạng>-text` |
 | Thanh điều hướng dưới | `--ui-nav-surface`, `--ui-nav-stroke`, `--ui-nav-tab-active` |
 
 Heading `--font-heading-h1` tới `h4` là cỡ desktop, không dùng trên mobile.

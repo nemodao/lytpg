@@ -181,14 +181,14 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .balance-tier { text-decoration: none; zoom: var(--tier-fit, 1); }
 /* Coins: on the card's top edge, middle on the border, at the card's left padding (above the coin). */
 .balance-tier--edge { position: absolute; z-index: 1; top: calc(var(--size-stroke) / -2); left: var(--spacing-card); transform: translateY(-50%); }
-/* Tier badge (spec §51, §55): one style for the four tiers, a pale tint of the tier's hue with the text in that hue,
-   so no tier looks like a main button. The tint is laid on the card colour, so the badge is opaque: on Coins it sits
-   across the card border, which must not show through. Grey Micro, blue Standard, purple VIP, gold Platinum. */
-.tier { background: color-mix(in srgb, var(--tier-hue) 14%, var(--card-surface)); color: color-mix(in srgb, var(--tier-hue) 72%, var(--ui-text-primary)); }
-.tier--micro { --tier-hue: var(--color-neutral-500); }
-.tier--standard { --tier-hue: var(--color-brand-500); }
-.tier--vip { --tier-hue: var(--color-purple-main); }
-.tier--platinum { --tier-hue: var(--color-yellow-500); }
+/* Tier badge (spec §51, §55): one style for the four tiers, a tinted pill with the text in the tier's hue, so no tier
+   looks like a main button. Colours are tokens per mode (--ui-tier-*), picked to stand a little off all three places
+   the badge sits (account sheet, Home page background, Coins card edge) with the text at 5:1. They are opaque: on
+   Coins the badge sits across the card border, which must not show through. */
+.tier--micro { background: var(--ui-tier-micro-surface); color: var(--ui-tier-micro-text); }
+.tier--standard { background: var(--ui-tier-standard-surface); color: var(--ui-tier-standard-text); }
+.tier--vip { background: var(--ui-tier-vip-surface); color: var(--ui-tier-vip-text); }
+.tier--platinum { background: var(--ui-tier-platinum-surface); color: var(--ui-tier-platinum-text); }
 .balance-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-8); }
 .balance.card { margin-block: 0; }
 

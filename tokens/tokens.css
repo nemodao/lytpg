@@ -141,6 +141,14 @@
   --ui-nav-surface: #edededf0;
   --ui-nav-stroke: #dadce1;
   --ui-nav-tab-active: #ffffff;
+  --ui-tier-micro-surface: #d4d7dc;
+  --ui-tier-micro-text: #4d566a;
+  --ui-tier-standard-surface: #c5d8ff;
+  --ui-tier-standard-text: #1e51b8;
+  --ui-tier-vip-surface: #dbd1fd;
+  --ui-tier-vip-text: #5932da;
+  --ui-tier-platinum-surface: #e6d5b9;
+  --ui-tier-platinum-text: #70511e;
 
   /* Effect strengths (light) */
   --bg-blend-strength: 16%;
@@ -359,6 +367,14 @@
   --ui-nav-surface: #0d0e11f0;
   --ui-nav-stroke: #16191d;
   --ui-nav-tab-active: #1d2025;
+  --ui-tier-micro-surface: #3b404a;
+  --ui-tier-micro-text: #b1b5c0;
+  --ui-tier-standard-surface: #293f6b;
+  --ui-tier-standard-text: #90b5ff;
+  --ui-tier-vip-surface: #423870;
+  --ui-tier-vip-text: #bca9fb;
+  --ui-tier-platinum-surface: #493e2c;
+  --ui-tier-platinum-text: #f1ae40;
 
   /* Effect strengths (dark) */
   --bg-blend-strength: 30%;
