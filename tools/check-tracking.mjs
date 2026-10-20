@@ -1,7 +1,8 @@
 // Checks the event tracking against TRACKING.md by using the pages for real (Playwright) and reading window.dataLayer.
 // Run it after any change to an event, a parameter or a page that sends events.
 //
-//   python3 serve.py 8000                      (in another terminal)
+//   python3 -m http.server 8000                (in another terminal, from the project or package folder;
+//                                               serve.py in the project does the same without caching)
 //   npm install --no-save playwright@1.64.0     (once; node_modules/ is ignored by git)
 //   node tools/check-tracking.mjs
 //

@@ -5,13 +5,14 @@ product's framework now, and who will receive updated drops later (API mapping, 
 
 ## 1. What this is
 
-Three mobile pages that run inside the app's webview, plus a bottom bar and a guided tour:
+Three mobile tab pages and one page opened from Coins, inside the app's webview, plus a bottom bar and a guided tour:
 
 | Tab | Page | Files |
 |---|---|---|
 | Home | Dashboard | `pages/dashboard.html` `.js` `.css` |
 | Earn | Daily Trading | `pages/trading-task.html` `.js` `.css` |
 | Coins | Coin Balance | `pages/point-balance.html` `.js` `.css` |
+| (from Coins) | Redemption history | `pages/redemptions.html` `.js` `.css` (no bottom bar; back button in the header) |
 
 No framework, no build step. Each HTML file is an empty shell (`<main id="app">`); the page's `.js` is an ES module that
 loads data and renders HTML strings into it. This phase is **display only**: buttons that leave the pages are not wired.
@@ -55,11 +56,14 @@ pages/<page>.js
 | Header, balance block, badge, notice, rules list, coin | `shared/components.js` + `shared/components.css` | Balance block is shared by Home (bare) and Coins (in a card). Rules list is shared by Earn and the tour |
 | Bottom bar | `shared/nav.js` | Tabs declared in the `TABS` array |
 | Date filter (chips + calendar sheet) | `shared/date-filter.js` | Used by Earn history and Coins Expired/History |
-| Live activity line | `shared/live-feed.js` | See §5 |
+| Recent activity card | `shared/activity-feed.js` | Home and Earn; data from `activityList` in `shared/data-source.js` |
+| Account tiers, session account | `shared/tiers.js` | `TIERS`, `chosenAccountId`, `highestTier`; used by Earn, the balance block and the events |
+| "How to start" sheet before Redeem | `shared/components.js` | `redeemAttrs`, `mountJoinSheet`, `joinPanel` |
 | Guided tour | `shared/tour.js` | Steps declared in the `STEPS` array; spec §38 |
 | Home | `pages/dashboard.js` | `rewardsGrid` (`rewardCard`, `earnCard`), `checkInCard` (future, off) |
-| Earn | `pages/trading-task.js` | `streakField` (decorative hero), `progressCard` / `endedCard`, `accountsCard`, `tradeButton`, `infoCard` (rules/history tabs), `sheet` (account picker) |
+| Earn | `pages/trading-task.js` | `streakField` (decorative hero), `progressCard` / `endedCard`, `accountsCard`, `upgradeRow`, `upgradeSheet` (tier sheet, `tierTable`), `tradeButton`, `infoCard` (rules/history tabs), `sheet` (account picker) |
 | Coins | `pages/point-balance.js` | `availableTab`, `expiredTab`, `historyTab`, `itemRow` |
+| Redemption history | `pages/redemptions.js` | order list and one order (`?order=`) |
 
 CSS: `shared/base.css` (frame, fonts, type classes), `shared/components.css` (shared pieces), `pages/<page>.css`
 (page only). Every colour, size, radius and spacing is a token (`var(--…)`); keep the token names when converting.
@@ -82,7 +86,7 @@ The mapping is written. Three pieces:
 
 | Piece | File | What it is |
 |---|---|---|
-| Converter | `shared/api-adapter.js` | Pure functions that turn the answers of the six loyalty endpoints (and the two sign-in fields) into the shapes in `DATA.md`. No fetch, no DOM. Convert it once to your language and keep it as the single place that knows API field names |
+| Converter | `shared/api-adapter.js` | Pure functions that turn the answers of the loyalty endpoints (the six of handoff 2, the guest trading task, and HSB's catalog, activity and orders endpoints; see `HANDOFF-6.md`) and the two sign-in fields into the shapes in `DATA.md`. No fetch, no DOM. Convert it once to your language and keep it as the single place that knows API field names |
 | Data source | `shared/data-source.js` | Calls the endpoints through `request(endpoint, body)` and hands the results to the converter. With `?source=api` it runs on sample answers |
 | Sample answers | `mock/api/*.json` | One file per endpoint, in the real response shape (`{ success, code, result, timestamp }`), plus `signin.json` with the two fields read from the app sign-in |
 
@@ -104,9 +108,10 @@ What the demo still does in the browser and the product must do with requests:
 | `pages/point-balance.js` — `loadMore` | Shows 15 more rows of a list it already has | Ask for `pageNo + 1` until the rows shown reach `total` |
 | Refresh | None | Call `tradingTask/get` and `coin/summary` again every 2 minutes while Home or Earn is visible, and when the page becomes visible again |
 | `shared/app.js` — `common.now` | The mock pins "now" | The converter takes it from the answer's `timestamp` (server time) |
-| `shared/live-feed.js` — `entryAt` | Entries are invented from a clock-seeded generator | Unchanged for now: there is no API for it |
+| `shared/data-source.js` — `activityList` | Reads `mock/api/loyalty-activity.json` | `GET /loyalty/activity`, asked once per session, waited for at most 3 s (`HANDOFF-6.md` §3) |
+| `shared/data-source.js` — `rewardsList`, `fetchMoreOrders` | Read the samples | Catalog (`[]` on failure: Home still opens); orders by `page` / `pageSize` (`HANDOFF-6.md` §1, §6) |
 | `shared/tour.js` — `seen` / `markSeen` | "Tour seen" kept in localStorage | Per-user flag from the app, if wanted |
-| `pages/trading-task.js` — `selectedAccountId` | Account switch is local to the page | Tell the app which account to trade with |
+| `pages/trading-task.js` — `selectedAccountId` | The tie-break for the account the pages open on (`shared/tiers.js`) | Unchanged: picking an account is kept for the session only; the app switches account on the trade button (`HANDOFF-6.md` §4) |
 
 Not sent by the loyalty API, fixed in the UI (`UI_CONSTANTS` in the converter): 15 minutes for coins to arrive, the
 10-day expiry warning, the 00:00 start of an earning day. Dates are formatted in GMT+7 (WIB), the programme's time

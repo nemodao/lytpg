@@ -3,9 +3,24 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 6 — phase 3, replaces handoff 5 (20 Oct 2026)
+
+**Full description for developers: `HANDOFF-6.md`** (everything since handoff 4; exact changes in
+`CHANGES-since-handoff-4.diff`). Spec §49–§58. Handoff 5 was sent but not converted: apply this one instead.
+
+- Everything in handoff 5 below: rewards grid on Home, Redeem asks for KYC / first deposit first, recent activity card,
+  account tiers on Earn, Redemption history, guest mode, taller sheets, tour fixes.
+- Tier label next to "Coin Balance" on Home and Coins; Earn opens on the highest-tier account, and a pick is kept for
+  the session. Tier colours are now tokens, one style for the four tiers.
+- Sticky header: plain title at the top, a small pill once the page scrolls.
+- Dark mode: a faint red sheen behind the bottom bar's Close.
+- Recent activity: one-line messages centred.
+- Events: 34 (12 new since handoff 4), reviewed screen by screen; `tools/check-tracking.mjs` in the package.
+- `DATA.md` and `STATES.md` changed (see `HANDOFF-6.md` §11).
+
 ## Handoff 5 — phase 3: rewards on Home, account tiers, Redemption history, guest mode (20 Oct 2026)
 
-**Full description for developers: `HANDOFF-5.md`.** Spec §49–§53.
+**Sent but not converted; replaced by handoff 6** (`HANDOFF-6.md`; `HANDOFF-5.md` is not in the package). Spec §49–§53.
 
 - Home: a rewards grid (with an "Earn more coins" card) replaces the Daily Trading card; a "Looking for something else?" card under it.
 - Every Redeem asks users who still need KYC or a first deposit to do that first, in a bottom sheet.
@@ -15,7 +30,7 @@ and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 - Guest mode: the pages work without a token and ask the user to sign up or log in.
 - Bottom sheets grow up to 80% of the screen; the tour skips the Coins tabs step for guests.
 - Events: 31 (9 new). New intents for the app: `voucher`, `signup`, `login`; `deposit` carries an account and amount.
-- `DATA.md` and `STATES.md` changed (see `HANDOFF-5.md` §9).
+- `DATA.md` and `STATES.md` changed.
 
 ## Handoff 4 — fixes from the owner's manual test (14 Oct 2026)
 

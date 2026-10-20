@@ -48,8 +48,8 @@ function checkInCard() {
 // treats `reward` like `redeem` (the Tada catalog).
 const GRID_CELLS = 10;
 const EARN_CELL = 3; // the "earn coins" card is the 3rd cell
-// Tracking (loyalty_reward_click): `position` is the reward's rank among the rewards (1–9, the "earn coins" card is not
-// counted), `reward_id` and `reward_name` as HSB sends them, `affordable` whether the balance covers the price (no
+// Tracking (loyalty_reward_click): `position` is the reward's rank among the rewards (1–10; the "earn coins" card is
+// not counted), `reward_id` and `reward_name` as HSB sends them, `affordable` whether the balance covers the price (no
 // amount is sent).
 const rewardCard = (item, position) => `
   <button class="card reward-card" type="button" ${redeemAttrs(common, 'reward', 'reward')} data-reward="${ui.esc(item.id)}" data-track="loyalty_reward_click" data-track-position="${position}" data-track-reward_id="${ui.esc(item.id)}" data-track-reward_name="${ui.esc(item.name)}" data-track-affordable="${common.balance.available >= item.points}">

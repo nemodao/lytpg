@@ -214,13 +214,14 @@ export function rulesList(ui, common) {
 
 // Tier label next to "Coin Balance" on Home and Coins (spec §55): the tier of the account chosen for the session
 // (shared/tiers.js: the one picked on Earn, else the eligible account on the highest tier). Shown only when Earn would
-// show a tier for it: the user has a trading task, the programme runs, and that account is eligible and on one of the
-// four tiers. Tapping it opens Earn on the account field (?focus=account).
+// show a tier for it: the user has a trading task, the programme runs, nothing is left to do before earning (no KYC or
+// first deposit pending: Earn then shows no account at all), and that account is eligible and on one of the four
+// tiers. Tapping it opens Earn on the account field (?focus=account).
 // `edge` (Coins, where the balance sits in a card): the badge hangs on the card's top edge instead, its middle on the
-// border, lined up with "Coin Balance"; the line next to the label is too short there on a 375px screen.
+// border, on the left above the coin; the line next to the label is too short there on a 375px screen.
 function balanceTier(ui, common, edge = false) {
   const { accounts = [], program } = common;
-  if (common.guest || program.tradingTask === false || program.ended) return '';
+  if (common.guest || program.tradingTask === false || program.ended || program.joinRequirement) return '';
   const id = chosenAccountId(accounts, common.selectedAccountId);
   const at = tierIndex(accounts.find((item) => item.id === id));
   if (at < 0) return '';

@@ -83,7 +83,7 @@ Example file: `mock/trading-task.json` (`default`)
 | `today.points` | number | `310` | Coins earned today. |
 | `today.status` | "not_started" | "earning" | "credited" | "pending" | `"earning"` | Where today's coins stand. Picks the line under the figures: earning = coins are arriving (shown even while lots and coins still read 0), credited = all in the balance, not_started = no trade yet, pending (delayed programmes) = no line. |
 | `today.capped` | boolean | `false` | true when today's maximum is reached. |
-| `selectedAccountId` | string or null | `"50000234"` | Trading account selected when the page opens; one of common.accounts[].id. Missing or null when the user has no account. |
+| `selectedAccountId` | string or null | `"50000234"` | The trading account the app currently trades with (tradingTask/get `selectedAccountId`, the same value as common.selectedAccountId); one of common.accounts[].id. Missing or null when the user has no account. Since spec §55 it is only the tie-break and the fallback: Earn opens on the account chosen for the session (shared/tiers.js chosenAccountId). |
 | `history[].date` | YYYY-MM-DD | `"2026-10-14"` | A trading day, newest first. Today is included once it has coins arriving and is labelled "Today". |
 | `history[].lots` | number | `3.5` | Lots traded that day. |
 | `history[].points` | number | `310` | Coins earned that day. |
@@ -126,7 +126,7 @@ Example file: `mock/redemptions.json` (`default`)
 | `orders[].orderNumber` | string | `"TADA26101406220019"` | Order number shown to the user, e.g. TADA26101214305512. |
 | `orders[].status` | "new" | "on process" | "completed" | "canceled" | "failed" | `"new"` | Normalised by the backend. Badge: new = Order placed, on process = Processing, completed, canceled = Cancelled, failed. |
 | `orders[].orderDate` | string | `"2026-10-14T06:22:00Z"` | When the order was placed (ISO 8601). List is newest first. |
-| `orders[].firstItemName` | string | `"Nintendo Switch"` | Name of the order's first reward (field name in the API to be confirmed). |
+| `orders[].firstItemName` | string | `"Nintendo Switch"` | Name of the order's first reward (GET /loyalty/orders `firstItemName`, settled 20 Oct 2026). |
 | `orders[].coinSpent` | number | `30000` | Coins taken for the order. |
 | `details[].orderReference` | string | `"ord_a03f77"` | MOCK ONLY: the demo's orders for fetchOrder(ref). With the API, one GET /loyalty/orders/{orderReference} per order, in this shape. |
 | `details[].orderNumber` | string | `"TADA26101406220019"` | As in the list. |
