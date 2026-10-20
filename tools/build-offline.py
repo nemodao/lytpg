@@ -19,6 +19,7 @@ OUT = ROOT / 'dist' / 'hsb-loyalty-review'
 PAGES = ['dashboard', 'trading-task', 'point-balance', 'redemptions']
 # Shared modules in dependency order, with the variable each one is bound to in the bundle.
 MODULES = {
+    '../shared/tiers.js': '__tiers',
     '../shared/tracking.js': '__tracking',
     '../shared/api-adapter.js': '__apiAdapter',
     '../shared/data-source.js': '__dataSource',
