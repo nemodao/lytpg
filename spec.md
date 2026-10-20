@@ -749,7 +749,7 @@ Asked for by business users.
 
 ## 57. Page title in a sticky pill (decided 20 Oct 2026, handoff 6)
 
-- On every page the title ("HSB Loyalty", "Daily Trading", "Coin Balance", "Redemption history") sits in a pill styled like the round header buttons (Home's help button, the back button): same surface, stroke and height, and the text in the same colour as their icon.
-- The header stays stuck at the top of the screen. Once the page scrolls, the title pill and the header buttons shrink together to the same size (86%), eased.
-- Earn follows the same style in both themes, with no special case for the night sky (user, 20 Oct 2026: the first version had a see-through glass pill that turned solid, and a dark pill over Earn's sky; replaced by this).
+- At the top of the page the title ("HSB Loyalty", "Daily Trading", "Coin Balance", "Redemption history") is plain text, as before (white on Earn's night sky).
+- The header stays stuck at the top of the screen. Once the page scrolls, the title turns into a small pill styled like the round header buttons (Home's help button, the back button): same surface, stroke and height, the text in the same colour as their icon; the pill and the buttons shrink together to the same size (86%). All eased.
+- Earn's pill is the common one in both themes, with no special case for the sky (user, 20 Oct 2026, after two earlier versions the same day).
 - Anything the pages scroll to (the account field from the tier label, the tour's highlights) stops below the header.

@@ -135,9 +135,10 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .tab[aria-selected="true"] { background: var(--ui-tab-surface-active); color: var(--ui-text-primary); }
 
 /* ---- App header: centred title (no back button) ---- */
-/* The header sticks to the top of the screen. The title sits in a pill styled like the round header buttons (help,
-   back): same surface, stroke, height, and the icon's colour for the text. Once the page scrolls (.is-stuck, set by
-   watchHeader() in components.js) the pill and the buttons shrink together to the same size, eased. */
+/* The header sticks to the top of the screen. At the top of the page the title is plain text. Once the page scrolls
+   (.is-stuck, set by watchHeader() in components.js) it turns into a pill styled like the round header buttons (help,
+   back: same surface, stroke and height, the icon's colour for the text), and the pill and the buttons shrink
+   together to the same size. All eased. */
 .app-header {
   position: sticky; z-index: 30; top: calc(env(safe-area-inset-top, 0px) + var(--spacing-8));
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--spacing-8); min-height: var(--size-icon-button);
@@ -145,14 +146,17 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 }
 .app-header.is-stuck { --header-scale: 0.86; }
 .app-header h1, .header-action {
-  height: var(--size-control-sm); border-radius: var(--radius-pill);
-  background: var(--ui-surface-pure); border: var(--size-stroke) solid var(--ui-stroke-soft); color: var(--ui-icon-secondary);
-  transform: scale(var(--header-scale)); transition: transform 0.3s ease;
+  height: var(--size-control-sm); border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--ui-stroke-soft);
+  transform: scale(var(--header-scale)); transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
-.app-header h1 { display: flex; align-items: center; padding: 0 var(--spacing-16); font: var(--font-large-semibold); }
+.app-header h1 {
+  display: flex; align-items: center; padding: 0 var(--spacing-16); font: var(--font-large-semibold);
+  color: var(--ui-text-primary); background-color: transparent; border-color: transparent;
+}
+.app-header.is-stuck h1 { color: var(--ui-icon-secondary); background-color: var(--ui-surface-pure); border-color: var(--ui-stroke-soft); }
 @media (prefers-reduced-motion: reduce) { .app-header h1, .header-action { transition: none; } }
 .app-header > [data-back] { justify-self: start; }
-.header-action { justify-self: end; display: grid; place-items: center; width: var(--size-control-sm); }
+.header-action { justify-self: end; display: grid; place-items: center; width: var(--size-control-sm); background: var(--ui-surface-pure); color: var(--ui-icon-secondary); }
 
 /* ---- Today panel (Dashboard task card, Trading Task progress card); sits on a blend card ---- */
 .coin--xs { width: var(--size-icon-sm); height: var(--size-icon-sm); }

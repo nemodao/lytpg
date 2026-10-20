@@ -91,12 +91,13 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
 
 ## 5. Page title in a sticky pill (spec §57)
 
-- `appHeader` markup is unchanged. `.app-header` (`shared/components.css`) is now `position: sticky`; the `h1` is a pill
-  with the same style as `.header-action` (`--ui-surface-pure`, `--ui-stroke-soft`, height `--size-control-sm`, text
-  in `--ui-icon-secondary`). The class `is-stuck` (set once the page has scrolled 8px) shrinks the pill and the header
-  buttons together (`--header-scale`); a CSS transition does the easing.
+- `appHeader` markup is unchanged. `.app-header` (`shared/components.css`) is now `position: sticky`. At the top of the
+  page the `h1` is plain text (transparent pill). The class `is-stuck` (set once the page has scrolled 8px) gives it
+  the `.header-action` look (`--ui-surface-pure`, `--ui-stroke-soft`, height `--size-control-sm`, text in
+  `--ui-icon-secondary`) and shrinks it and the header buttons together (`--header-scale`); CSS transitions do the
+  easing. Earn keeps its white title on the sky only while not stuck (`pages/trading-task.css`).
 - `watchHeader()` in `shared/components.js` sets `is-stuck` on scroll (one listener, once per frame).
 - Earn (`pages/trading-task.js`): the header moved out of `.hero` to just above it, so it can stay stuck; `.hero-bg`
-  reaches further up to still cover it. The rule giving Earn's title `--on-brand` is gone.
+  reaches further up to still cover it.
 - Scroll targets stop below the header: `[data-account-card]` `scroll-margin-top`, and the tour's scroll in
   `shared/tour.js`.

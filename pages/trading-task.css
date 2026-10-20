@@ -6,6 +6,8 @@
    Hue: the theme blue. --sky-light colours the streaks; the sky is tinted at the top and loses its tint towards the cut. */
 .app { isolation: isolate; --sky-light: color-mix(in srgb, var(--bg-blend) 60%, var(--color-blue-300)); }
 .hero-bg, .hero-card { --sky: color-mix(in srgb, var(--color-blue-500) 20%, var(--ui-surface-weak)); --sky-base: var(--ui-surface-weak); }
+/* At the top of the page the title sits on the dark sky in both themes (once scrolled it is the common pill). */
+.app-header:not(.is-stuck) h1 { color: var(--on-brand); }
 .hero { position: relative; display: flex; flex-direction: column; gap: var(--spacing-section); }
 .hero-bg {
   position: absolute; z-index: -1; overflow: hidden; pointer-events: none;
