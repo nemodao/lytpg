@@ -202,16 +202,18 @@ export function rulesList(ui, common) {
 // (shared/tiers.js: the one picked on Earn, else the eligible account on the highest tier). Shown only when Earn would
 // show a tier for it: the user has a trading task, the programme runs, and that account is eligible and on one of the
 // four tiers. Tapping it opens Earn on the account field (?focus=account).
-function balanceTier(ui, common) {
+// `edge` (Coins, where the balance sits in a card): the badge hangs on the card's top edge instead, its middle on the
+// border, lined up with "Coin Balance"; the line next to the label is too short there on a 375px screen.
+function balanceTier(ui, common, edge = false) {
   const { accounts = [], program } = common;
   if (common.guest || program.tradingTask === false || program.ended) return '';
   const id = chosenAccountId(accounts, common.selectedAccountId);
   const at = tierIndex(accounts.find((item) => item.id === id));
   if (at < 0) return '';
   const { key } = TIERS[at];
-  requestAnimationFrame(() => document.querySelectorAll('.balance-label').forEach(watchBalanceTier));
+  if (!edge) requestAnimationFrame(() => document.querySelectorAll('.balance-label').forEach(watchBalanceTier));
   const href = ui.href('trading-task.html');
-  return `<a class="badge tier tier--${key} balance-tier above" href="${href}${href.includes('?') ? '&' : '?'}focus=account" aria-label="${ui.t('balance.tierLink', { tier: ui.t(`tier.${key}`) })}" data-track="loyalty_tier_badge_click" data-track-tier="${key}">${ui.t(`tier.${key}`)}</a>`;
+  return `<a class="badge tier tier--${key} balance-tier ${edge ? 'balance-tier--edge' : 'above'}" href="${href}${href.includes('?') ? '&' : '?'}focus=account" aria-label="${ui.t('balance.tierLink', { tier: ui.t(`tier.${key}`) })}" data-track="loyalty_tier_badge_click" data-track-tier="${key}">${ui.t(`tier.${key}`)}</a>`;
 }
 
 // The tier badge stays on the "Coin Balance" line: when the room left there is narrower than the badge, the whole
@@ -245,16 +247,17 @@ function fitBalanceTier(label) {
 export function balanceBlock(ui, common, { href = '', card = false, history = '' } = {}) {
   const { available, expiring } = common.balance;
   if (expiring) trackView('loyalty_expiring_notice_view');
-  const tier = balanceTier(ui, common);
+  const tier = balanceTier(ui, common, card);
   return `
   <section class="balance ${card ? 'card card--soft' : ''}" data-tour="balance">
+    ${card ? tier : ''}
     ${href ? (common.program.joinRequirement === 'signup'
       ? `<button class="card-link" type="button" ${redeemAttrs(common, 'redeem', 'balance')} aria-label="${ui.t('balance.title')}" data-track="loyalty_card_click" data-track-target="coins"></button>`
       : `<a class="card-link" href="${href}" aria-label="${ui.t('balance.title')}" data-track="loyalty_card_click" data-track-target="coins"></a>`) : ''}
     <div class="balance-row">
       <span class="coin-glow">${coin('coin--lg')}</span>
       <div class="grow">
-        <p class="t-label c-3 balance-label"><span>${ui.t('balance.title')}</span>${tier}</p>
+        <p class="t-label c-3 balance-label"><span>${ui.t('balance.title')}</span>${card ? '' : tier}</p>
         <p class="balance-number num">${ui.num(available)}</p>
       </div>
       <div class="balance-side">

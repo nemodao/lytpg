@@ -68,7 +68,10 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
   `balance.tierLink` (its label for screen readers). The badge stays on the "Coin Balance" line: `fitBalanceTier`
   measures the room left and sets `--tier-fit` (CSS `zoom`, so text, padding and pill shrink together) down to
   `TIER_MIN_FIT` (0.75); below that it wraps under the label. A `ResizeObserver` measures again on rotation and once
-  the web font has loaded. The `.tier--*` colours moved from `pages/trading-task.css` to
+  the web font has loaded. On Coins (`balanceBlock(…, { card: true })`) the badge is not on that line: it hangs on
+  the card's top edge (`.balance-tier--edge`, middle on the border, lined up with "Coin Balance"), over an opaque
+  base so the border does not show through the translucent tints. For that the `.tier--*` classes now set
+  `--tier-bg` and `.tier` paints it (same colours as before). The `.tier--*` colours moved from `pages/trading-task.css` to
   `shared/components.css`.
 - **Data:** `common.selectedAccountId` (the account the app trades with, from `tradingTask/get`; null for guests) so
   Home and Coins pick the same default as Earn. `DATA.md` updated.
