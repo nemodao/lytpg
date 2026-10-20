@@ -744,5 +744,5 @@ Asked for by business users.
 
 ## 56. Close button in the bottom bar: faint red blend in dark mode (decided 20 Oct 2026, handoff 6)
 
-- In dark mode the Close (X) button of the bottom bar has a faint red blend in its own background: a soft red core behind the X and a touch of warm orange towards the lower right, fading into the bar colour. Not a shadow and no glow outside the button. It makes Close stand a little off the near-black bar so users find it more easily.
+- In dark mode the Close (X) button of the bottom bar stays black with a faint red sheen just around the X, part of its own background, fading into the bar colour within the button. Not a shadow and no glow outside the button. It makes Close stand a little off the near-black bar so users find it more easily (first version too strong and too wide, toned down by the user the same day).
 - Light mode is unchanged.

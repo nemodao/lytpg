@@ -150,7 +150,6 @@
   --ui-tier-platinum-surface: #e6d5b9;
   --ui-tier-platinum-text: #70511e;
   --ui-nav-exit-glow: #de2c4100;
-  --ui-nav-exit-glow-warm: #f0562a00;
 
   /* Effect strengths (light) */
   --bg-blend-strength: 16%;
@@ -377,8 +376,7 @@
   --ui-tier-vip-text: #bca9fb;
   --ui-tier-platinum-surface: #493e2c;
   --ui-tier-platinum-text: #f1ae40;
-  --ui-nav-exit-glow: #de2c4133;
-  --ui-nav-exit-glow-warm: #f0562a1f;
+  --ui-nav-exit-glow: #de2c4124;
 
   /* Effect strengths (dark) */
   --bg-blend-strength: 30%;
@@ -399,7 +397,7 @@
   --ui-button-glass-surface: var(--glass-surface);
   --ui-button-glass-pressed: color-mix(in srgb, var(--glass-tint) calc(var(--glass-fill-opacity) * 2), transparent);
   --ui-button-glass-blur: blur(var(--glass-blur));
-  --nav-exit-surface: radial-gradient(70% 75% at calc(50% + var(--spacing-8) / 2) 50%, var(--ui-nav-exit-glow), transparent), radial-gradient(80% 70% at 80% 110%, var(--ui-nav-exit-glow-warm), transparent), var(--ui-nav-surface);
+  --nav-exit-surface: radial-gradient(40% 45% at calc(50% + var(--spacing-8) / 2) 50%, var(--ui-nav-exit-glow), transparent), var(--ui-nav-surface);
   --blend-theme-bg: radial-gradient(90% 80% at 100% 105%, color-mix(in srgb, var(--accent-surface-brand) 45%, #fff) 0%, transparent 70%), radial-gradient(70% 70% at 90% -10%, var(--blend-theme-shade) 0%, transparent 70%), linear-gradient(160deg, color-mix(in srgb, var(--accent-surface-brand) 78%, var(--blend-theme-shade)), var(--accent-surface-brand));
   --blend-theme-fg: #ffffff;
   --blend-theme-ink: var(--accent-text-brand);
