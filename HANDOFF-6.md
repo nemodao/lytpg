@@ -65,7 +65,10 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
 - **Home and Coins** (`balanceBlock` in `shared/components.js`): a tier badge next to "Coin Balance"
   (`balanceTier`), linking to `trading-task.html?focus=account`; only when Earn would show a tier for that account
   (trading task on, programme running, account eligible and on one of the four tiers; never for guests). New copy key
-  `balance.tierLink` (its label for screen readers). The `.tier--*` colours moved from `pages/trading-task.css` to
+  `balance.tierLink` (its label for screen readers). The badge stays on the "Coin Balance" line: `fitBalanceTier`
+  measures the room left and sets `--tier-fit` (CSS `zoom`, so text, padding and pill shrink together) down to
+  `TIER_MIN_FIT` (0.75); below that it wraps under the label. A `ResizeObserver` measures again on rotation and once
+  the web font has loaded. The `.tier--*` colours moved from `pages/trading-task.css` to
   `shared/components.css`.
 - **Data:** `common.selectedAccountId` (the account the app trades with, from `tradingTask/get`; null for guests) so
   Home and Coins pick the same default as Earn. `DATA.md` updated.

@@ -209,8 +209,32 @@ function balanceTier(ui, common) {
   const at = tierIndex(accounts.find((item) => item.id === id));
   if (at < 0) return '';
   const { key } = TIERS[at];
+  requestAnimationFrame(() => document.querySelectorAll('.balance-label').forEach(watchBalanceTier));
   const href = ui.href('trading-task.html');
   return `<a class="badge tier tier--${key} balance-tier above" href="${href}${href.includes('?') ? '&' : '?'}focus=account" aria-label="${ui.t('balance.tierLink', { tier: ui.t(`tier.${key}`) })}" data-track="loyalty_tier_badge_click" data-track-tier="${key}">${ui.t(`tier.${key}`)}</a>`;
+}
+
+// The tier badge stays on the "Coin Balance" line: when the room left there is narrower than the badge, the whole
+// badge (text, padding, pill) shrinks by the same ratio, down to TIER_MIN_FIT; narrower still, it goes under the label
+// (flex-wrap). Measured again when the column or the label changes size (screen rotation, web font loaded).
+const TIER_MIN_FIT = 0.75;
+const tierObserver = typeof ResizeObserver === 'function' ? new ResizeObserver((entries) => {
+  new Set(entries.map((entry) => entry.target.closest('.balance-label'))).forEach(fitBalanceTier);
+}) : null;
+function watchBalanceTier(label) {
+  if (!label.querySelector('.balance-tier')) return;
+  fitBalanceTier(label);
+  tierObserver?.observe(label);
+  tierObserver?.observe(label.firstElementChild);
+}
+function fitBalanceTier(label) {
+  const badge = label.querySelector('.balance-tier');
+  if (!badge) return;
+  badge.style.removeProperty('--tier-fit');
+  const room = label.getBoundingClientRect().width - label.firstElementChild.getBoundingClientRect().width
+    - parseFloat(getComputedStyle(label).columnGap || 0) - 1; // 1px: sub-pixel rounding of the scaled badge
+  const fit = Math.floor((room / badge.getBoundingClientRect().width) * 100) / 100;
+  if (fit < 1 && fit >= TIER_MIN_FIT) badge.style.setProperty('--tier-fit', fit);
 }
 
 // Balance block: coin, label, number, Redeem button and the expiry warning. Coins that are not credited yet are never
