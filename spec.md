@@ -753,3 +753,7 @@ Asked for by business users.
 - The header stays stuck at the top of the screen. Once the page scrolls, the title turns into a small pill styled like the round header buttons (Home's help button, the back button): same surface, stroke and height, the text in the same colour as their icon; the pill and the buttons shrink together to the same size (86%). All eased.
 - Earn's pill is the common one in both themes, with no special case for the sky (user, 20 Oct 2026, after two earlier versions the same day).
 - Anything the pages scroll to (the account field from the tier label, the tour's highlights) stops below the header.
+
+## 58. Recent activity card: one-line messages centred (decided 20 Oct 2026, handoff 6)
+
+- The card keeps the height of a two-line message. A message that fits on one line sits in the middle of the card, not at the top (user, 20 Oct 2026).

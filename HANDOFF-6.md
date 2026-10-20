@@ -101,3 +101,9 @@ All events were reviewed screen by screen. `TRACKING.md` is the contract (now 33
   reaches further up to still cover it.
 - Scroll targets stop below the header: `[data-account-card]` `scroll-margin-top`, and the tour's scroll in
   `shared/tour.js`.
+
+## 6. Recent activity card: a one-line message sits in the middle
+
+- `shared/components.css`: the two-line height moved from `.activity__text` to `.activity__row` (`min-height: 2lh`
+  with the text's font), so the card keeps its height and a one-line message is centred vertically, like the icon
+  and the time. Same on Home and Earn.
