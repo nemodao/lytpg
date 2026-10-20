@@ -174,35 +174,6 @@ The tour was reviewed against the new pages, signed in and as a guest; its steps
 - **Step 4's pop-up opens under the whole balance card**, not right under `Redeem`, so it no longer cuts through the
   "Redemption history" link. Steps take a new option `below` (a selector).
 
-## 11. Guided tour: opens by itself once per device (spec §38)
-
-**Reported on UAT (20 Oct 2026):** opening Home in the app, the tour did not appear by itself.
-
-**Wanted:** the first time Home is opened on a device, the tour opens by itself. After that it never opens by itself
-on that device again; the `?` button in Home's header still opens it any time.
-
-**Change in the reference:** the device now counts as "seen" as soon as the tour **opens by itself**, not only after
-Skip or Finish (so leaving mid-tour no longer brings it back). In `shared/tour.js`, `start()` calls `markSeen()` when it
-is called without an event (the auto-open). In the Next.js app that is the auto-open effect in `useGuidedTour.ts`: call
-`markTourSeen()` there, next to `track('loyalty_tour_start', { trigger: 'auto' })`.
-
-**Then find why it did not open on UAT.** The code reviewed (branch `uat`, `useGuidedTour.ts` and `seen.ts`) looks
-right, so check in this order:
-
-1. **A device that has really never opened Home:** uninstall and reinstall the app, or clear its data. A phone used for
-   earlier tests already holds `hsb-loyalty-tour-seen` = `1` and correctly shows no tour.
-2. **The webview keeps its storage between launches** (that is the "device" memory):
-   - Android: `WebSettings.setDomStorageEnabled(true)`. Without it `localStorage` throws, and the in-memory fallback
-     in `seen.ts` reopens the tour on every launch.
-   - iOS: a persistent `WKWebsiteDataStore.default()`, not `.nonPersistent()`.
-3. **The URL the app opens has no `tour` parameter.** Any `?tour=` (including `off`) stops the auto-open.
-4. **Home's data loads.** The tour opens only once Home has its data (not on the loading or error view), and only on Home.
-5. **The origin stays the same.** Storage belongs to `https://uat-loyalty.hsb.co.id`: a redirect to another host starts
-   with empty storage there.
-
-To test again on a used phone without reinstalling: in the webview console,
-`localStorage.removeItem('hsb-loyalty-tour-seen')`, then reopen Home.
-
 ## Waiting on others
 
 - Backend: the rewards list API (guest and signed-in, same shape), the recent activity API (needs no token; not created
