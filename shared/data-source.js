@@ -62,13 +62,18 @@ async function sessionCached(key, loader) {
 }
 // API: the recent activity list (spec §50), from HSB (the Tada integration): GET /loyalty/activity, no Authorization and
 // no clientId, only the x-auth-key header, for guests and signed-in users alike; { success, result: { activity } }.
-// Asked for once per session. When it fails the card is hidden (activity = []) and it is asked for again next time.
+// Asked for once per session, alongside the page's other calls. The card is hidden (activity = []) when the call fails,
+// sends nothing, or has not answered within ACTIVITY_WAIT_MS: the page never waits longer for it. A late answer is
+// still kept for the session, so the next page (or the other tab) shows the card; a failure is not kept, so the next
+// page asks again.
 // Here: mock/api/loyalty-activity.json (API mode) or mock/common.json.
-const activityList = () => (USE_API
-  ? sessionCached('hsb-loyalty-activity-api-v1', () => getJSON('../mock/api/loyalty-activity.json')
-    .then((answer) => { if (answer.success !== true) throw new Error(`loyalty/activity: ${answer.message}`); return toActivity(answer.result); }))
-    .catch(() => [])
-  : sessionCached('hsb-loyalty-activity-v3', () => getJSON('../mock/common.json').then((common) => common.activity)));
+const ACTIVITY_WAIT_MS = 3000;
+const activityList = () => {
+  if (!USE_API) return sessionCached('hsb-loyalty-activity-v3', () => getJSON('../mock/common.json').then((common) => common.activity));
+  const asked = sessionCached('hsb-loyalty-activity-api-v1', () => getJSON('../mock/api/loyalty-activity.json')
+    .then((answer) => { if (answer.success !== true) throw new Error(`loyalty/activity: ${answer.message}`); return toActivity(answer.result); }));
+  return Promise.race([asked, new Promise((done) => { setTimeout(() => done([]), ACTIVITY_WAIT_MS); })]).catch(() => []);
+};
 
 // Date ranges and paging. API: the three list endpoints take from / to (at most 30 days) and pageNo / pageSize;
 // send the range of the date filter and ask for the next page as the user scrolls (spec §43, §44). The demo asks
@@ -82,6 +87,7 @@ const TASK_ENDPOINT = GUEST ? 'guest/tradingTask/get' : 'tradingTask/get';
 const taskGet = () => result(TASK_ENDPOINT);
 
 async function commonFromApi() {
+  const activity = activityList(); // asked for at once, alongside the other calls
   if (GUEST) {
     const [taskAnswer, ui] = await Promise.all([request(TASK_ENDPOINT), uiOnly()]);
     const task = taskAnswer.result;
@@ -92,7 +98,7 @@ async function commonFromApi() {
       program: { ...toProgram(task, null), joinRequirement: 'signup' },
       accounts: toAccounts(task),
       tiers: [],
-      activity: await activityList(), // the recent activity API needs no token (spec §53)
+      activity: await activity, // the recent activity API needs no token (spec §53)
       tour: ui.tour,
     };
   }
@@ -105,7 +111,7 @@ async function commonFromApi() {
     program: toProgram(task, user),
     accounts: toAccounts(task),
     tiers: toTiers(task),
-    activity: await activityList(),
+    activity: await activity,
     tour: ui.tour,
   };
 }

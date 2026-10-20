@@ -70,8 +70,11 @@ turns light purple.
   gift entries `{ type, client, reward, at }`, coin entries `{ type, client, points, at }`, `at` ISO 8601 UTC. The
   backend sends at most N of each kind, newest first (its config; 700 coin and 300 gift entries for now): coin entries
   are trading coins only, gift entries are one per redemption (first item's name) that still holds its coins. Adapter
-  `toActivity` (`shared/api-adapter.js`), sample `mock/api/loyalty-activity.json`. When the call fails the card is
-  hidden and nothing is kept, so the next session asks again.
+  `toActivity` (`shared/api-adapter.js`), sample `mock/api/loyalty-activity.json`. **No data, no card:** the call
+  starts with the page's other calls and the page waits for it **at most 3 s** (`ACTIVITY_WAIT_MS` in
+  `shared/data-source.js`). Failed, empty or not answered in time: the card is hidden, the rest of the page shows as
+  usual. A late answer is still kept for the session (the next page shows the card); a failure is not kept (the next
+  page asks again).
 - **Order:** newest first within each kind; the kinds take turns in rounds of 1:1, 2:1, 3:1 and 3:2 (coin entries :
   rewards, rewards first), played in a shuffled order, then shuffled again. Each kind loops on its own.
 - **Linked:** Home and Earn share the list and the place in the loop for the session (`sessionStorage`), so switching
