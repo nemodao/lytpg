@@ -108,8 +108,8 @@ guests see none); "About this reward" (`description`). A Tour & Travel picture i
 - Dark mode, every store page (this replaces spec §59's earlier "Home Store only"): square cards, tickets and the
   reward page's card are frosted glass; prices white, with a soft glow behind the coin on cards and tickets.
 - `Hot` / `New` label: on the square cards (Popular, Categories) in the picture's top-left corner, square where it
-  touches the frame; before the name on the reward page. F&B tickets and Tour & Travel cards have none (Travel has its
-  Special sash). `Hot` is drawn in the colours of the bottom bar's HOT badge (new tokens, §6).
+  touches the frame; before the name on the reward page. F&B tickets and Tour & Travel cards have none, on purpose (Travel has
+  its Special sash). `Hot` is drawn in the colours of the bottom bar's HOT badge (new tokens, §6).
 - The classes on `<body>` that switch the look: `store-look`, `store-tab--home`, `store-tab--rewards`,
   `store-look--fixed` (set by `store.js` / `reward.js`).
 
