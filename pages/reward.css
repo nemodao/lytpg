@@ -38,6 +38,7 @@
 
 /* "Checkout is coming soon" sheet. */
 .reward-soon { align-items: center; text-align: center; }
+.reward-soon__clock { display: block; width: calc(var(--size-control-lg) * 1.4); height: calc(var(--size-control-lg) * 1.4); object-fit: contain; }
 .reward-soon__icon { display: grid; place-items: center; width: var(--size-control-lg); height: var(--size-control-lg); border-radius: var(--radius-pill); background: var(--ui-badge-blue); color: var(--ui-text-brand); }
 .reward-soon .stack { align-self: stretch; margin-top: var(--spacing-8); }
 /* Guests: Sign up and, lighter, Log in side by side; "Got it" as a quiet text button under them. */

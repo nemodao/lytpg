@@ -103,9 +103,10 @@ function homeTab() {
 const chip = (key, label) =>
   `<button class="chip${key === 'more' ? ' chip--more' : ''}" type="button" data-action="category" data-cat="${key}" aria-pressed="${key === category}">${label}</button>`;
 
+// `icon`: a line icon's name, or 'clock' for the 3D clock picture (assets/images/store/clock.webp).
 const noteCard = (title, body, icon) => `
   <div class="card store-note">
-    <span class="store-note__icon">${ui.icon(icon)}</span>
+    ${icon === 'clock' ? '<img class="store-note__clock" src="../assets/images/store/clock.webp" alt="">' : `<span class="store-note__icon">${ui.icon(icon)}</span>`}
     <span class="stack stack--tight"><span class="t-body-strong">${title}</span><span class="t-caption c-2">${body}</span></span>
   </div>`;
 

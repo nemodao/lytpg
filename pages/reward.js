@@ -76,7 +76,7 @@ function openSheet() {
     <div class="scrim" data-soon-sheet data-action="close-sheet">
       <div class="sheet reward-soon" role="dialog" aria-modal="true" aria-label="${ui.t('reward.soon.title')}">
         <span class="sheet__grab"></span>
-        <span class="reward-soon__icon">${ui.icon('clock')}</span>
+        <img class="reward-soon__clock" src="../assets/images/store/clock.webp" alt="">
         <h2 class="t-title-s">${ui.t('reward.soon.title')}</h2>
         <p class="t-body c-2">${ui.t('reward.soon.body')}</p>
         <div class="stack">
