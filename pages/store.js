@@ -86,11 +86,12 @@ const sectionHead = (title, cat) => `
     <button class="text-btn" type="button" data-action="see-all" data-cat="${cat}">${ui.t('store.seeAll')}${ui.icon('right', 'icon--sm')}</button>
   </div>`;
 
+// PREVIEW ONLY: `page.banner` ('navy', state banner-navy) tries another banner colour, for review.
 function homeTab() {
   const { popular, fnb, travel } = arrange(rewards);
   return `
     <div class="store-banner">
-      <img class="store-banner__img" src="../assets/images/store/banner.webp" alt="">
+      <img class="store-banner__img" src="../assets/images/store/banner${page.banner ? `-${page.banner}` : ''}.webp" alt="">
       <div class="store-banner__text"><p class="store-banner__title">${ui.t('store.banner.title')}</p><p class="store-banner__body">${ui.t('store.banner.body')}</p></div>
     </div>
     ${popular.length ? `<section class="store-section">${sectionHead(ui.t('store.popular'), 'all')}<div class="store-row">${popular.map(card).join('')}</div></section>` : ''}
