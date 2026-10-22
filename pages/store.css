@@ -153,15 +153,25 @@
 .store-row::-webkit-scrollbar { display: none; }
 .store-row .store-card { flex: none; width: 42%; scroll-snap-align: start; }
 
-/* Tour & Travel: a promo panel (first draft from a reference picture). The tokens' purple blend (.blend-pink), faint
-   light rays from the top, a big white title with a dark outline, a frosted ribbon, white cards with a scalloped price sticker, and See all on the bottom edge. */
+/* Tour & Travel: a promo panel (first draft from a reference picture). The tokens' purple blend (.blend-pink), soft
+   champagne-gold rays from the top, a big white title with a dark outline, a frosted ribbon, white cards with a scalloped price sticker, and See all on the bottom edge. */
 .trip-promo {
-  position: relative; display: flex; flex-direction: column; gap: var(--spacing-24);
+  position: relative; isolation: isolate; display: flex; flex-direction: column; gap: var(--spacing-24);
   margin-bottom: var(--spacing-16); padding: var(--spacing-32) 0 var(--spacing-32); border-radius: var(--radius-card);
-  background:
-    repeating-conic-gradient(from -90deg at 50% -10%, color-mix(in srgb, var(--color-neutral-0) 7%, transparent) 0deg 5deg, transparent 5deg 12deg),
-    var(--blend-bg);
+  background: var(--blend-bg);
   box-shadow: var(--blend-stroke);
+}
+/* Light rays from above the title: thin champagne-gold beams with soft edges, brightest at the top centre and fading out
+   (a mask) before the cards, plus a warm glow behind the title. */
+.trip-promo::before {
+  content: ""; position: absolute; z-index: -1; inset: 0; border-radius: inherit; pointer-events: none;
+  background:
+    radial-gradient(60% 38% at 50% 0, color-mix(in srgb, var(--color-yellow-400) 30%, transparent), transparent 75%),
+    repeating-conic-gradient(from -90deg at 50% -12%,
+      transparent 0deg, color-mix(in srgb, var(--color-yellow-400) 26%, transparent) 2deg,
+      transparent 4deg 11deg);
+  -webkit-mask-image: radial-gradient(85% 70% at 50% 0, black 20%, transparent 85%);
+  mask-image: radial-gradient(85% 70% at 50% 0, black 20%, transparent 85%);
 }
 .trip-promo__head { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-6); padding: 0 var(--spacing-card); text-align: center; }
 .trip-promo__title {
