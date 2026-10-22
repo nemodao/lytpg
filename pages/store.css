@@ -1,5 +1,13 @@
 /* Reward Store only (spec §59). The top bar (.store-head) and the "Hot" / "New" badge are shared with reward.html. */
 
+/* ---- Page background: a deeper blue than Loyalty's pages, strongest at the top and fading down (store and reward
+   page, after a reference picture, 22 Oct 2026). ---- */
+.app {
+  background:
+    radial-gradient(120% 360px at 50% 0, color-mix(in srgb, var(--bg-blend) 55%, transparent), transparent 75%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-blend) 40%, var(--ui-surface-weak)) 0, color-mix(in srgb, var(--bg-blend) 14%, var(--ui-surface-weak)) 560px, var(--ui-surface-weak) 1100px);
+}
+
 /* ---- Top of the store: icon, "Reward Redemption", balance ---- */
 /* Sticks to the top like Loyalty's header (spec §57): plain at the top of the page; once it scrolls (.is-stuck) the icon
    and the title become one pill, styled like the round header buttons, and shrink together with the balance. */
@@ -27,17 +35,14 @@
   border-radius: var(--radius-pill); background: var(--blend-theme-bg); color: var(--blend-theme-fg); box-shadow: var(--blend-stroke);
 }
 .store-head__title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--font-large-semibold); }
-/* The balance: one pill in two parts, the coin on a slightly darker part. */
+/* The balance: one pill, a thin line between the coin and the number. */
 .store-head__balance {
   position: absolute; right: 0; top: 50%; transform: translateY(-50%) scale(var(--header-scale)); transform-origin: right center;
   display: inline-flex; align-items: stretch; height: var(--size-control-sm); overflow: hidden;
   border-radius: var(--radius-pill); background: var(--ui-surface-pure); border: var(--size-stroke) solid var(--ui-stroke-soft);
   font: var(--font-small-semibold);
 }
-.store-head__coin {
-  display: grid; place-items: center; padding: 0 var(--spacing-8) 0 var(--spacing-10);
-  background: color-mix(in srgb, var(--ui-text-primary) 6%, var(--ui-surface-pure)); border-right: var(--size-stroke) solid var(--ui-stroke-soft);
-}
+.store-head__coin { display: grid; place-items: center; padding: 0 var(--spacing-8) 0 var(--spacing-10); border-right: var(--size-stroke) solid var(--ui-stroke-soft); }
 .store-head__balance .num { display: grid; place-items: center; padding: 0 var(--spacing-12) 0 var(--spacing-8); }
 @media (prefers-reduced-motion: reduce) { .store-head__brand, .store-head__balance, .store-head__back { transition: none; } }
 

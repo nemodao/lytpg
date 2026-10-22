@@ -17,7 +17,7 @@ export const rewardHref = (ui, id, back) => withParams(ui.href('reward.html'), {
 // Top of both tabs (and of the reward page): the store's icon, "Reward Redemption" and the user's balance, small.
 // The icon is a placeholder until the 3D icon is supplied. It sticks to the top like Loyalty's header: once the page
 // scrolls (.is-stuck, watchHeader in components.js) the icon and the title become one pill and shrink together with
-// the balance. The balance pill is split in two: the coin on a slightly darker part, then the number.
+// the balance. The balance pill has a thin line between the coin and the number.
 export const storeHead = (ui, common, { back = '' } = {}) => (requestAnimationFrame(watchHeader), `
   <header class="store-head">
     ${back ? `<a class="header-action store-head__back" href="${ui.esc(back)}" aria-label="${ui.t('orders.back')}" data-back>${ui.icon('back')}</a>` : ''}
