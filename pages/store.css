@@ -41,7 +41,13 @@
 /* No icon in front of the title (the reward page, which has a back button instead): the same room on both sides. */
 .store-head.is-stuck .store-head__brand--plain { padding-left: var(--spacing-16); }
 .store-head__back { flex: none; transform-origin: left center; }
-.store-head__icon { flex: none; display: block; width: var(--size-control-sm); height: var(--size-control-sm); object-fit: contain; }
+/* The gift box sits in a round badge styled like the header buttons (white, soft stroke), so it reads as one piece
+   with the title next to it. */
+.store-head__icon {
+  flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm);
+  border-radius: var(--radius-pill); background: var(--ui-surface-pure); border: var(--size-stroke) solid var(--ui-stroke-soft);
+}
+.store-head__icon img { display: block; width: 72%; height: 72%; object-fit: contain; }
 .store-head__title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--font-large-semibold); }
 /* The balance: one pill, a thin line between the coin and the number. */
 .store-head__balance {

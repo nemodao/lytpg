@@ -22,7 +22,7 @@ export const storeHead = (ui, common, { back = '' } = {}) => (requestAnimationFr
   <header class="store-head">
     ${back ? `<a class="header-action store-head__back" href="${ui.esc(back)}" aria-label="${ui.t('orders.back')}" data-back>${ui.icon('back')}</a>` : ''}
     <span class="store-head__brand${back ? ' store-head__brand--plain' : ''}">
-      ${back ? '' : '<img class="store-head__icon" src="../assets/images/store/store-icon.webp" alt="">'}
+      ${back ? '' : '<span class="store-head__icon"><img src="../assets/images/store/store-icon.webp" alt=""></span>'}
       <h1 class="store-head__title">${ui.t('store.title')}</h1>
     </span>
     <span class="store-head__balance" aria-label="${ui.t('store.balance', { points: ui.num(common.balance.available) })}">
