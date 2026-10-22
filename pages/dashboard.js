@@ -5,7 +5,7 @@ import { mountNav } from '../shared/nav.js';
 import { mountTour } from '../shared/tour.js';
 import { createActivityFeed } from '../shared/activity-feed.js';
 import { initTracking, trackView } from '../shared/tracking.js';
-import { appHeader, balanceBlock, coin, mountJoinSheet, redeemAttrs, showStatus, tourButton } from '../shared/components.js';
+import { appHeader, balanceBlock, coin, mountJoinSheet, mountStoreLinks, redeemAttrs, showStatus, tourButton } from '../shared/components.js';
 
 const { common, page, ui } = await load('dashboard');
 // `no-task-trading` state: the programme runs no trading task, so the "earn coins" card (and the Earn tab) are hidden.
@@ -153,6 +153,7 @@ if (showStatus(ui, common, app, header)) {
   addEventListener('resize', () => { if (innerWidth !== width) { width = innerWidth; fitPrices(); } });
   mountNav(ui, common, 'home');
   mountJoinSheet(ui, common, app);
+  mountStoreLinks(ui, app);
 
   // Guided tour: opens on the first visit, and again from the help button in the header.
   const tour = mountTour(ui, common, 'dashboard');

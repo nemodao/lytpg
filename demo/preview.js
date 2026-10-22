@@ -1,7 +1,7 @@
 // DEMO ONLY — floating state switcher. Not part of the product UI.
 // To remove it, delete the demo/ folder and the DEMO ONLY block at the end of each page's HTML.
 
-const page = document.body.dataset.page;
+const page = document.body.dataset.mock || document.body.dataset.page; // data-mock: a page that uses another page's data and states
 const params = new URLSearchParams(location.search);
 const active = new Set((params.get('state') || '').split(',').map((s) => s.trim()).filter(Boolean));
 

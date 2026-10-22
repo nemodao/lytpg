@@ -1,0 +1,31 @@
+<!doctype html>
+<!--
+  Loyalty · Reward Store · one reward (spec §59): reward.html?id=<reward id>&back=<page to go back to>
+  e.g. ?id=101 (Hot, a gadget), ?id=130 (cheap F&B voucher: enough coins), ?id=120 (New, a trip), ?id=109 (no category),
+  ?id=999 (not in the catalog)
+  Data: the store's (mock/store.json), so the store's states apply: catalog-empty, no-travel, few-rewards
+  Shared states (guest, empty, needs-kyc, needs-deposit, expiring, activity-empty) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Loyalty · Reward</title>
+  <script src="../shared/theme.js"></script>
+  <link rel="stylesheet" href="../tokens/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="../shared/components.css">
+  <link rel="stylesheet" href="store.css">
+  <link rel="stylesheet" href="reward.css">
+</head>
+<body data-page="reward" data-mock="store">
+  <main class="app" id="app"></main>
+  <script type="module" src="reward.js"></script>
+  <!-- DEMO ONLY: start. Review aids, not part of the product. Strip this block (and the demo/ folder) before handoff:
+       the state switcher, the "Internal Explanation" messages on buttons and the analytics event list. -->
+  <script type="module" src="../demo/preview.js"></script>
+  <script type="module" src="../demo/intents.js"></script>
+  <script type="module" src="../demo/tracking-log.js"></script>
+  <!-- DEMO ONLY: end -->
+</body>
+</html>

@@ -91,3 +91,15 @@ File: `mock/redemptions.json` · page: `pages/redemptions.html`
 | Page | `orders-more` | The backend says there are more orders than the first page (total 30): a spinner row at the end of the list loads the next page as the user scrolls. In this demo the next page is empty, so the row then goes away. | `page.total = 30` |
 | Page | `loading` | The page is waiting for its data: the header and grey placeholder cards. | `common.view = "loading"` |
 | Page | `error` | The data could not be loaded: a message and “Try again”. | `common.view = "error"` |
+
+## Reward Store and its reward page (from Redeem)
+
+File: `mock/store.json` · page: `pages/store.html`
+
+| Group | State | What it shows | Data it changes |
+|---|---|---|---|
+| Sign-in | `guest` ("Guest (not signed in)") · shared | Not signed in: the store and its rewards show as usual, balance 0; a reward's page has no balance line, and its Checkout sheet adds Sign up. | `common.guest = true`<br>`common.balance.available = 0`<br>`common.balance.expiring = null`<br>`common.program.joinRequirement = "signup"`<br>`common.accounts = []` |
+| Coin Balance | `empty` · shared | Balance is 0: the top bar shows 0; on a reward's page the user needs the full price. | `common.balance.available = 0`<br>`common.balance.expiring = null` |
+| Catalog | `catalog-empty` | The catalog API sent nothing, or failed: no banner sections; a short message that rewards are on their way, on both tabs. | `page.rewards = []` |
+| Catalog | `no-travel` | No reward in Tour & Travel: that section of Home Store is hidden; the Rewards tab's Tour & Travel chip shows only the “more coming soon” card. | `page.rewards = [41 items]` |
+| Catalog | `few-rewards` | Only 6 rewards in the catalog: Home Store fills F&B and Travel first, then Popular gets what is left. | `page.rewards = [6 items]` |

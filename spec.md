@@ -758,3 +758,22 @@ Asked for by business users.
 ## 58. Recent activity card: one-line messages centred (decided 20 Oct 2026, handoff 6)
 
 - The card keeps the height of a two-line message. A message that fits on one line sits in the middle of the card, not at the top (user, 20 Oct 2026).
+
+## 59. Reward Store: a browse-only redemption store (Plan B, decided 22 Oct 2026, early handoff)
+
+The Tada integration may not be ready for launch, so the pages get their own redemption store to browse rewards. Checkout is not live: it says "coming soon".
+
+- **Ways in:** every general Redeem button (balance block, `Explore all rewards`, the empty Redemption history) opens the store's Home Store tab; a reward card on Home opens that reward's page. Everyone can browse, guests and users who still need KYC or a first deposit included (replaces the "How to start" sheet on Redeem of §49 for these buttons).
+- **Pages:** `store.html` with two tabs, and `reward.html?id=…` for one reward.
+- **Top of the store (both tabs):** the store's icon (a 3D icon will be supplied), "Reward Redemption", and the user's balance, small.
+- **Bottom bar of the store:** a Back button on the left (where Loyalty has its Close), then the tabs Home Store and Rewards. Back returns to the Loyalty page the user came from.
+- **Home Store tab:**
+  - A decorative banner of rewards (an image, no function).
+  - **Popular Rewards:** 8 rewards. **F&B e-Vouchers:** 4 rewards of that category, in a layout made for vouchers. **Tour & Travel:** 4 rewards of that category, in a layout made for trips. Each has `See all`, which opens the Rewards tab on that category.
+  - The front end fills the three sections from the one catalog list, with no reward twice: first F&B (its first 4 in the catalog's order), then Travel (its first 4), then Popular from the rest (rewards marked `hot` first, then one from each category in turn). A section with no reward is hidden.
+- **Rewards tab:** category chips in one scrolling row: `All` (selected first, every reward), the five categories, and `More categories` at the end. A category shows its rewards from the list, then a small card saying more rewards are coming soon. `More categories` shows a card: 2,000+ rewards and more categories coming soon.
+- **Categories** (keys from the API, names in the copy file): Gadget & Electronics `gadget_electronics`, Tour & Travel `tour_travel`, Shopping e-Voucher `shopping_voucher`, F&B e-Voucher `fnb_voucher`, Home & Living `home_living`. A reward with no or another category shows only under `All`. (Tada may export its real categories; the list may change then.)
+- **Reward page:** back button (to where the user came from); image, `Hot` / `New` badge, category, name, price in coins, the user's balance against the price, the one-line description; a `Checkout` button at the bottom. Checkout opens a bottom sheet: checkout is coming soon, keep trading and collecting coins to redeem when it launches. Guests also get `Sign up` there.
+- **Data:** the same catalog API as Home (§49), extended by the backend: every reward on show for the user's group (about 50), each with `category`, `description`, `badge` (`hot` | `new` | null) and `showOnHome`; Home's grid takes the rewards with `showOnHome`. No terms or details field (the store is not live), no money values.
+- **Events:** none new for now (a later round).
+- Delivered to the front-end developer as an early handoff, before the backend's API changes.

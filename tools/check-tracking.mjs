@@ -90,19 +90,15 @@ await run('home', 'dashboard.html', ['scroll'], [
   ['loyalty_page_view', { page: 'home', has_task: 'true', ...signedIn }],
   ['loyalty_rewards_view', { reward_count: '9', has_earn_card: 'true' }],
 ]);
-await run('home: positions count rewards only', 'dashboard.html', ['.reward-card:not(.reward-card--earn) ~ .reward-card:not(.reward-card--earn)'], [
+await run('home: positions count rewards only', 'dashboard.html', ['stay', '.reward-card:not(.reward-card--earn) ~ .reward-card:not(.reward-card--earn)'], [
   ['loyalty_reward_click', { position: '2', reward_id: '102', affordable: 'false' }], // costs more than the balance
 ]);
 await run('home: no rewards', 'dashboard.html?state=rewards-empty', [], [['loyalty_rewards_view', { reward_count: '0', has_earn_card: 'false' }]]);
-await run('home: gate sheet (needs KYC)', 'dashboard.html?state=needs-kyc', [
-  '.reward-card[data-reward="101"]', '.sheet [data-intent="kyc"]', 'close', '[data-tour="redeem"]', '.sheet [data-intent="kyc"]',
+await run('home: Redeem and rewards open the store, needs KYC too (spec §59)', 'dashboard.html?state=needs-kyc', [
+  'stay', '.reward-card[data-reward="101"]', '[data-tour="redeem"]',
 ], [
   ['loyalty_reward_click', { position: '1', reward_id: '101' }],
-  ['loyalty_join_card_view', { source: 'redeem', from: 'reward', step: undefined }],
-  ['loyalty_kyc_click', { source: 'redeem', from: 'reward' }],
   ['loyalty_redeem_click', { source: undefined, from: undefined }],
-  ['loyalty_join_card_view', { source: 'redeem', from: 'redeem' }],
-  ['loyalty_kyc_click', { source: 'redeem', from: 'redeem' }],
 ]);
 await run('home: guest', 'dashboard.html?state=guest', ['.balance .card-link'], [
   ['loyalty_page_view', { join_step: 'signup', loyalty_tier: undefined }],

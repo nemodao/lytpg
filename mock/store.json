@@ -1,0 +1,1062 @@
+{
+  "stateGroups": [
+    {
+      "title": "Sign-in",
+      "states": [
+        "guest"
+      ],
+      "labels": {
+        "guest": "Guest (not signed in)"
+      },
+      "descriptions": {
+        "guest": "Not signed in: the store and its rewards show as usual, balance 0; a reward's page has no balance line, and its Checkout sheet adds Sign up."
+      }
+    },
+    {
+      "title": "Coin Balance",
+      "states": [
+        "empty"
+      ],
+      "descriptions": {
+        "empty": "Balance is 0: the top bar shows 0; on a reward's page the user needs the full price."
+      }
+    },
+    {
+      "title": "Catalog",
+      "states": [
+        "catalog-empty",
+        "no-travel",
+        "few-rewards"
+      ],
+      "descriptions": {
+        "catalog-empty": "The catalog API sent nothing, or failed: no banner sections; a short message that rewards are on their way, on both tabs.",
+        "no-travel": "No reward in Tour & Travel: that section of Home Store is hidden; the Rewards tab's Tour & Travel chip shows only the “more coming soon” card.",
+        "few-rewards": "Only 6 rewards in the catalog: Home Store fills F&B and Travel first, then Popular gets what is left."
+      }
+    }
+  ],
+  "default": {
+    "rewards": [
+      {
+        "id": "101",
+        "name": "iPhone 16 Pro",
+        "points": 95000,
+        "image": "../assets/images/rewards/gift-01.webp",
+        "category": "gadget_electronics",
+        "description": "256GB, Desert Titanium",
+        "badge": "hot",
+        "showOnHome": true
+      },
+      {
+        "id": "102",
+        "name": "AirPods Pro 2",
+        "points": 18000,
+        "image": "../assets/images/rewards/gift-02.webp",
+        "category": "gadget_electronics",
+        "description": "Active noise cancellation, USB-C",
+        "badge": "hot",
+        "showOnHome": true
+      },
+      {
+        "id": "103",
+        "name": "MacBook Air 13-inch",
+        "points": 85000,
+        "image": "../assets/images/rewards/gift-03.webp",
+        "category": "gadget_electronics",
+        "description": "M3 chip, 16GB, 512GB",
+        "badge": null,
+        "showOnHome": true
+      },
+      {
+        "id": "104",
+        "name": "Travel voucher",
+        "points": 60000,
+        "image": "../assets/images/rewards/gift-04.webp",
+        "category": "tour_travel",
+        "description": "Flights and hotels across Asia",
+        "badge": null,
+        "showOnHome": true
+      },
+      {
+        "id": "105",
+        "name": "Galaxy Z Fold",
+        "points": 90000,
+        "image": "../assets/images/rewards/gift-05.webp",
+        "category": "gadget_electronics",
+        "description": "Foldable phone, 512GB",
+        "badge": null,
+        "showOnHome": true
+      },
+      {
+        "id": "106",
+        "name": "Nintendo Switch",
+        "points": 30000,
+        "image": "../assets/images/rewards/gift-06.webp",
+        "category": "gadget_electronics",
+        "description": "OLED model with two Joy-Con",
+        "badge": null,
+        "showOnHome": true
+      },
+      {
+        "id": "107",
+        "name": "PlayStation 5",
+        "points": 45000,
+        "image": "../assets/images/rewards/gift-07.webp",
+        "category": "gadget_electronics",
+        "description": "Slim, with DualSense controller",
+        "badge": "hot",
+        "showOnHome": true
+      },
+      {
+        "id": "108",
+        "name": "Starbucks gift card",
+        "points": 2000,
+        "image": "../assets/images/rewards/gift-08.webp",
+        "category": "fnb_voucher",
+        "description": "Use at any Starbucks in Indonesia",
+        "badge": null,
+        "showOnHome": true
+      },
+      {
+        "id": "109",
+        "name": "Adidas Campus 00s",
+        "points": 8000,
+        "image": "../assets/images/rewards/gift-09.webp",
+        "category": null,
+        "description": "Sneakers, any size",
+        "badge": null,
+        "showOnHome": true
+      },
+      {
+        "id": "110",
+        "name": "Apple Watch Series 10",
+        "points": 40000,
+        "image": "../assets/images/rewards/gift-110.webp",
+        "category": "gadget_electronics",
+        "description": "46mm, GPS",
+        "badge": "new",
+        "showOnHome": false
+      },
+      {
+        "id": "120",
+        "name": "Bali 3D2N getaway",
+        "points": 70000,
+        "image": "../assets/images/rewards/gift-120.webp",
+        "category": "tour_travel",
+        "description": "Villa stay for two, with breakfast",
+        "badge": "new",
+        "showOnHome": false
+      },
+      {
+        "id": "140",
+        "name": "Tokopedia e-Voucher Rp100.000",
+        "points": 2000,
+        "image": "../assets/images/rewards/gift-140.webp",
+        "category": "shopping_voucher",
+        "description": "For any purchase on Tokopedia",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "130",
+        "name": "Kopi Kenangan e-Voucher Rp50.000",
+        "points": 1000,
+        "image": "../assets/images/rewards/gift-130.webp",
+        "category": "fnb_voucher",
+        "description": "Any drink, any store",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "150",
+        "name": "Dyson V15 Detect",
+        "points": 60000,
+        "image": "../assets/images/rewards/gift-150.webp",
+        "category": "home_living",
+        "description": "Cordless vacuum",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "111",
+        "name": "Sony WH-1000XM5",
+        "points": 25000,
+        "image": "../assets/images/rewards/gift-111.webp",
+        "category": "gadget_electronics",
+        "description": "Noise-cancelling headphones",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "121",
+        "name": "Labuan Bajo boat trip",
+        "points": 80000,
+        "image": "../assets/images/rewards/gift-121.webp",
+        "category": "tour_travel",
+        "description": "2 days sailing Komodo",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "141",
+        "name": "Shopee e-Voucher Rp100.000",
+        "points": 2000,
+        "image": "../assets/images/rewards/gift-141.webp",
+        "category": "shopping_voucher",
+        "description": "For any purchase on Shopee",
+        "badge": "new",
+        "showOnHome": false
+      },
+      {
+        "id": "131",
+        "name": "McDonald's e-Voucher Rp100.000",
+        "points": 2000,
+        "image": "../assets/images/rewards/gift-131.webp",
+        "category": "fnb_voucher",
+        "description": "Dine-in, take-away or delivery",
+        "badge": "hot",
+        "showOnHome": false
+      },
+      {
+        "id": "151",
+        "name": "Philips Air Fryer XL",
+        "points": 15000,
+        "image": "../assets/images/rewards/gift-151.webp",
+        "category": "home_living",
+        "description": "6.2 L, digital",
+        "badge": "new",
+        "showOnHome": false
+      },
+      {
+        "id": "112",
+        "name": "GoPro HERO13",
+        "points": 35000,
+        "image": "../assets/images/rewards/gift-112.webp",
+        "category": "gadget_electronics",
+        "description": "5.3K action camera",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "122",
+        "name": "Yogyakarta heritage tour",
+        "points": 25000,
+        "image": "../assets/images/rewards/gift-122.webp",
+        "category": "tour_travel",
+        "description": "Borobudur and Prambanan day tour",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "142",
+        "name": "Zalora e-Voucher Rp200.000",
+        "points": 4000,
+        "image": "../assets/images/rewards/gift-142.webp",
+        "category": "shopping_voucher",
+        "description": "Fashion and beauty",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "132",
+        "name": "KFC e-Voucher Rp100.000",
+        "points": 2000,
+        "image": "../assets/images/rewards/gift-132.webp",
+        "category": "fnb_voucher",
+        "description": "All KFC Indonesia",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "152",
+        "name": "Nespresso Vertuo Pop",
+        "points": 18000,
+        "image": "../assets/images/rewards/gift-152.webp",
+        "category": "home_living",
+        "description": "Coffee machine with 12 capsules",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "113",
+        "name": "JBL Flip 6",
+        "points": 9000,
+        "image": "../assets/images/rewards/gift-113.webp",
+        "category": "gadget_electronics",
+        "description": "Waterproof Bluetooth speaker",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "123",
+        "name": "Bromo sunrise trip",
+        "points": 20000,
+        "image": "../assets/images/rewards/gift-123.webp",
+        "category": "tour_travel",
+        "description": "Jeep tour from Malang",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "143",
+        "name": "Uniqlo e-Voucher Rp300.000",
+        "points": 6000,
+        "image": "../assets/images/rewards/gift-143.webp",
+        "category": "shopping_voucher",
+        "description": "In store and online",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "133",
+        "name": "Pizza Hut e-Voucher Rp150.000",
+        "points": 3000,
+        "image": "../assets/images/rewards/gift-133.webp",
+        "category": "fnb_voucher",
+        "description": "Dine-in and delivery",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "153",
+        "name": "Xiaomi Robot Vacuum S10",
+        "points": 22000,
+        "image": "../assets/images/rewards/gift-153.webp",
+        "category": "home_living",
+        "description": "Vacuum and mop",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "124",
+        "name": "Singapore city break",
+        "points": 65000,
+        "image": "../assets/images/rewards/gift-124.webp",
+        "category": "tour_travel",
+        "description": "3 days, flight and hotel",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "144",
+        "name": "Sephora e-Voucher Rp250.000",
+        "points": 5000,
+        "image": "../assets/images/rewards/gift-144.webp",
+        "category": "shopping_voucher",
+        "description": "Beauty and skincare",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "134",
+        "name": "Chatime e-Voucher Rp50.000",
+        "points": 1000,
+        "image": "../assets/images/rewards/gift-134.webp",
+        "category": "fnb_voucher",
+        "description": "Any drink",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "154",
+        "name": "Samsung 55\" Smart TV",
+        "points": 75000,
+        "image": "../assets/images/rewards/gift-154.webp",
+        "category": "home_living",
+        "description": "4K Crystal UHD",
+        "badge": "hot",
+        "showOnHome": false
+      },
+      {
+        "id": "125",
+        "name": "Tokyo 5D4N",
+        "points": 150000,
+        "image": "../assets/images/rewards/gift-125.webp",
+        "category": "tour_travel",
+        "description": "Flight, hotel and rail pass",
+        "badge": "hot",
+        "showOnHome": false
+      },
+      {
+        "id": "145",
+        "name": "Alfamart e-Voucher Rp50.000",
+        "points": 1000,
+        "image": "../assets/images/rewards/gift-145.webp",
+        "category": "shopping_voucher",
+        "description": "Any Alfamart store",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "135",
+        "name": "J.CO e-Voucher Rp75.000",
+        "points": 1500,
+        "image": "../assets/images/rewards/gift-135.webp",
+        "category": "fnb_voucher",
+        "description": "Donuts and coffee",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "155",
+        "name": "Bed linen set, king",
+        "points": 7000,
+        "image": "../assets/images/rewards/gift-155.webp",
+        "category": "home_living",
+        "description": "Cotton, 4 pieces",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "126",
+        "name": "Hotel voucher, 2 nights",
+        "points": 15000,
+        "image": "../assets/images/rewards/gift-126.webp",
+        "category": "tour_travel",
+        "description": "Any partner hotel in Indonesia",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "146",
+        "name": "Indomaret e-Voucher Rp50.000",
+        "points": 1000,
+        "image": "../assets/images/rewards/gift-146.webp",
+        "category": "shopping_voucher",
+        "description": "Any Indomaret store",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "136",
+        "name": "Sushi Tei e-Voucher Rp200.000",
+        "points": 4000,
+        "image": "../assets/images/rewards/gift-136.webp",
+        "category": "fnb_voucher",
+        "description": "Dine-in only",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "156",
+        "name": "Philips blender",
+        "points": 6000,
+        "image": "../assets/images/rewards/gift-156.webp",
+        "category": "home_living",
+        "description": "2 L, 700 W",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "127",
+        "name": "Flight voucher Rp1.000.000",
+        "points": 12000,
+        "image": "../assets/images/rewards/gift-127.webp",
+        "category": "tour_travel",
+        "description": "Domestic flights",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "147",
+        "name": "MAP e-Voucher Rp500.000",
+        "points": 10000,
+        "image": "../assets/images/rewards/gift-147.webp",
+        "category": "shopping_voucher",
+        "description": "Over 150 MAP brands",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "137",
+        "name": "HokBen e-Voucher Rp100.000",
+        "points": 2000,
+        "image": "../assets/images/rewards/gift-137.webp",
+        "category": "fnb_voucher",
+        "description": "All HokBen stores",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "157",
+        "name": "Cosmos rice cooker",
+        "points": 4000,
+        "image": "../assets/images/rewards/gift-157.webp",
+        "category": "home_living",
+        "description": "1.8 L, digital",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "128",
+        "name": "Lombok surf weekend",
+        "points": 30000,
+        "image": "../assets/images/rewards/gift-128.webp",
+        "category": "tour_travel",
+        "description": "2 nights with surf lessons",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "148",
+        "name": "Erafone e-Voucher Rp1.000.000",
+        "points": 20000,
+        "image": "../assets/images/rewards/gift-148.webp",
+        "category": "shopping_voucher",
+        "description": "Phones and gadgets",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "138",
+        "name": "Burger King e-Voucher Rp100.000",
+        "points": 2000,
+        "image": "../assets/images/rewards/gift-138.webp",
+        "category": "fnb_voucher",
+        "description": "Dine-in and take-away",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "158",
+        "name": "Smart LED lamp",
+        "points": 3500,
+        "image": "../assets/images/rewards/gift-158.webp",
+        "category": "home_living",
+        "description": "Wi-Fi, 16 million colours",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "149",
+        "name": "Gramedia e-Voucher Rp100.000",
+        "points": 2000,
+        "image": "../assets/images/rewards/gift-149.webp",
+        "category": "shopping_voucher",
+        "description": "Books and stationery",
+        "badge": null,
+        "showOnHome": false
+      },
+      {
+        "id": "159",
+        "name": "Indoor plant set",
+        "points": 2500,
+        "image": "../assets/images/rewards/gift-159.webp",
+        "category": "home_living",
+        "description": "Three plants with pots",
+        "badge": null,
+        "showOnHome": false
+      }
+    ]
+  },
+  "states": {
+    "guest": {
+      "common": {
+        "guest": true,
+        "balance": {
+          "available": 0,
+          "expiring": null
+        },
+        "program": {
+          "joinRequirement": "signup"
+        },
+        "accounts": []
+      }
+    },
+    "empty": {
+      "common": {
+        "balance": {
+          "available": 0,
+          "expiring": null
+        }
+      }
+    },
+    "catalog-empty": {
+      "page": {
+        "rewards": []
+      }
+    },
+    "no-travel": {
+      "page": {
+        "rewards": [
+          {
+            "id": "101",
+            "name": "iPhone 16 Pro",
+            "points": 95000,
+            "image": "../assets/images/rewards/gift-01.webp",
+            "category": "gadget_electronics",
+            "description": "256GB, Desert Titanium",
+            "badge": "hot",
+            "showOnHome": true
+          },
+          {
+            "id": "102",
+            "name": "AirPods Pro 2",
+            "points": 18000,
+            "image": "../assets/images/rewards/gift-02.webp",
+            "category": "gadget_electronics",
+            "description": "Active noise cancellation, USB-C",
+            "badge": "hot",
+            "showOnHome": true
+          },
+          {
+            "id": "103",
+            "name": "MacBook Air 13-inch",
+            "points": 85000,
+            "image": "../assets/images/rewards/gift-03.webp",
+            "category": "gadget_electronics",
+            "description": "M3 chip, 16GB, 512GB",
+            "badge": null,
+            "showOnHome": true
+          },
+          {
+            "id": "105",
+            "name": "Galaxy Z Fold",
+            "points": 90000,
+            "image": "../assets/images/rewards/gift-05.webp",
+            "category": "gadget_electronics",
+            "description": "Foldable phone, 512GB",
+            "badge": null,
+            "showOnHome": true
+          },
+          {
+            "id": "106",
+            "name": "Nintendo Switch",
+            "points": 30000,
+            "image": "../assets/images/rewards/gift-06.webp",
+            "category": "gadget_electronics",
+            "description": "OLED model with two Joy-Con",
+            "badge": null,
+            "showOnHome": true
+          },
+          {
+            "id": "107",
+            "name": "PlayStation 5",
+            "points": 45000,
+            "image": "../assets/images/rewards/gift-07.webp",
+            "category": "gadget_electronics",
+            "description": "Slim, with DualSense controller",
+            "badge": "hot",
+            "showOnHome": true
+          },
+          {
+            "id": "108",
+            "name": "Starbucks gift card",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-08.webp",
+            "category": "fnb_voucher",
+            "description": "Use at any Starbucks in Indonesia",
+            "badge": null,
+            "showOnHome": true
+          },
+          {
+            "id": "109",
+            "name": "Adidas Campus 00s",
+            "points": 8000,
+            "image": "../assets/images/rewards/gift-09.webp",
+            "category": null,
+            "description": "Sneakers, any size",
+            "badge": null,
+            "showOnHome": true
+          },
+          {
+            "id": "110",
+            "name": "Apple Watch Series 10",
+            "points": 40000,
+            "image": "../assets/images/rewards/gift-110.webp",
+            "category": "gadget_electronics",
+            "description": "46mm, GPS",
+            "badge": "new",
+            "showOnHome": false
+          },
+          {
+            "id": "140",
+            "name": "Tokopedia e-Voucher Rp100.000",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-140.webp",
+            "category": "shopping_voucher",
+            "description": "For any purchase on Tokopedia",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "130",
+            "name": "Kopi Kenangan e-Voucher Rp50.000",
+            "points": 1000,
+            "image": "../assets/images/rewards/gift-130.webp",
+            "category": "fnb_voucher",
+            "description": "Any drink, any store",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "150",
+            "name": "Dyson V15 Detect",
+            "points": 60000,
+            "image": "../assets/images/rewards/gift-150.webp",
+            "category": "home_living",
+            "description": "Cordless vacuum",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "111",
+            "name": "Sony WH-1000XM5",
+            "points": 25000,
+            "image": "../assets/images/rewards/gift-111.webp",
+            "category": "gadget_electronics",
+            "description": "Noise-cancelling headphones",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "141",
+            "name": "Shopee e-Voucher Rp100.000",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-141.webp",
+            "category": "shopping_voucher",
+            "description": "For any purchase on Shopee",
+            "badge": "new",
+            "showOnHome": false
+          },
+          {
+            "id": "131",
+            "name": "McDonald's e-Voucher Rp100.000",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-131.webp",
+            "category": "fnb_voucher",
+            "description": "Dine-in, take-away or delivery",
+            "badge": "hot",
+            "showOnHome": false
+          },
+          {
+            "id": "151",
+            "name": "Philips Air Fryer XL",
+            "points": 15000,
+            "image": "../assets/images/rewards/gift-151.webp",
+            "category": "home_living",
+            "description": "6.2 L, digital",
+            "badge": "new",
+            "showOnHome": false
+          },
+          {
+            "id": "112",
+            "name": "GoPro HERO13",
+            "points": 35000,
+            "image": "../assets/images/rewards/gift-112.webp",
+            "category": "gadget_electronics",
+            "description": "5.3K action camera",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "142",
+            "name": "Zalora e-Voucher Rp200.000",
+            "points": 4000,
+            "image": "../assets/images/rewards/gift-142.webp",
+            "category": "shopping_voucher",
+            "description": "Fashion and beauty",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "132",
+            "name": "KFC e-Voucher Rp100.000",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-132.webp",
+            "category": "fnb_voucher",
+            "description": "All KFC Indonesia",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "152",
+            "name": "Nespresso Vertuo Pop",
+            "points": 18000,
+            "image": "../assets/images/rewards/gift-152.webp",
+            "category": "home_living",
+            "description": "Coffee machine with 12 capsules",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "113",
+            "name": "JBL Flip 6",
+            "points": 9000,
+            "image": "../assets/images/rewards/gift-113.webp",
+            "category": "gadget_electronics",
+            "description": "Waterproof Bluetooth speaker",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "143",
+            "name": "Uniqlo e-Voucher Rp300.000",
+            "points": 6000,
+            "image": "../assets/images/rewards/gift-143.webp",
+            "category": "shopping_voucher",
+            "description": "In store and online",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "133",
+            "name": "Pizza Hut e-Voucher Rp150.000",
+            "points": 3000,
+            "image": "../assets/images/rewards/gift-133.webp",
+            "category": "fnb_voucher",
+            "description": "Dine-in and delivery",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "153",
+            "name": "Xiaomi Robot Vacuum S10",
+            "points": 22000,
+            "image": "../assets/images/rewards/gift-153.webp",
+            "category": "home_living",
+            "description": "Vacuum and mop",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "144",
+            "name": "Sephora e-Voucher Rp250.000",
+            "points": 5000,
+            "image": "../assets/images/rewards/gift-144.webp",
+            "category": "shopping_voucher",
+            "description": "Beauty and skincare",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "134",
+            "name": "Chatime e-Voucher Rp50.000",
+            "points": 1000,
+            "image": "../assets/images/rewards/gift-134.webp",
+            "category": "fnb_voucher",
+            "description": "Any drink",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "154",
+            "name": "Samsung 55\" Smart TV",
+            "points": 75000,
+            "image": "../assets/images/rewards/gift-154.webp",
+            "category": "home_living",
+            "description": "4K Crystal UHD",
+            "badge": "hot",
+            "showOnHome": false
+          },
+          {
+            "id": "145",
+            "name": "Alfamart e-Voucher Rp50.000",
+            "points": 1000,
+            "image": "../assets/images/rewards/gift-145.webp",
+            "category": "shopping_voucher",
+            "description": "Any Alfamart store",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "135",
+            "name": "J.CO e-Voucher Rp75.000",
+            "points": 1500,
+            "image": "../assets/images/rewards/gift-135.webp",
+            "category": "fnb_voucher",
+            "description": "Donuts and coffee",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "155",
+            "name": "Bed linen set, king",
+            "points": 7000,
+            "image": "../assets/images/rewards/gift-155.webp",
+            "category": "home_living",
+            "description": "Cotton, 4 pieces",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "146",
+            "name": "Indomaret e-Voucher Rp50.000",
+            "points": 1000,
+            "image": "../assets/images/rewards/gift-146.webp",
+            "category": "shopping_voucher",
+            "description": "Any Indomaret store",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "136",
+            "name": "Sushi Tei e-Voucher Rp200.000",
+            "points": 4000,
+            "image": "../assets/images/rewards/gift-136.webp",
+            "category": "fnb_voucher",
+            "description": "Dine-in only",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "156",
+            "name": "Philips blender",
+            "points": 6000,
+            "image": "../assets/images/rewards/gift-156.webp",
+            "category": "home_living",
+            "description": "2 L, 700 W",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "147",
+            "name": "MAP e-Voucher Rp500.000",
+            "points": 10000,
+            "image": "../assets/images/rewards/gift-147.webp",
+            "category": "shopping_voucher",
+            "description": "Over 150 MAP brands",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "137",
+            "name": "HokBen e-Voucher Rp100.000",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-137.webp",
+            "category": "fnb_voucher",
+            "description": "All HokBen stores",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "157",
+            "name": "Cosmos rice cooker",
+            "points": 4000,
+            "image": "../assets/images/rewards/gift-157.webp",
+            "category": "home_living",
+            "description": "1.8 L, digital",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "148",
+            "name": "Erafone e-Voucher Rp1.000.000",
+            "points": 20000,
+            "image": "../assets/images/rewards/gift-148.webp",
+            "category": "shopping_voucher",
+            "description": "Phones and gadgets",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "138",
+            "name": "Burger King e-Voucher Rp100.000",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-138.webp",
+            "category": "fnb_voucher",
+            "description": "Dine-in and take-away",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "158",
+            "name": "Smart LED lamp",
+            "points": 3500,
+            "image": "../assets/images/rewards/gift-158.webp",
+            "category": "home_living",
+            "description": "Wi-Fi, 16 million colours",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "149",
+            "name": "Gramedia e-Voucher Rp100.000",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-149.webp",
+            "category": "shopping_voucher",
+            "description": "Books and stationery",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "159",
+            "name": "Indoor plant set",
+            "points": 2500,
+            "image": "../assets/images/rewards/gift-159.webp",
+            "category": "home_living",
+            "description": "Three plants with pots",
+            "badge": null,
+            "showOnHome": false
+          }
+        ]
+      }
+    },
+    "few-rewards": {
+      "page": {
+        "rewards": [
+          {
+            "id": "101",
+            "name": "iPhone 16 Pro",
+            "points": 95000,
+            "image": "../assets/images/rewards/gift-01.webp",
+            "category": "gadget_electronics",
+            "description": "256GB, Desert Titanium",
+            "badge": "hot",
+            "showOnHome": true
+          },
+          {
+            "id": "104",
+            "name": "Travel voucher",
+            "points": 60000,
+            "image": "../assets/images/rewards/gift-04.webp",
+            "category": "tour_travel",
+            "description": "Flights and hotels across Asia",
+            "badge": null,
+            "showOnHome": true
+          },
+          {
+            "id": "108",
+            "name": "Starbucks gift card",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-08.webp",
+            "category": "fnb_voucher",
+            "description": "Use at any Starbucks in Indonesia",
+            "badge": null,
+            "showOnHome": true
+          },
+          {
+            "id": "120",
+            "name": "Bali 3D2N getaway",
+            "points": 70000,
+            "image": "../assets/images/rewards/gift-120.webp",
+            "category": "tour_travel",
+            "description": "Villa stay for two, with breakfast",
+            "badge": "new",
+            "showOnHome": false
+          },
+          {
+            "id": "140",
+            "name": "Tokopedia e-Voucher Rp100.000",
+            "points": 2000,
+            "image": "../assets/images/rewards/gift-140.webp",
+            "category": "shopping_voucher",
+            "description": "For any purchase on Tokopedia",
+            "badge": null,
+            "showOnHome": false
+          },
+          {
+            "id": "130",
+            "name": "Kopi Kenangan e-Voucher Rp50.000",
+            "points": 1000,
+            "image": "../assets/images/rewards/gift-130.webp",
+            "category": "fnb_voucher",
+            "description": "Any drink, any store",
+            "badge": null,
+            "showOnHome": false
+          }
+        ]
+      }
+    }
+  }
+}

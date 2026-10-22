@@ -7,7 +7,8 @@
 //
 //   fetchOrder(ref)    -> one reward order, for Redemption history (spec §52)
 //
-// `page` is 'dashboard' | 'trading-task' | 'point-balance' | 'redemptions'. The shapes are documented field by field in
+// `page` is 'dashboard' | 'trading-task' | 'point-balance' | 'redemptions' | 'store' (the Reward Store and its reward
+// page, spec §59). The shapes are documented field by field in
 // DATA.md.
 //
 // Two sources:
@@ -146,6 +147,7 @@ function rewardsList() {
 async function pageFromApi(page) {
   if (GUEST && page === 'point-balance') return toPointBalancePage(null, null, null, null); // nothing to ask for
   if (GUEST && page === 'redemptions') return { orders: [], total: 0 }; // guests never reach it
+  if (page === 'store') return { rewards: await rewardsList() }; // the Reward Store and its reward page (spec §59)
   if (page === 'redemptions') {
     const first = toOrdersPage(await getOrders(`loyalty/orders?page=1&pageSize=${ORDERS_PAGE_SIZE}`));
     return { orders: first.orders, total: first.total };

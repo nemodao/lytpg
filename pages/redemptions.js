@@ -4,7 +4,7 @@
 import { load } from '../shared/app.js';
 import { fetchMoreOrders, fetchOrder } from '../shared/data-source.js';
 import { initTracking, trackView } from '../shared/tracking.js';
-import { appHeader, badge, coin, loadMoreRow, mountJoinSheet, notice, redeemAttrs, showStatus } from '../shared/components.js';
+import { appHeader, badge, coin, loadMoreRow, mountJoinSheet, mountStoreLinks, notice, redeemAttrs, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('redemptions');
 // `view` goes with every event of this page: 'list' (orders to show), 'empty' (none yet) or 'detail' (one order).
@@ -214,4 +214,5 @@ if (!showStatus(ui, common, app, header)) {
     else render();
   } else render();
   mountJoinSheet(ui, common, app);
+  mountStoreLinks(ui, app);
 }

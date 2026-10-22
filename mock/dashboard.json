@@ -95,55 +95,91 @@
         "id": "101",
         "name": "iPhone 16 Pro",
         "points": 95000,
-        "image": "../assets/images/rewards/gift-01.webp"
+        "image": "../assets/images/rewards/gift-01.webp",
+        "category": "gadget_electronics",
+        "description": "256GB, Desert Titanium",
+        "badge": "hot",
+        "showOnHome": true
       },
       {
         "id": "102",
         "name": "AirPods Pro 2",
         "points": 18000,
-        "image": "../assets/images/rewards/gift-02.webp"
+        "image": "../assets/images/rewards/gift-02.webp",
+        "category": "gadget_electronics",
+        "description": "Active noise cancellation, USB-C",
+        "badge": "hot",
+        "showOnHome": true
       },
       {
         "id": "103",
         "name": "MacBook Air 13-inch",
         "points": 85000,
-        "image": "../assets/images/rewards/gift-03.webp"
+        "image": "../assets/images/rewards/gift-03.webp",
+        "category": "gadget_electronics",
+        "description": "M3 chip, 16GB, 512GB",
+        "badge": null,
+        "showOnHome": true
       },
       {
         "id": "104",
         "name": "Travel voucher",
         "points": 60000,
-        "image": "../assets/images/rewards/gift-04.webp"
+        "image": "../assets/images/rewards/gift-04.webp",
+        "category": "tour_travel",
+        "description": "Flights and hotels across Asia",
+        "badge": null,
+        "showOnHome": true
       },
       {
         "id": "105",
         "name": "Galaxy Z Fold",
         "points": 90000,
-        "image": "../assets/images/rewards/gift-05.webp"
+        "image": "../assets/images/rewards/gift-05.webp",
+        "category": "gadget_electronics",
+        "description": "Foldable phone, 512GB",
+        "badge": null,
+        "showOnHome": true
       },
       {
         "id": "106",
         "name": "Nintendo Switch",
         "points": 30000,
-        "image": "../assets/images/rewards/gift-06.webp"
+        "image": "../assets/images/rewards/gift-06.webp",
+        "category": "gadget_electronics",
+        "description": "OLED model with two Joy-Con",
+        "badge": null,
+        "showOnHome": true
       },
       {
         "id": "107",
         "name": "PlayStation 5",
         "points": 45000,
-        "image": "../assets/images/rewards/gift-07.webp"
+        "image": "../assets/images/rewards/gift-07.webp",
+        "category": "gadget_electronics",
+        "description": "Slim, with DualSense controller",
+        "badge": "hot",
+        "showOnHome": true
       },
       {
         "id": "108",
         "name": "Starbucks gift card",
         "points": 2000,
-        "image": "../assets/images/rewards/gift-08.webp"
+        "image": "../assets/images/rewards/gift-08.webp",
+        "category": "fnb_voucher",
+        "description": "Use at any Starbucks in Indonesia",
+        "badge": null,
+        "showOnHome": true
       },
       {
         "id": "109",
         "name": "Adidas Campus 00s",
         "points": 8000,
-        "image": "../assets/images/rewards/gift-09.webp"
+        "image": "../assets/images/rewards/gift-09.webp",
+        "category": null,
+        "description": "Sneakers, any size",
+        "badge": null,
+        "showOnHome": true
       }
     ],
     "checkIn": {

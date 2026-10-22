@@ -1,0 +1,40 @@
+/* Reward Store · one reward (spec §59). The top bar and the badge come from store.css. */
+
+/* Room under the content for the Checkout bar. */
+.app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--size-control-lg) + var(--spacing-40)); }
+
+.reward-art {
+  position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-card);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--color-purple-main) 16%, var(--card-surface)), color-mix(in srgb, var(--color-purple-main) 6%, var(--card-surface)));
+}
+.reward-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.reward-art--trip { aspect-ratio: 4 / 3; }
+.reward-art--trip img { object-fit: cover; }
+.reward-art .store-badge { top: var(--spacing-12); left: var(--spacing-12); }
+
+.reward-info { display: flex; flex-direction: column; gap: var(--spacing-6); }
+.reward-info__category { font: var(--font-small-semibold); color: var(--ui-text-brand); }
+.reward-info__name { font: var(--font-title-m); }
+.reward-info__price { display: flex; align-items: center; gap: var(--spacing-6); font: var(--font-title-m); color: var(--ui-text-brand); }
+
+/* The balance against the price: green when it is enough, otherwise how many more, with a bar. */
+.reward-balance { display: flex; flex-direction: column; gap: var(--spacing-8); margin-top: var(--spacing-6); padding: var(--spacing-12); border-radius: var(--radius-card-inner); background: var(--ui-field-surface); font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.reward-balance strong { color: var(--ui-text-primary); }
+.reward-balance--enough { flex-direction: row; align-items: center; background: var(--ui-badge-green); color: var(--ui-text-green); }
+.reward-balance__bar { display: block; height: var(--spacing-6); border-radius: var(--radius-pill); background: var(--ui-surface-soft); overflow: hidden; }
+.reward-balance__bar span { display: block; height: 100%; border-radius: inherit; background: var(--accent-surface-brand); }
+
+.reward-about { gap: var(--spacing-6); }
+.reward-missing { gap: var(--spacing-8); }
+
+/* Checkout, always at the bottom of the screen. */
+.reward-cta {
+  position: fixed; z-index: 20; bottom: 0; left: calc(50% - var(--app-width) / 2); width: var(--app-width);
+  padding: var(--spacing-12) var(--spacing-gutter) calc(env(safe-area-inset-bottom, 0px) + var(--spacing-12));
+  background: linear-gradient(transparent, var(--ui-surface-weak) 35%);
+}
+
+/* "Checkout is coming soon" sheet. */
+.reward-soon { align-items: center; text-align: center; }
+.reward-soon__icon { display: grid; place-items: center; width: var(--size-control-lg); height: var(--size-control-lg); border-radius: var(--radius-pill); background: var(--ui-badge-blue); color: var(--ui-text-brand); }
+.reward-soon .stack { align-self: stretch; margin-top: var(--spacing-8); }

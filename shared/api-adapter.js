@@ -87,7 +87,7 @@ const toToday = (task) => {
 // The Home page's data (spec §49). Nothing on Home comes from tradingTask/get any more. `rewards` comes from HSB's
 // catalog (toRewards) and `checkIn` has its own API (off for now): pass what the page should show.
 export function toDashboardPage(task, { rewards, checkIn }) {
-  return { rewards, checkIn };
+  return { rewards: rewards.filter((reward) => reward.showOnHome), checkIn };
 }
 
 // tradingTask/get + tradingTask/getHistory -> the Earn page's data.
@@ -181,16 +181,24 @@ export const toOrder = (order) => ({
   recipient: order.recipient ?? null,
 });
 
-// GET /loyalty/catalog?clientId=… (signed in) or GET /loyalty/catalog-guest (guests) -> page.rewards (spec §49).
-// The backend sends only the rewards on show, in display order, for the user's client group (guests: the default
-// group). `id` is HSB's own key for the card (point_featured_gift.id): it does not open the reward in Tada (see the
-// `reward` intent). Images are hosted by HSB: square, transparent background, product centred, at least 460px.
+// GET /loyalty/catalog?clientId=… (signed in) or GET /loyalty/catalog-guest (guests) -> the rewards of Home (spec §49)
+// and of the Reward Store (spec §59). The backend sends every reward on show for the user's client group (guests: the
+// default group; about 50), in display order. `id` is HSB's own key (point_featured_gift.id). Images are hosted by HSB:
+// square, transparent background, product centred, at least 460px.
+// Added for the store (requested from the backend 22 Oct 2026; field names to be confirmed): `category` (one of
+// STORE_CATEGORIES, anything else is kept and shows under "All" only), `description` (one line), `badge` ('hot' | 'new')
+// and `showOnHome` (Home's grid takes only these).
+export const STORE_CATEGORIES = ['gadget_electronics', 'tour_travel', 'shopping_voucher', 'fnb_voucher', 'home_living'];
 export const toRewards = (catalog) =>
   (catalog?.rewards ?? []).map((reward) => ({
     id: String(reward.id),
     name: reward.name ?? '',
     points: reward.points ?? 0,
     image: reward.image ?? '',
+    category: reward.category ?? null,
+    description: reward.description ?? null,
+    badge: ['hot', 'new'].includes(reward.badge) ? reward.badge : null,
+    showOnHome: reward.showOnHome === true,
   }));
 
 // GET /loyalty/activity (no token, no clientId; x-auth-key only) -> common.activity (spec §50). One list for everyone,

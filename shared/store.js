@@ -1,0 +1,30 @@
+// Pieces shared by the Reward Store (pages/store.js) and its reward page (pages/reward.js), spec §59.
+// The store is browse-only for now: its rewards come from the same catalog API as Home's grid (toRewards), and
+// Checkout only says that checkout is coming soon.
+import { STORE_CATEGORIES } from './api-adapter.js';
+import { coin } from './components.js';
+
+// Where "back" goes. Every link into the store carries `back` (the page the user came from, with its query); the
+// store passes its own address on to the reward page, so Back always returns one step.
+export const backParam = () => new URLSearchParams(location.search).get('back');
+export const withParams = (href, params) => {
+  const query = Object.entries(params).filter(([, value]) => value != null && value !== '')
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  return query ? `${href}${href.includes('?') ? '&' : '?'}${query}` : href;
+};
+export const rewardHref = (ui, id, back) => withParams(ui.href('reward.html'), { id, back });
+
+// Top of both tabs (and of the reward page): the store's icon, "Reward Redemption" and the user's balance, small.
+// The icon is a placeholder until the 3D icon is supplied.
+export const storeHead = (ui, common, { back = '' } = {}) => `
+  <header class="store-head">
+    ${back ? `<a class="header-action" href="${ui.esc(back)}" aria-label="${ui.t('orders.back')}" data-back>${ui.icon('back')}</a>` : `<span class="store-head__icon" aria-hidden="true">${ui.icon('gift')}</span>`}
+    <h1 class="store-head__title">${ui.t('store.title')}</h1>
+    <span class="store-head__balance num" aria-label="${ui.t('store.balance', { points: ui.num(common.balance.available) })}">${coin('coin--xs')}${ui.num(common.balance.available)}</span>
+  </header>`;
+
+// "Hot" / "New" on a reward's image.
+export const rewardBadge = (ui, item) =>
+  (item.badge ? `<span class="store-badge store-badge--${item.badge}">${ui.t(`store.badge.${item.badge}`)}</span>` : '');
+
+export const categoryName = (ui, key) => (STORE_CATEGORIES.includes(key) ? ui.t(`store.cat.${key}`) : '');

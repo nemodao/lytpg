@@ -98,13 +98,29 @@ export function joinPanel(ui, common, { flat = false, nudged = false, source = '
     ${guest ? `<button class="text-btn join__login" type="button" data-intent="login" data-track="loyalty_login_click" ${where}>${ui.md('join.login')}</button>` : ''}`;
 }
 
-// Redeem buttons (spec §49): the balance block's Redeem and every reward card. A user who still needs KYC or a first
-// deposit cannot redeem yet: the button opens the "How to start" sheet (mountJoinSheet) instead of going to Tada.
-// Everyone else gets the Tada intent (`redeem` = the store, `reward` = one reward).
-// `from` names the button (redeem | balance | reward | explore | history), sent with the sheet's loyalty_join_card_view
-// (and loyalty_login_prompt_view for guests) and with the buttons inside it.
+// Redeem buttons. Since spec §59 (Plan B, the Reward Store) Redeem and `Explore all rewards` open the store
+// (store.html) and a reward card opens that reward (reward.html, the card's data-reward), for everyone: guests and
+// users who still need KYC or a first deposit can browse too. mountStoreLinks does the navigation.
+// What still opens the "How to start" sheet (mountJoinSheet): a guest's balance and `Redemption history` (`from` =
+// balance | history, sent with the sheet's loyalty_join_card_view and loyalty_login_prompt_view).
 export const redeemAttrs = (common, intent, from = intent) =>
-  joinIntent(common) ? `data-action="join-sheet" data-from="${from}" aria-haspopup="dialog"` : `data-intent="${intent}"`;
+  (['balance', 'history'].includes(from) && joinIntent(common)
+    ? `data-action="join-sheet" data-from="${from}" aria-haspopup="dialog"`
+    : `data-action="store" data-store="${intent}"`);
+
+// Opens the store, or a reward's page, from a Loyalty page. `back` is this page with its query, so the store's Back
+// returns here. A click whose default was prevented (e.g. by a test) does not navigate.
+export function mountStoreLinks(ui, app) {
+  app.addEventListener('click', (event) => {
+    const target = event.target.closest('[data-action="store"]');
+    if (!target || event.defaultPrevented) return;
+    const back = location.pathname.split('/').pop() + location.search;
+    const reward = target.dataset.store === 'reward' ? target.dataset.reward : null;
+    const query = `${reward ? `id=${encodeURIComponent(reward)}&` : ''}back=${encodeURIComponent(back)}`;
+    const href = ui.href(reward ? 'reward.html' : 'store.html');
+    location.href = `${href}${href.includes('?') ? '&' : '?'}${query}`;
+  });
+}
 
 // The sheet Redeem opens for those users: a title, one line on why, then "How to start" as on Earn (steps, rate line,
 // the button for the current step with its tapping finger). The scrim, the close button and Esc close it.

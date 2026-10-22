@@ -64,6 +64,10 @@ FIELDS = {
         'rewards[].name': ('Reward name as HSB sends it (may include a denomination, e.g. "Rp50.000"), two lines at most.', ''),
         'rewards[].points': ('Price in coins on the card.', ''),
         'rewards[].image': ('HTTPS link to the reward image, hosted by HSB: square, transparent background, product centred, at least 460px; shown whole.', ''),
+        'rewards[].category': ('Reward Store category (spec §59), from the catalog API: gadget_electronics, tour_travel, shopping_voucher, fnb_voucher or home_living. Any other value, or null: the reward shows only under "All" in the store.', 'string or null'),
+        'rewards[].description': ('One line about the reward (point_featured_gift.gift_description), on its store page under "About this reward"; no section when null.', 'string or null'),
+        'rewards[].badge': ('"Hot" or "New" on the reward\'s picture in the store; `hot` rewards come first in Popular Rewards.', '"hot" | "new" | null'),
+        'rewards[].showOnHome': ('True for the rewards Home\'s grid shows (point_featured_gift.show_on_dashboard). The store shows every reward.', ''),
         'checkIn.enabled': ('Shows the daily check-in card (future feature, off by default).', ''),
         'checkIn.rewards[]': ('Coins for each of the seven check-in days, in order.', ''),
         'checkIn.checkedDays': ('How many days in a row the user has checked in.', ''),
@@ -100,6 +104,16 @@ FIELDS = {
         'empty.available': ('PREVIEW ONLY. Empties the Available tab.', 'optional'),
         'empty.expired': ('PREVIEW ONLY. Empties the Expired tab.', 'optional'),
         'empty.history': ('PREVIEW ONLY. Empties the History tab.', 'optional'),
+    },
+    'store': {
+        'rewards[].id': ('As dashboard rewards[].id. reward.html?id= picks one.', ''),
+        'rewards[].name': ('As dashboard rewards[].name.', ''),
+        'rewards[].points': ('Price in coins; on a reward\'s page it is set against the user\'s balance.', ''),
+        'rewards[].image': ('As dashboard rewards[].image. Tour & Travel rewards are shown cropped to a wide frame, so their picture should fill the square.', ''),
+        'rewards[].category': ('As dashboard rewards[].category: places the reward in the store\'s sections and category tabs.', 'string or null'),
+        'rewards[].description': ('As dashboard rewards[].description.', 'string or null'),
+        'rewards[].badge': ('As dashboard rewards[].badge.', '"hot" | "new" | null'),
+        'rewards[].showOnHome': ('As dashboard rewards[].showOnHome (not used by the store).', ''),
     },
     'redemptions': {
         'total': ('Number of orders the user has (the `total` of GET /loyalty/orders). While the list holds fewer, it loads the next page on scroll (page, pageSize 20).', ''),
@@ -143,6 +157,7 @@ SOURCES = [
     ('trading-task', 'mock/trading-task.json', 'default', 'Earn — `fetchPage(\'trading-task\')`'),
     ('point-balance', 'mock/point-balance.json', 'default', 'Coins — `fetchPage(\'point-balance\')`'),
     ('redemptions', 'mock/redemptions.json', 'default', 'Redemption history — `fetchPage(\'redemptions\')` (list) and `fetchOrder(ref)` (one order, shape of `details[]`)'),
+    ('store', 'mock/store.json', 'default', 'Reward Store and its reward page — `fetchPage(\'store\')`: the whole catalog (spec §59)'),
 ]
 TYPES = {'str': 'string', 'int': 'number', 'float': 'number', 'bool': 'boolean', 'NoneType': 'null', 'list': 'array', 'dict': 'object'}
 

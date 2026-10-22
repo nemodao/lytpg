@@ -68,6 +68,10 @@ Example file: `mock/dashboard.json` (`default`)
 | `rewards[].name` | string | `"iPhone 16 Pro"` | Reward name as HSB sends it (may include a denomination, e.g. "Rp50.000"), two lines at most. |
 | `rewards[].points` | number | `95000` | Price in coins on the card. |
 | `rewards[].image` | string | `"../assets/images/rewards/gift-01.webp"` | HTTPS link to the reward image, hosted by HSB: square, transparent background, product centred, at least 460px; shown whole. |
+| `rewards[].category` | string or null | `"gadget_electronics"` | Reward Store category (spec §59), from the catalog API: gadget_electronics, tour_travel, shopping_voucher, fnb_voucher or home_living. Any other value, or null: the reward shows only under "All" in the store. |
+| `rewards[].description` | string or null | `"256GB, Desert Titanium"` | One line about the reward (point_featured_gift.gift_description), on its store page under "About this reward"; no section when null. |
+| `rewards[].badge` | "hot" | "new" | null | `"hot"` | "Hot" or "New" on the reward's picture in the store; `hot` rewards come first in Popular Rewards. |
+| `rewards[].showOnHome` | boolean | `true` | True for the rewards Home's grid shows (point_featured_gift.show_on_dashboard). The store shows every reward. |
 | `checkIn.enabled` | boolean | `false` | Shows the daily check-in card (future feature, off by default). |
 | `checkIn.rewards[]` | number | `[10, 10, 20, 20, 30, 50, 100]` | Coins for each of the seven check-in days, in order. |
 | `checkIn.checkedDays` | number | `3` | How many days in a row the user has checked in. |
@@ -154,3 +158,18 @@ Example file: `mock/redemptions.json` (`default`)
 | `details[].recipient.name` | string | `"Budi Santoso"` | Physical goods: "Delivery to". |
 | `details[].recipient.address` | string | `"Jl. Sudirman No. 21, Kebayoran Baru, Jakar…` | Address. |
 | `details[].recipient.postalCode` | string | `"12190"` | Postal code. |
+
+## Reward Store and its reward page — `fetchPage('store')`: the whole catalog (spec §59)
+
+Example file: `mock/store.json` (`default`)
+
+| Field | Type | Example | Meaning |
+|---|---|---|---|
+| `rewards[].id` | string | `"101"` | As dashboard rewards[].id. reward.html?id= picks one. |
+| `rewards[].name` | string | `"iPhone 16 Pro"` | As dashboard rewards[].name. |
+| `rewards[].points` | number | `95000` | Price in coins; on a reward's page it is set against the user's balance. |
+| `rewards[].image` | string | `"../assets/images/rewards/gift-01.webp"` | As dashboard rewards[].image. Tour & Travel rewards are shown cropped to a wide frame, so their picture should fill the square. |
+| `rewards[].category` | string or null | `"gadget_electronics"` | As dashboard rewards[].category: places the reward in the store's sections and category tabs. |
+| `rewards[].description` | string or null | `"256GB, Desert Titanium"` | As dashboard rewards[].description. |
+| `rewards[].badge` | "hot" | "new" | null | `"hot"` | As dashboard rewards[].badge. |
+| `rewards[].showOnHome` | boolean | `true` | As dashboard rewards[].showOnHome (not used by the store). |

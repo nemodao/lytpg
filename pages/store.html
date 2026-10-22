@@ -1,0 +1,31 @@
+<!doctype html>
+<!--
+  Loyalty · Reward Store (spec §59): browse-only store, opened from Loyalty's Redeem buttons
+  Tabs: ?tab=home (default) | ?tab=rewards, with ?cat=<category key> | all | more on the Rewards tab
+  Back to Loyalty: ?back=<page the user came from>, e.g. ?back=dashboard.html
+  States (combine with commas):
+    Catalog: catalog-empty, no-travel, few-rewards
+  Shared states (guest, empty, needs-kyc, needs-deposit, expiring, activity-empty) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Loyalty · Reward Store</title>
+  <script src="../shared/theme.js"></script>
+  <link rel="stylesheet" href="../tokens/tokens.css">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="../shared/components.css">
+  <link rel="stylesheet" href="store.css">
+</head>
+<body data-page="store">
+  <main class="app" id="app"></main>
+  <script type="module" src="store.js"></script>
+  <!-- DEMO ONLY: start. Review aids, not part of the product. Strip this block (and the demo/ folder) before handoff:
+       the state switcher, the "Internal Explanation" messages on buttons and the analytics event list. -->
+  <script type="module" src="../demo/preview.js"></script>
+  <script type="module" src="../demo/intents.js"></script>
+  <script type="module" src="../demo/tracking-log.js"></script>
+  <!-- DEMO ONLY: end -->
+</body>
+</html>

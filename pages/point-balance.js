@@ -4,7 +4,7 @@ import { mountNav } from '../shared/nav.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { mountTour } from '../shared/tour.js';
 import { initTracking, trackView } from '../shared/tracking.js';
-import { appHeader, badge, balanceBlock, coin, loadMoreRow, mountJoinSheet, notice, showStatus } from '../shared/components.js';
+import { appHeader, badge, balanceBlock, coin, loadMoreRow, mountJoinSheet, mountStoreLinks, notice, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('point-balance');
 // Preview states can empty one tab (`page.empty.available|expired|history`) without touching the others.
@@ -218,5 +218,6 @@ if (showStatus(ui, common, app, appHeader(ui, { title: ui.t('pb.title') }))) {
   render();
   mountNav(ui, common, 'points');
   mountJoinSheet(ui, common, app);
+  mountStoreLinks(ui, app);
   mountTour(ui, common, 'point-balance');
 }

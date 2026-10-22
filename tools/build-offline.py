@@ -16,7 +16,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'dist' / 'hsb-loyalty-review'
-PAGES = ['dashboard', 'trading-task', 'point-balance', 'redemptions']
+PAGES = ['dashboard', 'trading-task', 'point-balance', 'redemptions', 'store', 'reward']
+# A page that uses another page's data and stylesheet too (the reward page reads the store's catalog, spec §59).
+MOCK_OF = {'reward': 'store'}
+EXTRA_CSS = {'reward': ['pages/store.css']}
 # Shared modules in dependency order, with the variable each one is bound to in the bundle.
 MODULES = {
     '../shared/tiers.js': '__tiers',
@@ -25,6 +28,7 @@ MODULES = {
     '../shared/data-source.js': '__dataSource',
     '../shared/app.js': '__app',
     '../shared/components.js': '__components',
+    '../shared/store.js': '__store',
     '../shared/date-filter.js': '__dateFilter',
     '../shared/nav.js': '__nav',
     '../shared/activity-feed.js': '__activityFeed',
@@ -49,7 +53,7 @@ def css_bundle(page):
     base = read('shared/base.css')
     # Fonts must be inline: browsers refuse font files from file:// pages.
     base = re.sub(r'url\("\.\./(assets/fonts/[^"]+\.woff2)"\)', lambda m: f'url("{data_uri(m.group(1), "font/woff2")}")', base)
-    parts = [read('tokens/tokens.css'), base, read('shared/components.css'), read(f'pages/{page}.css')]
+    parts = [read('tokens/tokens.css'), base, read('shared/components.css'), *(read(f) for f in EXTRA_CSS.get(page, [])), read(f'pages/{page}.css')]
     return assets_to_local('\n'.join(parts))
 
 
@@ -81,7 +85,7 @@ def script_bundle(page):
 
 
 def data_bundle(page):
-    files = ['mock/common.json', f'mock/{page}.json', 'copy/en.json', 'demo/intents.en.json']
+    files = ['mock/common.json', f'mock/{MOCK_OF.get(page, page)}.json', 'copy/en.json', 'demo/intents.en.json']
     # ?source=api also works offline: the sample API answers and the UI-only parts it reads are inlined too.
     files += sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'mock' / 'api').glob('*.json'))
     files += [f for f in ('mock/dashboard.json',) if f not in files]
@@ -118,7 +122,7 @@ def build_page(page):
   <script>{read('shared/theme.js')}</script>
   <style>{css_bundle(page)}</style>
 </head>
-<body data-page="{page}">
+<body data-page="{page}"{f' data-mock="{MOCK_OF[page]}"' if page in MOCK_OF else ''}>
   {sprite()}
   <main class="app" id="app"></main>
   <script>{data_bundle(page)}</script>
