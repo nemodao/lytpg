@@ -119,7 +119,7 @@
   text-shadow: 0 0 var(--spacing-2) var(--ui-hot-glow), 0 var(--size-stroke) 0 var(--ui-hot-deep);
 }
 
-/* Square card, two per row: Popular and the Rewards tab. Same look as Home's reward cards. */
+/* Square card: one scrolling row in Popular, two per row on Categories. Same look as Home's reward cards. */
 .store-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-12); }
 .store-card { gap: var(--spacing-6); padding: var(--spacing-8) var(--spacing-8) var(--spacing-12); color: inherit; text-decoration: none; }
 .store-card__art {
@@ -179,7 +179,8 @@
 .store-row .store-card { flex: none; width: 42%; scroll-snap-align: start; }
 
 /* Tour & Travel: a promo panel (first draft from a reference picture). The tokens' purple blend (.blend-pink), soft
-   champagne-gold rays from the top, a big white title with a dark outline, a frosted ribbon, white cards with a scalloped price sticker, and See all on the bottom edge. */
+   champagne-gold rays from the top, a big white title with a dark outline, a frosted ribbon, tilted white cards with a
+   "Special" sash and the price under the name, and See all on the bottom edge. */
 .trip-promo {
   position: relative; isolation: isolate; display: flex; flex-direction: column; gap: var(--spacing-24);
   margin-bottom: var(--spacing-16); padding: var(--spacing-32) 0 var(--spacing-32); border-radius: var(--radius-card);
@@ -291,7 +292,7 @@
   color: var(--color-purple-main); font: var(--font-small-semibold); box-shadow: var(--card-shadow); cursor: pointer;
 }
 
-/* ---- Rewards tab ---- */
+/* ---- Categories tab (tab=rewards) ---- */
 .store-chips {
   display: flex; gap: var(--spacing-8); overflow-x: auto; scrollbar-width: none;
   margin-inline: calc(var(--spacing-gutter) * -1); padding-inline: var(--spacing-gutter);
@@ -305,7 +306,7 @@
 .store-note__clock { flex: none; display: block; width: var(--size-icon-button); height: var(--size-icon-button); object-fit: contain; }
 .store-note__icon { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--ui-badge-blue); color: var(--ui-text-brand); }
 
-/* ---- Bottom bar: Back instead of Loyalty's Close, tabs with line icons ---- */
+/* ---- Bottom bar: Back instead of Loyalty's Close; tabs with 3D artwork (Loyalty's .nav classes from components.css) ---- */
 .nav__exit.nav__back { background: var(--ui-nav-surface); color: var(--ui-icon-secondary); }
 .nav__exit.nav__back .icon { color: var(--ui-icon-secondary); stroke-width: 2; }
 .nav__tab[data-tab] { border: 0; background: none; font: var(--font-x-small-medium); color: var(--ui-text-secondary); }

@@ -188,7 +188,8 @@ export const toOrder = (order) => ({
 // square, transparent background, product centred, at least 460px.
 // Added for the store (confirmed by the backend 22 Oct 2026): `category` (one of
 // STORE_CATEGORIES, anything else is kept and shows under "All" only), `description` (one line), `badge` ('hot' | 'new')
-// and `showOnHome` (Home's grid takes only these).
+// and `showOnHome` (Home's grid takes only these; a reward without the field counts as on Home, so Home keeps working
+// with a backend that does not send it yet).
 export const STORE_CATEGORIES = ['gadget_electronics', 'tour_travel', 'shopping_voucher', 'fnb_voucher', 'home_living'];
 export const toRewards = (catalog) =>
   (catalog?.rewards ?? []).map((reward) => ({
@@ -199,7 +200,7 @@ export const toRewards = (catalog) =>
     category: reward.category ?? null,
     description: reward.description ?? null,
     badge: ['hot', 'new'].includes(reward.badge) ? reward.badge : null,
-    showOnHome: reward.showOnHome === true,
+    showOnHome: reward.showOnHome !== false,
   }));
 
 // POST /app/point/activity (no token, no clientId; x-auth-key only) -> common.activity (spec §50). One list for everyone,

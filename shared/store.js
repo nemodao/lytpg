@@ -6,7 +6,13 @@ import { coin, watchHeader } from './components.js';
 
 // Where "back" goes. Every link into the store carries `back` (the page the user came from, with its query); the
 // store passes its own address on to the reward page, so Back always returns one step.
-export const backParam = () => new URLSearchParams(location.search).get('back');
+// Only one of our own pages is accepted (a file name such as "dashboard.html", with or without a query): never a scheme
+// or a host, so `back` cannot send the user to another site or run script. Anything else: null (the caller's default).
+const OWN_PAGE = /^[a-z0-9-]+\.html(\?[^#]*)?$/i;
+export const backParam = () => {
+  const back = new URLSearchParams(location.search).get('back');
+  return back && OWN_PAGE.test(back) ? back : null;
+};
 export const withParams = (href, params) => {
   const query = Object.entries(params).filter(([, value]) => value != null && value !== '')
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');

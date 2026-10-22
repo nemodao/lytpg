@@ -1,5 +1,5 @@
 // Reward Store (spec §59): a browse-only redemption store, opened from Loyalty's Redeem buttons. Two tabs on one page,
-// switched by the store's own bottom bar: Home Store (banner and three picked sections) and Rewards (every reward, by
+// switched by the store's own bottom bar: Home Store (banner and three picked sections) and Categories (`tab=rewards`: every reward, by
 // category). A reward opens reward.html. The bar's Back returns to the Loyalty page the user came from (?back=).
 // No events yet (spec §59: a later round).
 import { load } from '../shared/app.js';
@@ -11,12 +11,18 @@ const { common, page, ui } = await load('store');
 const app = document.getElementById('app');
 const query = new URLSearchParams(location.search);
 
-// The only state that changes without a reload: the tab and, on Rewards, the category ('all', a category key or
-// 'more'). Both are kept in the address (history.replaceState), so a reward's Back returns to the same view.
+// The only state that changes without a reload: the tab and, on Categories (`tab=rewards`), the category ('all', a
+// category key or 'more'). Both are kept in the address (history.replaceState), so a reward's Back returns to the
+// same view. Only `tab`, `cat` and `back` are rewritten; every other parameter of the address is kept.
 let tab = query.get('tab') === 'rewards' ? 'rewards' : 'home';
 let category = ['all', 'more', ...STORE_CATEGORIES].includes(query.get('cat')) ? query.get('cat') : 'all';
 const back = backParam() || ui.href('dashboard.html');
-const selfHref = () => withParams(ui.href('store.html'), { tab: tab === 'rewards' ? 'rewards' : '', cat: tab === 'rewards' && category !== 'all' ? category : '', back });
+const selfHref = () => {
+  const keep = new URLSearchParams(location.search);
+  ['tab', 'cat', 'back'].forEach((name) => keep.delete(name));
+  const rest = keep.toString().replace(/%2C/g, ',');
+  return withParams(`store.html${rest ? `?${rest}` : ''}`, { tab: tab === 'rewards' ? 'rewards' : '', cat: tab === 'rewards' && category !== 'all' ? category : '', back });
+};
 const rewards = page.rewards;
 
 // ---- Home Store: three sections from the one list, no reward twice (spec §59) ----
@@ -40,7 +46,7 @@ function arrange(list) {
 const price = (item) => `<span class="store-price num">${coin('coin--xs')}${ui.num(item.points)}</span>`;
 const href = (item) => rewardHref(ui, item.id, selfHref());
 
-// Square card: two per row on the Rewards tab, one scrolling row in Popular.
+// Square card: two per row on Categories, one scrolling row in Popular. The only card with the Hot / New label.
 const card = (item) => `
   <a class="card store-card" href="${href(item)}">
     <span class="store-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}${rewardBadge(ui, item)}</span>
@@ -59,8 +65,8 @@ const voucher = (item) => `
     <span class="voucher__stub">${price(item)}</span>
   </a>`;
 
-// Tour & Travel: its own promo panel (lilac with light rays, a big outlined title and a dark ribbon) holding a row of
-// cards that scrolls sideways, about 1.7 on screen. Each card is a white card drawn slightly tilted (its top-left corner
+// Tour & Travel: its own promo panel (the tokens' purple blend with soft gold rays, a big outlined title and a frosted
+// ribbon) holding a row of cards that scrolls sideways, about 1.7 on screen. Each card is a white card drawn slightly tilted (its top-left corner
 // raised) over a purple layer showing at the bottom right; a diagonal "Special" sash crosses its picture's top-left
 // corner (fixed in the front end, not from the API); the price is under the name. `See all` sits on the panel's
 // bottom edge. The panel keeps its light colours in both themes (data-theme="light").

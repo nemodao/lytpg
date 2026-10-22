@@ -58,9 +58,9 @@ Never sent: trading account numbers, exact balances, names, any personal data.
 
 | Event | Sent when | Extra parameters | Where |
 |---|---|---|---|
-| `loyalty_page_view` | A page opens | | `initTracking` |
+| `loyalty_page_view` | A Loyalty page opens (not the Reward Store's `store.html` / `reward.html`, which send no events yet) | | `initTracking` |
 | `loyalty_nav_click` | A tab of the bottom bar, or its exit button, is tapped | `target`: `home` \| `earn` \| `coins` \| `exit` | `shared/nav.js` |
-| `loyalty_card_click` | On Home, the balance (goes to Coins; for guests it opens the sign-up sheet), the "earn coins" card of the rewards grid (goes to Earn) or `Explore all rewards` under the grid (goes to Tada, or opens the "How to start" sheet) is tapped | `target`: `coins` \| `earn` \| `rewards` | `balanceBlock`, `pages/dashboard.js` |
+| `loyalty_card_click` | On Home, the balance (goes to Coins; for guests it opens the sign-up sheet), the "earn coins" card of the rewards grid (goes to Earn) or `Explore all rewards` under the grid (goes to Tada, or opens the "How to start" sheet; with Plan B, `common.rewardStore`, it opens the Reward Store) is tapped | `target`: `coins` \| `earn` \| `rewards` | `balanceBlock`, `pages/dashboard.js` |
 | `loyalty_tab_click` | A tab inside a page is tapped | `tab`: `rules` \| `history` (Earn); `available` \| `expired` \| `history` (Coins) | `pages/trading-task.js`, `pages/point-balance.js` |
 | `loyalty_date_filter_apply` | A date range is chosen (a preset chip, or `Apply` in the calendar) | `tab`: `history` \| `expired`; `range`: `7` \| `30` \| `custom` | `shared/date-filter.js` |
 | `loyalty_account_select` | A trading account is chosen in the account sheet | `eligible`: `true` \| `false` | `pages/trading-task.js` |

@@ -9,7 +9,7 @@
         "guest": "Guest (not signed in)"
       },
       "descriptions": {
-        "guest": "Not signed in: the store and its rewards show as usual, balance 0; a reward's page has no balance line, and its Checkout sheet adds Sign up."
+        "guest": "Not signed in: the store and its rewards show as usual, balance 0; a reward's page has no balance line, and its Checkout sheet adds Sign up and, lighter, Log in."
       }
     },
     {
@@ -30,7 +30,7 @@
       ],
       "descriptions": {
         "catalog-empty": "The catalog API sent nothing, or failed: no banner sections; a short message that rewards are on their way, on both tabs.",
-        "no-travel": "No reward in Tour & Travel: that section of Home Store is hidden; the Rewards tab's Tour & Travel chip shows only the “more coming soon” card.",
+        "no-travel": "No reward in Tour & Travel: that section of Home Store is hidden; the Categories tab's Tour & Travel chip shows only the “more coming soon” card.",
         "few-rewards": "Only 6 rewards in the catalog: Home Store fills F&B and Travel first, then Popular gets what is left."
       }
     },

@@ -1,11 +1,13 @@
 <!doctype html>
 <!--
   Loyalty · Reward Store (spec §59): browse-only store, opened from Loyalty's Redeem buttons
-  Tabs: ?tab=home (default) | ?tab=rewards, with ?cat=<category key> | all | more on the Rewards tab
+  Tabs: Home Store (default, no tab) | ?tab=rewards (the Categories tab), with ?cat=<category key> | more (no cat = All)
   Back to Loyalty: ?back=<page the user came from>, e.g. ?back=dashboard.html
   States (combine with commas):
+    Sign-in: guest   Balance: empty
     Catalog: catalog-empty, no-travel, few-rewards
-  Shared states (guest, empty, needs-kyc, needs-deposit, expiring, activity-empty) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
+    Redemption mode: plan-b (shared)
+  Shared states (guest, empty, needs-kyc, needs-deposit, expiring, activity-empty, plan-b) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
 -->
 <html lang="en">
 <head>

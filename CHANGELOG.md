@@ -12,7 +12,12 @@ and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 - With the switch on, Redeem and reward cards open the store, and the recent activity shows coin entries only.
 - The catalog sends every reward with `category`, `description`, `badge`, `showOnHome`.
 - HSB's endpoints moved to `/app/point`, all POST; the guest catalog is the same endpoint with `clientId` null.
-- No new events. `DATA.md` and `STATES.md` changed (see `HANDOFF-7.md` §5).
+- No new events; the store pages send none. `DATA.md` and `STATES.md` changed (see `HANDOFF-7.md` §5).
+- Files: new `pages/store.*`, `pages/reward.*`, `shared/store.js`, `mock/store.json`, images in `assets/images/store/`,
+  `nav/` and `rewards/`; changed `shared/components.js`, `data-source.js`, `api-adapter.js`, `activity-feed.js`,
+  `app.js`, `pages/dashboard.js`, `point-balance.js`, `redemptions.js`, every `mock/*.json`,
+  `mock/api/loyalty-catalog*.json`, `mock/api/check.mjs`, `copy/en.json`, `tokens/`, `tools/check-tracking.mjs`,
+  `HANDOFF.md`, `TRACKING.md`.
 
 ## Handoff 6 — phase 3, replaces handoff 5 (20 Oct 2026)
 
