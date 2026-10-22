@@ -1,7 +1,7 @@
 // Reward Store · one reward (spec §59): one card holding the picture, then parts split by thin lines: category, name and
 // price; the user's balance against the price; the one-line description. Checkout at the bottom. Checkout is not live. A signed-in user without enough coins gets a
 // sheet saying so, with "Learn how to earn coins" (to Earn); otherwise the sheet says checkout is coming soon (guests
-// also get Sign up there). Back returns to where the user came from (?back=: the store, or a Loyalty page).
+// also get Sign up and, lighter, Log in there). Back returns to where the user came from (?back=: the store, or a Loyalty page).
 // The data is the store's (the catalog list); the reward is picked by ?id=.
 import { load } from '../shared/app.js';
 import { coin } from '../shared/components.js';
@@ -80,8 +80,11 @@ function openSheet() {
         <h2 class="t-title-s">${ui.t('reward.soon.title')}</h2>
         <p class="t-body c-2">${ui.t('reward.soon.body')}</p>
         <div class="stack">
-          ${guest ? `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="signup">${ui.t('join.signup')}</button>` : ''}
-          <button class="btn ${guest ? 'btn--stroke' : 'btn--primary'} btn--lg btn--block" type="button" data-action="close-sheet">${ui.t('reward.soon.ok')}</button>
+          ${guest ? `<div class="reward-soon__pair">
+            <button class="btn btn--primary btn--lg" type="button" data-intent="signup">${ui.t('join.signup')}</button>
+            <button class="btn btn--stroke btn--lg" type="button" data-intent="login">${ui.t('reward.soon.login')}</button>
+          </div>` : ''}
+          <button class="btn ${guest ? 'text-btn reward-soon__close' : 'btn--primary btn--lg btn--block'}" type="button" data-action="close-sheet">${ui.t('reward.soon.ok')}</button>
         </div>
       </div>
     </div>`);

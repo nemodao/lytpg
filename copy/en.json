@@ -306,5 +306,6 @@
   "store.special": "Special",
   "reward.short.title": "Not enough coins yet",
   "reward.short.body": "You need {need} more coins for this reward. Trade more to collect them.",
-  "reward.short.cta": "Learn how to earn coins"
+  "reward.short.cta": "Learn how to earn coins",
+  "reward.soon.login": "Log in"
 }

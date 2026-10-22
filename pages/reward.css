@@ -40,3 +40,6 @@
 .reward-soon { align-items: center; text-align: center; }
 .reward-soon__icon { display: grid; place-items: center; width: var(--size-control-lg); height: var(--size-control-lg); border-radius: var(--radius-pill); background: var(--ui-badge-blue); color: var(--ui-text-brand); }
 .reward-soon .stack { align-self: stretch; margin-top: var(--spacing-8); }
+/* Guests: Sign up and, lighter, Log in side by side; "Got it" as a quiet text button under them. */
+.reward-soon__pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-10); }
+.reward-soon__close { align-self: center; color: var(--ui-text-secondary); }
