@@ -75,6 +75,8 @@
   border-radius: 0 0 var(--radius-control) 0; font: var(--font-x-small-semibold); color: var(--on-brand);
 }
 .store-badge--new { background: var(--accent-surface-brand); }
+/* In a line of text (the reward's page, before the name): rounded all round, centred on the line. */
+.store-badge--inline { position: static; display: inline-block; margin-right: var(--spacing-6); vertical-align: middle; border-radius: var(--radius-control); }
 .store-badge--hot {
   /* After the HOT badge on Loyalty's bottom bar (assets/images/nav/hot.png): a glossy red core with blazing orange ends,
      an amber-to-yellow glow rising from the bottom and a pink gloss on top. */

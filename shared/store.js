@@ -31,8 +31,9 @@ export const storeHead = (ui, common, { back = '' } = {}) => (requestAnimationFr
   </header>`);
 
 
-// "Hot" / "New" on a reward's image.
-export const rewardBadge = (ui, item) =>
-  (item.badge ? `<span class="store-badge store-badge--${item.badge}">${ui.t(`store.badge.${item.badge}`)}</span>` : '');
+// "Hot" / "New": on a reward's picture in the store; `inline` puts it in a line of text (before the name on the
+// reward's page).
+export const rewardBadge = (ui, item, { inline = false } = {}) =>
+  (item.badge ? `<span class="store-badge store-badge--${item.badge}${inline ? ' store-badge--inline' : ''}">${ui.t(`store.badge.${item.badge}`)}</span>` : '');
 
 export const categoryName = (ui, key) => (STORE_CATEGORIES.includes(key) ? ui.t(`store.cat.${key}`) : '');
