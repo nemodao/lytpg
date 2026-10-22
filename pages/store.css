@@ -30,7 +30,7 @@
   padding: var(--spacing-2) 0; border-radius: var(--radius-pill); border: var(--size-stroke) solid transparent;
 }
 .store-head.is-stuck .store-head__brand {
-  padding: var(--spacing-2) var(--spacing-16) var(--spacing-2) var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-16) var(--spacing-2) var(--spacing-8); /* room around the gift */
   background: var(--ui-surface-pure); border-color: var(--ui-stroke-soft); color: var(--ui-icon-secondary);
 }
 /* Stuck: the same height as the back button and the balance (all three are --size-control-sm before the shrink); the
@@ -41,7 +41,7 @@
 .store-head.is-stuck .store-head__brand--plain { padding-left: var(--spacing-16); }
 .store-head__back { flex: none; transform-origin: left center; }
 /* The gift box sits in a white round badge (white in both themes), so it reads as one piece with the title next to it.
-   Once stuck, the badge melts away: the gift and the title make one pill. */
+   Once stuck, the badge melts away: the gift (a little smaller, with room around it) and the title make one pill. */
 .store-head__icon {
   flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm);
   border-radius: var(--radius-pill); background: var(--color-neutral-0); border: var(--size-stroke) solid var(--color-neutral-200);
@@ -49,7 +49,7 @@
 }
 .store-head__icon img { display: block; width: 72%; height: 72%; object-fit: contain; transition: width 0.3s ease, height 0.3s ease; }
 .store-head.is-stuck .store-head__icon { background-color: transparent; border-color: transparent; }
-.store-head.is-stuck .store-head__icon img { width: 100%; height: 100%; }
+.store-head.is-stuck .store-head__icon img { width: 82%; height: 82%; }
 .store-head__title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--font-large-semibold); }
 /* The balance: one pill, a thin line between the coin and the number. */
 .store-head__balance {
