@@ -777,3 +777,13 @@ The Tada integration may not be ready for launch, so the pages get their own red
 - **Data:** the same catalog API as Home (§49), extended by the backend: every reward on show for the user's group (about 50), each with `category`, `description`, `badge` (`hot` | `new` | null) and `showOnHome`; Home's grid takes the rewards with `showOnHome`. No terms or details field (the store is not live), no money values.
 - **Events:** none new for now (a later round).
 - Delivered to the front-end developer as an early handoff, before the backend's API changes.
+
+## 60. HSB's own endpoints moved to /app/point, all POST (confirmed by the Tada integration backend 22 Oct 2026)
+
+Replaces the paths of §49, §50, §52 and §59 (the answers are unchanged):
+
+- Rewards: `POST /app/point/catalog`, body `{ clientId }`, app token. **One endpoint for everyone:** guests send `clientId` null and get the default group's rewards (`/loyalty/catalog-guest` is gone). It answers every reward on show (about 50) with `id`, `name`, `points`, `image`, `category`, `description`, `badge`, `showOnHome`, by `sort_order`; Home keeps those with `showOnHome`.
+- Recent activity: `POST /app/point/activity`, `x-auth-key` header only (no token, no clientId).
+- Redemption history: `POST /app/point/orders`, body `{ clientId, page, pageSize }`; one order: `POST /app/point/orders/detail`, body `{ orderReference }` (was `GET …/orders/{orderReference}`).
+- Tada SSO for the app (when checkout goes live): `POST /app/point/redeem/session`, body `{ clientId }`.
+

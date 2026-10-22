@@ -108,7 +108,7 @@ What the demo still does in the browser and the product must do with requests:
 | `pages/point-balance.js` — `loadMore` | Shows 15 more rows of a list it already has | Ask for `pageNo + 1` until the rows shown reach `total` |
 | Refresh | None | Call `tradingTask/get` and `coin/summary` again every 2 minutes while Home or Earn is visible, and when the page becomes visible again |
 | `shared/app.js` — `common.now` | The mock pins "now" | The converter takes it from the answer's `timestamp` (server time) |
-| `shared/data-source.js` — `activityList` | Reads `mock/api/loyalty-activity.json` | `GET /loyalty/activity`, asked once per session, waited for at most 3 s (`HANDOFF-6.md` §3) |
+| `shared/data-source.js` — `activityList` | Reads `mock/api/loyalty-activity.json` | `POST /app/point/activity`, asked once per session, waited for at most 3 s (`HANDOFF-6.md` §3) |
 | `shared/data-source.js` — `rewardsList`, `fetchMoreOrders` | Read the samples | Catalog (`[]` on failure: Home still opens); orders by `page` / `pageSize` (`HANDOFF-6.md` §1, §6) |
 | `shared/tour.js` — `seen` / `markSeen` | "Tour seen" kept in localStorage | Per-user flag from the app, if wanted |
 | `pages/trading-task.js` — `selectedAccountId` | The tie-break for the account the pages open on (`shared/tiers.js`) | Unchanged: picking an account is kept for the session only; the app switches account on the trade button (`HANDOFF-6.md` §4) |
@@ -126,8 +126,8 @@ empty: `rateRange` null (no rate range line), `termsUrl` null or an empty string
 
 | `data-intent` | Destination |
 |---|---|
-| `redeem` | Tada (rewards store). The webview only tells the app; the **app** calls `POST /loyalty/redeem/session` (app token in the header, no body) and opens `result.url` (a Tada SSO link, valid about 300 s) in its in-app webview, not an outside browser (settled with the backend 20 Oct 2026) |
-| `reward` | For now the same as `redeem` (the Tada catalog): `data-reward` is HSB's own key for the card, not a Tada link. When Tada gives a link per reward, the backend will send it and this opens that reward |
+| `redeem` | Not used while the Reward Store stands in for Tada (spec §59): Redeem buttons open `store.html` inside the webview. When checkout goes live through Tada, the **app** will call `POST /app/point/redeem/session` (body `{ clientId }`, app token) and open `result.url` (a Tada SSO link, valid about 300 s) in its in-app webview |
+| `reward` | Not used while the Reward Store stands in for Tada: a reward card opens `reward.html?id=…` inside the webview |
 | `trade` | Market screen, current trading account |
 | `trade-account` (+ `data-account`) | Market screen, switched to that account |
 | `kyc` | KYC screen in the app |

@@ -64,7 +64,7 @@ Example file: `mock/dashboard.json` (`default`)
 
 | Field | Type | Example | Meaning |
 |---|---|---|---|
-| `rewards[].id` | string | `"101"` | HSB's key for the reward card (GET /loyalty/catalog, number in the API, text here). Sent as data-reward and as reward_id in loyalty_reward_click. Not a Tada id: it does not open the reward in Tada. |
+| `rewards[].id` | string | `"101"` | HSB's key for the reward card (POST /app/point/catalog, number in the API, text here). Sent as data-reward and as reward_id in loyalty_reward_click. Not a Tada id: it does not open the reward in Tada. |
 | `rewards[].name` | string | `"iPhone 16 Pro"` | Reward name as HSB sends it (may include a denomination, e.g. "Rp50.000"), two lines at most. |
 | `rewards[].points` | number | `95000` | Price in coins on the card. |
 | `rewards[].image` | string | `"../assets/images/rewards/gift-01.webp"` | HTTPS link to the reward image, hosted by HSB: square, transparent background, product centred, at least 460px; shown whole. |
@@ -125,14 +125,14 @@ Example file: `mock/redemptions.json` (`default`)
 
 | Field | Type | Example | Meaning |
 |---|---|---|---|
-| `total` | number | `7` | Number of orders the user has (the `total` of GET /loyalty/orders). While the list holds fewer, it loads the next page on scroll (page, pageSize 20). |
-| `orders[].orderReference` | string | `"ord_a03f77"` | Order id from GET /loyalty/orders (spec §52). Opens the order: fetchOrder(orderReference). |
+| `total` | number | `7` | Number of orders the user has (the `total` of POST /app/point/orders). While the list holds fewer, it loads the next page on scroll (page, pageSize 20). |
+| `orders[].orderReference` | string | `"ord_a03f77"` | Order id from POST /app/point/orders (spec §52). Opens the order: fetchOrder(orderReference). |
 | `orders[].orderNumber` | string | `"TADA26101406220019"` | Order number shown to the user, e.g. TADA26101214305512. |
 | `orders[].status` | "new" | "on process" | "completed" | "canceled" | "failed" | `"new"` | Normalised by the backend. Badge: new = Order placed, on process = Processing, completed, canceled = Cancelled, failed. |
 | `orders[].orderDate` | string | `"2026-10-14T06:22:00Z"` | When the order was placed (ISO 8601). List is newest first. |
-| `orders[].firstItemName` | string | `"Nintendo Switch"` | Name of the order's first reward (GET /loyalty/orders `firstItemName`, settled 20 Oct 2026). |
+| `orders[].firstItemName` | string | `"Nintendo Switch"` | Name of the order's first reward (POST /app/point/orders `firstItemName`, settled 20 Oct 2026). |
 | `orders[].coinSpent` | number | `30000` | Coins taken for the order. |
-| `details[].orderReference` | string | `"ord_a03f77"` | MOCK ONLY: the demo's orders for fetchOrder(ref). With the API, one GET /loyalty/orders/{orderReference} per order, in this shape. |
+| `details[].orderReference` | string | `"ord_a03f77"` | MOCK ONLY: the demo's orders for fetchOrder(ref). With the API, one POST /app/point/orders/detail { orderReference } per order, in this shape. |
 | `details[].orderNumber` | string | `"TADA26101406220019"` | As in the list. |
 | `details[].status` | as orders[].status | `"new"` | Current status (phase 1 has no step-by-step history). |
 | `details[].orderDate` | string | `"2026-10-14T06:22:00Z"` | When the order was placed. |

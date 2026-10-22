@@ -8,7 +8,7 @@
 // Home and Earn share the list and the place in the loop (kept for the session), so switching tabs or coming back goes
 // on from where it was. A page may re-render as often as it likes: the entry on screen stays until the timer moves on.
 //
-// API: the list comes from GET /loyalty/activity (data-source.js), asked for once per session and kept for the session
+// API: the list comes from POST /app/point/activity (data-source.js), asked for once per session and kept for the session
 // (data-source.js, sessionCached). Each entry: type "gift" | "coin", client (already masked by the backend), reward
 // (gift) or points (coin), at (ISO time). "3m ago" is worked out on screen from `at`, so it stays right as time passes.
 import { coin } from './components.js';

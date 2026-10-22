@@ -5,8 +5,9 @@
 //   tradingTask/get         -> common.program, common.accounts, Earn today + selected account
 //   tradingTask/getHistory  -> Earn history
 //   (tradingTask/get also gives common.tiers and each account's group and lifetime deposit, spec §51)
-//   GET /loyalty/catalog    -> Home rewards (GET /loyalty/catalog-guest for guests), spec §49
-//   GET /loyalty/orders     -> Redemption history list; GET /loyalty/orders/{ref} -> one order (HSB backend, spec §52)
+//   POST /app/point/catalog        -> Home's rewards and the Reward Store (guests: clientId null), spec §49, §59
+//   POST /app/point/orders         -> Redemption history list; POST /app/point/orders/detail -> one order (HSB backend,
+//                                     spec §52)
 //   coin/summary            -> common.balance
 //   coin/listAvailable      -> Coins, Available tab
 //   coin/listExpired        -> Coins, Expired tab
@@ -136,7 +137,7 @@ export function toPointBalancePage(available, expired, ledger, task) {
 export const ORDER_STATUSES = ['new', 'on process', 'completed', 'canceled', 'failed'];
 const orderStatus = (value) => String(value ?? '').trim().toLowerCase().replace(/^onprocess$/, 'on process');
 
-// GET /loyalty/orders?clientId=…&page=…&pageSize=… answers { orders: [...], page, pageSize, total } (settled with the
+// POST /app/point/orders { clientId, page, pageSize } answers { orders: [...], page, pageSize, total } (settled with the
 // backend, 20 Oct 2026). One summary per order; the first reward's name is `firstItemName`.
 export const toOrdersPage = (answer) => ({
   orders: toOrders(answer?.orders ?? []),
@@ -158,7 +159,7 @@ export const toOrders = (list) =>
     }))
     .sort((a, b) => Date.parse(b.orderDate) - Date.parse(a.orderDate));
 
-// GET /loyalty/orders/{orderReference} -> the order the details view shows. No money values: the backend strips every
+// POST /app/point/orders/detail { orderReference } -> the order the details view shows. No money values: the backend strips every
 // IDR amount (price, fees, value) and the page shows coins only (spec §52). Each item carries at most one of
 // evoucher (e-gifts), token (PLN, mobile credit) or tracking (physical goods); the others are null.
 export const toOrder = (order) => ({
@@ -181,11 +182,11 @@ export const toOrder = (order) => ({
   recipient: order.recipient ?? null,
 });
 
-// GET /loyalty/catalog?clientId=… (signed in) or GET /loyalty/catalog-guest (guests) -> the rewards of Home (spec §49)
+// POST /app/point/catalog { clientId } (guests: clientId null) -> the rewards of Home (spec §49)
 // and of the Reward Store (spec §59). The backend sends every reward on show for the user's client group (guests: the
 // default group; about 50), in display order. `id` is HSB's own key (point_featured_gift.id). Images are hosted by HSB:
 // square, transparent background, product centred, at least 460px.
-// Added for the store (requested from the backend 22 Oct 2026; field names to be confirmed): `category` (one of
+// Added for the store (confirmed by the backend 22 Oct 2026): `category` (one of
 // STORE_CATEGORIES, anything else is kept and shows under "All" only), `description` (one line), `badge` ('hot' | 'new')
 // and `showOnHome` (Home's grid takes only these).
 export const STORE_CATEGORIES = ['gadget_electronics', 'tour_travel', 'shopping_voucher', 'fnb_voucher', 'home_living'];
@@ -201,7 +202,7 @@ export const toRewards = (catalog) =>
     showOnHome: reward.showOnHome === true,
   }));
 
-// GET /loyalty/activity (no token, no clientId; x-auth-key only) -> common.activity (spec §50). One list for everyone,
+// POST /app/point/activity (no token, no clientId; x-auth-key only) -> common.activity (spec §50). One list for everyone,
 // guests included: the latest trading-coin credits and the latest redemptions, each kind at most N (backend config),
 // newest first; the page sorts and interleaves them itself. Gift: { type, client, reward, at }; coin: { type, client,
 // points, at }; `client` masked by the backend, `at` ISO 8601 UTC. Entries of another kind, or missing a field, are dropped.

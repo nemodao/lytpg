@@ -61,8 +61,8 @@ async function sessionCached(key, loader) {
   try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* not kept */ }
   return value;
 }
-// API: the recent activity list (spec §50), from HSB (the Tada integration): GET /loyalty/activity, no Authorization and
-// no clientId, only the x-auth-key header, for guests and signed-in users alike; { success, result: { activity } }.
+// API: the recent activity list (spec §50), from HSB (the Tada integration): POST /app/point/activity, no Authorization
+// and no clientId, only the x-auth-key header, for guests and signed-in users alike; { success, result: { activity } }.
 // Asked for once per session, alongside the page's other calls. The card is hidden (activity = []) when the call fails,
 // sends nothing, or has not answered within ACTIVITY_WAIT_MS: the page never waits longer for it. A late answer is
 // still kept for the session, so the next page (or the other tab) shows the card; a failure is not kept, so the next
@@ -72,7 +72,7 @@ const ACTIVITY_WAIT_MS = 3000;
 const activityList = () => {
   if (!USE_API) return sessionCached('hsb-loyalty-activity-v3', () => getJSON('../mock/common.json').then((common) => common.activity));
   const asked = sessionCached('hsb-loyalty-activity-api-v1', () => getJSON('../mock/api/loyalty-activity.json')
-    .then((answer) => { if (answer.success !== true) throw new Error(`loyalty/activity: ${answer.message}`); return toActivity(answer.result); }));
+    .then((answer) => { if (answer.success !== true) throw new Error(`app/point/activity: ${answer.message}`); return toActivity(answer.result); }));
   return Promise.race([asked, new Promise((done) => { setTimeout(() => done([]), ACTIVITY_WAIT_MS); })]).catch(() => []);
 };
 
@@ -119,24 +119,27 @@ async function commonFromApi() {
   };
 }
 
-// API: the HSB backend's order endpoints (spec §52): GET, with the app token; not the loyalty API above. `path` is e.g.
-// 'loyalty/orders?page=1&pageSize=20' (add clientId=<the user's> to the query) or 'loyalty/orders/{orderReference}'.
-// Settled with the backend: { success, result } like the loyalty API; the list's result is { orders, page, pageSize,
-// total }, newest first, page from 1, pageSize at most 100. The backend takes the client from the token: 403 when the
-// order, or the query's clientId, is not the user's (the page then shows its error view).
+// API: the HSB backend's order endpoints (spec §52), with the app token; not the loyalty API above. Both POST, JSON body
+// (confirmed by the Tada integration backend 22 Oct 2026): POST /app/point/orders { clientId, page, pageSize } for the
+// list, POST /app/point/orders/detail { orderReference } for one order. { success, result } like the loyalty API; the
+// list's result is { orders, page, pageSize, total }, newest first, page from 1, pageSize at most 100. The backend
+// takes the client from the token: 403 when the order, or the body's clientId, is not the user's (the page then shows
+// its error view).
 // Here: mock/api/loyalty-orders.json for the list and mock/api/loyalty-orders-detail.json for any one order.
-function getOrders(path) {
-  const file = path.startsWith('loyalty/orders/') ? 'loyalty-orders-detail' : 'loyalty-orders';
+function getOrders(path, body) { // the real call POSTs `body` (with clientId for the list); here it picks the sample
+  const file = path.endsWith('/detail') ? 'loyalty-orders-detail' : 'loyalty-orders';
   return getJSON(`../mock/api/${file}.json`).then((answer) => {
     if (answer.success !== true) throw new Error(`${path}: ${answer.message || 'request failed'}`);
     return answer.result;
   });
 }
 
-// API: Home's rewards (spec §49), from HSB (the Tada integration), GET: /loyalty/catalog?clientId=… with the app token,
-// or /loyalty/catalog-guest (app key only) for guests; { success, result: { rewards } }. A different backend from the
-// rest of Home: when it fails, Home still opens, without the rewards grid (rewards = []).
-// Here: mock/api/loyalty-catalog.json or loyalty-catalog-guest.json.
+// API: the rewards of Home (spec §49) and of the Reward Store (spec §59), from HSB (the Tada integration): POST
+// /app/point/catalog with body { clientId } and the app token; guests send clientId null (one endpoint for both since
+// 22 Oct 2026: the backend then answers with the default group's rewards). { success, result: { rewards } }: every
+// reward on show, ~50; Home keeps those with showOnHome. A different backend from the rest of the pages: when it
+// fails, Home still opens without the rewards grid, and the store shows its "on their way" message (rewards = []).
+// Here: mock/api/loyalty-catalog.json, or loyalty-catalog-guest.json (the answer for clientId null).
 function rewardsList() {
   const file = GUEST ? 'loyalty-catalog-guest' : 'loyalty-catalog';
   return getJSON(`../mock/api/${file}.json`)
@@ -149,7 +152,7 @@ async function pageFromApi(page) {
   if (GUEST && page === 'redemptions') return { orders: [], total: 0 }; // guests never reach it
   if (page === 'store') return { rewards: await rewardsList() }; // the Reward Store and its reward page (spec §59)
   if (page === 'redemptions') {
-    const first = toOrdersPage(await getOrders(`loyalty/orders?page=1&pageSize=${ORDERS_PAGE_SIZE}`));
+    const first = toOrdersPage(await getOrders('app/point/orders', { page: 1, pageSize: ORDERS_PAGE_SIZE }));
     return { orders: first.orders, total: first.total };
   }
   const task = await taskGet();
@@ -172,12 +175,12 @@ export const fetchPage = (page) => (USE_API ? pageFromApi(page) : getJSON(`../mo
 // Redemption history, the next page of the list (pageNo from 2). Mock: the mock holds every order, so nothing more.
 export const ORDERS_PAGE_SIZE = 20;
 export const fetchMoreOrders = (pageNo) => (USE_API
-  ? getOrders(`loyalty/orders?page=${pageNo}&pageSize=${ORDERS_PAGE_SIZE}`).then((answer) => toOrdersPage(answer).orders)
+  ? getOrders('app/point/orders', { page: pageNo, pageSize: ORDERS_PAGE_SIZE }).then((answer) => toOrdersPage(answer).orders)
   : Promise.resolve([]));
 
 // One order of Redemption history. Mock: from the `details` list of mock/redemptions.json.
 export const fetchOrder = (ref) => (USE_API
-  ? getOrders(`loyalty/orders/${encodeURIComponent(ref)}`).then(toOrder)
+  ? getOrders('app/point/orders/detail', { orderReference: ref }).then(toOrder)
   : getJSON('../mock/redemptions.json').then((file) => file.default.details.find((order) => order.orderReference === ref) ?? null));
 
 export const fetchCopy = () => getJSON('../copy/en.json');
