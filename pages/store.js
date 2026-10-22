@@ -136,15 +136,23 @@ function render() {
   try { history.replaceState(null, '', selfHref()); } catch { /* some file:// viewers refuse it: the view still changes */ }
 }
 
-// The store's bottom bar: Back (to Loyalty) where Loyalty has its Close, then the two tabs.
+// The store's bottom bar: Back (to Loyalty) where Loyalty has its Close, then the two tabs. Tab artwork as on Loyalty's
+// bar (shared/nav.js): assets/images/nav/<id>-light|dark|on.png; the tabs switch without a reload, so each tab holds all
+// three and CSS shows the right one (store.css).
+const navArt = (art, version, extraClass) => `<img class="nav__image ${extraClass}" src="../assets/images/nav/${art}-${version}.png" alt="">`;
+const navTab = (tabId, art, label) => `
+    <button class="nav__tab" type="button" data-tab="${tabId}">
+      <span class="nav__art">${navArt(art, 'light', 'nav__image--on-light store-nav__off')}${navArt(art, 'dark', 'nav__image--on-dark store-nav__off')}${navArt(art, 'on', 'store-nav__on')}</span>
+      <span>${label}</span>
+    </button>`;
 const nav = document.createElement('nav');
 nav.className = 'nav';
 nav.setAttribute('aria-label', ui.t('store.tabs'));
 nav.innerHTML = `
   <a class="nav__exit nav__back" href="${ui.esc(back)}" aria-label="${ui.t('store.back')}">${ui.icon('back')}</a>
   <div class="nav__tabs">
-    <button class="nav__tab" type="button" data-tab="home">${ui.icon('home', 'icon--lg')}<span>${ui.t('store.tab.home')}</span></button>
-    <button class="nav__tab" type="button" data-tab="rewards">${ui.icon('gift', 'icon--lg')}<span>${ui.t('store.tab.rewards')}</span></button>
+    ${navTab('home', 'store', ui.t('store.tab.home'))}
+    ${navTab('rewards', 'rewards', ui.t('store.tab.rewards'))}
   </div>`;
 document.body.appendChild(nav);
 document.body.classList.add('has-nav');

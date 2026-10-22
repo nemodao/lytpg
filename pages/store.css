@@ -282,3 +282,7 @@
 .nav__exit.nav__back .icon { color: var(--ui-icon-secondary); stroke-width: 2; }
 .nav__tab[data-tab] { border: 0; background: none; font: var(--font-x-small-medium); color: var(--ui-text-secondary); }
 .nav__tab[data-tab][aria-current="page"] { background: var(--ui-nav-tab-active); color: var(--ui-text-brand); }
+/* Tab artwork: the light / dark version when not selected (shared rules in components.css), the "on" one when selected. */
+.store-nav__on { display: none; }
+.nav__tab[aria-current] .nav__image.store-nav__on { display: block; }
+.nav__tab[aria-current] .nav__image.store-nav__off { display: none; }
