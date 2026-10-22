@@ -2,7 +2,7 @@
 
 `gift-110` … `gift-159.webp` are mock pictures for the Reward Store demo (spec §59). In production the pictures come
 from the catalog API. All are from Unsplash, free to use under the Unsplash License (https://unsplash.com/license),
-cropped to a square and converted to WebP (600 px). `gift-01` … `gift-09` predate this list.
+cropped to a square and converted to WebP (600 px). `gift-01` … `gift-09` predate this list, except `gift-04` below.
 
 | File | Shows | Photographer | Source |
 |---|---|---|---|
@@ -48,3 +48,4 @@ cropped to a square and converted to WebP (600 px). `gift-01` … `gift-09` pred
 | gift-157 | Rice cooker | J. Brouwer | https://unsplash.com/photos/white-rice-cooker-on-tabletop-c37_95CNcWM |
 | gift-158 | Globe lamp | I'M ZION | https://unsplash.com/photos/a-wooden-stool-with-a-light-on-top-of-it-ddW2HIYrFC4 |
 | gift-159 | Potted plants | freddie marriage | https://unsplash.com/photos/shallow-focus-photography-of-potted-plants-UcfKYTan-LU |
+| gift-04 | Golden Bridge, Ba Na Hills, Da Nang | supplied by the product owner (22 Oct 2026); source and licence not recorded: check before any public or production use | — |

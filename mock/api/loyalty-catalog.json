@@ -36,11 +36,11 @@
       },
       {
         "id": 104,
-        "name": "Travel voucher",
+        "name": "Da Nang 3D2N trip",
         "points": 60000,
         "image": "../assets/images/rewards/gift-04.webp",
         "category": "tour_travel",
-        "description": "Flights and hotels across Asia",
+        "description": "Golden Bridge at Ba Na Hills, flight and hotel",
         "badge": null,
         "showOnHome": true
       },
