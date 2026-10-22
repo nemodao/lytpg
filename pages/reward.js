@@ -3,9 +3,12 @@
 // sheet saying so, with "Learn how to earn coins" (to Earn); otherwise the sheet says checkout is coming soon (guests
 // also get Sign up and, lighter, Log in there). Back returns to where the user came from (?back=: the store, or a Loyalty page).
 // The data is the store's (the catalog list); the reward is picked by ?id=.
+// Events (spec §62, TRACKING.md): page view (`view` detail | missing, `entry`, the reward's parameters, which every event
+// of the page carries), Checkout (`outcome`), Learn how to earn coins, the guests' sign-up prompt, Back.
 import { load } from '../shared/app.js';
 import { coin } from '../shared/components.js';
-import { backParam, categoryName, rewardBadge, storeHead } from '../shared/store.js';
+import { initTracking, priceRange, shortRange, track } from '../shared/tracking.js';
+import { backParam, categoryName, readEntry, rewardBadge, storeHead } from '../shared/store.js';
 
 const { common, page, ui } = await load('store');
 const app = document.getElementById('app');
@@ -13,6 +16,15 @@ const id = new URLSearchParams(location.search).get('id');
 const item = page.rewards.find((reward) => reward.id === id);
 const back = backParam() || ui.href('store.html');
 const guest = common.guest;
+const entry = readEntry();
+// What Checkout shows, the same test the sheets use: 'guest' | 'not_enough' | 'coming_soon'.
+const outcome = () => (guest ? 'guest' : common.balance.available < item.points ? 'not_enough' : 'coming_soon');
+initTracking('reward', common, item ? {
+  view: 'detail', entry, reward_id: item.id, reward_name: item.name, category: item.category || 'none',
+  badge: item.badge || 'none', price_range: priceRange(item.points),
+  affordable: guest ? undefined : common.balance.available >= item.points,
+} : { view: 'missing', entry, reward_id: id ?? undefined });
+if (!item) track('loyalty_error_view', { error_scope: 'reward', reward_count: page.rewards.length }); // 0: catalog empty or failed
 document.body.classList.add('store-look', 'store-look--fixed'); // the store's look, background fixed (store.css)
 
 // The user's balance against the price: enough, or how many more coins (with a bar).
@@ -48,7 +60,7 @@ function render() {
       ${guest ? '' : balanceLine()}
       ${item.description ? `<div class="reward-part reward-about"><h3 class="t-body-strong">${ui.t('reward.about')}</h3><p class="t-body c-2">${ui.esc(item.description)}</p></div>` : ''}
     </section>
-    <div class="reward-cta"><button class="btn btn--primary btn--lg btn--block" type="button" data-action="checkout">${ui.t('reward.checkout')}</button></div>`;
+    <div class="reward-cta"><button class="btn btn--primary btn--lg btn--block" type="button" data-action="checkout" data-track="loyalty_checkout_click" data-track-outcome="${outcome()}"${outcome() === 'not_enough' ? ` data-track-short_range="${shortRange(item.points - common.balance.available)}"` : ''}>${ui.t('reward.checkout')}</button></div>`;
 }
 
 // Checkout. Not enough coins (signed in): how many more, and the way to Earn (left out when the programme runs no
@@ -64,7 +76,7 @@ function shortSheet() {
         <h2 class="t-title-s">${ui.t('reward.short.title')}</h2>
         <p class="t-body c-2">${ui.t('reward.short.body', { need: ui.num(item.points - common.balance.available) })}</p>
         <div class="stack">
-          ${earn ? `<a class="btn btn--primary btn--lg btn--block" href="${ui.href('trading-task.html')}">${ui.t('reward.short.cta')}${ui.icon('right', 'icon--sm')}</a>` : ''}
+          ${earn ? `<a class="btn btn--primary btn--lg btn--block" href="${ui.href('trading-task.html')}" data-track="loyalty_earn_more_click">${ui.t('reward.short.cta')}${ui.icon('right', 'icon--sm')}</a>` : ''}
           <button class="btn ${earn ? 'btn--stroke' : 'btn--primary'} btn--lg btn--block" type="button" data-action="close-sheet">${ui.t('reward.soon.ok')}</button>
         </div>
       </div>
@@ -72,7 +84,8 @@ function shortSheet() {
 }
 function openSheet() {
   closeSheet();
-  if (!guest && common.balance.available < item.points) { app.insertAdjacentHTML('beforeend', shortSheet()); return; }
+  if (outcome() === 'not_enough') { app.insertAdjacentHTML('beforeend', shortSheet()); return; }
+  if (outcome() === 'guest') track('loyalty_login_prompt_view', { from: 'checkout' }); // the guests' sign-up prompt, as in TRACKING.md E
   app.insertAdjacentHTML('beforeend', `
     <div class="scrim" data-soon-sheet data-action="close-sheet">
       <div class="sheet reward-soon" role="dialog" aria-modal="true" aria-label="${ui.t('reward.soon.title')}">
@@ -82,8 +95,8 @@ function openSheet() {
         <p class="t-body c-2">${ui.t('reward.soon.body')}</p>
         <div class="stack">
           ${guest ? `<div class="reward-soon__pair">
-            <button class="btn btn--primary btn--lg" type="button" data-intent="signup">${ui.t('join.signup')}</button>
-            <button class="btn btn--stroke btn--lg" type="button" data-intent="login">${ui.t('reward.soon.login')}</button>
+            <button class="btn btn--primary btn--lg" type="button" data-intent="signup" data-track="loyalty_signup_click" data-track-source="checkout" data-track-from="checkout">${ui.t('join.signup')}</button>
+            <button class="btn btn--stroke btn--lg" type="button" data-intent="login" data-track="loyalty_login_click" data-track-source="checkout" data-track-from="checkout">${ui.t('reward.soon.login')}</button>
           </div>` : ''}
           <button class="btn ${guest ? 'text-btn reward-soon__close' : 'btn--primary btn--lg btn--block'}" type="button" data-action="close-sheet">${ui.t('reward.soon.ok')}</button>
         </div>

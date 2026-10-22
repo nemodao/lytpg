@@ -4,7 +4,7 @@ import { load } from '../shared/app.js';
 import { mountNav } from '../shared/nav.js';
 import { mountTour } from '../shared/tour.js';
 import { createActivityFeed } from '../shared/activity-feed.js';
-import { initTracking, trackView } from '../shared/tracking.js';
+import { initTracking, priceRange, trackView } from '../shared/tracking.js';
 import { appHeader, balanceBlock, coin, mountJoinSheet, mountStoreLinks, redeemAttrs, showStatus, tourButton } from '../shared/components.js';
 
 const { common, page, ui } = await load('dashboard');
@@ -50,9 +50,10 @@ const GRID_CELLS = 10;
 const EARN_CELL = 3; // the "earn coins" card is the 3rd cell
 // Tracking (loyalty_reward_click): `position` is the reward's rank among the rewards (1–10; the "earn coins" card is
 // not counted), `reward_id` and `reward_name` as HSB sends them, `affordable` whether the balance covers the price (no
-// amount is sent).
+// amount is sent; not sent for guests, whose balance is always 0: spec §62), and since spec §62 `section` = home, the
+// reward's `category`, `badge` = none (Home's cards show no label) and `price_range`.
 const rewardCard = (item, position) => `
-  <button class="card reward-card" type="button" ${redeemAttrs(common, 'reward', 'reward')} data-reward="${ui.esc(item.id)}" data-track="loyalty_reward_click" data-track-position="${position}" data-track-reward_id="${ui.esc(item.id)}" data-track-reward_name="${ui.esc(item.name)}" data-track-affordable="${common.balance.available >= item.points}">
+  <button class="card reward-card" type="button" ${redeemAttrs(common, 'reward', 'reward')} data-reward="${ui.esc(item.id)}" data-track="loyalty_reward_click" data-track-position="${position}" data-track-reward_id="${ui.esc(item.id)}" data-track-reward_name="${ui.esc(item.name)}"${common.guest ? '' : ` data-track-affordable="${common.balance.available >= item.points}"`} data-track-section="home" data-track-category="${ui.esc(item.category || 'none')}" data-track-badge="none" data-track-price_range="${priceRange(item.points)}">
     <span class="reward-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</span>
     <span class="reward-card__name">${ui.esc(item.name)}</span>
     <span class="reward-card__foot">

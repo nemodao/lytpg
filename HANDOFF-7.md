@@ -1,7 +1,7 @@
 # Handoff 7 — what changed since handoff 6
 
 **Who this is for:** developers (and their AI assistants) who have already applied handoff 6, or are applying it now.
-Everything not named here is unchanged. Behaviour: `spec.md` §59–§61. Exact line changes: `CHANGES-since-handoff-6.diff`
+Everything not named here is unchanged. Behaviour: `spec.md` §59–§62. Exact line changes: `CHANGES-since-handoff-6.diff`
 in the package (images are not in it: see §7).
 
 This is an **early handoff**: the Reward Store's UI is done, sent before the backend has delivered the API changes it
@@ -114,13 +114,7 @@ guests see none); "About this reward" (`description`). A Tour & Travel picture i
 - The classes on `<body>` that switch the look: `store-look`, `store-tab--home`, `store-tab--rewards`,
   `store-look--fixed` (set by `store.js` / `reward.js`).
 
-**Events:** `store.html` and `reward.html` send **no events at all**: they do not call `initTracking`, so no
-`loyalty_page_view`, and the reward sheet's Sign up / Log in send no `loyalty_signup_click` / `loyalty_login_click`.
-If your layout sends page views for every route, leave the store routes out until store events are specified (a later
-round; spec §59). With Plan B on, the Loyalty pages still send what they did: `loyalty_redeem_click` (Redeem on Home
-and Coins, `Explore rewards` on the empty Redemption history), `loyalty_reward_click` (Home's reward cards),
-`loyalty_card_click` `target=rewards` (`Explore all rewards`), without the sheet's `source` / `from`; the "How to
-start" sheet events are no longer sent from those buttons.
+**Events:** see §9 (spec §62).
 
 ## 3. Catalog: more fields, all rewards (spec §59, §60)
 
@@ -199,6 +193,48 @@ In `shared/data-source.js`: `getOrders(path, body)` now takes the path and the b
   `loyalty_reward_click` without the sheet's `source` / `from` (links are held back, so the navigation itself is not
   checked). The existing "positions count rewards only" scenario gets a `stay` step, so its click does not navigate.
 
+## 9. Events for the store (spec §62): 38 events
+
+`TRACKING.md` is the contract (new section H, and changed rows); the event documentation for data and marketing is
+updated too. `tools/check-tracking.mjs` covers every point below (17 new scenarios).
+
+- **`shared/tracking.js`:**
+  - New common parameter `redeem_mode` = `store` | `tada` (from `common.rewardStore`) on every page.
+  - New `setPageParams(params)`: changes the page's base parameters after `initTracking` (the store's `view` when the
+    tab changes).
+  - The click listener now runs in the **capture phase**, so a click carries the page as it was when tapped, before
+    the page's own handler changes it. Side effect: on Earn `loyalty_account_select` now comes before the
+    `loyalty_upgrade_row_view` it causes. Keep this in the Next.js version.
+  - New `priceRange(points)`, `shortRange(coins)` (cut-offs to confirm against the real catalog); new `PARAMS`:
+    `section`, `filter`, `category`, `badge`, `outcome`, `price_range`, `short_range`.
+- **Pages:** `initTracking('store', …)` with `view` (`home` | `categories` | `empty`) and `entry`;
+  `initTracking('reward', …)` with `view` (`detail` | `missing`), `entry` and the reward's parameters (`reward_id`,
+  `reward_name`, `category`, `badge`, `price_range`, `affordable` for signed-in users), which every event of the page
+  then carries.
+- **`entry`** (how the page was reached): `mountStoreLinks` adds `via=<page>_<button>` to the store's and reward page's
+  address (`redeemAttrs` now puts `data-from` on store links), and the store's reward links add `via=store`.
+  `readEntry()` in `shared/store.js` reads it once and **removes it from the address** (`history.replaceState`), so
+  Back from a reward page, the device's back and a reload read `return`; `direct` without a valid `back`. The store's
+  `selfHref` drops `via` too.
+- **New events:** `loyalty_store_section_view` (`section`, `reward_count`; IntersectionObserver on each section's first
+  card, Travel's title; watched again after each render), `loyalty_category_view` (`category`, `from`: `chip` |
+  `see_all` sent on every change, `tab` | `page_load` once per category per load; `reward_count`),
+  `loyalty_checkout_click` (`outcome`: `not_enough` | `coming_soon` | `guest`, from the same test as the sheets;
+  `short_range` with `not_enough`), `loyalty_earn_more_click`.
+- **Reused:** `loyalty_reward_click` (store cards, tickets, trip cards: `section`, `filter` on lists, `position` within
+  the section, `category`, `badge` = the label the user saw, `price_range`, `affordable`); `loyalty_nav_click` (store bar:
+  `store_home` | `categories`, only when the tab changes: the open tab's button has no `data-track`, set in `render()`;
+  `back` on the bar and on the reward page's top Back); `loyalty_login_prompt_view`, `loyalty_signup_click`,
+  `loyalty_login_click` with `from` / `source` = `checkout` (guests' Checkout); `loyalty_error_view` `error_scope=reward`
+  with `reward_count` (missing reward; `0` = catalog empty or failed).
+- **Changed on Home:** `loyalty_reward_click` adds `section=home`, `category`, `badge=none`, `price_range`, and **no longer
+  sends `affordable` for guests** (it was always `false`). Tracking was not live yet, so no report breaks.
+- **GA4, before Plan B is turned on:** register 9 new event-scoped custom dimensions (`redeem_mode`, `entry`, `section`,
+  `filter`, `category`, `badge`, `outcome`, `price_range`, `short_range`); mark `loyalty_checkout_click` and
+  `loyalty_earn_more_click` as key events. GTM: Data Layer Variables for them; the `^loyalty_` trigger is unchanged.
+- **Check tool:** `loyalty_login_prompt_view` and `loyalty_category_view` are now allowed to repeat in one page load
+  (an existing bug for the first); new step `scroll-slowly` (screen by screen, so views of middle sections are seen).
+
 ## Left to the developer
 
 - **Status bar colour in a mobile browser:** the strip with the time and signal stays white or black over the store's
@@ -212,6 +248,7 @@ In `shared/data-source.js`: `getOrders(path, body)` now takes the path and the b
   says so. To confirm with the backend developer when the endpoints are handed over: the static key header's final
   name, how a signed-in call is authenticated, and the final fields.
 - **Do not ship** the `/app/point` paths before the backend has them on UAT.
-- **Product:** the switch `rewardStore` (where it lives, who turns it on); events for the store (a later round); a
+- **Product:** the switch `rewardStore` (where it lives, who turns it on); the price / shortfall cut-offs against the
+  real catalog; a
   loading / error view for the store pages; final copy for the store; real banner and reward pictures if the mock ones
   are not kept.

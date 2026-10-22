@@ -111,18 +111,22 @@ export function joinPanel(ui, common, { flat = false, nudged = false, source = '
 export const redeemAttrs = (common, intent, from = intent) => {
   const sheet = `data-action="join-sheet" data-from="${from}" aria-haspopup="dialog"`;
   if (!common.rewardStore) return joinIntent(common) ? sheet : `data-intent="${intent}"`;
-  return ['balance', 'history'].includes(from) && joinIntent(common) ? sheet : `data-action="store" data-store="${intent}"`;
+  return ['balance', 'history'].includes(from) && joinIntent(common) ? sheet : `data-action="store" data-store="${intent}" data-from="${from}"`;
 };
 
 // Opens the store, or a reward's page, from a Loyalty page. `back` is this page with its query, so the store's Back
-// returns here. A click whose default was prevented (e.g. by a test) does not navigate.
+// returns here. `via` names the way in for the store's tracking (`entry`, spec §62): this page and the button,
+// e.g. home_redeem, home_explore, home_reward, coins_redeem, orders_redeem; the store reads it once and removes it.
+// A click whose default was prevented (e.g. by a test) does not navigate.
+const PAGE_KEY = { 'dashboard.html': 'home', 'point-balance.html': 'coins', 'redemptions.html': 'orders' };
 export function mountStoreLinks(ui, app) {
   app.addEventListener('click', (event) => {
     const target = event.target.closest('[data-action="store"]');
     if (!target || event.defaultPrevented) return;
     const back = location.pathname.split('/').pop() + location.search;
     const reward = target.dataset.store === 'reward' ? target.dataset.reward : null;
-    const query = `${reward ? `id=${encodeURIComponent(reward)}&` : ''}back=${encodeURIComponent(back)}`;
+    const via = `${PAGE_KEY[location.pathname.split('/').pop()] ?? 'other'}_${target.dataset.from || target.dataset.store}`;
+    const query = `${reward ? `id=${encodeURIComponent(reward)}&` : ''}back=${encodeURIComponent(back)}&via=${via}`;
     const href = ui.href(reward ? 'reward.html' : 'store.html');
     location.href = `${href}${href.includes('?') ? '&' : '?'}${query}`;
   });

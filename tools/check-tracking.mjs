@@ -24,7 +24,8 @@ const eventsPart = tracking.slice(tracking.indexOf('## Events'), tracking.indexO
 const EVENTS = new Set([...eventsPart.matchAll(/^\| `(loyalty_[a-z_]+)` \|/gm)].map((match) => match[1]));
 const source = readFileSync(new URL('../shared/tracking.js', import.meta.url), 'utf8');
 const PARAMS = [...source.match(/const PARAMS = \[([\s\S]*?)\];/)[1].matchAll(/'([a-z_]+)'/g)].map((match) => match[1]);
-const REPEATABLE_VIEWS = new Set(['loyalty_join_card_view']); // the sheet's view is sent on every opening
+// Views sent again on purpose: the sheets' views on every opening; the store's category view on every chip / See all.
+const REPEATABLE_VIEWS = new Set(['loyalty_join_card_view', 'loyalty_login_prompt_view', 'loyalty_category_view']);
 
 const problems = [];
 const fail = (where, text) => problems.push(`${where}: ${text}`);
@@ -70,6 +71,9 @@ async function run(name, path, steps = [], expect = [], { tour = false } = {}) {
   await page.waitForTimeout(900);
   for (const step of steps) {
     if (step === 'scroll') await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    else if (step === 'scroll-slowly') { // screen by screen, so views of sections in the middle are seen
+      for (let y = 0; y <= await page.evaluate(() => document.body.scrollHeight); y += 300) { await page.evaluate((top) => window.scrollTo(0, top), y); await page.waitForTimeout(150); }
+    }
     else if (step === 'close') await page.evaluate(() => document.querySelector('[data-action^="close"]')?.click());
     else if (step === 'stay') await page.evaluate(() => document.addEventListener('click', (event) => event.preventDefault(), true)); // links do not navigate away
     else await page.evaluate((selector) => { const element = document.querySelector(selector); if (!element) throw new Error(`no ${selector}`); element.click(); }, step)
@@ -159,6 +163,62 @@ await run('orders: detail', 'redemptions.html?order=ord_7f3a91', ['[data-action=
   ['loyalty_voucher_open', { item_type: 'egift', status: 'completed' }],
 ]);
 await run('orders: unknown order', 'redemptions.html?order=nope', [], [['loyalty_error_view', { error_scope: 'order', view: 'detail' }]]);
+
+// Reward Store (Plan B, spec §62). Store and reward pages run with plan-b, as they only exist then.
+await run('home: redeem_mode', 'dashboard.html', [], [['loyalty_page_view', { page: 'home', redeem_mode: 'tada' }]]);
+await run('home: Plan B reward card', 'dashboard.html?state=plan-b', ['stay', '.reward-card[data-reward="101"]'], [
+  ['loyalty_page_view', { redeem_mode: 'store' }],
+  ['loyalty_reward_click', { section: 'home', position: '1', reward_id: '101', category: 'gadget_electronics', badge: 'none', price_range: '50000+', affordable: 'false' }],
+]);
+await run('home: guest reward card has no affordable', 'dashboard.html?state=guest,plan-b', ['stay', '.reward-card[data-reward="101"]'], [
+  ['loyalty_reward_click', { reward_id: '101', affordable: undefined }],
+]);
+await run('store: entries', 'store.html?state=plan-b&back=dashboard.html&via=home_explore', [], [['loyalty_page_view', { page: 'store', view: 'home', entry: 'home_explore', redeem_mode: 'store' }]]);
+await run('store: return', 'store.html?state=plan-b&back=dashboard.html', [], [['loyalty_page_view', { page: 'store', entry: 'return' }]]);
+await run('store: direct', 'store.html?state=plan-b', [], [['loyalty_page_view', { page: 'store', entry: 'direct' }]]);
+await run('store: Home Store', 'store.html?state=plan-b', ['scroll-slowly', 'stay', '.store-row .store-card:nth-child(2)', '.voucher', '.trip-card'], [
+  ['loyalty_store_section_view', { section: 'popular', reward_count: '8' }],
+  ['loyalty_store_section_view', { section: 'fnb', reward_count: '4' }],
+  ['loyalty_store_section_view', { section: 'travel', reward_count: '4' }],
+  ['loyalty_reward_click', { page: 'store', section: 'popular', position: '2', badge: 'hot', filter: undefined }],
+  ['loyalty_reward_click', { section: 'fnb', position: '1', badge: 'none', category: 'fnb_voucher', affordable: 'true' }],
+  ['loyalty_reward_click', { section: 'travel', position: '1', badge: 'none', category: 'tour_travel' }],
+]);
+await run('store: no travel', 'store.html?state=plan-b,no-travel', ['scroll-slowly'], [['loyalty_store_section_view', { section: 'fnb' }]]);
+await run('store: Categories', 'store.html?state=plan-b', ['[data-action="see-all"][data-cat="fnb_voucher"]', '[data-action="category"][data-cat="home_living"]', '[data-action="category"][data-cat="more"]', 'stay', '[data-tab="home"]', '[data-tab="rewards"]'], [
+  ['loyalty_category_view', { category: 'fnb_voucher', from: 'see_all', reward_count: '10', view: 'categories' }],
+  ['loyalty_category_view', { category: 'home_living', from: 'chip' }],
+  ['loyalty_category_view', { category: 'more', from: 'chip', reward_count: '0' }],
+  ['loyalty_nav_click', { target: 'store_home', view: 'categories' }],
+  ['loyalty_nav_click', { target: 'categories', view: 'home', reward_id: undefined, section: undefined }],
+  ['loyalty_category_view', { category: 'more', from: 'tab' }],
+]);
+await run('store: list taps', 'store.html?state=plan-b&tab=rewards&cat=fnb_voucher', ['stay', '.store-grid .store-card:nth-child(3)'], [
+  ['loyalty_category_view', { category: 'fnb_voucher', from: 'page_load' }],
+  ['loyalty_reward_click', { section: 'list', filter: 'fnb_voucher', position: '3' }],
+]);
+await run('store: empty catalog', 'store.html?state=plan-b,catalog-empty', [], [['loyalty_page_view', { page: 'store', view: 'empty' }]]);
+await run('reward: not enough coins', 'reward.html?state=plan-b&id=101&back=store.html&via=store', ['[data-action="checkout"]', 'stay', '[data-track="loyalty_earn_more_click"]'], [
+  ['loyalty_page_view', { page: 'reward', view: 'detail', entry: 'store', reward_id: '101', category: 'gadget_electronics', badge: 'hot', price_range: '50000+', affordable: 'false' }],
+  ['loyalty_checkout_click', { reward_id: '101', outcome: 'not_enough', short_range: '20000+' }],
+  ['loyalty_earn_more_click', { reward_id: '101' }],
+]);
+await run('reward: enough coins', 'reward.html?state=plan-b&id=108&back=dashboard.html&via=home_reward', ['[data-action="checkout"]'], [
+  ['loyalty_page_view', { entry: 'home_reward', affordable: 'true' }],
+  ['loyalty_checkout_click', { outcome: 'coming_soon', short_range: undefined }],
+]);
+await run('reward: no category', 'reward.html?state=plan-b&id=109', [], [['loyalty_page_view', { category: 'none', entry: 'direct' }]]);
+await run('reward: guest', 'reward.html?state=plan-b,guest&id=108', ['[data-action="checkout"]', 'stay', '[data-intent="signup"]', 'close', '[data-action="checkout"]'], [
+  ['loyalty_checkout_click', { outcome: 'guest', join_step: 'signup', affordable: undefined }],
+  ['loyalty_login_prompt_view', { from: 'checkout' }],
+  ['loyalty_signup_click', { source: 'checkout', from: 'checkout', reward_id: '108' }],
+  ['loyalty_login_prompt_view', { from: 'checkout' }],
+]);
+await run('reward: missing', 'reward.html?state=plan-b&id=nope', ['stay', '[data-back]'], [
+  ['loyalty_page_view', { page: 'reward', view: 'missing', reward_id: 'nope', reward_name: undefined }],
+  ['loyalty_error_view', { error_scope: 'reward', reward_count: '51' }],
+  ['loyalty_nav_click', { target: 'back' }],
+]);
 
 await browser.close();
 if (problems.length) {

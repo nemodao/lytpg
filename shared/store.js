@@ -18,7 +18,23 @@ export const withParams = (href, params) => {
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
   return query ? `${href}${href.includes('?') ? '&' : '?'}${query}` : href;
 };
-export const rewardHref = (ui, id, back) => withParams(ui.href('reward.html'), { id, back });
+export const rewardHref = (ui, id, back) => withParams(ui.href('reward.html'), { id, back, via: 'store' });
+
+// How this page was reached, for tracking (`entry`, spec §62): the `via` a link set (e.g. home_redeem, store), read once
+// and then removed from the address, so Back from a reward page, the device's back and a reload all read `return`;
+// `direct` when there is no valid `back` either (a link from outside).
+const VIAS = /^(home|coins|orders)_(redeem|explore|reward)$|^store$/;
+export function readEntry() {
+  const query = new URLSearchParams(location.search);
+  const via = query.get('via');
+  if (via != null) {
+    query.delete('via');
+    const rest = query.toString().replace(/%2C/g, ',');
+    try { history.replaceState(null, '', `${location.pathname}${rest ? `?${rest}` : ''}`); } catch { /* the address keeps it */ }
+  }
+  if (via && VIAS.test(via)) return via;
+  return backParam() ? 'return' : 'direct';
+}
 
 // Top of both tabs (and of the reward page): the store's icon, "Reward Redemption" and the user's balance, small.
 // The icon is a 3D gift box (assets/images/store/store-icon.webp). It sticks to the top like Loyalty's header: once the page
@@ -26,7 +42,7 @@ export const rewardHref = (ui, id, back) => withParams(ui.href('reward.html'), {
 // the balance. The balance pill has a thin line between the coin and the number.
 export const storeHead = (ui, common, { back = '' } = {}) => (requestAnimationFrame(watchHeader), `
   <header class="store-head">
-    ${back ? `<a class="header-action store-head__back" href="${ui.esc(back)}" aria-label="${ui.t('orders.back')}" data-back>${ui.icon('back')}</a>` : ''}
+    ${back ? `<a class="header-action store-head__back" href="${ui.esc(back)}" aria-label="${ui.t('orders.back')}" data-back data-track="loyalty_nav_click" data-track-target="back">${ui.icon('back')}</a>` : ''}
     <span class="store-head__brand${back ? ' store-head__brand--plain' : ''}">
       ${back ? '' : '<span class="store-head__icon"><img src="../assets/images/store/store-icon.webp" alt=""></span>'}
       <h1 class="store-head__title">${ui.t('store.title')}</h1>

@@ -798,3 +798,14 @@ The Reward Store of §59 is not always on: it is Plan B, used only if the Tada i
 - **Off (default):** Redeem buttons behave as in §49: users who still need KYC or a first deposit get the "How to start" sheet; everyone else the Tada intent (`redeem`, `reward`). The recent activity shows coin and reward entries.
 - **On (Plan B):** Redeem and `Explore all rewards` open the Reward Store, a reward card opens that reward's page, for everyone (§59); the recent activity shows coin entries only, since nothing can be redeemed yet. (With the real API there are no redemptions to show anyway; the filter makes the mock match.)
 
+## 62. Events for the Reward Store (decided 23 Oct 2026, handoff 7)
+
+Planned by 3 reviews (business, engineering, UI coverage) with a cross-review; approved by the owner. The full list is in `TRACKING.md` (section H).
+
+- **Purpose:** measure demand while checkout is not live: who enters the store and from where, what they browse, which rewards and price levels they want, how many try to Checkout with or without enough coins, and whether the store sends users to Earn and guests to sign up.
+- **New events (4):** `loyalty_store_section_view`, `loyalty_category_view`, `loyalty_checkout_click`, `loyalty_earn_more_click` (38 in all). Reused: `loyalty_page_view` (`page` = `store` / `reward`), `loyalty_reward_click`, `loyalty_nav_click`, `loyalty_login_prompt_view`, `loyalty_signup_click`, `loyalty_login_click`, `loyalty_error_view`.
+- **New parameters:** `redeem_mode` (every event: `tada` / `store`), `entry` (store and reward page: how they were reached; Back and reloads read `return`), `section`, `filter`, `category`, `badge` (the label the user saw), `outcome`, `price_range`, `short_range`. `view` gains store and reward values.
+- **Not tracked:** closing a sheet, the banner, the balance pill, scrolling a row, reaching the end of a list.
+- `affordable` is no longer sent for guests (their balance is always 0), on Home too.
+- **Before Plan B is turned on:** register the 9 new GA4 dimensions; mark `loyalty_checkout_click` and `loyalty_earn_more_click` as key events; confirm the price and shortfall cut-offs against the real catalog.
+

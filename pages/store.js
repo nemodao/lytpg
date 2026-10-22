@@ -1,13 +1,16 @@
 // Reward Store (spec §59): a browse-only redemption store, opened from Loyalty's Redeem buttons. Two tabs on one page,
 // switched by the store's own bottom bar: Home Store (banner and three picked sections) and Categories (`tab=rewards`: every reward, by
 // category). A reward opens reward.html. The bar's Back returns to the Loyalty page the user came from (?back=).
-// No events yet (spec §59: a later round).
+// Events (spec §62, TRACKING.md): page view with `view` and `entry`; section views; category views; reward clicks;
+// the bottom bar.
 import { load } from '../shared/app.js';
 import { coin } from '../shared/components.js';
 import { STORE_CATEGORIES } from '../shared/api-adapter.js';
-import { backParam, categoryName, rewardBadge, rewardHref, storeHead, withParams } from '../shared/store.js';
+import { initTracking, priceRange, setPageParams, track, trackView } from '../shared/tracking.js';
+import { backParam, categoryName, readEntry, rewardBadge, rewardHref, storeHead, withParams } from '../shared/store.js';
 
 const { common, page, ui } = await load('store');
+const entry = readEntry(); // before anything rewrites the address
 const app = document.getElementById('app');
 const query = new URLSearchParams(location.search);
 
@@ -19,11 +22,23 @@ let category = ['all', 'more', ...STORE_CATEGORIES].includes(query.get('cat')) ?
 const back = backParam() || ui.href('dashboard.html');
 const selfHref = () => {
   const keep = new URLSearchParams(location.search);
-  ['tab', 'cat', 'back'].forEach((name) => keep.delete(name));
+  ['tab', 'cat', 'back', 'via'].forEach((name) => keep.delete(name));
   const rest = keep.toString().replace(/%2C/g, ',');
   return withParams(`store.html${rest ? `?${rest}` : ''}`, { tab: tab === 'rewards' ? 'rewards' : '', cat: tab === 'rewards' && category !== 'all' ? category : '', back });
 };
 const rewards = page.rewards;
+const viewName = () => (!rewards.length ? 'empty' : tab === 'home' ? 'home' : 'categories');
+initTracking('store', common, { view: viewName(), entry });
+
+// Reward taps (loyalty_reward_click): the reward, its place (`section`; on Categories `filter` = the chip), `position` in
+// that place (from 1), `badge` = the label the user saw on that card, `affordable` for signed-in users only.
+const trackAttrs = (item, position, section, filter) => [
+  ['', 'loyalty_reward_click'], ['-section', section], ['-filter', filter], ['-position', position],
+  ['-reward_id', item.id], ['-reward_name', item.name], ['-category', item.category || 'none'],
+  ['-badge', section === 'popular' || section === 'list' ? item.badge || 'none' : 'none'],
+  ['-price_range', priceRange(item.points)],
+  ['-affordable', common.guest ? undefined : String(common.balance.available >= item.points)],
+].filter(([, value]) => value !== undefined).map(([name, value]) => `data-track${name}="${ui.esc(value)}"`).join(' ');
 
 // ---- Home Store: three sections from the one list, no reward twice (spec §59) ----
 // F&B first (its first 4 in the catalog's order), then Travel (its first 4), then Popular from the rest: rewards marked
@@ -47,16 +62,16 @@ const price = (item) => `<span class="store-price num">${coin('coin--xs')}${ui.n
 const href = (item) => rewardHref(ui, item.id, selfHref());
 
 // Square card: two per row on Categories, one scrolling row in Popular. The only card with the Hot / New label.
-const card = (item) => `
-  <a class="card store-card" href="${href(item)}">
+const card = (item, position, section, filter) => `
+  <a class="card store-card" href="${href(item)}" ${trackAttrs(item, position, section, filter)}>
     <span class="store-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}${rewardBadge(ui, item)}</span>
     <span class="store-card__name">${ui.esc(item.name)}</span>
     ${price(item)}
   </a>`;
 
 // Voucher: a ticket, one per row: the voucher's art on the left, a perforated edge, the price on the right.
-const voucher = (item) => `
-  <a class="voucher" href="${href(item)}">
+const voucher = (item, index) => `
+  <a class="voucher" href="${href(item)}" ${trackAttrs(item, index + 1, 'fnb')}>
     <span class="voucher__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</span>
     <span class="voucher__body">
       <span class="voucher__kind">${ui.t('store.voucher')}</span>
@@ -70,14 +85,14 @@ const voucher = (item) => `
 // raised) over a purple layer showing at the bottom right; a diagonal "Special" sash crosses its picture's top-left
 // corner (fixed in the front end, not from the API); the price is under the name. `See all` sits on the panel's
 // bottom edge. The panel keeps its light colours in both themes (data-theme="light").
-const trip = (item) => `
-  <a class="trip-card" href="${href(item)}">
+const trip = (item, index) => `
+  <a class="trip-card" href="${href(item)}" ${trackAttrs(item, index + 1, 'travel')}>
     <span class="trip-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}<span class="trip-sash">${ui.t('store.special')}</span></span>
     <span class="trip-card__name">${ui.esc(item.name)}</span>
     ${price(item)}
   </a>`;
 const tripPanel = (items) => `
-  <section class="trip-promo blend-pink" data-theme="light">
+  <section class="trip-promo blend-pink" data-theme="light" data-section="travel" data-count="${items.length}">
     <div class="trip-promo__head">
       <p class="trip-promo__title">${ui.t('store.travel')}</p>
       <p class="trip-promo__ribbon">${ui.t('store.travel.ribbon')}</p>
@@ -99,8 +114,8 @@ function homeTab() {
       <img class="store-banner__img" src="../assets/images/store/banner.webp" alt="">
       <div class="store-banner__text"><p class="store-banner__title">${ui.t('store.banner.title')}</p><p class="store-banner__body">${ui.t('store.banner.body')}</p></div>
     </div>
-    ${popular.length ? `<section class="store-section">${sectionHead(ui.t('store.popular'), 'all')}<div class="store-row">${popular.map(card).join('')}</div></section>` : ''}
-    ${fnb.length ? `<section class="store-section">${sectionHead(ui.t('store.fnb'), 'fnb_voucher')}<div class="voucher-list">${fnb.map(voucher).join('')}</div></section>` : ''}
+    ${popular.length ? `<section class="store-section" data-section="popular" data-count="${popular.length}">${sectionHead(ui.t('store.popular'), 'all')}<div class="store-row">${popular.map((item, index) => card(item, index + 1, 'popular')).join('')}</div></section>` : ''}
+    ${fnb.length ? `<section class="store-section" data-section="fnb" data-count="${fnb.length}">${sectionHead(ui.t('store.fnb'), 'fnb_voucher')}<div class="voucher-list">${fnb.map(voucher).join('')}</div></section>` : ''}
     ${travel.length ? tripPanel(travel) : ''}`;
 }
 
@@ -128,11 +143,38 @@ function rewardsTab() {
   }
   const shown = category === 'all' ? rewards : rewards.filter((item) => item.category === category);
   return `${chips}
-    ${shown.length ? `<div class="store-grid">${shown.map(card).join('')}</div>` : ''}
+    ${shown.length ? `<div class="store-grid">${shown.map((item, index) => card(item, index + 1, 'list', category)).join('')}</div>` : ''}
     ${noteCard(ui.t('store.soon.title'), ui.t('store.soon.body'), 'clock')}`;
 }
 
 // ---- Page ----
+
+// Section views (loyalty_store_section_view): once per section per page load, when the section's first card (Travel:
+// its title) is half on screen. Watched again after each render, since a tab switch rebuilds the page.
+let sectionObserver = null;
+function watchSections() {
+  sectionObserver?.disconnect();
+  sectionObserver = new IntersectionObserver((entries) => entries.forEach((item) => {
+    if (!item.isIntersecting) return;
+    const section = item.target.closest('[data-section]');
+    trackView('loyalty_store_section_view', { section: section.dataset.section, reward_count: section.dataset.count }, section.dataset.section);
+    sectionObserver.unobserve(item.target);
+  }), { threshold: 0.5 });
+  app.querySelectorAll('[data-section]').forEach((section) => {
+    const first = section.querySelector('.trip-promo__head, .store-row > *, .voucher-list > *');
+    if (first) sectionObserver.observe(first);
+  });
+}
+
+// Category views (loyalty_category_view): each time a list is shown. `from` says how: a chip or See all (sent on every
+// change: a choice), or the Categories tab / the page opening on it (sent once per category per page load: the list
+// was only shown).
+let categoryFrom = 'page_load';
+function trackCategory() {
+  const params = { category, from: categoryFrom, reward_count: category === 'more' ? 0 : (category === 'all' ? rewards : rewards.filter((item) => item.category === category)).length };
+  if (categoryFrom === 'chip' || categoryFrom === 'see_all') track('loyalty_category_view', params);
+  else trackView('loyalty_category_view', params, `${categoryFrom}:${category}`);
+}
 
 function render() {
   const chipsScroll = app.querySelector('.store-chips')?.scrollLeft ?? null;
@@ -152,7 +194,17 @@ function render() {
   // Categories: the top bar scrolls away and the category chips stick to the top instead.
   document.body.classList.toggle('store-tab--rewards', tab === 'rewards' && !empty);
   if (tab === 'rewards') app.querySelector('.store-head')?.setAttribute('data-no-stick', '');
-  nav.querySelectorAll('[data-tab]').forEach((button) => (button.dataset.tab === tab ? button.setAttribute('aria-current', 'page') : button.removeAttribute('aria-current')));
+  nav.querySelectorAll('[data-tab]').forEach((button) => {
+    const current = button.dataset.tab === tab;
+    button.toggleAttribute('aria-current', current);
+    if (current) button.setAttribute('aria-current', 'page');
+    // Only a change of tab is tracked: the open tab has no data-track.
+    if (current) button.removeAttribute('data-track');
+    else button.setAttribute('data-track', 'loyalty_nav_click');
+  });
+  setPageParams({ view: viewName() });
+  if (!empty && tab === 'rewards') trackCategory();
+  if (!empty && tab === 'home') watchSections();
   try { history.replaceState(null, '', selfHref()); } catch { /* some file:// viewers refuse it: the view still changes */ }
 }
 
@@ -161,7 +213,7 @@ function render() {
 // three and CSS shows the right one (store.css).
 const navArt = (art, version, extraClass) => `<img class="nav__image ${extraClass}" src="../assets/images/nav/${art}-${version}.png" alt="">`;
 const navTab = (tabId, art, label) => `
-    <button class="nav__tab" type="button" data-tab="${tabId}">
+    <button class="nav__tab" type="button" data-tab="${tabId}" data-track-target="${tabId === 'home' ? 'store_home' : 'categories'}">
       <span class="nav__art">${navArt(art, 'light', 'nav__image--on-light store-nav__off')}${navArt(art, 'dark', 'nav__image--on-dark store-nav__off')}${navArt(art, 'on', 'store-nav__on')}</span>
       <span>${label}</span>
     </button>`;
@@ -169,7 +221,7 @@ const nav = document.createElement('nav');
 nav.className = 'nav';
 nav.setAttribute('aria-label', ui.t('store.tabs'));
 nav.innerHTML = `
-  <a class="nav__exit nav__back" href="${ui.esc(back)}" aria-label="${ui.t('store.back')}">${ui.icon('back')}</a>
+  <a class="nav__exit nav__back" href="${ui.esc(back)}" aria-label="${ui.t('store.back')}" data-track="loyalty_nav_click" data-track-target="back">${ui.icon('back')}</a>
   <div class="nav__tabs">
     ${navTab('home', 'store', ui.t('store.tab.home'))}
     ${navTab('rewards', 'rewards', ui.t('store.tab.rewards'))}
@@ -180,6 +232,7 @@ nav.addEventListener('click', (event) => {
   const button = event.target.closest('[data-tab]');
   if (!button || button.dataset.tab === tab) return;
   tab = button.dataset.tab;
+  categoryFrom = 'tab';
   render();
   window.scrollTo(0, 0);
 });
@@ -195,8 +248,8 @@ addEventListener('scroll', () => { if (!chipsFrame) chipsFrame = requestAnimatio
 app.addEventListener('click', (event) => {
   const button = event.target.closest('[data-action]');
   if (!button) return;
-  if (button.dataset.action === 'see-all') { tab = 'rewards'; category = button.dataset.cat; app.querySelector('.store-chips')?.remove(); render(); window.scrollTo(0, 0); }
-  if (button.dataset.action === 'category') { category = button.dataset.cat; render(); }
+  if (button.dataset.action === 'see-all') { tab = 'rewards'; category = button.dataset.cat; categoryFrom = 'see_all'; app.querySelector('.store-chips')?.remove(); render(); window.scrollTo(0, 0); }
+  if (button.dataset.action === 'category' && button.dataset.cat !== category) { category = button.dataset.cat; categoryFrom = 'chip'; render(); }
 });
 
 render();
