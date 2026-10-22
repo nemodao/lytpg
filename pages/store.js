@@ -111,7 +111,15 @@ const noteCard = (title, body, icon) => `
 
 function rewardsTab() {
   const chips = `<div class="store-chips" role="group" aria-label="${ui.t('store.categories')}">${chip('all', ui.t('store.cat.all'))}${STORE_CATEGORIES.map((key) => chip(key, categoryName(ui, key))).join('')}${chip('more', ui.t('store.cat.more'))}</div>`;
-  if (category === 'more') return `${chips}${noteCard(ui.t('store.more.title'), ui.t('store.more.body'), 'star')}`;
+  // "More categories": a centred card with the pile of rewards from the banner on top. A clock will be added to the
+  // picture (more is on the way).
+  if (category === 'more') {
+    return `${chips}
+      <div class="card store-note store-note--stacked">
+        <img class="store-note__art" src="../assets/images/store/more-rewards.webp" alt="">
+        <span class="stack stack--tight"><span class="t-body-strong">${ui.t('store.more.title')}</span><span class="t-caption c-2">${ui.t('store.more.body')}</span></span>
+      </div>`;
+  }
   const shown = category === 'all' ? rewards : rewards.filter((item) => item.category === category);
   return `${chips}
     ${shown.length ? `<div class="store-grid">${shown.map(card).join('')}</div>` : ''}

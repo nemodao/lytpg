@@ -279,6 +279,8 @@
 .store-chips .chip { flex: none; white-space: nowrap; }
 .chip--more { border-style: dashed; }
 .store-note { flex-direction: row; align-items: center; gap: var(--spacing-12); }
+.store-note--stacked { flex-direction: column; text-align: center; gap: var(--spacing-12); padding-block: var(--spacing-24); }
+.store-note__art { display: block; width: 72%; height: auto; }
 .store-note__icon { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--ui-badge-blue); color: var(--ui-text-brand); }
 
 /* ---- Bottom bar: Back instead of Loyalty's Close, tabs with line icons ---- */
