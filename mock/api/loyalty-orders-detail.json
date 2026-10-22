@@ -3,21 +3,24 @@
   "message": "",
   "code": 200,
   "result": {
+    "status": "onprocess",
     "orderReference": "ord_5c2e08",
     "orderNumber": "TADA26101009120384",
-    "status": "onprocess",
-    "orderDate": "2026-10-10T02:12:00Z",
-    "lastStatusAt": "2026-10-11T08:20:00Z",
-    "coinSpent": 18000,
-    "refunded": false,
-    "items": [
+    "recipient": {
+      "name": "Budi Santoso",
+      "email": "budi@example.com",
+      "address": "Jl. Sudirman No. 21, Kebayoran Baru, Jakarta Selatan",
+      "postalCode": "12190",
+      "cityId": 5,
+      "areaId": 11239
+    },
+    "orderItems": [
       {
-        "name": "AirPods Pro 2",
-        "type": "physical",
-        "quantity": 1,
+        "itemName": "AirPods Pro 2",
+        "itemType": "physical",
         "status": "on process",
-        "evoucher": null,
-        "token": null,
+        "quantity": 1,
+        "price": 3999000,
         "tracking": {
           "awbNumber": "JNE0012345678",
           "shippingCompany": "JNE",
@@ -25,11 +28,15 @@
         }
       }
     ],
-    "recipient": {
-      "name": "Budi Santoso",
-      "address": "Jl. Sudirman No. 21, Kebayoran Baru, Jakarta Selatan",
-      "postalCode": "12190"
-    }
+    "payment": {
+      "method": "coin"
+    },
+    "fees": [
+      {
+        "name": "SHIPPING_FEE",
+        "amount": 0
+      }
+    ]
   },
   "extraData": null,
   "timestamp": 1791963300000

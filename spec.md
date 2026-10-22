@@ -830,3 +830,12 @@ Corrects §60 ("no `timestamp`", header name to confirm), after the Tada integra
 - The `/app/point` endpoints go through the app's standard request filter: **the same request envelope as the loyalty API** (signed body, `timestamp` in seconds **required**, refused outside a 24-hour window) and the same headers: signed in `authorization` = the app's JWT; guests only `x-auth-key` with the same static value as the loyalty API's no-login calls.
 - Only the path and the business fields differ: catalog `{ clientId }` (null for guests); orders `{ clientId, pageNo, pageSize }` (**`pageNo`**, not `page`); order detail at **`POST /app/point/order/detail`** (`order` singular; §60 said `orders/detail`), `{ clientId, orderReference }`; redeem session `{ clientId }`; activity no business field.
 - Base unchanged: `{host}/pointSys/app/point/…`.
+
+## 66. Order detail: Tada's order passed through, joined with the list (decided 23 Oct 2026, handoff 7)
+
+From the backend code, settled with the owner through the Tada integration session:
+
+- `POST /app/point/order/detail` `{ clientId, orderReference }` is read live from Tada and passes Tada's JSON through: `{ status, orderReference, orderNumber, recipient, orderItems, payment, fees }`. Items: `itemName`, `itemType`, `status`, `quantity`, `price`; e-vouchers `egiftDetail { evoucherCode, pin, evoucherLink, expiredDate }`; PLN / mobile credit / e-wallet `vendorDetail { serialNumber, vendorMessage, vendorStatus }`; goods `tracking { awbNumber, shippingCompany, trackingNumber }`. Recipient `{ name, email, address, postalCode, cityId, areaId }`: name, address and postal code are shown. Field names follow Tada's documentation: to be checked against a real order.
+- The detail's coins, order date and status come from that order's row of `/app/point/orders` (the front end joins them); the backend does not enrich the detail for now.
+- Not sent by any endpoint for now: when the status last changed (the "Updated …" line is hidden) and whether the coins were refunded (no green note). To be added later if needed.
+- Never shown (IDR): items' `price`, `fees[].amount`, any amount in `payment`. Statuses as §52 (`onprocess` is read as `on process`), for the order and each item.

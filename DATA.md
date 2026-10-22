@@ -133,13 +133,13 @@ Example file: `mock/redemptions.json` (`default`)
 | `orders[].orderDate` | string | `"2026-10-14T06:22:00Z"` | When the order was placed (ISO 8601). List is newest first. |
 | `orders[].firstItemName` | string | `"Nintendo Switch"` | Name of the order's first reward (POST /app/point/orders `firstItemName`, settled 20 Oct 2026). |
 | `orders[].coinSpent` | number | `30000` | Coins taken for the order. |
-| `details[].orderReference` | string | `"ord_a03f77"` | MOCK ONLY: the demo's orders for fetchOrder(ref). With the API, one POST /app/point/order/detail { orderReference } per order, in this shape. |
+| `details[].orderReference` | string | `"ord_a03f77"` | MOCK ONLY: the demo's orders for fetchOrder(ref). With the API, one POST /app/point/order/detail { orderReference } per order (the Tada order) joined with its row of the list, in this shape. |
 | `details[].orderNumber` | string | `"TADA26101406220019"` | As in the list. |
 | `details[].status` | as orders[].status | `"new"` | Current status (phase 1 has no step-by-step history). |
 | `details[].orderDate` | string | `"2026-10-14T06:22:00Z"` | When the order was placed. |
-| `details[].lastStatusAt` | string | `"2026-10-14T06:22:00Z"` | When the status last changed: "Updated {date}, {time}". |
+| `details[].lastStatusAt` | string | `"2026-10-14T06:22:00Z"` | When the status last changed: "Updated {date}, {time}". null: the line is hidden (no endpoint sends it for now). |
 | `details[].coinSpent` | number | `30000` | Coins taken for the order. |
-| `details[].refunded` | boolean | `false` | true when the coins went back to the balance: a green note. |
+| `details[].refunded` | boolean | `false` | true when the coins went back to the balance: a green note. No endpoint sends it for now (always false with the API). |
 | `details[].items[].name` | string | `"Nintendo Switch"` | Reward name. |
 | `details[].items[].type` | "egift" | "physical" | "pln" | "pulsa" | … | `"physical"` | Kind: decides the block shown. egift: evoucher; pln / pulsa: token; physical: tracking. Others: label "Reward". |
 | `details[].items[].quantity` | number | `1` | Quantity. |

@@ -159,7 +159,7 @@ function orderView(order) {
   const title = order.items.length > 1 ? ui.t('orders.itemsCount', { n: order.items.length }) : ui.esc(order.items[0]?.name ?? '');
   return `${header}
     <section class="card order-head">
-      <div class="order-head__status">${statusBadge(order.status)}<span class="t-caption c-3 num">${ui.t('orders.updated', { date: ui.date(order.lastStatusAt), time: ui.time(order.lastStatusAt) })}</span></div>
+      <div class="order-head__status">${statusBadge(order.status)}${order.lastStatusAt ? `<span class="t-caption c-3 num">${ui.t('orders.updated', { date: ui.date(order.lastStatusAt), time: ui.time(order.lastStatusAt) })}</span>` : ''}</div>
       <h2 class="t-title-s">${title}</h2>
       ${order.refunded ? notice(ui, { icon: 'check', tone: 'success', text: ui.t('orders.refunded', { points: ui.num(order.coinSpent) }) }) : ''}
       <div class="facts">

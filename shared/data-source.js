@@ -161,7 +161,7 @@ async function pageFromApi(page) {
   if (page === 'store') return { rewards: await rewardsList() }; // the Reward Store and its reward page (spec §59)
   if (page === 'redemptions') {
     const first = toOrdersPage(await getOrders('app/point/orders', { pageNo: 1, pageSize: ORDERS_PAGE_SIZE }));
-    return { orders: first.orders, total: first.total };
+    return { orders: rememberOrders(first.orders), total: first.total };
   }
   const task = await taskGet();
   if (page === 'dashboard') return toDashboardPage(task, { ...(await uiOnly()), rewards: await rewardsList() });
@@ -183,13 +183,36 @@ export const fetchPage = (page) => (USE_API ? pageFromApi(page) : getJSON(`../mo
 // Redemption history, the next page of the list (pageNo from 2). Mock: the mock holds every order, so nothing more.
 export const ORDERS_PAGE_SIZE = 20;
 export const fetchMoreOrders = (pageNo) => (USE_API
-  ? getOrders('app/point/orders', { pageNo, pageSize: ORDERS_PAGE_SIZE }).then((answer) => toOrdersPage(answer).orders)
+  ? getOrders('app/point/orders', { pageNo, pageSize: ORDERS_PAGE_SIZE }).then((answer) => rememberOrders(toOrdersPage(answer).orders))
   : Promise.resolve([]));
 
-// One order of Redemption history. Mock: from the `details` list of mock/redemptions.json.
-export const fetchOrder = (ref) => (USE_API
-  ? getOrders('app/point/order/detail', { orderReference: ref }).then(toOrder)
-  : getJSON('../mock/redemptions.json').then((file) => file.default.details.find((order) => order.orderReference === ref) ?? null));
+// One order of Redemption history. API: POST /app/point/order/detail { orderReference } (Tada's order, passed through),
+// joined with the order's row of the list for its coins, date and status (spec §66). The rows already shown this
+// session are kept (rememberOrders); an order opened from elsewhere (a link) is looked up in the list, 100 a page.
+// Mock: from the `details` list of mock/redemptions.json.
+const ORDERS_KEY = 'hsb-loyalty-orders-v1';
+function rememberOrders(orders) {
+  try {
+    const kept = JSON.parse(sessionStorage.getItem(ORDERS_KEY) || '{}');
+    orders.forEach((order) => { kept[order.orderReference] = order; });
+    sessionStorage.setItem(ORDERS_KEY, JSON.stringify(kept));
+  } catch { /* not kept: looked up again */ }
+  return orders;
+}
+async function orderSummary(ref) {
+  try { const kept = JSON.parse(sessionStorage.getItem(ORDERS_KEY) || '{}'); if (kept[ref]) return kept[ref]; } catch { /* look it up */ }
+  for (let pageNo = 1; pageNo <= 50; pageNo += 1) {
+    const answer = toOrdersPage(await getOrders('app/point/orders', { pageNo, pageSize: 100 }));
+    const found = rememberOrders(answer.orders).find((order) => order.orderReference === ref);
+    if (found || !answer.orders.length || pageNo * 100 >= answer.total) return found ?? null;
+  }
+  return null;
+}
+export const fetchOrder = async (ref) => {
+  if (!USE_API) return getJSON('../mock/redemptions.json').then((file) => file.default.details.find((order) => order.orderReference === ref) ?? null);
+  const [detail, summary] = await Promise.all([getOrders('app/point/order/detail', { orderReference: ref }), orderSummary(ref)]);
+  return toOrder(detail, summary);
+};
 
 export const fetchCopy = () => getJSON('../copy/en.json');
 

@@ -24,7 +24,7 @@ const built = {
   'store.rewards': [toRewards(api('loyalty-catalog')), mock('store').rewards],
   'redemptions.orders': [toOrdersPage(api('loyalty-orders')).orders, mock('redemptions').orders],
   'redemptions.total': [toOrdersPage(api('loyalty-orders')).total, mock('redemptions').total],
-  'redemptions.order': [toOrder(api('loyalty-orders-detail')), mock('redemptions').details.find((order) => order.orderReference === api('loyalty-orders-detail').orderReference)],
+  'redemptions.order': [toOrder(api('loyalty-orders-detail'), toOrdersPage(api('loyalty-orders')).orders.find((order) => order.orderReference === api('loyalty-orders-detail').orderReference)), mock('redemptions').details.find((order) => order.orderReference === api('loyalty-orders-detail').orderReference)],
 };
 
 // Differences that are expected: preview-only fields of the mock, and values the sample API states more precisely.

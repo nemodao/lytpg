@@ -171,27 +171,49 @@ export const toOrders = (list) =>
     }))
     .sort((a, b) => Date.parse(b.orderDate) - Date.parse(a.orderDate));
 
-// POST /app/point/order/detail { orderReference } -> the order the details view shows. No money values: the backend strips every
-// IDR amount (price, fees, value) and the page shows coins only (spec §52). Each item carries at most one of
-// evoucher (e-gifts), token (PLN, mobile credit) or tracking (physical goods); the others are null.
-export const toOrder = (order) => ({
-  orderReference: String(order.orderReference),
-  orderNumber: order.orderNumber ?? '',
-  status: orderStatus(order.status),
-  orderDate: apiTime(order.orderDate),
-  lastStatusAt: apiTime(order.lastStatusAt ?? order.orderDate),
-  coinSpent: order.coinSpent ?? 0,
-  refunded: order.refunded === true,
-  items: (order.items ?? []).map((item) => ({
-    name: item.name ?? '',
-    type: item.type ?? '',
+// POST /app/point/order/detail { clientId, orderReference } -> one order. HSB reads it live from Tada and passes Tada's
+// JSON through: { status, orderReference, orderNumber, recipient, orderItems, payment, fees } (backend code, 23 Oct
+// 2026; field names to be checked against a real Tada order). The coins, the order date and the status of the list
+// come from that order's row of /app/point/orders (`summary`, joined in shared/data-source.js; decided 23 Oct 2026).
+// No money values on the page (spec §52): items' `price`, `fees` and `payment` are IDR and are never read.
+// Not sent by any endpoint for now: `lastStatusAt` (the "Updated …" line is then hidden) and `refunded` (no green
+// note). Each item carries at most one of egiftDetail (e-vouchers), vendorDetail (PLN token, mobile credit, e-wallet)
+// or tracking (physical goods). The older shape (items[] with evoucher / token) is still read, for the samples.
+const toOrderItem = (item) => {
+  const egift = item.egiftDetail ?? item.evoucher ?? null;
+  const vendor = item.vendorDetail ?? item.token ?? null;
+  const tracking = item.tracking ?? null;
+  return {
+    name: item.itemName ?? item.name ?? '',
+    type: String(item.itemType ?? item.type ?? '').trim().toLowerCase(),
     quantity: item.quantity ?? 1,
     status: orderStatus(item.status),
-    evoucher: item.evoucher ?? null,
-    token: item.token ?? null,
-    tracking: item.tracking ?? null,
-  })),
-  recipient: order.recipient ?? null,
+    evoucher: egift && {
+      code: egift.evoucherCode ?? egift.code ?? '',
+      pin: egift.pin ?? '',
+      link: egift.evoucherLink ?? egift.link ?? '',
+      expiredDate: egift.expiredDate ? apiTime(egift.expiredDate) : null,
+    },
+    token: vendor && { serialNumber: vendor.serialNumber ?? '', message: vendor.vendorMessage ?? vendor.message ?? '' },
+    tracking: tracking && {
+      awbNumber: tracking.awbNumber ?? '',
+      shippingCompany: tracking.shippingCompany ?? '',
+      trackingNumber: tracking.trackingNumber ?? '',
+    },
+  };
+};
+export const toOrder = (order, summary = null) => ({
+  orderReference: String(order.orderReference ?? summary?.orderReference ?? ''),
+  orderNumber: order.orderNumber ?? summary?.orderNumber ?? '',
+  status: orderStatus(order.status ?? summary?.status),
+  orderDate: apiTime(summary?.orderDate ?? order.orderDate) ?? null,
+  lastStatusAt: order.lastStatusAt ? apiTime(order.lastStatusAt) : null,
+  coinSpent: summary?.coinSpent ?? order.coinSpent ?? 0,
+  refunded: order.refunded === true,
+  items: (order.orderItems ?? order.items ?? []).map(toOrderItem),
+  recipient: order.recipient
+    ? { name: order.recipient.name ?? '', address: order.recipient.address ?? '', postalCode: order.recipient.postalCode ?? '' }
+    : null,
 });
 
 // POST /app/point/catalog { clientId } (guests: clientId null) -> the rewards of Home (spec §49)

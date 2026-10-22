@@ -171,9 +171,17 @@ inside the payload differ (table below; `clientId` as in your loyalty envelope, 
   `WIB_OFFSET` there if the final answer is UTC. The samples now use this form.
 - Activity: every entry carries both `reward` and `points`, the one that does not apply is `null` (the adapter already
   keeps gift entries by `reward` and coin entries by `points`); samples updated.
-- Order detail (`order/detail`) is read live from Tada and its fields differ from the sample (`orderItems`,
-  `payment`, `fees`; money values in IDR that the page must not show): **to be settled** with the real answer before
-  you wire it (Waiting on others).
+- **Order detail** (`order/detail`, spec §66): HSB reads Tada's order live and passes it through:
+  `{ status, orderReference, orderNumber, recipient, orderItems, payment, fees }`. `toOrder(detail, summary)` in
+  `shared/api-adapter.js` reads it: items from `orderItems` (`itemName`, `itemType`, `quantity`, `status`;
+  `egiftDetail` → code / PIN / link / valid until, `vendorDetail.serialNumber` and `vendorMessage` → the PLN or credit
+  serial, `tracking` as before); the recipient's name, address and postal code. **Never read** `price`, `fees` or
+  `payment` (IDR). The coins, order date and status come from the order's row of `/orders` (`summary`):
+  `fetchOrder(ref)` in `shared/data-source.js` keeps the rows shown this session (`rememberOrders`, sessionStorage
+  `hsb-loyalty-orders-v1`) and, for an order opened from elsewhere, looks it up in the list (100 a page). No endpoint
+  sends when the status last changed or whether coins were refunded: `lastStatusAt` is null and the "Updated …" line
+  is hidden; `refunded` is false (no green note). The sample `loyalty-orders-detail.json` now has Tada's shape (with an
+  IDR price, to show it is ignored); field names follow Tada's documentation, to be checked on a real order.
 
 In `shared/data-source.js`: `getOrders(path, body)` now takes the path and the body (the demo passes
 `{ pageNo, pageSize }` / `{ orderReference }`; the real call wraps it in the loyalty envelope, which adds `clientId` and
@@ -326,8 +334,8 @@ the tap is tracked first. Reward cards use a native `onClick` and are fine.
 ## Waiting on others
 
 - **Backend (Tada integration):** the catalog changes of §3 and the `/app/point` paths of §4, on UAT when the backend
-  says so. Headers and envelope are settled (§4). Still open: the order detail's real fields (`toOrder` will be
-  updated from a real answer), and the zone of `orderDate` (GMT+7 or UTC).
+  says so. Headers and envelope are settled (§4). Still open: the order detail's field names checked on a real Tada
+  order, and the zone of `orderDate` (GMT+7 or UTC).
 - **Do not ship** the `/app/point` paths before the backend has them on UAT.
 - **App team, to confirm (from the review, §10):** the app calls `initWebview` also when there is no token (guests);
   otherwise the pages stay on their loading view (seen on UAT opened outside the app). The Deposit intent's
