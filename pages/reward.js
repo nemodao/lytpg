@@ -5,7 +5,7 @@
 // The data is the store's (the catalog list); the reward is picked by ?id=.
 import { load } from '../shared/app.js';
 import { coin } from '../shared/components.js';
-import { backParam, categoryName, rewardBadge, storeHead } from '../shared/store.js';
+import { backParam, categoryName, rewardBadge, storeChrome, storeHead } from '../shared/store.js';
 
 const { common, page, ui } = await load('store');
 const app = document.getElementById('app');
@@ -13,6 +13,7 @@ const id = new URLSearchParams(location.search).get('id');
 const item = page.rewards.find((reward) => reward.id === id);
 const back = backParam() || ui.href('store.html');
 const guest = common.guest;
+storeChrome();
 document.body.classList.add('store-look', 'store-look--fixed'); // the store's look, background fixed (store.css)
 
 // The user's balance against the price: enough, or how many more coins (with a bar).

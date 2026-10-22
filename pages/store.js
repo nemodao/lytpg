@@ -5,7 +5,7 @@
 import { load } from '../shared/app.js';
 import { coin } from '../shared/components.js';
 import { STORE_CATEGORIES } from '../shared/api-adapter.js';
-import { backParam, categoryName, rewardBadge, rewardHref, storeHead, withParams } from '../shared/store.js';
+import { backParam, categoryName, rewardBadge, rewardHref, storeChrome, storeHead, withParams } from '../shared/store.js';
 
 const { common, page, ui } = await load('store');
 const app = document.getElementById('app');
@@ -18,6 +18,7 @@ let category = ['all', 'more', ...STORE_CATEGORIES].includes(query.get('cat')) ?
 const back = backParam() || ui.href('dashboard.html');
 const selfHref = () => withParams(ui.href('store.html'), { tab: tab === 'rewards' ? 'rewards' : '', cat: tab === 'rewards' && category !== 'all' ? category : '', back });
 const rewards = page.rewards;
+storeChrome();
 
 // ---- Home Store: three sections from the one list, no reward twice (spec §59) ----
 // F&B first (its first 4 in the catalog's order), then Travel (its first 4), then Popular from the rest: rewards marked

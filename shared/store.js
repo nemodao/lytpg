@@ -36,4 +36,17 @@ export const storeHead = (ui, common, { back = '' } = {}) => (requestAnimationFr
 export const rewardBadge = (ui, item, { inline = false } = {}) =>
   (item.badge ? `<span class="store-badge store-badge--${item.badge}${inline ? ' store-badge--inline' : ''}">${ui.t(`store.badge.${item.badge}`)}</span>` : '');
 
+// The phone's status bar (time, signal, notch) in the store's blue rather than plain white or black: a mobile browser
+// colours it from <meta name="theme-color"> (older iOS, Android) or from the page's own background behind it (newer
+// iOS); the bounce area above the page takes the same blue (store.css, html.store-chrome). In the app's webview the
+// page already draws under the status bar (viewport-fit=cover), so the blue reaches it there anyway.
+export function storeChrome() {
+  const root = document.documentElement;
+  root.classList.add('store-chrome');
+  const meta = document.querySelector('meta[name="theme-color"]') ?? document.head.appendChild(Object.assign(document.createElement('meta'), { name: 'theme-color' }));
+  const paint = () => { meta.content = getComputedStyle(root).getPropertyValue('--accent-surface-brand').trim(); };
+  paint();
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => requestAnimationFrame(paint));
+}
+
 export const categoryName = (ui, key) => (STORE_CATEGORIES.includes(key) ? ui.t(`store.cat.${key}`) : '');
