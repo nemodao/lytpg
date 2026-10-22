@@ -67,25 +67,32 @@
 .store-section__head .text-btn { align-self: center; }
 .store-price { display: inline-flex; align-items: center; gap: var(--spacing-4); font: var(--font-small-semibold); color: var(--ui-text-brand); white-space: nowrap; }
 
-/* "Hot" / "New" on a reward's picture. */
-/* Flush with the picture's top-left corner, part of the picture (the picture's own rounding clips its corner): square
-   top corners, rounded bottom ones. Solid colours: it sits on pictures. */
+/* "Hot" / "New" on a reward's picture: a flap on the picture's top-left corner. Its left side is on the picture's
+   edge, its top rises a little above the picture, with a darker fold at the top-right end, as if the band wrapped from
+   behind the picture to the front. It sits outside the picture's clipping (.store-card__media / .reward-media hold
+   both). Square top corners, rounded bottom ones. Solid colours: it sits on pictures. */
+.store-card__media { position: relative; display: block; }
 .store-badge {
-  position: absolute; z-index: 1; top: 0; left: 0; padding: var(--spacing-4) var(--spacing-10);
+  --rise: var(--spacing-6);
+  position: absolute; z-index: 1; top: calc(var(--rise) * -1); left: 0; padding: calc(var(--spacing-4) + var(--rise) / 2) var(--spacing-10) var(--spacing-4);
   border-radius: 0 0 var(--radius-control) var(--radius-control); font: var(--font-x-small-semibold); color: var(--on-brand);
 }
+.store-badge::after {
+  content: ""; position: absolute; top: 0; left: 100%; width: var(--rise); height: var(--rise);
+  background: color-mix(in srgb, var(--ui-hot-deep) 70%, var(--color-neutral-900)); clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+.store-badge--new::after { background: color-mix(in srgb, var(--accent-surface-brand) 60%, var(--color-neutral-900)); }
 .store-badge--hot {
   /* After the HOT badge on Loyalty's bottom bar (assets/images/nav/hot.png): a glossy red core with blazing orange ends,
-     an amber-to-yellow glow rising from the bottom, a pink gloss on top and a thin bright rim inside. */
+     an amber-to-yellow glow rising from the bottom and a pink gloss on top. */
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--ui-hot-gloss) 80%, transparent) 0, transparent 46%),
     radial-gradient(55% 130% at 0 50%, var(--ui-hot-orange), transparent 75%),
     radial-gradient(55% 130% at 100% 50%, var(--ui-hot-orange), transparent 75%),
     radial-gradient(90% 85% at 50% 135%, var(--ui-hot-glow), var(--ui-hot-amber) 38%, transparent 72%),
     linear-gradient(90deg, var(--ui-hot-red), var(--ui-hot-deep) 50%, var(--ui-hot-red));
-  box-shadow:
-    inset 0 0 0 calc(var(--size-stroke) * 1.5) color-mix(in srgb, var(--ui-hot-glow) 85%, transparent),
-    inset 0 0 var(--spacing-8) var(--ui-hot-amber);
+  /* No rim: the glow blends in from the bottom and the ends, nothing sharp. */
+  box-shadow: inset 0 calc(var(--spacing-4) * -1) var(--spacing-8) color-mix(in srgb, var(--ui-hot-glow) 55%, transparent), inset 0 0 var(--spacing-6) color-mix(in srgb, var(--ui-hot-amber) 45%, transparent);
   font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
   text-shadow: 0 0 var(--spacing-2) var(--ui-hot-glow), 0 var(--size-stroke) 0 var(--ui-hot-deep);
 }

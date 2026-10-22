@@ -3,6 +3,7 @@
 /* Room under the content for the Checkout bar. */
 .app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--size-control-lg) + var(--spacing-40)); }
 
+.reward-media { position: relative; }
 .reward-art {
   position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-card);
   background: linear-gradient(160deg, color-mix(in srgb, var(--color-purple-main) 16%, var(--card-surface)), color-mix(in srgb, var(--color-purple-main) 6%, var(--card-surface)));

@@ -36,7 +36,7 @@ function render() {
   const category = categoryName(ui, item.category);
   app.innerHTML = `
     ${storeHead(ui, common, { back })}
-    <div class="reward-art${item.category === 'tour_travel' ? ' reward-art--trip' : ''}">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}${rewardBadge(ui, item)}</div>
+    <div class="reward-media"><div class="reward-art${item.category === 'tour_travel' ? ' reward-art--trip' : ''}">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</div>${rewardBadge(ui, item)}</div>
     <section class="reward-info">
       ${category ? `<p class="reward-info__category">${category}</p>` : ''}
       <h2 class="reward-info__name">${ui.esc(item.name)}</h2>
