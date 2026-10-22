@@ -153,15 +153,15 @@
 .store-row::-webkit-scrollbar { display: none; }
 .store-row .store-card { flex: none; width: 42%; scroll-snap-align: start; }
 
-/* Tour & Travel: a promo panel (first draft from a reference picture). Lilac, light rays from the top, a big white
-   title with a dark outline, a dark ribbon, white cards with a scalloped price sticker, and See all on the bottom edge. */
+/* Tour & Travel: a promo panel (first draft from a reference picture). The tokens' purple blend (.blend-pink), faint
+   light rays from the top, a big white title with a dark outline, a frosted ribbon, white cards with a scalloped price sticker, and See all on the bottom edge. */
 .trip-promo {
   position: relative; display: flex; flex-direction: column; gap: var(--spacing-16);
   margin-bottom: var(--spacing-16); padding: var(--spacing-20) 0 var(--spacing-32); border-radius: var(--radius-card);
   background:
-    radial-gradient(70% 45% at 50% 0, color-mix(in srgb, var(--color-neutral-0) 35%, transparent), transparent 70%),
-    repeating-conic-gradient(from -90deg at 50% -10%, color-mix(in srgb, var(--color-neutral-0) 16%, transparent) 0deg 5deg, transparent 5deg 12deg),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-purple-main) 62%, var(--color-neutral-0)), color-mix(in srgb, var(--color-purple-main) 36%, var(--color-neutral-0)));
+    repeating-conic-gradient(from -90deg at 50% -10%, color-mix(in srgb, var(--color-neutral-0) 7%, transparent) 0deg 5deg, transparent 5deg 12deg),
+    var(--blend-bg);
+  box-shadow: var(--blend-stroke);
 }
 .trip-promo__head { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-6); padding: 0 var(--spacing-card); text-align: center; }
 .trip-promo__title {
@@ -211,7 +211,7 @@
     calc(var(--outline) * 0.707) calc(var(--outline) * -0.707 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
     calc(var(--outline) * 0.924) calc(var(--outline) * -0.383 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker);
 }
-.trip-promo__ribbon { padding: var(--spacing-4) var(--spacing-12); border-radius: var(--radius-control); background: var(--color-purple-darker); color: var(--color-neutral-0); font: var(--font-x-small-semibold); text-transform: uppercase; letter-spacing: 0.04em; }
+.trip-promo__ribbon { padding: var(--spacing-4) var(--spacing-12); border-radius: var(--radius-control); background: var(--blend-glass); color: var(--blend-fg); font: var(--font-x-small-semibold); text-transform: uppercase; letter-spacing: 0.04em; }
 .trip-promo__row {
   display: flex; gap: var(--spacing-16); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
   padding: var(--spacing-20) var(--spacing-card) var(--spacing-24); scroll-padding-inline: var(--spacing-card);

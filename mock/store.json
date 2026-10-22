@@ -33,18 +33,6 @@
         "no-travel": "No reward in Tour & Travel: that section of Home Store is hidden; the Rewards tab's Tour & Travel chip shows only the “more coming soon” card.",
         "few-rewards": "Only 6 rewards in the catalog: Home Store fills F&B and Travel first, then Popular gets what is left."
       }
-    },
-    {
-      "title": "Banner colour (review)",
-      "states": [
-        "banner-navy"
-      ],
-      "labels": {
-        "banner-navy": "Deep navy banner"
-      },
-      "descriptions": {
-        "banner-navy": "PREVIEW ONLY, for review: the banner on a deep navy, darker than the page's blue, with white text, for a more neutral look. Default: orange to pink."
-      }
     }
   ],
   "default": {
@@ -1068,11 +1056,6 @@
             "showOnHome": false
           }
         ]
-      }
-    },
-    "banner-navy": {
-      "page": {
-        "banner": "navy"
       }
     }
   }
