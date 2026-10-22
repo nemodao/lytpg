@@ -16,10 +16,11 @@
 .reward-info__name { font: var(--font-title-m); }
 .reward-info__price { display: flex; align-items: center; gap: var(--spacing-6); font: var(--font-title-m); color: var(--ui-text-brand); }
 
-/* The balance against the price: green when it is enough, otherwise how many more, with a bar. */
-.reward-balance { display: flex; flex-direction: column; gap: var(--spacing-8); margin-top: var(--spacing-6); padding: var(--spacing-12); border-radius: var(--radius-card-inner); background: var(--ui-field-surface); font: var(--font-small-regular); color: var(--ui-text-secondary); }
+/* The balance against the price, in a card like "About this reward": how many more coins, with a bar; or, when it is
+   enough, a green tick and line. */
+.reward-balance { gap: var(--spacing-10); font: var(--font-small-regular); color: var(--ui-text-secondary); }
 .reward-balance strong { color: var(--ui-text-primary); }
-.reward-balance--enough { flex-direction: row; align-items: center; background: var(--ui-badge-green); color: var(--ui-text-green); }
+.reward-balance--enough { flex-direction: row; align-items: center; color: var(--ui-text-green); }
 .reward-balance__bar { display: block; height: var(--spacing-6); border-radius: var(--radius-pill); background: var(--ui-surface-soft); overflow: hidden; }
 .reward-balance__bar span { display: block; height: 100%; border-radius: inherit; background: var(--accent-surface-brand); }
 

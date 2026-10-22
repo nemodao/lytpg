@@ -21,7 +21,7 @@ export const rewardHref = (ui, id, back) => withParams(ui.href('reward.html'), {
 export const storeHead = (ui, common, { back = '' } = {}) => (requestAnimationFrame(watchHeader), `
   <header class="store-head">
     ${back ? `<a class="header-action store-head__back" href="${ui.esc(back)}" aria-label="${ui.t('orders.back')}" data-back>${ui.icon('back')}</a>` : ''}
-    <span class="store-head__brand">
+    <span class="store-head__brand${back ? ' store-head__brand--plain' : ''}">
       ${back ? '' : `<span class="store-head__icon" aria-hidden="true">${ui.icon('gift')}</span>`}
       <h1 class="store-head__title">${ui.t('store.title')}</h1>
     </span>

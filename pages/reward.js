@@ -16,12 +16,12 @@ const guest = common.guest;
 // The user's balance against the price: enough, or how many more coins (with a bar).
 function balanceLine() {
   const have = common.balance.available;
-  if (have >= item.points) return `<div class="reward-balance reward-balance--enough">${ui.icon('check')}<p>${ui.t('reward.enough')}</p></div>`;
+  if (have >= item.points) return `<section class="card reward-balance reward-balance--enough">${ui.icon('check')}<p>${ui.t('reward.enough')}</p></section>`;
   return `
-    <div class="reward-balance">
+    <section class="card reward-balance">
       <p>${ui.md('reward.need', { have: ui.num(have), need: ui.num(item.points - have) })}</p>
       <span class="reward-balance__bar"><span style="width:${Math.max(2, Math.floor((have / item.points) * 100))}%"></span></span>
-    </div>`;
+    </section>`;
 }
 
 function render() {
@@ -41,8 +41,8 @@ function render() {
       ${category ? `<p class="reward-info__category">${category}</p>` : ''}
       <h2 class="reward-info__name">${rewardBadge(ui, item, { inline: true })}${ui.esc(item.name)}</h2>
       <p class="reward-info__price num">${coin('coin--sm')}${ui.num(item.points)}</p>
-      ${guest ? '' : balanceLine()}
     </section>
+    ${guest ? '' : balanceLine()}
     ${item.description ? `<section class="card reward-about"><h3 class="t-body-strong">${ui.t('reward.about')}</h3><p class="t-body c-2">${ui.esc(item.description)}</p></section>` : ''}
     <div class="reward-cta"><button class="btn btn--primary btn--lg btn--block" type="button" data-action="checkout">${ui.t('reward.checkout')}</button></div>`;
 }

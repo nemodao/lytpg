@@ -34,6 +34,8 @@
   padding: var(--spacing-2) var(--spacing-16) var(--spacing-2) var(--spacing-2);
   background: var(--ui-surface-pure); border-color: var(--ui-stroke-soft); color: var(--ui-icon-secondary);
 }
+/* No icon in front of the title (the reward page, which has a back button instead): the same room on both sides. */
+.store-head.is-stuck .store-head__brand--plain { padding-left: var(--spacing-16); }
 .store-head__back { flex: none; transform-origin: left center; }
 .store-head__icon {
   flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm);
