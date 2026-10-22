@@ -9,7 +9,8 @@ reads (§3, §4). The pages already run on sample answers in `mock/api/`.
 
 **In one line:** a browse-only Reward Store inside the webview ("Plan B", in case the Tada integration is not ready for
 launch), behind a switch that is **off by default**; and HSB's own endpoints (the Tada integration backend: catalog,
-activity, orders, redeem session; not the loyalty API under `/pointSys/app/point/`) moved to `/app/point`, all POST.
+activity, orders, redeem session) moved from `/loyalty/…` to `/app/point/…`, all POST, on the same host and base as
+the loyalty API (`{host}/pointSys/app/point/…`).
 
 ---
 
@@ -140,11 +141,19 @@ first 9 rewards with `showOnHome`, or 10 when the "Earn more coins" card is hidd
 
 Confirmed by the Tada integration backend on 22 Oct 2026. **This replaces the paths in `HANDOFF-6.md` §1, §3, §6 and
 "Waiting on others".** `HANDOFF.md` in this package is already updated (§5 rows, §6 `redeem` / `reward`, §7 reading
-order). The answers' shapes are unchanged. These endpoints sit without the loyalty API's `/pointSys` prefix.
+order). The answers' shapes are unchanged.
+
+**Base:** the same host and the same `/pointSys` context path as the loyalty API, so the full address is
+`{host}/pointSys/app/point/catalog` (and `/activity`, `/orders`, `/orders/detail`, `/redeem/session`). **Bodies:** only
+the fields below; no `timestamp` needed (the backend's optional `currentTime` is for testing only). **Headers:** signed
+in, the app's token as for the loyalty API; guests (no token) the app's static key only, no Authorization, as for
+`/activity` and `guest/tradingTask/get`. These endpoints are still being built: confirm the static key header's final
+name (`x-auth-key` so far) and how a signed-in call is authenticated with the backend developer when they hand them
+over (backend, 22 Oct 2026).
 
 | Was (handoff 6) | Now |
 |---|---|
-| `GET /loyalty/catalog?clientId=…` and `GET /loyalty/catalog-guest` (app key) | `POST /app/point/catalog`, body `{ clientId }`; **guests send `clientId` null** (one endpoint: the default group's rewards). Signed in: app token. Guests have no token: which header they send is to be confirmed (see "Waiting on others") |
+| `GET /loyalty/catalog?clientId=…` and `GET /loyalty/catalog-guest` (app key) | `POST /app/point/catalog`, body `{ clientId }`; **guests send `clientId` null** (one endpoint: the default group's rewards). Signed in: app token. Guests: the app's static key only (`x-auth-key` so far), no Authorization |
 | `GET /loyalty/activity` | `POST /app/point/activity`, `x-auth-key` header only (no token, no clientId) |
 | `GET /loyalty/orders?clientId=…&page=…&pageSize=…` | `POST /app/point/orders`, body `{ clientId, page, pageSize }` |
 | `GET /loyalty/orders/{orderReference}` | `POST /app/point/orders/detail`, body `{ orderReference }` |
@@ -200,8 +209,8 @@ In `shared/data-source.js`: `getOrders(path, body)` now takes the path and the b
 ## Waiting on others
 
 - **Backend (Tada integration):** the catalog changes of §3 and the `/app/point` paths of §4, on UAT when the backend
-  says so. To confirm: which header guests send to `POST /app/point/catalog` (they have no app token); the base URL of
-  the `/app/point` endpoints; whether their bodies take a `timestamp` like the loyalty API's.
+  says so. To confirm with the backend developer when the endpoints are handed over: the static key header's final
+  name, how a signed-in call is authenticated, and the final fields.
 - **Do not ship** the `/app/point` paths before the backend has them on UAT.
 - **Product:** the switch `rewardStore` (where it lives, who turns it on); events for the store (a later round); a
   loading / error view for the store pages; final copy for the store; real banner and reward pictures if the mock ones

@@ -124,8 +124,9 @@ async function commonFromApi() {
   };
 }
 
-// API: the HSB backend's order endpoints (spec §52), with the app token; not the loyalty API above. Both POST, JSON body
-// (confirmed by the Tada integration backend 22 Oct 2026): POST /app/point/orders { clientId, page, pageSize } for the
+// API: the HSB backend's order endpoints (spec §52), with the app token. Both POST, JSON body, on the same host and
+// /pointSys base as the loyalty API above ({host}/pointSys/app/point/…), no timestamp (spec §60; confirmed by the Tada
+// integration backend 22 Oct 2026): POST /app/point/orders { clientId, page, pageSize } for the
 // list, POST /app/point/orders/detail { orderReference } for one order. { success, result } like the loyalty API; the
 // list's result is { orders, page, pageSize, total }, newest first, page from 1, pageSize at most 100. The backend
 // takes the client from the token: 403 when the order, or the body's clientId, is not the user's (the page then shows
@@ -140,7 +141,8 @@ function getOrders(path, body) { // the real call POSTs `body` (with clientId fo
 }
 
 // API: the rewards of Home (spec §49) and of the Reward Store (spec §59), from HSB (the Tada integration): POST
-// /app/point/catalog with body { clientId } and the app token; guests send clientId null (one endpoint for both since
+// {host}/pointSys/app/point/catalog with body { clientId } and the app token; guests send clientId null and the app's
+// static key only, no token (spec §60) (one endpoint for both since
 // 22 Oct 2026: the backend then answers with the default group's rewards). { success, result: { rewards } }: every
 // reward on show, ~50; Home keeps those with showOnHome. A different backend from the rest of the pages: when it
 // fails, Home still opens without the rewards grid, and the store shows its "on their way" message (rewards = []).

@@ -783,9 +783,9 @@ The Tada integration may not be ready for launch, so the pages get their own red
 
 ## 60. HSB's own endpoints moved to /app/point, all POST (confirmed by the Tada integration backend 22 Oct 2026)
 
-Replaces the paths of §49, §50, §52 and §59 (the answers are unchanged):
+Replaces the paths of §49, §50, §52 and §59 (the answers are unchanged). Same host and `/pointSys` context path as the loyalty API: `{host}/pointSys/app/point/…`. Bodies: only the fields below, no `timestamp`. Headers: signed in, the app's token; guests, the app's static key only (no Authorization); the key's final name and the signed-in auth are to be confirmed with the backend developer when the endpoints are handed over.
 
-- Rewards: `POST /app/point/catalog`, body `{ clientId }`, app token (guests have none: their header is to be confirmed with the backend). **One endpoint for everyone:** guests send `clientId` null and get the default group's rewards (`/loyalty/catalog-guest` is gone). It answers every reward on show (about 50) with `id`, `name`, `points`, `image`, `category`, `description`, `badge`, `showOnHome`, by `sort_order`; Home keeps those with `showOnHome`.
+- Rewards: `POST /app/point/catalog`, body `{ clientId }`, app token (guests: the app's static key only, as for the activity). **One endpoint for everyone:** guests send `clientId` null and get the default group's rewards (`/loyalty/catalog-guest` is gone). It answers every reward on show (about 50) with `id`, `name`, `points`, `image`, `category`, `description`, `badge`, `showOnHome`, by `sort_order`; Home keeps those with `showOnHome`.
 - Recent activity: `POST /app/point/activity`, `x-auth-key` header only (no token, no clientId).
 - Redemption history: `POST /app/point/orders`, body `{ clientId, page, pageSize }`; one order: `POST /app/point/orders/detail`, body `{ orderReference }` (was `GET …/orders/{orderReference}`).
 - Tada SSO for the app (when checkout goes live): `POST /app/point/redeem/session`, body `{ clientId }`.
