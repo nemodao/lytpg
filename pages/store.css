@@ -156,8 +156,8 @@
 /* Tour & Travel: a promo panel (first draft from a reference picture). The tokens' purple blend (.blend-pink), faint
    light rays from the top, a big white title with a dark outline, a frosted ribbon, white cards with a scalloped price sticker, and See all on the bottom edge. */
 .trip-promo {
-  position: relative; display: flex; flex-direction: column; gap: var(--spacing-16);
-  margin-bottom: var(--spacing-16); padding: var(--spacing-20) 0 var(--spacing-32); border-radius: var(--radius-card);
+  position: relative; display: flex; flex-direction: column; gap: var(--spacing-24);
+  margin-bottom: var(--spacing-16); padding: var(--spacing-32) 0 var(--spacing-32); border-radius: var(--radius-card);
   background:
     repeating-conic-gradient(from -90deg at 50% -10%, color-mix(in srgb, var(--color-neutral-0) 7%, transparent) 0deg 5deg, transparent 5deg 12deg),
     var(--blend-bg);
