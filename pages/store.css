@@ -8,6 +8,17 @@
     linear-gradient(180deg, color-mix(in srgb, var(--bg-blend) 40%, var(--ui-surface-weak)) 0, color-mix(in srgb, var(--bg-blend) 14%, var(--ui-surface-weak)) 560px, var(--ui-surface-weak) 1100px);
 }
 
+/* PREVIEW ONLY (state bg-deep, for review): solid deep brand blue behind the header, the banner and Popular Rewards'
+   heading (white text), fading to a light tint behind Popular's cards, so the dark text further down stays readable. */
+.store--deep .app {
+  background:
+    radial-gradient(90% 260px at 80% 0, color-mix(in srgb, var(--color-purple-main) 45%, transparent), transparent 75%),
+    linear-gradient(180deg, var(--accent-surface-brand) 0, color-mix(in srgb, var(--accent-surface-brand) 86%, var(--ui-surface-weak)) 400px, color-mix(in srgb, var(--bg-blend) 16%, var(--ui-surface-weak)) 640px, var(--ui-surface-weak) 1000px);
+}
+.store--deep .store-head:not(.is-stuck) .store-head__title,
+.store--deep .store-banner + .store-section .store-section__head, .store--deep .store-banner + .store-section .text-btn { color: var(--on-brand); }
+.store--deep .store-head:not(.is-stuck) .store-head__icon { background: var(--ui-surface-pure); color: var(--ui-text-brand); box-shadow: none; }
+
 /* ---- Top of the store: icon, "Reward Redemption", balance ---- */
 /* Sticks to the top like Loyalty's header (spec §57): plain at the top of the page; once it scrolls (.is-stuck) the icon
    and the title become one pill, styled like the round header buttons, and shrink together with the balance. */

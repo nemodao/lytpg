@@ -12,6 +12,8 @@ const id = new URLSearchParams(location.search).get('id');
 const item = page.rewards.find((reward) => reward.id === id);
 const back = backParam() || ui.href('store.html');
 const guest = common.guest;
+// PREVIEW ONLY: `look: 'deep'` (state bg-deep) tries a deep blue background, for review.
+document.body.classList.toggle('store--deep', page.look === 'deep');
 
 // The user's balance against the price: enough, or how many more coins (with a bar).
 function balanceLine() {

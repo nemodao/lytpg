@@ -18,6 +18,8 @@ let category = ['all', 'more', ...STORE_CATEGORIES].includes(query.get('cat')) ?
 const back = backParam() || ui.href('dashboard.html');
 const selfHref = () => withParams(ui.href('store.html'), { tab: tab === 'rewards' ? 'rewards' : '', cat: tab === 'rewards' && category !== 'all' ? category : '', back });
 const rewards = page.rewards;
+// PREVIEW ONLY: `look: 'deep'` (state bg-deep) tries a deep blue background, for review.
+document.body.classList.toggle('store--deep', page.look === 'deep');
 
 // ---- Home Store: three sections from the one list, no reward twice (spec §59) ----
 // F&B first (its first 4 in the catalog's order), then Travel (its first 4), then Popular from the rest: rewards marked
