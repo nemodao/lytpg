@@ -8,7 +8,7 @@
         "orderReference": "ord_a03f77",
         "orderNumber": "TADA26101406220019",
         "status": "new",
-        "orderDate": "2026-10-14T06:22:00Z",
+        "orderDate": "2026-10-14 13:22:00",
         "firstItemName": "Nintendo Switch",
         "coinSpent": 30000
       },
@@ -16,7 +16,7 @@
         "orderReference": "ord_7f3a91",
         "orderNumber": "TADA26101214305512",
         "status": "completed",
-        "orderDate": "2026-10-12T07:30:00Z",
+        "orderDate": "2026-10-12 14:30:00",
         "firstItemName": "Starbucks gift card",
         "coinSpent": 2000
       },
@@ -24,7 +24,7 @@
         "orderReference": "ord_5c2e08",
         "orderNumber": "TADA26101009120384",
         "status": "on process",
-        "orderDate": "2026-10-10T02:12:00Z",
+        "orderDate": "2026-10-10 09:12:00",
         "firstItemName": "AirPods Pro 2",
         "coinSpent": 18000
       },
@@ -32,7 +32,7 @@
         "orderReference": "ord_91d4b2",
         "orderNumber": "TADA26100815004410",
         "status": "completed",
-        "orderDate": "2026-10-08T08:00:00Z",
+        "orderDate": "2026-10-08 15:00:00",
         "firstItemName": "PLN electricity token",
         "coinSpent": 5000
       },
@@ -40,7 +40,7 @@
         "orderReference": "ord_3b8c15",
         "orderNumber": "TADA26100511452207",
         "status": "canceled",
-        "orderDate": "2026-10-05T04:45:00Z",
+        "orderDate": "2026-10-05 11:45:00",
         "firstItemName": "PlayStation 5",
         "coinSpent": 45000
       },
@@ -48,7 +48,7 @@
         "orderReference": "ord_e61d90",
         "orderNumber": "TADA26100109301175",
         "status": "failed",
-        "orderDate": "2026-10-01T02:30:00Z",
+        "orderDate": "2026-10-01 09:30:00",
         "firstItemName": "Grab voucher",
         "coinSpent": 1500
       },
@@ -56,7 +56,7 @@
         "orderReference": "ord_2d7c44",
         "orderNumber": "TADA26092810150933",
         "status": "completed",
-        "orderDate": "2026-09-28T03:15:00Z",
+        "orderDate": "2026-09-28 10:15:00",
         "firstItemName": "Tokopedia voucher",
         "coinSpent": 4000
       }

@@ -137,8 +137,20 @@ export function toPointBalancePage(available, expired, ledger, task) {
 export const ORDER_STATUSES = ['new', 'on process', 'completed', 'canceled', 'failed'];
 const orderStatus = (value) => String(value ?? '').trim().toLowerCase().replace(/^onprocess$/, 'on process');
 
-// POST /app/point/orders { clientId, page, pageSize } answers { orders: [...], page, pageSize, total } (settled with the
-// backend, 20 Oct 2026). One summary per order; the first reward's name is `firstItemName`.
+// Dates of the order endpoints. The backend's DTO sends "YYYY-MM-DD HH:mm:ss" with no zone (GMT+7 by its @JsonFormat,
+// 23 Oct 2026); Safari cannot parse that form, so it is read as +07:00 and given as ISO 8601 UTC, like every other
+// date the pages read. ISO values pass through.
+// API: the zone is still an open point with the backend developer (the database holds UTC): change WIB_OFFSET if the
+// final answer is UTC.
+const WIB_OFFSET = '+07:00';
+export const apiTime = (value) => {
+  const match = /^(\d{4}-\d\d-\d\d)[ T](\d\d:\d\d(?::\d\d)?)$/.exec(String(value ?? '').trim());
+  return match ? new Date(`${match[1]}T${match[2]}${WIB_OFFSET}`).toISOString().replace(/\.000Z$/, 'Z') : value;
+};
+
+// POST /app/point/orders { clientId, pageNo, pageSize } answers { orders: [...], page, pageSize, total } (the request
+// says pageNo, the answer page; backend DTO, 23 Oct 2026). One summary per order; the first reward's name is
+// `firstItemName`.
 export const toOrdersPage = (answer) => ({
   orders: toOrders(answer?.orders ?? []),
   page: answer?.page ?? 1,
@@ -153,7 +165,7 @@ export const toOrders = (list) =>
       orderReference: String(order.orderReference),
       orderNumber: order.orderNumber ?? '',
       status: orderStatus(order.status),
-      orderDate: order.orderDate,
+      orderDate: apiTime(order.orderDate),
       firstItemName: order.firstItemName ?? '',
       coinSpent: order.coinSpent ?? 0,
     }))
@@ -166,8 +178,8 @@ export const toOrder = (order) => ({
   orderReference: String(order.orderReference),
   orderNumber: order.orderNumber ?? '',
   status: orderStatus(order.status),
-  orderDate: order.orderDate,
-  lastStatusAt: order.lastStatusAt ?? order.orderDate,
+  orderDate: apiTime(order.orderDate),
+  lastStatusAt: apiTime(order.lastStatusAt ?? order.orderDate),
   coinSpent: order.coinSpent ?? 0,
   refunded: order.refunded === true,
   items: (order.items ?? []).map((item) => ({

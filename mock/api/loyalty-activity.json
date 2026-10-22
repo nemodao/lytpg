@@ -7,6 +7,7 @@
       {
         "type": "coin",
         "client": "95***356",
+        "reward": null,
         "points": 12,
         "at": "2026-10-14T07:32:00Z"
       },
@@ -14,17 +15,20 @@
         "type": "gift",
         "client": "95***442",
         "reward": "iPhone 16 Pro",
+        "points": null,
         "at": "2026-10-11T09:10:00Z"
       },
       {
         "type": "coin",
         "client": "95***081",
+        "reward": null,
         "points": 40,
         "at": "2026-10-14T07:28:00Z"
       },
       {
         "type": "coin",
         "client": "95***907",
+        "reward": null,
         "points": 1,
         "at": "2026-10-14T07:20:00Z"
       },
@@ -32,23 +36,27 @@
         "type": "gift",
         "client": "95***128",
         "reward": "AirPods Pro 2",
+        "points": null,
         "at": "2026-10-14T05:35:00Z"
       },
       {
         "type": "coin",
         "client": "95***615",
+        "reward": null,
         "points": 150,
         "at": "2026-10-14T06:50:00Z"
       },
       {
         "type": "coin",
         "client": "95***733",
+        "reward": null,
         "points": 25,
         "at": "2026-10-14T05:10:00Z"
       },
       {
         "type": "coin",
         "client": "95***264",
+        "reward": null,
         "points": 8,
         "at": "2026-10-14T03:35:00Z"
       },
@@ -56,17 +64,20 @@
         "type": "gift",
         "client": "95***590",
         "reward": "Starbucks gift card",
+        "points": null,
         "at": "2026-10-13T10:00:00Z"
       },
       {
         "type": "coin",
         "client": "95***019",
+        "reward": null,
         "points": 300,
         "at": "2026-10-13T08:00:00Z"
       },
       {
         "type": "coin",
         "client": "95***846",
+        "reward": null,
         "points": 60,
         "at": "2026-10-12T12:00:00Z"
       },
@@ -74,17 +85,20 @@
         "type": "gift",
         "client": "95***375",
         "reward": "PlayStation 5",
+        "points": null,
         "at": "2026-10-09T03:00:00Z"
       },
       {
         "type": "coin",
         "client": "95***552",
+        "reward": null,
         "points": 18,
         "at": "2026-10-10T02:00:00Z"
       },
       {
         "type": "coin",
         "client": "95***694",
+        "reward": null,
         "points": 90,
         "at": "2026-10-08T05:00:00Z"
       }

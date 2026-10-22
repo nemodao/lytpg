@@ -162,6 +162,19 @@ inside the payload differ (table below; `clientId` as in your loyalty envelope, 
 | `GET /loyalty/orders/{orderReference}` | `POST /app/point/order/detail` (**`order`**, singular), `{ orderReference }` (with `clientId` as in the envelope) |
 | `POST /loyalty/redeem/session` (app; app token, **no body**) | `POST /app/point/redeem/session`, `{ clientId }` in the same envelope: the app calls it for the `redeem` / `reward` intents, i.e. whenever Plan B is off |
 
+**Answers, from the backend's DTOs (23 Oct 2026):** every answer is `{ success, code, message, result }`.
+- Catalog: as in the samples (§3).
+- Orders list: `{ orders, page, pageSize, total }`: the **request** says `pageNo`, the **answer** `page`.
+- Dates of the order endpoints (`orderDate`) come as `"YYYY-MM-DD HH:mm:ss"` with no zone (GMT+7 by the backend's
+  setting; still an open point with the backend developer, as the database holds UTC). Safari cannot parse that form:
+  new `apiTime()` in `shared/api-adapter.js` reads it as +07:00 and gives ISO UTC like every other date; change
+  `WIB_OFFSET` there if the final answer is UTC. The samples now use this form.
+- Activity: every entry carries both `reward` and `points`, the one that does not apply is `null` (the adapter already
+  keeps gift entries by `reward` and coin entries by `points`); samples updated.
+- Order detail (`order/detail`) is read live from Tada and its fields differ from the sample (`orderItems`,
+  `payment`, `fees`; money values in IDR that the page must not show): **to be settled** with the real answer before
+  you wire it (Waiting on others).
+
 In `shared/data-source.js`: `getOrders(path, body)` now takes the path and the body (the demo passes
 `{ pageNo, pageSize }` / `{ orderReference }`; the real call wraps it in the loyalty envelope, which adds `clientId` and
 `timestamp`);
@@ -313,7 +326,8 @@ the tap is tracked first. Reward cards use a native `onClick` and are fine.
 ## Waiting on others
 
 - **Backend (Tada integration):** the catalog changes of §3 and the `/app/point` paths of §4, on UAT when the backend
-  says so. Headers and envelope are settled (§4); still to see on UAT: the final fields of each answer.
+  says so. Headers and envelope are settled (§4). Still open: the order detail's real fields (`toOrder` will be
+  updated from a real answer), and the zone of `orderDate` (GMT+7 or UTC).
 - **Do not ship** the `/app/point` paths before the backend has them on UAT.
 - **App team, to confirm (from the review, §10):** the app calls `initWebview` also when there is no token (guests);
   otherwise the pages stay on their loading view (seen on UAT opened outside the app). The Deposit intent's
