@@ -98,15 +98,20 @@ export function joinPanel(ui, common, { flat = false, nudged = false, source = '
     ${guest ? `<button class="text-btn join__login" type="button" data-intent="login" data-track="loyalty_login_click" ${where}>${ui.md('join.login')}</button>` : ''}`;
 }
 
-// Redeem buttons. Since spec §59 (Plan B, the Reward Store) Redeem and `Explore all rewards` open the store
-// (store.html) and a reward card opens that reward (reward.html, the card's data-reward), for everyone: guests and
-// users who still need KYC or a first deposit can browse too. mountStoreLinks does the navigation.
-// What still opens the "How to start" sheet (mountJoinSheet): a guest's balance and `Redemption history` (`from` =
-// balance | history, sent with the sheet's loyalty_join_card_view and loyalty_login_prompt_view).
-export const redeemAttrs = (common, intent, from = intent) =>
-  (['balance', 'history'].includes(from) && joinIntent(common)
-    ? `data-action="join-sheet" data-from="${from}" aria-haspopup="dialog"`
-    : `data-action="store" data-store="${intent}"`);
+// Redeem buttons: the balance block's Redeem, every reward card, `Explore all rewards`, the empty Redemption history.
+// `from` names the button (redeem | balance | reward | explore | history), sent with the "How to start" sheet's
+// loyalty_join_card_view (and loyalty_login_prompt_view for guests) and with the buttons inside it.
+// Two modes, by `common.rewardStore` (spec §61):
+// - Off (default, spec §49): a user who still needs KYC or a first deposit gets the "How to start" sheet
+//   (mountJoinSheet); everyone else the Tada intent (`redeem` = the store, `reward` = one reward).
+// - On (Plan B, spec §59): Redeem and `Explore all rewards` open the in-webview Reward Store (store.html) and a reward
+//   card that reward's page (reward.html), for everyone; mountStoreLinks does the navigation. Only a guest's balance
+//   and `Redemption history` still open the sheet.
+export const redeemAttrs = (common, intent, from = intent) => {
+  const sheet = `data-action="join-sheet" data-from="${from}" aria-haspopup="dialog"`;
+  if (!common.rewardStore) return joinIntent(common) ? sheet : `data-intent="${intent}"`;
+  return ['balance', 'history'].includes(from) && joinIntent(common) ? sheet : `data-action="store" data-store="${intent}"`;
+};
 
 // Opens the store, or a reward's page, from a Loyalty page. `back` is this page with its query, so the store's Back
 // returns here. A click whose default was prevented (e.g. by a test) does not navigate.

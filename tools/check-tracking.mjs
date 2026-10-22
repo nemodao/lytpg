@@ -94,7 +94,17 @@ await run('home: positions count rewards only', 'dashboard.html', ['stay', '.rew
   ['loyalty_reward_click', { position: '2', reward_id: '102', affordable: 'false' }], // costs more than the balance
 ]);
 await run('home: no rewards', 'dashboard.html?state=rewards-empty', [], [['loyalty_rewards_view', { reward_count: '0', has_earn_card: 'false' }]]);
-await run('home: Redeem and rewards open the store, needs KYC too (spec §59)', 'dashboard.html?state=needs-kyc', [
+await run('home: gate sheet (needs KYC)', 'dashboard.html?state=needs-kyc', [
+  '.reward-card[data-reward="101"]', '.sheet [data-intent="kyc"]', 'close', '[data-tour="redeem"]', '.sheet [data-intent="kyc"]',
+], [
+  ['loyalty_reward_click', { position: '1', reward_id: '101' }],
+  ['loyalty_join_card_view', { source: 'redeem', from: 'reward', step: undefined }],
+  ['loyalty_kyc_click', { source: 'redeem', from: 'reward' }],
+  ['loyalty_redeem_click', { source: undefined, from: undefined }],
+  ['loyalty_join_card_view', { source: 'redeem', from: 'redeem' }],
+  ['loyalty_kyc_click', { source: 'redeem', from: 'redeem' }],
+]);
+await run('home: Plan B, Redeem and rewards open the store, needs KYC too (spec §61)', 'dashboard.html?state=needs-kyc,plan-b', [
   'stay', '.reward-card[data-reward="101"]', '[data-tour="redeem"]',
 ], [
   ['loyalty_reward_click', { position: '1', reward_id: '101' }],

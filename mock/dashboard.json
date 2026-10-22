@@ -87,6 +87,18 @@
       "descriptions": {
         "check-in": "Shows the daily check-in card (future feature, not launched)."
       }
+    },
+    {
+      "title": "Redemption mode",
+      "states": [
+        "plan-b"
+      ],
+      "labels": {
+        "plan-b": "Plan B: Reward Store"
+      },
+      "descriptions": {
+        "plan-b": "Plan B (spec §59, §61): Redeem opens the in-webview Reward Store and a reward card opens that reward's page, for everyone; the recent activity shows coin entries only. Off: Redeem goes to Tada (users who need KYC or a deposit get the How to start sheet)."
+      }
     }
   ],
   "default": {
@@ -348,6 +360,11 @@
     "rewards-empty": {
       "page": {
         "rewards": []
+      }
+    },
+    "plan-b": {
+      "common": {
+        "rewardStore": true
       }
     }
   }

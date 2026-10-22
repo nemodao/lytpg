@@ -61,6 +61,18 @@
         "has-used": "Adds fully used lots: two still before expiry, shown muted in a “Fully used” section at the end of Available (Remain 0), and one used up and then expired, shown in Expired with “Expired 0” (inside Last 7 days).",
         "more-error": "The next page of a long list failed to load: “Couldn’t load more. Try again” at the end of the list (open the History tab with Last 30 days)."
       }
+    },
+    {
+      "title": "Redemption mode",
+      "states": [
+        "plan-b"
+      ],
+      "labels": {
+        "plan-b": "Plan B: Reward Store"
+      },
+      "descriptions": {
+        "plan-b": "Plan B (spec §59, §61): Redeem opens the in-webview Reward Store and a reward card opens that reward's page, for everyone; the recent activity shows coin entries only. Off: Redeem goes to Tada (users who need KYC or a deposit get the How to start sheet)."
+      }
     }
   ],
   "default": {
@@ -541,6 +553,11 @@
           "joinRequirement": "signup"
         },
         "accounts": []
+      }
+    },
+    "plan-b": {
+      "common": {
+        "rewardStore": true
       }
     }
   }

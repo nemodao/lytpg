@@ -763,6 +763,7 @@ Asked for by business users.
 
 The Tada integration may not be ready for launch, so the pages get their own redemption store to browse rewards. Checkout is not live: it says "coming soon".
 
+- **Only in Plan B** (switch `common.rewardStore`, §61).
 - **Ways in:** every general Redeem button (balance block, `Explore all rewards`, the empty Redemption history) opens the store's Home Store tab; a reward card on Home opens that reward's page. Everyone can browse, guests and users who still need KYC or a first deposit included (replaces the "How to start" sheet on Redeem of §49 for these buttons).
 - **Pages:** `store.html` with two tabs, and `reward.html?id=…` for one reward.
 - **Top of the store (both tabs):** the store's icon (a 3D deep-blue gift box in a round white badge in both themes; once the header is stuck the badge melts away and the gift and title make one pill), "Reward Redemption", and the user's balance, small, in one pill with a thin line between the coin and the number. The Home Store tab has a deep blue background (after a reference picture; the deep version chosen over a lighter wash, 22 Oct 2026; the Rewards tab and the reward page follow the design tokens, user 22 Oct 2026): solid brand blue behind the top bar, the banner and Popular Rewards' heading, with white text there, fading to a light tint behind Popular's cards. It sticks to the top like Loyalty's header (§57): once the page scrolls, the icon and the title become one pill and shrink together with the balance (user, 22 Oct 2026).
@@ -788,4 +789,12 @@ Replaces the paths of §49, §50, §52 and §59 (the answers are unchanged):
 - Recent activity: `POST /app/point/activity`, `x-auth-key` header only (no token, no clientId).
 - Redemption history: `POST /app/point/orders`, body `{ clientId, page, pageSize }`; one order: `POST /app/point/orders/detail`, body `{ orderReference }` (was `GET …/orders/{orderReference}`).
 - Tada SSO for the app (when checkout goes live): `POST /app/point/redeem/session`, body `{ clientId }`.
+
+## 61. Plan B is a switch (decided 22 Oct 2026)
+
+The Reward Store of §59 is not always on: it is Plan B, used only if the Tada integration is not ready.
+
+- **Switch:** `common.rewardStore` (false by default). A setting on HSB's side, not from the loyalty API. Preview: shared state `plan-b` ("Plan B: Reward Store").
+- **Off (default):** Redeem buttons behave as in §49: users who still need KYC or a first deposit get the "How to start" sheet; everyone else the Tada intent (`redeem`, `reward`). The recent activity shows coin and reward entries.
+- **On (Plan B):** Redeem and `Explore all rewards` open the Reward Store, a reward card opens that reward's page, for everyone (§59); the recent activity shows coin entries only, since nothing can be redeemed yet. (With the real API there are no redemptions to show anyway; the filter makes the mock match.)
 

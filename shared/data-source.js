@@ -21,6 +21,9 @@
 import { joinRequirementFrom, toAccounts, toActivity, toBalance, toDashboardPage, toOrder, toOrdersPage, toPointBalancePage, toProgram, toRewards, toTiers, toTradingTaskPage } from './api-adapter.js';
 
 const USE_API = new URLSearchParams(location.search).get('source') === 'api';
+// API: Plan B (spec §61): true while the in-webview Reward Store stands in for Tada. Not sent by the loyalty API: a
+// switch on HSB's side (build setting or remote config).
+const REWARD_STORE = false;
 
 const getJSON = (path) =>
   fetch(path).then((res) => {
@@ -94,6 +97,7 @@ async function commonFromApi() {
     const task = taskAnswer.result;
     return {
       guest: true,
+      rewardStore: REWARD_STORE,
       now: new Date(taskAnswer.timestamp).toISOString(),
       balance: { available: 0, expiring: null },
       program: { ...toProgram(task, null), joinRequirement: 'signup' },
@@ -108,6 +112,7 @@ async function commonFromApi() {
   const task = taskAnswer.result;
   return {
     guest: false,
+    rewardStore: REWARD_STORE,
     now: new Date(taskAnswer.timestamp).toISOString(), // server time
     balance: toBalance(summary),
     program: toProgram(task, user),

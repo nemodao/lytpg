@@ -34,8 +34,9 @@ const readPlace = () => {
 };
 const savePlace = (place) => { try { sessionStorage.setItem(PLACE_KEY, JSON.stringify(place)); } catch { /* the loop restarts next time */ } };
 
+// With the Reward Store (Plan B, `common.rewardStore`, spec §61) nothing can be redeemed yet, so only coin entries show.
 export function createActivityFeed(ui, common, items = []) {
-  const sorted = [...items].sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
+  const sorted = items.filter((item) => !common.rewardStore || item.type === 'coin').sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
   const queues = { gift: sorted.filter((item) => item.type === 'gift'), coin: sorted.filter((item) => item.type === 'coin') };
   // The clock: the data's "now", moving forward in real time.
   const started = Date.now();

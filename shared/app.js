@@ -10,7 +10,7 @@ document.addEventListener('contextmenu', (event) => event.preventDefault());
 
 // States that mean the same on several pages. Links between pages carry them along, so a Point Balance state
 // set on the Dashboard is still on when you open Point Balance (and back).
-const SHARED_STATES = ['guest', 'empty', 'needs-kyc', 'needs-deposit', 'expiring', 'activity-empty'];
+const SHARED_STATES = ['guest', 'empty', 'needs-kyc', 'needs-deposit', 'expiring', 'activity-empty', 'plan-b'];
 
 export const activeStates = (params.get('state') || '')
   .split(',')

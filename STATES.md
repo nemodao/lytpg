@@ -7,7 +7,7 @@ A state is a named override of the mock data that shows one situation of a page.
 `mock/common.json` plus its own `mock/<page>.json`; a state merges its `common` and `page` parts over the
 default data (objects merge key by key, arrays and plain values replace).
 
-**Shared states** mean the same thing on every page and carry over through links between pages: `guest`, `empty`, `needs-kyc`, `needs-deposit`, `expiring`, `activity-empty`.
+**Shared states** mean the same thing on every page and carry over through links between pages: `guest`, `empty`, `needs-kyc`, `needs-deposit`, `expiring`, `activity-empty`, `plan-b`.
 
 Guided tour: `?tour=<step>` resumes a step, `?tour=off` keeps it closed (use it for screenshots).
 
@@ -34,6 +34,7 @@ File: `mock/dashboard.json` · page: `pages/dashboard.html`
 | Rewards grid | `rewards-empty` ("No rewards") | The rewards API sent nothing, or failed (it is a different backend): the “Redeem coins for rewards” title and the grid (with its “Earn more coins” card) are left out; the rest of Home stays, including “Looking for something else?”. | `page.rewards = []` |
 | Rewards grid | `big-prices` ("Big prices") | Some rewards cost a lot of coins (99,999 to 12,500,000). When one price and its Redeem do not fit on one row (about 6 digits and up), Redeem moves under the price, at the right, on every card of the grid; the number is never cut. | `page.rewards = [9 items]` |
 | Daily check-in (future) | `check-in` | Shows the daily check-in card (future feature, not launched). | `page.checkIn.enabled = true` |
+| Redemption mode | `plan-b` ("Plan B: Reward Store") · shared | Plan B (spec §59, §61): Redeem opens the in-webview Reward Store and a reward card opens that reward's page, for everyone; the recent activity shows coin entries only. Off: Redeem goes to Tada (users who need KYC or a deposit get the How to start sheet). | `common.rewardStore = true` |
 
 ## Daily Trading (Earn tab)
 
@@ -61,6 +62,7 @@ File: `mock/trading-task.json` · page: `pages/trading-task.html`
 | Account tier | `tier-top` ("Tier: Platinum (top)") | Selected account is Platinum (Direct\MIVIP), the top tier: a quiet row (crown, no border, grey) reads “Platinum: our highest rates”; the sheet says the account is on the top tier and offers to trade. | `page.selectedAccountId = "50000519"`<br>`page.previewAccountId = "50000519"` |
 | Account tier | `tier-reached` ("Tier: deposit reached") | Selected account is still VIP (Direct\VIP1) but has $5,200 deposited, past Platinum's $5,000 (the dealing team changes groups by hand): the sheet says the upgrade is on its way instead of asking for more. | `common.accounts = [4 items]`<br>`page.previewAccountId = "50000234"` |
 | Account tier | `tier-unknown` ("Tier: unknown group") | Selected account's MT5 group is not one of the four tiers (1F\Direct\Mini10, matched exactly): no tier label and no upgrade row. | `common.accounts = [4 items]`<br>`page.previewAccountId = "50000234"` |
+| Redemption mode | `plan-b` ("Plan B: Reward Store") · shared | Plan B (spec §59, §61): Redeem opens the in-webview Reward Store and a reward card opens that reward's page, for everyone; the recent activity shows coin entries only. Off: Redeem goes to Tada (users who need KYC or a deposit get the How to start sheet). | `common.rewardStore = true` |
 
 ## Coin Balance (Coins tab)
 
@@ -80,6 +82,7 @@ File: `mock/point-balance.json` · page: `pages/point-balance.html`
 | Tabs | `history-empty` | The History tab has nothing: “No activity in this period.” | `page.empty.history = true` |
 | Tabs | `has-used` | Adds fully used lots: two still before expiry, shown muted in a “Fully used” section at the end of Available (Remain 0), and one used up and then expired, shown in Expired with “Expired 0” (inside Last 7 days). | `page.usedItems = [3 items]` |
 | Tabs | `more-error` | The next page of a long list failed to load: “Couldn’t load more. Try again” at the end of the list (open the History tab with Last 30 days). | `page.loadMoreError = true` |
+| Redemption mode | `plan-b` ("Plan B: Reward Store") · shared | Plan B (spec §59, §61): Redeem opens the in-webview Reward Store and a reward card opens that reward's page, for everyone; the recent activity shows coin entries only. Off: Redeem goes to Tada (users who need KYC or a deposit get the How to start sheet). | `common.rewardStore = true` |
 
 ## Redemption history (from Coins)
 
@@ -91,6 +94,7 @@ File: `mock/redemptions.json` · page: `pages/redemptions.html`
 | Page | `orders-more` | The backend says there are more orders than the first page (total 30): a spinner row at the end of the list loads the next page as the user scrolls. In this demo the next page is empty, so the row then goes away. | `page.total = 30` |
 | Page | `loading` | The page is waiting for its data: the header and grey placeholder cards. | `common.view = "loading"` |
 | Page | `error` | The data could not be loaded: a message and “Try again”. | `common.view = "error"` |
+| Redemption mode | `plan-b` ("Plan B: Reward Store") · shared | Plan B (spec §59, §61): Redeem opens the in-webview Reward Store and a reward card opens that reward's page, for everyone; the recent activity shows coin entries only. Off: Redeem goes to Tada (users who need KYC or a deposit get the How to start sheet). | `common.rewardStore = true` |
 
 ## Reward Store and its reward page (from Redeem)
 
@@ -103,3 +107,4 @@ File: `mock/store.json` · page: `pages/store.html`
 | Catalog | `catalog-empty` | The catalog API sent nothing, or failed: no banner sections; a short message that rewards are on their way, on both tabs. | `page.rewards = []` |
 | Catalog | `no-travel` | No reward in Tour & Travel: that section of Home Store is hidden; the Rewards tab's Tour & Travel chip shows only the “more coming soon” card. | `page.rewards = [41 items]` |
 | Catalog | `few-rewards` | Only 6 rewards in the catalog: Home Store fills F&B and Travel first, then Popular gets what is left. | `page.rewards = [6 items]` |
+| Redemption mode | `plan-b` ("Plan B: Reward Store") · shared | Plan B (spec §59, §61): Redeem opens the in-webview Reward Store and a reward card opens that reward's page, for everyone; the recent activity shows coin entries only. Off: Redeem goes to Tada (users who need KYC or a deposit get the How to start sheet). | `common.rewardStore = true` |

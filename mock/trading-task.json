@@ -98,6 +98,18 @@
         "tier-reached": "Selected account is still VIP (Direct\\VIP1) but has $5,200 deposited, past Platinum's $5,000 (the dealing team changes groups by hand): the sheet says the upgrade is on its way instead of asking for more.",
         "tier-unknown": "Selected account's MT5 group is not one of the four tiers (1F\\Direct\\Mini10, matched exactly): no tier label and no upgrade row."
       }
+    },
+    {
+      "title": "Redemption mode",
+      "states": [
+        "plan-b"
+      ],
+      "labels": {
+        "plan-b": "Plan B: Reward Store"
+      },
+      "descriptions": {
+        "plan-b": "Plan B (spec §59, §61): Redeem opens the in-webview Reward Store and a reward card opens that reward's page, for everyone; the recent activity shows coin entries only. Off: Redeem goes to Tada (users who need KYC or a deposit get the How to start sheet)."
+      }
     }
   ],
   "default": {
@@ -1371,6 +1383,11 @@
           "joinRequirement": "signup"
         },
         "accounts": []
+      }
+    },
+    "plan-b": {
+      "common": {
+        "rewardStore": true
       }
     }
   }
