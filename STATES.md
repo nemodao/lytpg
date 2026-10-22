@@ -103,5 +103,3 @@ File: `mock/store.json` · page: `pages/store.html`
 | Catalog | `catalog-empty` | The catalog API sent nothing, or failed: no banner sections; a short message that rewards are on their way, on both tabs. | `page.rewards = []` |
 | Catalog | `no-travel` | No reward in Tour & Travel: that section of Home Store is hidden; the Rewards tab's Tour & Travel chip shows only the “more coming soon” card. | `page.rewards = [41 items]` |
 | Catalog | `few-rewards` | Only 6 rewards in the catalog: Home Store fills F&B and Travel first, then Popular gets what is left. | `page.rewards = [6 items]` |
-| Banner colour (review) | `banner-light` ("B: white and lilac, dark text") | PREVIEW ONLY, for review: a light white-to-lilac banner with dark purple text, against the deep blue page. | `page.banner = "light"` |
-| Banner colour (review) | `banner-gold` ("C: yellow, dark text") | PREVIEW ONLY, for review: a yellow-to-orange banner with dark text, the coins' colour. | `page.banner = "gold"` |

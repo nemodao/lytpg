@@ -33,23 +33,6 @@
         "no-travel": "No reward in Tour & Travel: that section of Home Store is hidden; the Rewards tab's Tour & Travel chip shows only the “more coming soon” card.",
         "few-rewards": "Only 6 rewards in the catalog: Home Store fills F&B and Travel first, then Popular gets what is left."
       }
-    },
-    {
-      "title": "Banner colour (review)",
-      "exclusive": true,
-      "defaultLabel": "A: orange to pink, white text (default)",
-      "states": [
-        "banner-light",
-        "banner-gold"
-      ],
-      "labels": {
-        "banner-light": "B: white and lilac, dark text",
-        "banner-gold": "C: yellow, dark text"
-      },
-      "descriptions": {
-        "banner-light": "PREVIEW ONLY, for review: a light white-to-lilac banner with dark purple text, against the deep blue page.",
-        "banner-gold": "PREVIEW ONLY, for review: a yellow-to-orange banner with dark text, the coins' colour."
-      }
     }
   ],
   "default": {
@@ -1073,16 +1056,6 @@
             "showOnHome": false
           }
         ]
-      }
-    },
-    "banner-light": {
-      "page": {
-        "banner": "light"
-      }
-    },
-    "banner-gold": {
-      "page": {
-        "banner": "gold"
       }
     }
   }

@@ -1,6 +1,7 @@
 // Reward Store · one reward (spec §59): picture, category, name, price, the user's balance against the price, the
-// one-line description, and Checkout at the bottom. Checkout is not live: it opens a sheet saying it is coming soon
-// (guests also get Sign up there). Back returns to where the user came from (?back=: the store, or a Loyalty page).
+// one-line description, and Checkout at the bottom. Checkout is not live. A signed-in user without enough coins gets a
+// sheet saying so, with "Learn how to earn coins" (to Earn); otherwise the sheet says checkout is coming soon (guests
+// also get Sign up there). Back returns to where the user came from (?back=: the store, or a Loyalty page).
 // The data is the store's (the catalog list); the reward is picked by ?id=.
 import { load } from '../shared/app.js';
 import { coin } from '../shared/components.js';
@@ -47,10 +48,28 @@ function render() {
     <div class="reward-cta"><button class="btn btn--primary btn--lg btn--block" type="button" data-action="checkout">${ui.t('reward.checkout')}</button></div>`;
 }
 
-// Checkout: coming soon.
+// Checkout. Not enough coins (signed in): how many more, and the way to Earn (left out when the programme runs no
+// trading task: Earn is not shown then). Otherwise: coming soon.
 const closeSheet = () => app.querySelector('[data-soon-sheet]')?.remove();
+function shortSheet() {
+  const earn = common.program.tradingTask !== false;
+  return `
+    <div class="scrim" data-soon-sheet data-action="close-sheet">
+      <div class="sheet reward-soon" role="dialog" aria-modal="true" aria-label="${ui.t('reward.short.title')}">
+        <span class="sheet__grab"></span>
+        <span class="reward-soon__icon">${coin('coin--sm')}</span>
+        <h2 class="t-title-s">${ui.t('reward.short.title')}</h2>
+        <p class="t-body c-2">${ui.t('reward.short.body', { need: ui.num(item.points - common.balance.available) })}</p>
+        <div class="stack">
+          ${earn ? `<a class="btn btn--primary btn--lg btn--block" href="${ui.href('trading-task.html')}">${ui.t('reward.short.cta')}${ui.icon('right', 'icon--sm')}</a>` : ''}
+          <button class="btn ${earn ? 'btn--stroke' : 'btn--primary'} btn--lg btn--block" type="button" data-action="close-sheet">${ui.t('reward.soon.ok')}</button>
+        </div>
+      </div>
+    </div>`;
+}
 function openSheet() {
   closeSheet();
+  if (!guest && common.balance.available < item.points) { app.insertAdjacentHTML('beforeend', shortSheet()); return; }
   app.insertAdjacentHTML('beforeend', `
     <div class="scrim" data-soon-sheet data-action="close-sheet">
       <div class="sheet reward-soon" role="dialog" aria-modal="true" aria-label="${ui.t('reward.soon.title')}">

@@ -303,5 +303,8 @@
   "reward.missing.title": "This reward is no longer available",
   "reward.missing.body": "It may have been taken off the store. Have a look at the other rewards.",
   "store.travel.ribbon": "Trips you can get with coins",
-  "store.special": "Special"
+  "store.special": "Special",
+  "reward.short.title": "Not enough coins yet",
+  "reward.short.body": "You need {need} more coins for this reward. Trade more to collect them.",
+  "reward.short.cta": "Learn how to earn coins"
 }
