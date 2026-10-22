@@ -147,23 +147,24 @@ Confirmed by the Tada integration backend on 22 Oct 2026. **This replaces the pa
 order). The answers' shapes are unchanged.
 
 **Base:** the same host and the same `/pointSys` context path as the loyalty API, so the full address is
-`{host}/pointSys/app/point/catalog` (and `/activity`, `/orders`, `/orders/detail`, `/redeem/session`). **Bodies:** only
-the fields below; no `timestamp` needed (the backend's optional `currentTime` is for testing only). **Headers:** signed
-in, the app's token as for the loyalty API; guests (no token) the app's static key only, no Authorization, as for
-`/activity` and `guest/tradingTask/get`. These endpoints are still being built: confirm the static key header's final
-name (`x-auth-key` so far) and how a signed-in call is authenticated with the backend developer when they hand them
-over (backend, 22 Oct 2026).
+`{host}/pointSys/app/point/catalog` (and `/activity`, `/orders`, `/order/detail`, `/redeem/session`).
+**Request: exactly like the loyalty API you already call** (corrected 23 Oct 2026 from the backend's delivered code,
+spec §65; this replaces "no timestamp"): the same envelope (signed body with `timestamp` in seconds, **required**, and
+refused outside a 24-hour window), the same headers: signed in `authorization` = the app's JWT; guests (no token) only
+`x-auth-key` with the same static value as the loyalty API's no-login calls. Only the path and the business fields
+inside the payload differ (table below; `clientId` as in your loyalty envelope, null for guests).
 
 | Was (handoff 6) | Now |
 |---|---|
-| `GET /loyalty/catalog?clientId=…` and `GET /loyalty/catalog-guest` (app key) | `POST /app/point/catalog`, body `{ clientId }`; **guests send `clientId` null** (one endpoint: the default group's rewards). Signed in: app token. Guests: the app's static key only (`x-auth-key` so far), no Authorization |
-| `GET /loyalty/activity` | `POST /app/point/activity`, `x-auth-key` header only (no token, no clientId) |
-| `GET /loyalty/orders?clientId=…&page=…&pageSize=…` | `POST /app/point/orders`, body `{ clientId, page, pageSize }` |
-| `GET /loyalty/orders/{orderReference}` | `POST /app/point/orders/detail`, body `{ orderReference }` |
-| `POST /loyalty/redeem/session` (app; app token, **no body**) | `POST /app/point/redeem/session`, now with a body `{ clientId }`: the app calls it for the `redeem` / `reward` intents, i.e. whenever Plan B is off |
+| `GET /loyalty/catalog?clientId=…` and `GET /loyalty/catalog-guest` (app key) | `POST /app/point/catalog`, `{ clientId }`; **guests send `clientId` null** (one endpoint: the default group's rewards). Signed in: `authorization`. Guests: `x-auth-key` only |
+| `GET /loyalty/activity` | `POST /app/point/activity`, no business field; `x-auth-key` only (no token, no clientId) |
+| `GET /loyalty/orders?clientId=…&page=…&pageSize=…` | `POST /app/point/orders`, `{ clientId, pageNo, pageSize }` (**`pageNo`**, from 1) |
+| `GET /loyalty/orders/{orderReference}` | `POST /app/point/order/detail` (**`order`**, singular), `{ orderReference }` (with `clientId` as in the envelope) |
+| `POST /loyalty/redeem/session` (app; app token, **no body**) | `POST /app/point/redeem/session`, `{ clientId }` in the same envelope: the app calls it for the `redeem` / `reward` intents, i.e. whenever Plan B is off |
 
 In `shared/data-source.js`: `getOrders(path, body)` now takes the path and the body (the demo passes
-`{ page, pageSize }` / `{ orderReference }`; the real call adds the user's `clientId` to the list's body);
+`{ pageNo, pageSize }` / `{ orderReference }`; the real call wraps it in the loyalty envelope, which adds `clientId` and
+`timestamp`);
 `rewardsList()` serves Home and the store. The samples keep their old names (`mock/api/loyalty-catalog.json`,
 `loyalty-catalog-guest.json` for `clientId` null, `loyalty-orders*.json`, `loyalty-activity.json`).
 
@@ -312,8 +313,7 @@ the tap is tracked first. Reward cards use a native `onClick` and are fine.
 ## Waiting on others
 
 - **Backend (Tada integration):** the catalog changes of §3 and the `/app/point` paths of §4, on UAT when the backend
-  says so. To confirm with the backend developer when the endpoints are handed over: the static key header's final
-  name, how a signed-in call is authenticated, and the final fields.
+  says so. Headers and envelope are settled (§4); still to see on UAT: the final fields of each answer.
 - **Do not ship** the `/app/point` paths before the backend has them on UAT.
 - **App team, to confirm (from the review, §10):** the app calls `initWebview` also when there is no token (guests);
   otherwise the pages stay on their loading view (seen on UAT opened outside the app). The Deposit intent's

@@ -822,3 +822,11 @@ Planned by 3 reviews (business, engineering, UI coverage) with a cross-review; a
 
 - The part of the bar already collected is green instead of brand blue, so it stands out. New token `--ui-progress-done`: `#29896e` (Green/500) in light mode, `#37b793` (Green/400) in dark mode.
 - Measured on the page: light 3.7:1 against the bar's track and 4.3:1 against the card; dark 4.8:1 against the track and 3.8:1 against the glass card (at least 3:1 for a graphic). The brighter green in light mode would be only 2.1:1 against the track.
+
+## 65. /app/point requests use the loyalty API's envelope (correction, 23 Oct 2026, handoff 7)
+
+Corrects §60 ("no `timestamp`", header name to confirm), after the Tada integration backend read the code the backend developer delivered:
+
+- The `/app/point` endpoints go through the app's standard request filter: **the same request envelope as the loyalty API** (signed body, `timestamp` in seconds **required**, refused outside a 24-hour window) and the same headers: signed in `authorization` = the app's JWT; guests only `x-auth-key` with the same static value as the loyalty API's no-login calls.
+- Only the path and the business fields differ: catalog `{ clientId }` (null for guests); orders `{ clientId, pageNo, pageSize }` (**`pageNo`**, not `page`); order detail at **`POST /app/point/order/detail`** (`order` singular; §60 said `orders/detail`), `{ clientId, orderReference }`; redeem session `{ clientId }`; activity no business field.
+- Base unchanged: `{host}/pointSys/app/point/…`.

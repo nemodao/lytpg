@@ -124,7 +124,7 @@ FIELDS = {
         'orders[].orderDate': ('When the order was placed (ISO 8601). List is newest first.', ''),
         'orders[].firstItemName': ('Name of the order\'s first reward (POST /app/point/orders `firstItemName`, settled 20 Oct 2026).', ''),
         'orders[].coinSpent': ('Coins taken for the order.', ''),
-        'details[].orderReference': ('MOCK ONLY: the demo\'s orders for fetchOrder(ref). With the API, one POST /app/point/orders/detail { orderReference } per order, in this shape.', ''),
+        'details[].orderReference': ('MOCK ONLY: the demo\'s orders for fetchOrder(ref). With the API, one POST /app/point/order/detail { orderReference } per order, in this shape.', ''),
         'details[].orderNumber': ('As in the list.', ''),
         'details[].status': ('Current status (phase 1 has no step-by-step history).', 'as orders[].status'),
         'details[].orderDate': ('When the order was placed.', ''),

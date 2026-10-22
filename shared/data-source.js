@@ -65,7 +65,8 @@ async function sessionCached(key, loader) {
   return value;
 }
 // API: the recent activity list (spec §50), from HSB (the Tada integration): POST /app/point/activity, no Authorization
-// and no clientId, only the x-auth-key header, for guests and signed-in users alike; { success, result: { activity } }.
+// and no clientId, only the x-auth-key header, for guests and signed-in users alike, in the loyalty API's request
+// envelope with no other field (timestamp still required: spec §65); { success, result: { activity } }.
 // Asked for once per session, alongside the page's other calls. The card is hidden (activity = []) when the call fails,
 // sends nothing, or has not answered within ACTIVITY_WAIT_MS: the page never waits longer for it. A late answer is
 // still kept for the session, so the next page (or the other tab) shows the card; a failure is not kept, so the next
@@ -124,10 +125,10 @@ async function commonFromApi() {
   };
 }
 
-// API: the HSB backend's order endpoints (spec §52), with the app token. Both POST, JSON body, on the same host and
-// /pointSys base as the loyalty API above ({host}/pointSys/app/point/…), no timestamp (spec §60; confirmed by the Tada
-// integration backend 22 Oct 2026): POST /app/point/orders { clientId, page, pageSize } for the
-// list, POST /app/point/orders/detail { orderReference } for one order. { success, result } like the loyalty API; the
+// API: the HSB backend's order endpoints (spec §52), with the app token. Both POST on the same host and /pointSys base
+// as the loyalty API above ({host}/pointSys/app/point/…), in the same request envelope as `request()` (signed body with
+// clientId and timestamp, same headers; spec §65): POST /app/point/orders with { pageNo, pageSize } for the list, POST
+// /app/point/order/detail with { orderReference } for one order. { success, result } like the loyalty API; the
 // list's result is { orders, page, pageSize, total }, newest first, page from 1, pageSize at most 100. The backend
 // takes the client from the token: 403 when the order, or the body's clientId, is not the user's (the page then shows
 // its error view).
@@ -141,8 +142,8 @@ function getOrders(path, body) { // the real call POSTs `body` (with clientId fo
 }
 
 // API: the rewards of Home (spec §49) and of the Reward Store (spec §59), from HSB (the Tada integration): POST
-// {host}/pointSys/app/point/catalog with body { clientId } and the app token; guests send clientId null and the app's
-// static key only, no token (spec §60) (one endpoint for both since
+// {host}/pointSys/app/point/catalog with { clientId } in the loyalty API's request envelope (timestamp, signed body;
+// spec §65) and the app token; guests send clientId null and the app's static key (x-auth-key) only, no token (spec §60) (one endpoint for both since
 // 22 Oct 2026: the backend then answers with the default group's rewards). { success, result: { rewards } }: every
 // reward on show, ~50; Home keeps those with showOnHome. A different backend from the rest of the pages: when it
 // fails, Home still opens without the rewards grid, and the store shows its "on their way" message (rewards = []).
@@ -159,7 +160,7 @@ async function pageFromApi(page) {
   if (GUEST && page === 'redemptions') return { orders: [], total: 0 }; // guests never reach it
   if (page === 'store') return { rewards: await rewardsList() }; // the Reward Store and its reward page (spec §59)
   if (page === 'redemptions') {
-    const first = toOrdersPage(await getOrders('app/point/orders', { page: 1, pageSize: ORDERS_PAGE_SIZE }));
+    const first = toOrdersPage(await getOrders('app/point/orders', { pageNo: 1, pageSize: ORDERS_PAGE_SIZE }));
     return { orders: first.orders, total: first.total };
   }
   const task = await taskGet();
@@ -182,12 +183,12 @@ export const fetchPage = (page) => (USE_API ? pageFromApi(page) : getJSON(`../mo
 // Redemption history, the next page of the list (pageNo from 2). Mock: the mock holds every order, so nothing more.
 export const ORDERS_PAGE_SIZE = 20;
 export const fetchMoreOrders = (pageNo) => (USE_API
-  ? getOrders('app/point/orders', { page: pageNo, pageSize: ORDERS_PAGE_SIZE }).then((answer) => toOrdersPage(answer).orders)
+  ? getOrders('app/point/orders', { pageNo, pageSize: ORDERS_PAGE_SIZE }).then((answer) => toOrdersPage(answer).orders)
   : Promise.resolve([]));
 
 // One order of Redemption history. Mock: from the `details` list of mock/redemptions.json.
 export const fetchOrder = (ref) => (USE_API
-  ? getOrders('app/point/orders/detail', { orderReference: ref }).then(toOrder)
+  ? getOrders('app/point/order/detail', { orderReference: ref }).then(toOrder)
   : getJSON('../mock/redemptions.json').then((file) => file.default.details.find((order) => order.orderReference === ref) ?? null));
 
 export const fetchCopy = () => getJSON('../copy/en.json');

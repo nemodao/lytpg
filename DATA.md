@@ -133,7 +133,7 @@ Example file: `mock/redemptions.json` (`default`)
 | `orders[].orderDate` | string | `"2026-10-14T06:22:00Z"` | When the order was placed (ISO 8601). List is newest first. |
 | `orders[].firstItemName` | string | `"Nintendo Switch"` | Name of the order's first reward (POST /app/point/orders `firstItemName`, settled 20 Oct 2026). |
 | `orders[].coinSpent` | number | `30000` | Coins taken for the order. |
-| `details[].orderReference` | string | `"ord_a03f77"` | MOCK ONLY: the demo's orders for fetchOrder(ref). With the API, one POST /app/point/orders/detail { orderReference } per order, in this shape. |
+| `details[].orderReference` | string | `"ord_a03f77"` | MOCK ONLY: the demo's orders for fetchOrder(ref). With the API, one POST /app/point/order/detail { orderReference } per order, in this shape. |
 | `details[].orderNumber` | string | `"TADA26101406220019"` | As in the list. |
 | `details[].status` | as orders[].status | `"new"` | Current status (phase 1 has no step-by-step history). |
 | `details[].orderDate` | string | `"2026-10-14T06:22:00Z"` | When the order was placed. |

@@ -112,7 +112,7 @@ What the demo still does in the browser and the product must do with requests:
 | Refresh | None | Call `tradingTask/get` and `coin/summary` again every 2 minutes while Home or Earn is visible, and when the page becomes visible again |
 | `shared/app.js` — `common.now` | The mock pins "now" | The converter takes it from the answer's `timestamp` (server time) |
 | `shared/data-source.js` — `activityList` | Reads `mock/api/loyalty-activity.json` | `POST /app/point/activity`, asked once per session, waited for at most 3 s (`HANDOFF-6.md` §3) |
-| `shared/data-source.js` — `rewardsList`, `fetchMoreOrders` | Read the samples | Catalog (`[]` on failure: Home still opens, the store shows "Rewards are on their way"); orders by `page` / `pageSize` (`HANDOFF-6.md` §1, §6; paths since `HANDOFF-7.md` §4) |
+| `shared/data-source.js` — `rewardsList`, `fetchMoreOrders` | Read the samples | Catalog (`[]` on failure: Home still opens, the store shows "Rewards are on their way"); orders by `pageNo` / `pageSize` (`HANDOFF-6.md` §1, §6; paths since `HANDOFF-7.md` §4) |
 | `shared/data-source.js` — `REWARD_STORE` | `false` | Plan B switch, a setting on HSB's side (`HANDOFF-7.md` §1) |
 | `shared/tour.js` — `seen` / `markSeen` | "Tour seen" kept in localStorage | Per-user flag from the app, if wanted |
 | `pages/trading-task.js` — `selectedAccountId` | The tie-break for the account the pages open on (`shared/tiers.js`) | Unchanged: picking an account is kept for the session only; the app switches account on the trade button (`HANDOFF-6.md` §4) |

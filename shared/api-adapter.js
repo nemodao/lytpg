@@ -6,7 +6,7 @@
 //   tradingTask/getHistory  -> Earn history
 //   (tradingTask/get also gives common.tiers and each account's group and lifetime deposit, spec §51)
 //   POST /app/point/catalog        -> Home's rewards and the Reward Store (guests: clientId null), spec §49, §59
-//   POST /app/point/orders         -> Redemption history list; POST /app/point/orders/detail -> one order (HSB backend,
+//   POST /app/point/orders         -> Redemption history list; POST /app/point/order/detail -> one order (HSB backend,
 //                                     spec §52)
 //   coin/summary            -> common.balance
 //   coin/listAvailable      -> Coins, Available tab
@@ -159,7 +159,7 @@ export const toOrders = (list) =>
     }))
     .sort((a, b) => Date.parse(b.orderDate) - Date.parse(a.orderDate));
 
-// POST /app/point/orders/detail { orderReference } -> the order the details view shows. No money values: the backend strips every
+// POST /app/point/order/detail { orderReference } -> the order the details view shows. No money values: the backend strips every
 // IDR amount (price, fees, value) and the page shows coins only (spec §52). Each item carries at most one of
 // evoucher (e-gifts), token (PLN, mobile credit) or tracking (physical goods); the others are null.
 export const toOrder = (order) => ({
