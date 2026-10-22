@@ -81,26 +81,30 @@
 .store-card__art img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .store-card__name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2lh; font: var(--font-small-semibold); color: var(--ui-text-primary); }
 
-/* Voucher: a ticket. A dashed cut with two round notches separates the voucher from its price. */
+/* Voucher: a ticket. A dashed cut separates the voucher from its price stub, with a round notch at each end of the cut.
+   The notches are real holes (a mask), so the page's gradient shows through them; the stub has a fixed width so the
+   holes always sit on the cut. (The mask also clips the card's shadow, so tickets have their border only.) */
 .voucher-list { display: flex; flex-direction: column; gap: var(--spacing-10); }
 .voucher {
-  --notch: var(--spacing-8);
+  --notch: var(--spacing-8); /* hole radius */
+  --stub: calc(var(--size-control-lg) * 2);
+  --cut: calc(100% - var(--stub) - var(--size-stroke));
   position: relative; display: flex; align-items: stretch; min-height: calc(var(--size-control-lg) + var(--spacing-24));
-  border-radius: var(--radius-card-inner); background: var(--card-surface); border: var(--size-stroke) solid var(--card-stroke); box-shadow: var(--card-shadow);
+  border-radius: var(--radius-card-inner); background: var(--card-surface); border: var(--size-stroke) solid var(--card-stroke);
   color: inherit; text-decoration: none;
+  -webkit-mask:
+    radial-gradient(circle at var(--cut) 0, transparent var(--notch), black calc(var(--notch) + var(--size-stroke))) top / 100% 51% no-repeat,
+    radial-gradient(circle at var(--cut) 100%, transparent var(--notch), black calc(var(--notch) + var(--size-stroke))) bottom / 100% 51% no-repeat;
+  mask:
+    radial-gradient(circle at var(--cut) 0, transparent var(--notch), black calc(var(--notch) + var(--size-stroke))) top / 100% 51% no-repeat,
+    radial-gradient(circle at var(--cut) 100%, transparent var(--notch), black calc(var(--notch) + var(--size-stroke))) bottom / 100% 51% no-repeat;
 }
 .voucher__art { flex: none; display: grid; place-items: center; width: calc(var(--size-control-lg) + var(--spacing-24)); padding: var(--spacing-8); }
 .voucher__art img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .voucher__body { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: var(--spacing-2); padding: var(--spacing-10) var(--spacing-12) var(--spacing-10) 0; }
 .voucher__kind { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); }
 .voucher__name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: var(--font-small-semibold); }
-.voucher__stub { position: relative; flex: none; display: grid; place-items: center; padding: 0 var(--spacing-16); border-left: var(--size-stroke) dashed var(--ui-stroke-soft); }
-.voucher__stub::before, .voucher__stub::after {
-  content: ""; position: absolute; left: calc(var(--notch) / -2 - var(--size-stroke) / 2); width: var(--notch); height: var(--notch);
-  border-radius: var(--radius-pill); background: var(--ui-surface-weak);
-}
-.voucher__stub::before { top: calc(var(--notch) / -2 - var(--size-stroke)); }
-.voucher__stub::after { bottom: calc(var(--notch) / -2 - var(--size-stroke)); }
+.voucher__stub { flex: none; display: grid; place-items: center; width: var(--stub); border-left: var(--size-stroke) dashed var(--ui-stroke-soft); }
 
 /* One row that scrolls sideways, edge to edge (Popular). */
 .store-row {
