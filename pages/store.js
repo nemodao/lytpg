@@ -111,15 +111,11 @@ const noteCard = (title, body, icon) => `
 
 function rewardsTab() {
   const chips = `<div class="store-chips" role="group" aria-label="${ui.t('store.categories')}">${chip('all', ui.t('store.cat.all'))}${STORE_CATEGORIES.map((key) => chip(key, categoryName(ui, key))).join('')}${chip('more', ui.t('store.cat.more'))}</div>`;
-  // "More categories": a centred card with the pile of rewards from the banner on top and, on its corner, a clock in a
-  // purple disc (more is on the way).
+  // "More categories": a centred card with the pile of rewards from the banner on top.
   if (category === 'more') {
     return `${chips}
       <div class="card store-note store-note--stacked">
-        <span class="store-note__media">
-          <img class="store-note__art" src="../assets/images/store/more-rewards.webp" alt="">
-          <span class="store-clock"><img src="../assets/images/store/clock.webp" alt=""></span>
-        </span>
+        <img class="store-note__art" src="../assets/images/store/more-rewards.webp" alt="">
         <span class="stack stack--tight"><span class="t-body-strong">${ui.t('store.more.title')}</span><span class="t-caption c-2">${ui.t('store.more.body')}</span></span>
       </div>`;
   }

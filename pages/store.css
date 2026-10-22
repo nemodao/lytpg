@@ -280,20 +280,7 @@
 .chip--more { border-style: dashed; }
 .store-note { flex-direction: row; align-items: center; gap: var(--spacing-12); }
 .store-note--stacked { flex-direction: column; text-align: center; gap: var(--spacing-12); padding-block: var(--spacing-24); }
-.store-note__media { position: relative; display: block; width: 72%; }
-.store-note__art { display: block; width: 100%; height: auto; }
-/* The clock ("on the way") on the pile's bottom-right corner, in a purple disc drawn on the same centre as the arrow
-   that circles the clock, a little wider than it (clock.webp is cropped square on that centre: the disc is 86% of it). */
-.store-clock {
-  position: absolute; right: -6%; bottom: -10%; width: calc(var(--size-control-lg) * 1.85); aspect-ratio: 1;
-  display: grid; place-items: center;
-}
-.store-clock::before {
-  content: ""; position: absolute; inset: 7%; border-radius: var(--radius-pill);
-  background: radial-gradient(circle at 40% 35%, var(--color-purple-darker-hover), var(--color-purple-darker-active) 60%, var(--color-purple-darker));
-  box-shadow: inset 0 0 0 var(--size-stroke) color-mix(in srgb, var(--color-neutral-0) 35%, transparent), var(--card-shadow);
-}
-.store-clock img { position: relative; display: block; width: 100%; height: 100%; }
+.store-note__art { display: block; width: 72%; height: auto; }
 .store-note__icon { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--ui-badge-blue); color: var(--ui-text-brand); }
 
 /* ---- Bottom bar: Back instead of Loyalty's Close, tabs with line icons ---- */
