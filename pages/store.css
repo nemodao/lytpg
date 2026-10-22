@@ -9,7 +9,8 @@
     linear-gradient(180deg, var(--accent-surface-brand) 0, color-mix(in srgb, var(--accent-surface-brand) 86%, var(--ui-surface-weak)) 400px, color-mix(in srgb, var(--bg-blend) 16%, var(--ui-surface-weak)) 640px, var(--ui-surface-weak) 1000px); }
 .store-tab--home .app { background: var(--store-bg); }
 .store-look--fixed .app { background: none; }
-.store-look--fixed::before { content: ""; position: fixed; z-index: -1; inset: 0; background: var(--store-bg); pointer-events: none; }
+/* Within the page frame (375px column on a computer, the whole screen on a phone), like .app and the bottom bar. */
+.store-look--fixed::before { content: ""; position: fixed; z-index: -1; top: 0; bottom: 0; left: calc(50% - var(--app-width) / 2); width: var(--app-width); background: var(--store-bg); pointer-events: none; }
 .store-look .store-head:not(.is-stuck) .store-head__title,
 .store-banner + .store-section .store-section__head, .store-banner + .store-section .text-btn { color: var(--on-brand); }
 /* Category chips on the blue: glass with white text, the selected one solid white. */
