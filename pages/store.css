@@ -134,8 +134,9 @@
   position: relative; display: flex; flex-direction: column; gap: var(--spacing-16);
   margin-bottom: var(--spacing-16); padding: var(--spacing-20) 0 var(--spacing-32); border-radius: var(--radius-card);
   background:
-    repeating-conic-gradient(from -90deg at 50% -10%, color-mix(in srgb, var(--color-neutral-0) 22%, transparent) 0deg 5deg, transparent 5deg 12deg),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-purple-main) 34%, var(--color-neutral-0)), color-mix(in srgb, var(--color-purple-main) 14%, var(--color-neutral-0)));
+    radial-gradient(70% 45% at 50% 0, color-mix(in srgb, var(--color-neutral-0) 35%, transparent), transparent 70%),
+    repeating-conic-gradient(from -90deg at 50% -10%, color-mix(in srgb, var(--color-neutral-0) 16%, transparent) 0deg 5deg, transparent 5deg 12deg),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-purple-main) 62%, var(--color-neutral-0)), color-mix(in srgb, var(--color-purple-main) 36%, var(--color-neutral-0)));
 }
 .trip-promo__head { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-6); padding: 0 var(--spacing-card); text-align: center; }
 .trip-promo__title {
