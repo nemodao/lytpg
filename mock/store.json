@@ -50,6 +50,26 @@
         "banner-light": "PREVIEW ONLY, for review: a light white-to-lilac banner with dark purple text, against the deep blue page.",
         "banner-gold": "PREVIEW ONLY, for review: a yellow-to-orange banner with dark text, the coins' colour."
       }
+    },
+    {
+      "title": "Card colour in dark mode (review)",
+      "exclusive": true,
+      "defaultLabel": "4: Current (dark grey)",
+      "states": [
+        "cards-light",
+        "cards-blue",
+        "cards-glass"
+      ],
+      "labels": {
+        "cards-light": "1: As in light mode",
+        "cards-blue": "2: Blue-black, lighter",
+        "cards-glass": "3: Frosted glass"
+      },
+      "descriptions": {
+        "cards-light": "PREVIEW ONLY, for review, dark mode only: the reward and voucher cards keep their light-mode look (white card, dark text, lilac picture backdrop) on the dark page.",
+        "cards-blue": "PREVIEW ONLY, for review, dark mode only: cards in a lighter black tinted with the brand blue, the picture backdrop a brighter blue.",
+        "cards-glass": "PREVIEW ONLY, for review, dark mode only: frosted-glass cards (see-through white with a blur) over the blue background, the picture backdrop a soft white glow."
+      }
     }
   ],
   "default": {
@@ -1083,6 +1103,21 @@
     "banner-gold": {
       "page": {
         "banner": "gold"
+      }
+    },
+    "cards-light": {
+      "page": {
+        "cards": "light"
+      }
+    },
+    "cards-blue": {
+      "page": {
+        "cards": "blue"
+      }
+    },
+    "cards-glass": {
+      "page": {
+        "cards": "glass"
       }
     }
   }

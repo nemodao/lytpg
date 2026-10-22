@@ -18,6 +18,10 @@ let category = ['all', 'more', ...STORE_CATEGORIES].includes(query.get('cat')) ?
 const back = backParam() || ui.href('dashboard.html');
 const selfHref = () => withParams(ui.href('store.html'), { tab: tab === 'rewards' ? 'rewards' : '', cat: tab === 'rewards' && category !== 'all' ? category : '', back });
 const rewards = page.rewards;
+// PREVIEW ONLY: `page.cards` ('light' | 'blue' | 'glass', states cards-*) tries other card colours in dark mode, for
+// review. 'light' gives the cards the light theme's tokens (data-theme); the others are classes in store.css.
+document.body.classList.toggle(`store-cards--${page.cards}`, Boolean(page.cards));
+const cardTheme = page.cards === 'light' ? ' data-theme="light"' : '';
 
 // ---- Home Store: three sections from the one list, no reward twice (spec §59) ----
 // F&B first (its first 4 in the catalog's order), then Travel (its first 4), then Popular from the rest: rewards marked
@@ -42,7 +46,7 @@ const href = (item) => rewardHref(ui, item.id, selfHref());
 
 // Square card: two per row on the Rewards tab, one scrolling row in Popular.
 const card = (item) => `
-  <a class="card store-card" href="${href(item)}">
+  <a class="card store-card" href="${href(item)}"${cardTheme}>
     <span class="store-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}${rewardBadge(ui, item)}</span>
     <span class="store-card__name">${ui.esc(item.name)}</span>
     ${price(item)}
@@ -50,7 +54,7 @@ const card = (item) => `
 
 // Voucher: a ticket, one per row: the voucher's art on the left, a perforated edge, the price on the right.
 const voucher = (item) => `
-  <a class="voucher" href="${href(item)}">
+  <a class="voucher" href="${href(item)}"${cardTheme}>
     <span class="voucher__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</span>
     <span class="voucher__body">
       <span class="voucher__kind">${ui.t('store.voucher')}</span>
