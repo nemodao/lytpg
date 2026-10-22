@@ -166,8 +166,50 @@
 .trip-promo__head { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-6); padding: 0 var(--spacing-card); text-align: center; }
 .trip-promo__title {
   font: var(--font-display-m); text-transform: uppercase; color: var(--color-neutral-0);
-  -webkit-text-stroke: var(--spacing-6) var(--color-purple-darker); paint-order: stroke fill;
-  text-shadow: 0 var(--spacing-4) 0 var(--color-purple-darker);
+  /* A round outline made of shadows all around each letter (a text stroke draws spikes at sharp corners), plus a drop
+     under it. */
+  --outline: calc(var(--spacing-6) / 2);
+  text-shadow:
+    calc(var(--outline) * 1.000) calc(var(--outline) * 0.000) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.966) calc(var(--outline) * 0.259) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.866) calc(var(--outline) * 0.500) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.707) calc(var(--outline) * 0.707) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.500) calc(var(--outline) * 0.866) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.259) calc(var(--outline) * 0.966) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.000) calc(var(--outline) * 1.000) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.259) calc(var(--outline) * 0.966) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.500) calc(var(--outline) * 0.866) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.707) calc(var(--outline) * 0.707) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.866) calc(var(--outline) * 0.500) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.966) calc(var(--outline) * 0.259) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -1.000) calc(var(--outline) * 0.000) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.966) calc(var(--outline) * -0.259) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.866) calc(var(--outline) * -0.500) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.707) calc(var(--outline) * -0.707) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.500) calc(var(--outline) * -0.866) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.259) calc(var(--outline) * -0.966) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.000) calc(var(--outline) * -1.000) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.259) calc(var(--outline) * -0.966) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.500) calc(var(--outline) * -0.866) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.707) calc(var(--outline) * -0.707) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.866) calc(var(--outline) * -0.500) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.966) calc(var(--outline) * -0.259) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 1.000) calc(var(--outline) * 0.000 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.924) calc(var(--outline) * 0.383 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.707) calc(var(--outline) * 0.707 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.383) calc(var(--outline) * 0.924 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.000) calc(var(--outline) * 1.000 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.383) calc(var(--outline) * 0.924 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.707) calc(var(--outline) * 0.707 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.924) calc(var(--outline) * 0.383 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -1.000) calc(var(--outline) * 0.000 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.924) calc(var(--outline) * -0.383 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.707) calc(var(--outline) * -0.707 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.383) calc(var(--outline) * -0.924 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * -0.000) calc(var(--outline) * -1.000 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.383) calc(var(--outline) * -0.924 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.707) calc(var(--outline) * -0.707 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker),
+    calc(var(--outline) * 0.924) calc(var(--outline) * -0.383 + var(--spacing-4)) calc(var(--size-stroke) / 2) var(--color-purple-darker);
 }
 .trip-promo__ribbon { padding: var(--spacing-4) var(--spacing-12); border-radius: var(--radius-control); background: var(--color-purple-darker); color: var(--color-neutral-0); font: var(--font-x-small-semibold); text-transform: uppercase; letter-spacing: 0.04em; }
 .trip-promo__row {
