@@ -43,7 +43,7 @@ const href = (item) => rewardHref(ui, item.id, selfHref());
 // Square card: two per row on the Rewards tab, one scrolling row in Popular.
 const card = (item) => `
   <a class="card store-card" href="${href(item)}">
-    <span class="store-card__media"><span class="store-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</span>${rewardBadge(ui, item)}</span>
+    <span class="store-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}${rewardBadge(ui, item)}</span>
     <span class="store-card__name">${ui.esc(item.name)}</span>
     ${price(item)}
   </a>`;

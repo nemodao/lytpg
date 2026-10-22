@@ -67,27 +67,19 @@
 .store-section__head .text-btn { align-self: center; }
 .store-price { display: inline-flex; align-items: center; gap: var(--spacing-4); font: var(--font-small-semibold); color: var(--ui-text-brand); white-space: nowrap; }
 
-/* "Hot" / "New" on a reward's picture: a band that rolls over the picture's top edge from behind. Its left side is on
-   the picture's edge and its top rises a little above the picture. The top is shaded like a roll (a thin dark strip where
-   the band turns back, a light strip where it comes round to the front) instead of a hard fold. The top-left corner has
-   the picture's own rounding, so it stays inside the card's rounded corner. It sits outside the picture's clipping
-   (.store-card__media / .reward-media hold both). Solid colours: it sits on pictures. */
-.store-card__media { position: relative; display: block; }
+/* "Hot" / "New" on a reward's picture: inside the picture's frame, in its top-left corner. The corners that touch the
+   frame are square (the picture's own rounding clips the outer one); only the free bottom-right corner is rounded.
+   Solid colours: it sits on pictures. */
 .store-badge {
-  --rise: var(--spacing-6);
-  --roll: linear-gradient(180deg, color-mix(in srgb, var(--color-neutral-900) 45%, transparent) 0, transparent var(--rise)),
-          linear-gradient(180deg, transparent calc(var(--rise) * 0.8), color-mix(in srgb, var(--color-neutral-0) 38%, transparent) calc(var(--rise) * 1.3), transparent calc(var(--rise) * 2.6));
-  position: absolute; z-index: 1; top: calc(var(--rise) * -1); left: 0; padding: calc(var(--spacing-4) + var(--rise) / 2) var(--spacing-10) var(--spacing-4);
-  border-radius: var(--radius-card-inner) var(--spacing-10) var(--radius-control) var(--radius-control);
-  font: var(--font-x-small-semibold); color: var(--on-brand);
+  position: absolute; z-index: 1; top: 0; left: 0; padding: var(--spacing-4) var(--spacing-10);
+  border-radius: 0 0 var(--radius-control) 0; font: var(--font-x-small-semibold); color: var(--on-brand);
 }
-.store-badge--new { background: var(--roll), var(--accent-surface-brand); }
+.store-badge--new { background: var(--accent-surface-brand); }
 .store-badge--hot {
   /* After the HOT badge on Loyalty's bottom bar (assets/images/nav/hot.png): a glossy red core with blazing orange ends,
      an amber-to-yellow glow rising from the bottom and a pink gloss on top. */
   background:
-    var(--roll),
-    linear-gradient(180deg, transparent var(--rise), color-mix(in srgb, var(--ui-hot-gloss) 70%, transparent) calc(var(--rise) * 1.4), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ui-hot-gloss) 70%, transparent) 0, transparent 50%),
     radial-gradient(55% 130% at 0 50%, var(--ui-hot-orange), transparent 75%),
     radial-gradient(55% 130% at 100% 50%, var(--ui-hot-orange), transparent 75%),
     radial-gradient(90% 85% at 50% 135%, var(--ui-hot-glow), var(--ui-hot-amber) 38%, transparent 72%),
