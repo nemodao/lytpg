@@ -301,5 +301,7 @@
   "reward.soon.body": "Keep trading and collecting coins. You'll be able to redeem this reward as soon as checkout launches.",
   "reward.soon.ok": "Got it",
   "reward.missing.title": "This reward is no longer available",
-  "reward.missing.body": "It may have been taken off the store. Have a look at the other rewards."
+  "reward.missing.body": "It may have been taken off the store. Have a look at the other rewards.",
+  "store.travel.ribbon": "Trips you can get with coins",
+  "store.coins": "coins"
 }

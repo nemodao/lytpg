@@ -25,11 +25,11 @@ export const appHeader = (ui, { title, action = '', back = '' }) => (requestAnim
     ${action || (back ? '<span></span>' : '')}
   </header>`);
 
-// Sticky header (CSS .app-header): .is-stuck once the page has scrolled, which shrinks the title pill and the header
-// buttons together (a little hysteresis so it does not flicker at the threshold).
+// Sticky header (CSS .app-header; the Reward Store's .store-head, spec §59): .is-stuck once the page has scrolled, which
+// shrinks the title pill and the header buttons together (a little hysteresis so it does not flicker at the threshold).
 const HEADER_STICK_AT = 8;
-function watchHeader() {
-  const header = document.querySelector('.app-header');
+export function watchHeader() {
+  const header = document.querySelector('.app-header, .store-head');
   if (!header) return;
   const stuck = header.classList.contains('is-stuck') ? window.scrollY > HEADER_STICK_AT / 2 : window.scrollY > HEADER_STICK_AT;
   header.classList.toggle('is-stuck', stuck);

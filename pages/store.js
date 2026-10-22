@@ -5,7 +5,7 @@
 import { load } from '../shared/app.js';
 import { coin } from '../shared/components.js';
 import { STORE_CATEGORIES } from '../shared/api-adapter.js';
-import { backParam, categoryName, rewardBadge, rewardHref, storeHead, withParams } from '../shared/store.js';
+import { backParam, categoryName, rewardBadge, rewardHref, shortPoints, storeHead, withParams } from '../shared/store.js';
 
 const { common, page, ui } = await load('store');
 const app = document.getElementById('app');
@@ -40,7 +40,7 @@ function arrange(list) {
 const price = (item) => `<span class="store-price num">${coin('coin--xs')}${ui.num(item.points)}</span>`;
 const href = (item) => rewardHref(ui, item.id, selfHref());
 
-// Square card, two per row (Popular and the Rewards tab).
+// Square card: two per row on the Rewards tab, one scrolling row in Popular.
 const card = (item) => `
   <a class="card store-card" href="${href(item)}">
     <span class="store-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}${rewardBadge(ui, item)}</span>
@@ -59,12 +59,24 @@ const voucher = (item) => `
     <span class="voucher__stub">${price(item)}</span>
   </a>`;
 
-// Trip: a wide picture with the name and price over it, in a row that scrolls sideways.
+// Tour & Travel: its own promo panel (lilac with light rays, a big outlined title and a dark ribbon) holding a row of
+// white cards that scrolls sideways; each card has a scalloped sticker with the price ("70K coins"). `See all` sits on
+// the panel's bottom edge. First draft from a reference picture; details to come.
 const trip = (item) => `
-  <a class="trip" href="${href(item)}">
-    ${item.image ? `<img class="trip__img" src="${ui.esc(item.image)}" alt="">` : ''}${rewardBadge(ui, item)}
-    <span class="trip__text"><span class="trip__name">${ui.esc(item.name)}</span>${price(item)}</span>
+  <a class="trip-card" href="${href(item)}">
+    <span class="trip-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</span>
+    <span class="trip-sticker num"><b>${shortPoints(item.points)}</b>${ui.t('store.coins')}</span>
+    <span class="trip-card__name">${ui.esc(item.name)}</span>
   </a>`;
+const tripPanel = (items) => `
+  <section class="trip-promo">
+    <div class="trip-promo__head">
+      <p class="trip-promo__title">${ui.t('store.travel')}</p>
+      <p class="trip-promo__ribbon">${ui.t('store.travel.ribbon')}</p>
+    </div>
+    <div class="trip-promo__row">${items.map(trip).join('')}</div>
+    <button class="trip-promo__more" type="button" data-action="see-all" data-cat="tour_travel">${ui.t('store.seeAll')}${ui.icon('right', 'icon--sm')}</button>
+  </section>`;
 
 const sectionHead = (title, cat) => `
   <div class="store-section__head">
@@ -79,9 +91,9 @@ function homeTab() {
       <img class="store-banner__img" src="../assets/images/store/banner.webp" alt="">
       <div class="store-banner__text"><p class="store-banner__title">${ui.t('store.banner.title')}</p><p class="store-banner__body">${ui.t('store.banner.body')}</p></div>
     </div>
-    ${popular.length ? `<section class="store-section">${sectionHead(ui.t('store.popular'), 'all')}<div class="store-grid">${popular.map(card).join('')}</div></section>` : ''}
+    ${popular.length ? `<section class="store-section">${sectionHead(ui.t('store.popular'), 'all')}<div class="store-row">${popular.map(card).join('')}</div></section>` : ''}
     ${fnb.length ? `<section class="store-section">${sectionHead(ui.t('store.fnb'), 'fnb_voucher')}<div class="voucher-list">${fnb.map(voucher).join('')}</div></section>` : ''}
-    ${travel.length ? `<section class="store-section">${sectionHead(ui.t('store.travel'), 'tour_travel')}<div class="trip-row">${travel.map(trip).join('')}</div></section>` : ''}`;
+    ${travel.length ? tripPanel(travel) : ''}`;
 }
 
 // ---- Rewards: category chips and the rewards of the chosen one ----

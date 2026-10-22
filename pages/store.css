@@ -1,17 +1,45 @@
 /* Reward Store only (spec §59). The top bar (.store-head) and the "Hot" / "New" badge are shared with reward.html. */
 
 /* ---- Top of the store: icon, "Reward Redemption", balance ---- */
-.store-head { display: flex; align-items: center; gap: var(--spacing-10); min-height: var(--size-icon-button); }
+/* Sticks to the top like Loyalty's header (spec §57): plain at the top of the page; once it scrolls (.is-stuck) the icon
+   and the title become one pill, styled like the round header buttons, and shrink together with the balance. */
+.store-head {
+  position: sticky; z-index: 30; top: calc(env(safe-area-inset-top, 0px) + var(--spacing-8));
+  display: flex; align-items: center; gap: var(--spacing-8); min-height: var(--size-icon-button);
+  --header-scale: 1;
+}
+.store-head.is-stuck { --header-scale: 0.86; }
+.store-head__brand, .store-head__back { transform: scale(var(--header-scale)); }
+.store-head__brand, .store-head__balance, .store-head__back { transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, padding 0.3s ease, color 0.3s ease; }
+.store-head__brand {
+  flex: none; min-width: 0; display: flex; align-items: center; gap: var(--spacing-10); transform-origin: left center;
+  /* Room for the balance (out of the flow, on the right), measured after the shrink so the title is not cut early. */
+  max-width: calc((100% - var(--size-icon-button) * 2.5) / var(--header-scale));
+  padding: var(--spacing-2) 0; border-radius: var(--radius-pill); border: var(--size-stroke) solid transparent;
+}
+.store-head.is-stuck .store-head__brand {
+  padding: var(--spacing-2) var(--spacing-16) var(--spacing-2) var(--spacing-2);
+  background: var(--ui-surface-pure); border-color: var(--ui-stroke-soft); color: var(--ui-icon-secondary);
+}
+.store-head__back { flex: none; transform-origin: left center; }
 .store-head__icon {
   flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm);
-  border-radius: var(--radius-control); background: var(--blend-theme-bg); color: var(--blend-theme-fg); box-shadow: var(--blend-stroke);
+  border-radius: var(--radius-pill); background: var(--blend-theme-bg); color: var(--blend-theme-fg); box-shadow: var(--blend-stroke);
 }
-.store-head__title { flex: 1; min-width: 0; font: var(--font-large-semibold); }
+.store-head__title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--font-large-semibold); }
+/* The balance: one pill in two parts, the coin on a slightly darker part. */
 .store-head__balance {
-  flex: none; display: inline-flex; align-items: center; gap: var(--spacing-4); height: var(--size-control-sm);
-  padding: 0 var(--spacing-12); border-radius: var(--radius-pill); background: var(--ui-surface-pure);
-  border: var(--size-stroke) solid var(--ui-stroke-soft); font: var(--font-small-semibold);
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%) scale(var(--header-scale)); transform-origin: right center;
+  display: inline-flex; align-items: stretch; height: var(--size-control-sm); overflow: hidden;
+  border-radius: var(--radius-pill); background: var(--ui-surface-pure); border: var(--size-stroke) solid var(--ui-stroke-soft);
+  font: var(--font-small-semibold);
 }
+.store-head__coin {
+  display: grid; place-items: center; padding: 0 var(--spacing-8) 0 var(--spacing-10);
+  background: color-mix(in srgb, var(--ui-text-primary) 6%, var(--ui-surface-pure)); border-right: var(--size-stroke) solid var(--ui-stroke-soft);
+}
+.store-head__balance .num { display: grid; place-items: center; padding: 0 var(--spacing-12) 0 var(--spacing-8); }
+@media (prefers-reduced-motion: reduce) { .store-head__brand, .store-head__balance, .store-head__back { transition: none; } }
 
 /* ---- Banner: decoration only ---- */
 .store-banner { position: relative; overflow: hidden; border-radius: var(--radius-card); aspect-ratio: 1080 / 480; }
@@ -62,23 +90,58 @@
 .voucher__stub::before { top: calc(var(--notch) / -2 - var(--size-stroke)); }
 .voucher__stub::after { bottom: calc(var(--notch) / -2 - var(--size-stroke)); }
 
-/* Trip: a wide picture, the name and price over it; the row scrolls sideways, edge to edge. */
-.trip-row {
+/* One row that scrolls sideways, edge to edge (Popular). */
+.store-row {
   display: flex; gap: var(--spacing-12); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-  margin-inline: calc(var(--spacing-gutter) * -1); padding-inline: var(--spacing-gutter); scroll-padding-inline: var(--spacing-gutter);
+  margin-inline: calc(var(--spacing-gutter) * -1); padding: var(--spacing-2) var(--spacing-gutter) var(--spacing-8); scroll-padding-inline: var(--spacing-gutter);
 }
-.trip-row::-webkit-scrollbar { display: none; }
-.trip {
-  position: relative; flex: none; width: 78%; aspect-ratio: 16 / 10; overflow: hidden; scroll-snap-align: start;
-  border-radius: var(--radius-card); color: var(--on-brand); text-decoration: none; box-shadow: var(--card-shadow);
-  background: linear-gradient(170deg, color-mix(in srgb, var(--color-blue-500) 35%, var(--card-surface)), color-mix(in srgb, var(--color-purple-main) 18%, var(--card-surface))); /* behind pictures with a transparent background */
+.store-row::-webkit-scrollbar { display: none; }
+.store-row .store-card { flex: none; width: 42%; scroll-snap-align: start; }
+
+/* Tour & Travel: a promo panel (first draft from a reference picture). Lilac, light rays from the top, a big white
+   title with a dark outline, a dark ribbon, white cards with a scalloped price sticker, and See all on the bottom edge. */
+.trip-promo {
+  position: relative; display: flex; flex-direction: column; gap: var(--spacing-16);
+  margin-bottom: var(--spacing-16); padding: var(--spacing-20) 0 var(--spacing-32); border-radius: var(--radius-card);
+  background:
+    repeating-conic-gradient(from -90deg at 50% -10%, color-mix(in srgb, var(--color-neutral-0) 22%, transparent) 0deg 5deg, transparent 5deg 12deg),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-purple-main) 34%, var(--color-neutral-0)), color-mix(in srgb, var(--color-purple-main) 14%, var(--color-neutral-0)));
 }
-.trip__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.trip::after { content: ""; position: absolute; inset: 40% 0 0; background: linear-gradient(transparent, color-mix(in srgb, var(--color-neutral-600) 80%, transparent)); }
-.trip__text { position: absolute; z-index: 1; inset: auto var(--spacing-card) var(--spacing-12); display: flex; flex-direction: column; gap: var(--spacing-2); }
-.trip__name { font: var(--font-medium-semibold); }
-.trip .store-price { color: var(--on-brand); }
-.trip .store-badge { z-index: 1; top: var(--spacing-12); left: var(--spacing-12); }
+.trip-promo__head { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-6); padding: 0 var(--spacing-card); text-align: center; }
+.trip-promo__title {
+  font: var(--font-display-m); text-transform: uppercase; color: var(--color-neutral-0);
+  -webkit-text-stroke: var(--spacing-6) var(--color-purple-darker); paint-order: stroke fill;
+  text-shadow: 0 var(--spacing-4) 0 var(--color-purple-darker);
+}
+.trip-promo__ribbon { padding: var(--spacing-4) var(--spacing-12); border-radius: var(--radius-control); background: var(--color-purple-darker); color: var(--color-neutral-0); font: var(--font-x-small-semibold); text-transform: uppercase; letter-spacing: 0.04em; }
+.trip-promo__row {
+  display: flex; gap: var(--spacing-12); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+  padding: var(--spacing-10) var(--spacing-card) var(--spacing-4); scroll-padding-inline: var(--spacing-card);
+}
+.trip-promo__row::-webkit-scrollbar { display: none; }
+.trip-card {
+  position: relative; flex: none; width: 46%; display: flex; flex-direction: column; gap: var(--spacing-8); scroll-snap-align: start;
+  padding: var(--spacing-8) var(--spacing-8) var(--spacing-12); border-radius: var(--radius-card);
+  background: var(--color-neutral-0); color: var(--color-neutral-900); text-decoration: none;
+}
+.trip-card__art { display: block; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-card-inner); background: color-mix(in srgb, var(--color-blue-500) 18%, var(--color-neutral-0)); }
+.trip-card__art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.trip-card__name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2lh; font: var(--font-small-semibold); }
+/* Scalloped sticker with the price, over the card's top-left corner. */
+.trip-sticker {
+  position: absolute; top: calc(var(--spacing-10) * -1); left: calc(var(--spacing-6) * -1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: calc(var(--size-control-lg) + var(--spacing-16)); aspect-ratio: 1;
+  clip-path: polygon(50.0% 0.0%, 58.8% 5.9%, 69.1% 3.8%, 75.0% 12.6%, 85.4% 14.6%, 87.4% 25.0%, 96.2% 30.9%, 94.1% 41.2%, 100.0% 50.0%, 94.1% 58.8%, 96.2% 69.1%, 87.4% 75.0%, 85.4% 85.4%, 75.0% 87.4%, 69.1% 96.2%, 58.8% 94.1%, 50.0% 100.0%, 41.2% 94.1%, 30.9% 96.2%, 25.0% 87.4%, 14.6% 85.4%, 12.6% 75.0%, 3.8% 69.1%, 5.9% 58.8%, 0.0% 50.0%, 5.9% 41.2%, 3.8% 30.9%, 12.6% 25.0%, 14.6% 14.6%, 25.0% 12.6%, 30.9% 3.8%, 41.2% 5.9%);
+  background: var(--color-purple-main); color: var(--color-neutral-0); font: var(--font-x-small-semibold); line-height: 1;
+}
+.trip-sticker b { font: var(--font-medium-semibold); line-height: 1.1; }
+.trip-promo__more {
+  position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 50%);
+  display: inline-flex; align-items: center; gap: var(--spacing-2); height: var(--size-control-sm); padding: 0 var(--spacing-16);
+  border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--color-purple-light-active); background: var(--color-neutral-0);
+  color: var(--color-purple-main); font: var(--font-small-semibold); box-shadow: var(--card-shadow); cursor: pointer;
+}
 
 /* ---- Rewards tab ---- */
 .store-chips {
