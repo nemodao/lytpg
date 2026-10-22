@@ -150,6 +150,12 @@
   --ui-tier-platinum-surface: #e6d5b9;
   --ui-tier-platinum-text: #70511e;
   --ui-nav-exit-glow: #de2c4100;
+  --ui-hot-deep: #b81400;
+  --ui-hot-red: #d21e00;
+  --ui-hot-orange: #f96304;
+  --ui-hot-amber: #fda60b;
+  --ui-hot-glow: #fde83c;
+  --ui-hot-gloss: #fdb192;
 
   /* Effect strengths (light) */
   --bg-blend-strength: 16%;
@@ -377,6 +383,12 @@
   --ui-tier-platinum-surface: #493e2c;
   --ui-tier-platinum-text: #f1ae40;
   --ui-nav-exit-glow: #de2c411b;
+  --ui-hot-deep: #b81400;
+  --ui-hot-red: #d21e00;
+  --ui-hot-orange: #f96304;
+  --ui-hot-amber: #fda60b;
+  --ui-hot-glow: #fde83c;
+  --ui-hot-gloss: #fdb192;
 
   /* Effect strengths (dark) */
   --bg-blend-strength: 30%;
