@@ -10,7 +10,7 @@ reads (§3, §4). The pages already run on sample answers in `mock/api/`.
 **In one line:** a browse-only Reward Store inside the webview ("Plan B", in case the Tada integration is not ready for
 launch), behind a switch that is **off by default**; and HSB's own endpoints (the Tada integration backend: catalog,
 activity, orders, redeem session) moved from `/loyalty/…` to `/app/point/…`, all POST, on the same host and base as
-the loyalty API (`{host}/pointSys/app/point/…`).
+the loyalty API (`{host}/pointSys/app/point/…`). It also lists fixes from the review of your handoff 6 work (§10).
 
 ---
 
@@ -261,6 +261,47 @@ updated too. `tools/check-tracking.mjs` covers every point below (17 new scenari
 - **Check tool:** `loyalty_login_prompt_view` and `loyalty_category_view` are now allowed to repeat in one page load
   (an existing bug for the first); new step `scroll-slowly` (screen by screen, so views of middle sections are seen).
 
+## 10. Fixes from the review of your handoff 6 work
+
+The owner's review of the `uat` branch (commit `f63deec`, 21 Oct 2026; code read, UAT opened as a guest) found the
+port close to complete and faithful. These need fixing in this round. Paths are in your repository.
+
+1. **No mock data for real users.** `core/data-source/api.ts` hard-codes `LOYALTY_API = { deployed: false }` and
+   `GUEST_TASK_FROM_API = false`, so in API mode Home's rewards, the recent activity, the Redemption history (list and
+   order details, with sample voucher codes and PINs) and the guests' programme all come from the mock JSON. With the
+   `/app/point` endpoints of §4 (and `guest/tradingTask/get` once the backend has it on UAT), call the real APIs and
+   remove both switches. Until an endpoint is live, treat it as a failed call, as the reference does: Home's rewards
+   empty (the "Find rewards" card), the activity card hidden, the Redemption history's error view. Never show mock
+   orders or codes to a real user.
+2. **Redemption history loads only one more page** (`HANDOFF-6.md` §6: "the next page on scroll, until `total`").
+   `components/molecules/LoadMoreRow/LoadMoreRow.tsx` disconnects its observer after the first hit, and in
+   `features/Redemptions/components/OrdersSection/OrdersSection.tsx` the row has no `key`, so it is never attached
+   again: page 2 loads, page 3 and later never do (users with more than 40 orders). Key the row on the number of
+   orders shown, as Coins already does (`CoinTabs.tsx`: `key={`${tab}-${paging.shown[tab]}`}`).
+3. **The expiry rule is always shown** (`HANDOFF-6.md` §7: "left out when `expiryDays` is null").
+   `components/molecules/RulesList/RulesList.tsx` renders it unconditionally and `TProgram.expiryDays` is typed
+   `number`. Show it only when `expiryDays != null` (type `number | null`), keep the API's null in the adapter, and
+   do not fill in 0 when there is no trading task (`core/data-source/api-adapter.ts`).
+4. **Page parameters leak between pages in the single-page app** (`TRACKING.md`: parameters are cleared on every
+   push). The reference opens each page with a page load, so a page's own base parameters (`view` on Redemption
+   history; from this handoff also `view`, `entry` and the reward's parameters on the store and the reward page,
+   §9) never reach another page. In your app `view` is not in `PARAMS` (`core/tracking/index.ts`) and GTM's data
+   layer keeps the last value: after Redemption history, Coins and Home events still carry `view=list` / `detail`.
+   On every route change, clear the previous page's base parameters (push them as `undefined`, or add them to the
+   list cleared on every push and send them again with the new page's base).
+5. **A page view for each view** (`TRACKING.md`: `loyalty_page_view` once per page load). Opening an order from the
+   Redemption history list (and going back) is a new page load in the reference, so it sends `loyalty_page_view`
+   with `view=detail` (then `list`). In your app it stays on one route and `useTracking.ts` sends the page view only
+   once. Send it on each change between list and detail. The same applies to the store (§9): store → reward page is
+   a new page view; the store's own tab switch is not (it only changes `view`, as the reference does with
+   `setPageParams`).
+
+**To check on a real device (GTM preview), not a confirmed bug:** the Redeem button on the balance card, the "Find
+rewards" card and the empty history's Explore use HeroUI `onPress` (fires on pointer up, then `setTimeout(0)` in
+`core/redeem-gate/index.ts`), while the tap itself is tracked on the later `click`. On a touch webview the sheet's
+`loyalty_login_prompt_view` / `loyalty_join_card_view` could come before `loyalty_redeem_click`; `HANDOFF-6.md` §2 says
+the tap is tracked first. Reward cards use a native `onClick` and are fine.
+
 ## Left to the developer
 
 - **Status bar colour in a mobile browser:** the strip with the time and signal stays white or black over the store's
@@ -274,6 +315,9 @@ updated too. `tools/check-tracking.mjs` covers every point below (17 new scenari
   says so. To confirm with the backend developer when the endpoints are handed over: the static key header's final
   name, how a signed-in call is authenticated, and the final fields.
 - **Do not ship** the `/app/point` paths before the backend has them on UAT.
+- **App team, to confirm (from the review, §10):** the app calls `initWebview` also when there is no token (guests);
+  otherwise the pages stay on their loading view (seen on UAT opened outside the app). The Deposit intent's
+  parameter names (`loginId`, `amount` in `core/webview/intents.ts`) are agreed with them.
 - **Product:** the switch `rewardStore` (where it lives, who turns it on); the price / shortfall cut-offs against the
   real catalog; a
   loading / error view for the store pages; final copy for the store; real banner and reward pictures if the mock ones
