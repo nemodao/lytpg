@@ -143,6 +143,9 @@ function render() {
   document.body.classList.add('store-look');
   document.body.classList.toggle('store-tab--home', tab === 'home' && !empty);
   document.body.classList.toggle('store-look--fixed', tab !== 'home' || empty);
+  // Categories: the top bar scrolls away and the category chips stick to the top instead.
+  document.body.classList.toggle('store-tab--rewards', tab === 'rewards' && !empty);
+  if (tab === 'rewards') app.querySelector('.store-head')?.setAttribute('data-no-stick', '');
   nav.querySelectorAll('[data-tab]').forEach((button) => (button.dataset.tab === tab ? button.setAttribute('aria-current', 'page') : button.removeAttribute('aria-current')));
   try { history.replaceState(null, '', selfHref()); } catch { /* some file:// viewers refuse it: the view still changes */ }
 }
@@ -174,6 +177,14 @@ nav.addEventListener('click', (event) => {
   render();
   window.scrollTo(0, 0);
 });
+
+// Categories: the chips row is .is-stuck once it has reached the top (its band shows then; store.css).
+let chipsFrame = 0;
+const watchChips = () => {
+  const chips = app.querySelector('.store-chips');
+  if (chips) chips.classList.toggle('is-stuck', window.scrollY > 0 && chips.getBoundingClientRect().top <= 0);
+};
+addEventListener('scroll', () => { if (!chipsFrame) chipsFrame = requestAnimationFrame(() => { chipsFrame = 0; watchChips(); }); }, { passive: true });
 
 app.addEventListener('click', (event) => {
   const button = event.target.closest('[data-action]');

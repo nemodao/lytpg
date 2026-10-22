@@ -31,6 +31,7 @@ const HEADER_STICK_AT = 8;
 export function watchHeader() {
   const header = document.querySelector('.app-header, .store-head');
   if (!header) return;
+  if ('noStick' in header.dataset) { header.classList.remove('is-stuck'); return; } // scrolls away (store Categories)
   const stuck = header.classList.contains('is-stuck') ? window.scrollY > HEADER_STICK_AT / 2 : window.scrollY > HEADER_STICK_AT;
   header.classList.toggle('is-stuck', stuck);
 }
