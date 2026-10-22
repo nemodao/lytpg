@@ -1,23 +1,16 @@
 /* Reward Store only (spec §59). The top bar (.store-head) and the "Hot" / "New" badge are shared with reward.html. */
 
-/* ---- Page background: a deeper blue than Loyalty's pages, strongest at the top and fading down (store and reward
-   page, after a reference picture, 22 Oct 2026). ---- */
+/* ---- Page background (store and reward page, 22 Oct 2026, after a reference picture): solid deep brand blue behind
+   the header, the banner and Popular Rewards' heading (white text there), fading to a light tint behind Popular's
+   cards, so the dark text further down stays readable. ---- */
 .app {
-  background:
-    radial-gradient(120% 360px at 50% 0, color-mix(in srgb, var(--bg-blend) 55%, transparent), transparent 75%),
-    linear-gradient(180deg, color-mix(in srgb, var(--bg-blend) 40%, var(--ui-surface-weak)) 0, color-mix(in srgb, var(--bg-blend) 14%, var(--ui-surface-weak)) 560px, var(--ui-surface-weak) 1100px);
-}
-
-/* PREVIEW ONLY (state bg-deep, for review): solid deep brand blue behind the header, the banner and Popular Rewards'
-   heading (white text), fading to a light tint behind Popular's cards, so the dark text further down stays readable. */
-.store--deep .app {
   background:
     radial-gradient(90% 260px at 80% 0, color-mix(in srgb, var(--color-purple-main) 45%, transparent), transparent 75%),
     linear-gradient(180deg, var(--accent-surface-brand) 0, color-mix(in srgb, var(--accent-surface-brand) 86%, var(--ui-surface-weak)) 400px, color-mix(in srgb, var(--bg-blend) 16%, var(--ui-surface-weak)) 640px, var(--ui-surface-weak) 1000px);
 }
-.store--deep .store-head:not(.is-stuck) .store-head__title,
-.store--deep .store-banner + .store-section .store-section__head, .store--deep .store-banner + .store-section .text-btn { color: var(--on-brand); }
-.store--deep .store-head:not(.is-stuck) .store-head__icon { background: var(--ui-surface-pure); color: var(--ui-text-brand); box-shadow: none; }
+.store-head:not(.is-stuck) .store-head__title,
+.store-banner + .store-section .store-section__head, .store-banner + .store-section .text-btn { color: var(--on-brand); }
+.store-head:not(.is-stuck) .store-head__icon { background: var(--ui-surface-pure); color: var(--ui-text-brand); box-shadow: none; }
 
 /* ---- Top of the store: icon, "Reward Redemption", balance ---- */
 /* Sticks to the top like Loyalty's header (spec §57): plain at the top of the page; once it scrolls (.is-stuck) the icon
@@ -63,6 +56,9 @@
 .store-banner__text { position: absolute; inset: 0 auto 0 0; width: 46%; display: flex; flex-direction: column; justify-content: center; gap: var(--spacing-4); padding-left: var(--spacing-card); color: var(--on-brand); }
 .store-banner__title { font: var(--font-large-semibold); }
 .store-banner__body { font: var(--font-x-small-regular); opacity: 0.86; }
+/* PREVIEW ONLY (states banner-light, banner-gold): dark text on the lighter banners being reviewed. */
+.store-banner--light .store-banner__text { color: var(--color-purple-darker); }
+.store-banner--gold .store-banner__text { color: var(--color-neutral-900); }
 
 /* ---- Sections ---- */
 .store-section { display: flex; flex-direction: column; gap: var(--spacing-12); }

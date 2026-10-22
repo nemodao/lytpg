@@ -35,15 +35,20 @@
       }
     },
     {
-      "title": "Background (review)",
+      "title": "Banner colour (review)",
+      "exclusive": true,
+      "defaultLabel": "A: orange to pink, white text (default)",
       "states": [
-        "bg-deep"
+        "banner-light",
+        "banner-gold"
       ],
       "labels": {
-        "bg-deep": "Deep blue background"
+        "banner-light": "B: white and lilac, dark text",
+        "banner-gold": "C: yellow, dark text"
       },
       "descriptions": {
-        "bg-deep": "PREVIEW ONLY, for review: solid deep brand blue behind the header, the banner and Popular Rewards' heading (white title and See all), fading to a light tint behind Popular's cards. Default: the lighter blue wash."
+        "banner-light": "PREVIEW ONLY, for review: a light white-to-lilac banner with dark purple text, against the deep blue page.",
+        "banner-gold": "PREVIEW ONLY, for review: a yellow-to-orange banner with dark text, the coins' colour."
       }
     }
   ],
@@ -1070,9 +1075,14 @@
         ]
       }
     },
-    "bg-deep": {
+    "banner-light": {
       "page": {
-        "look": "deep"
+        "banner": "light"
+      }
+    },
+    "banner-gold": {
+      "page": {
+        "banner": "gold"
       }
     }
   }
