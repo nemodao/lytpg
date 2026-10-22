@@ -7,12 +7,8 @@
 .store-look { --store-bg:
     radial-gradient(90% 260px at 80% 0, color-mix(in srgb, var(--color-purple-main) 45%, transparent), transparent 75%),
     linear-gradient(180deg, var(--accent-surface-brand) 0, color-mix(in srgb, var(--accent-surface-brand) 86%, var(--ui-surface-weak)) 400px, color-mix(in srgb, var(--bg-blend) 16%, var(--ui-surface-weak)) 640px, var(--ui-surface-weak) 1000px); }
-/* The status bar area and the bounce above the page in the store's blue (storeChrome in shared/store.js). */
-html.store-chrome { background: var(--accent-surface-brand); }
 .store-tab--home .app { background: var(--store-bg); }
 .store-look--fixed .app { background: none; }
-/* body is its own stacking context, so the fixed layer below paints over body's background (html has its own, blue). */
-.store-look--fixed { isolation: isolate; }
 /* Within the page frame (375px column on a computer, the whole screen on a phone), like .app and the bottom bar. */
 .store-look--fixed::before { content: ""; position: fixed; z-index: -1; top: 0; bottom: 0; left: calc(50% - var(--app-width) / 2); width: var(--app-width); background: var(--store-bg); pointer-events: none; }
 .store-look .store-head:not(.is-stuck) .store-head__title,
