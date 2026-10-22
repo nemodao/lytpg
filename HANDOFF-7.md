@@ -194,6 +194,21 @@ In `shared/data-source.js`: `getOrders(path, body)` now takes the path and the b
 - `assets/images/rewards/`: 42 mock pictures numbered between `gift-110` and `gift-159.webp` (not every number;
   Unsplash; sources in `assets/images/rewards/CREDITS.md`, also outside the diff). `gift-04.webp` replaced (Golden Bridge, supplied by the owner; source not
   recorded). In production all reward pictures come from the catalog API.
+- **Image weight review (23 Oct 2026).** Every image was measured against its largest size on screen (430px wide
+  phone, 3x). Changes:
+  - **Reward pictures load lazily:** `loading="lazy" decoding="async"` on the reward `<img>` of the store's cards,
+    tickets and trip cards (`pages/store.js`) and of Home's reward cards (`pages/dashboard.js`). Categories used to
+    fetch all ~50 pictures at once (about 1 MB); it now fetches the ones near the screen (about 300 KB with the page's
+    other images). Keep this in the Next.js version (`next/image` is lazy by default; do not set `priority` on list
+    pictures). The reward page's own picture stays eager (it is the page).
+  - `assets/images/rewards/*.webp` re-encoded at WebP quality 75 (same size in pixels, no visible change): about
+    500 KB less; `assets/images` 2.5 MB → 2.0 MB.
+  - `store-icon.webp`: 144px → 72px (it is never shown larger than 24px).
+  - Unchanged on purpose: the PNG icons (already small; renaming them would change paths in the code) and two pictures
+    a little under 3x because their source files are no bigger (`home/coin-cup.webp`, `store/more-rewards.webp`).
+  - **For the catalog API's pictures** (production): a square WebP or JPEG about 600×600px, under about 60 KB each, is
+    enough for the cards (shown about 175px wide) and acceptable on the reward page (about 380px wide). Pass this on
+    to whoever uploads the catalog pictures.
 
 ## 8. Tools
 

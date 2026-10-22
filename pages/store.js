@@ -62,13 +62,15 @@ function arrange(list) {
   return { popular, fnb, travel };
 }
 
+// Reward pictures load lazily (loading="lazy"): Categories lists every reward, so only the ones near the screen are
+// fetched (about 8 at first instead of all ~50); a row that scrolls sideways fetches the rest as it scrolls.
 const price = (item) => `<span class="store-price num">${coin('coin--xs')}${ui.num(item.points)}</span>`;
 const href = (item) => rewardHref(ui, item.id, selfHref());
 
 // Square card: two per row on Categories, one scrolling row in Popular. The only card with the Hot / New label.
 const card = (item, position, section, filter) => `
   <a class="card store-card" href="${href(item)}" ${trackAttrs(item, position, section, filter)}>
-    <span class="store-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}${rewardBadge(ui, item)}</span>
+    <span class="store-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="" loading="lazy" decoding="async">` : ''}${rewardBadge(ui, item)}</span>
     <span class="store-card__name">${ui.esc(item.name)}</span>
     ${price(item)}
   </a>`;
@@ -76,7 +78,7 @@ const card = (item, position, section, filter) => `
 // Voucher: a ticket, one per row: the voucher's art on the left, a perforated edge, the price on the right.
 const voucher = (item, index) => `
   <a class="voucher" href="${href(item)}" ${trackAttrs(item, index + 1, 'fnb')}>
-    <span class="voucher__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</span>
+    <span class="voucher__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="" loading="lazy" decoding="async">` : ''}</span>
     <span class="voucher__body">
       <span class="voucher__kind">${ui.t('store.voucher')}</span>
       <span class="voucher__name">${ui.esc(item.name)}</span>
@@ -91,7 +93,7 @@ const voucher = (item, index) => `
 // bottom edge. The panel keeps its light colours in both themes (data-theme="light").
 const trip = (item, index) => `
   <a class="trip-card" href="${href(item)}" ${trackAttrs(item, index + 1, 'travel')}>
-    <span class="trip-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}<span class="trip-sash">${ui.t('store.special')}</span></span>
+    <span class="trip-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="" loading="lazy" decoding="async">` : ''}<span class="trip-sash">${ui.t('store.special')}</span></span>
     <span class="trip-card__name">${ui.esc(item.name)}</span>
     ${price(item)}
   </a>`;

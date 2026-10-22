@@ -54,7 +54,7 @@ const EARN_CELL = 3; // the "earn coins" card is the 3rd cell
 // reward's `category`, `badge` = none (Home's cards show no label) and `price_range`.
 const rewardCard = (item, position) => `
   <button class="card reward-card" type="button" ${redeemAttrs(common, 'reward', 'reward')} data-reward="${ui.esc(item.id)}" data-track="loyalty_reward_click" data-track-position="${position}" data-track-reward_id="${ui.esc(item.id)}" data-track-reward_name="${ui.esc(item.name)}"${common.guest ? '' : ` data-track-affordable="${common.balance.available >= item.points}"`} data-track-section="home" data-track-category="${ui.esc(item.category || 'none')}" data-track-badge="none" data-track-price_range="${priceRange(item.points)}">
-    <span class="reward-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</span>
+    <span class="reward-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="" loading="lazy" decoding="async">` : ''}</span>
     <span class="reward-card__name">${ui.esc(item.name)}</span>
     <span class="reward-card__foot">
       <span class="reward-card__price num">${coin('coin--xs')}${ui.num(item.points)}</span>
