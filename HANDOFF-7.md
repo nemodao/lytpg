@@ -44,11 +44,11 @@ the loyalty API (`{host}/pointSys/app/point/…`).
 module `shared/store.js` (`storeHead`, `rewardBadge`, `categoryName`, `backParam`, `withParams`, `rewardHref`). Both
 pages read `fetchCommon()` (balance, guest flag) and `fetchPage('store')` (§3).
 
-**Addresses:** `store.html?tab=rewards&cat=<category key>|more&back=<page>` (no `tab` = Home Store; no `cat` = All;
+**Addresses:** `store.html?tab=rewards&cat=<category key>|more&sort=price_asc|price_desc&back=<page>` (no `tab` = Home Store; no `cat` = All; no `sort` = the catalog's order;
 `tab=rewards` is the **Categories** tab: id `rewards` everywhere in code, copy key `store.tab.rewards`, artwork
 `nav/rewards-*.png`, class `.store-tab--rewards`) and `reward.html?id=<id>&back=<page>`.
-- The store keeps its tab and category in the address (`history.replaceState`), so a reward's Back returns to the
-  same view. It rewrites only `tab`, `cat` and `back` and keeps every other parameter.
+- The store keeps its tab, category and sort in the address (`history.replaceState`), so a reward's Back returns to the
+  same view. It rewrites only `tab`, `cat`, `sort` and `back` and keeps every other parameter.
 - `back` = the path and query of the page to return to, URL-encoded (nested once for a reward opened from the
   store). Only one of our own pages is accepted (`backParam`: a file name such as `dashboard.html?…`, never a scheme or
   a host); anything else, or no `back`: the store returns to Home, a reward page to the store. In Next.js put your own
@@ -86,6 +86,14 @@ away and the chips row sticks to the top instead (`data-no-stick` on the header;
 the top, giving it a blurred blue band). A category shows its rewards (two per row), then a "More rewards coming soon"
 card with a 3D clock. `More categories` shows one centred card: the pile of rewards from the banner
 (`assets/images/store/more-rewards.webp`) and "2,000+ rewards on the way".
+
+**Sort** (spec §63): a round button at the right end of the chips row (`.store-sort`, icon `sort` in `icons.svg`); the
+chips scroll under a short fade before it, and the whole row (`.store-filters`, which now holds `.store-chips` and the
+button) is what sticks. It opens a bottom sheet "Sort by": Recommended (the catalog's order, default), Coins: low to
+high, Coins: high to low; tapping one applies it and closes the sheet. Sorting is done in the page on the catalog list
+(stable: same price keeps the API's order), for every category; the button is solid once sorted (`.is-on`) and
+disabled on More categories. The sheet's rows are the account sheet's `.option` / `.radio`, moved from
+`trading-task.css` to `components.css` (same class names, nothing else changes on Earn). Not tracked.
 
 **No rewards at all** (catalog empty, or the call fails: `rewards = []`): both tabs show only the top bar and a
 "Rewards are on their way" card (`store.empty.*`; state `catalog-empty`), and every reward page says "This reward is
@@ -173,7 +181,8 @@ In `shared/data-source.js`: `getOrders(path, body)` now takes the path and the b
 
 - **New tokens** (`tokens/tokens.json`, `tokens.css` rebuilt): `--ui-hot-deep`, `--ui-hot-red`, `--ui-hot-orange`,
   `--ui-hot-amber`, `--ui-hot-glow`, `--ui-hot-gloss` (the Hot label and the Special sash).
-- **New copy** (`copy/en.json`): `store.*` (top bar, tabs, sections, categories `store.cat.*`, badges, notes) and
+- **New copy** (`copy/en.json`): `store.*` (top bar, tabs, sections, categories `store.cat.*`, badges, notes, sort
+  `store.sort.*`) and
   `reward.*` (the reward page and its sheets). Nothing removed or renamed.
 
 ## 7. Images (not in the diff file)

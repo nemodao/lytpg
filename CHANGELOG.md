@@ -5,17 +5,19 @@ and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
 ## Handoff 7 — Reward Store (Plan B), early handoff (22 Oct 2026)
 
-**Full description for developers: `HANDOFF-7.md`.** Spec §59–§61.
+**Full description for developers: `HANDOFF-7.md`.** Spec §59–§63.
 
 - A browse-only Reward Store in the webview (Home Store and Categories tabs, one page per reward, Checkout "coming
   soon"), behind a switch `common.rewardStore` that is off by default (Plan B, if Tada is not ready).
 - With the switch on, Redeem and reward cards open the store, and the recent activity shows coin entries only.
+- Categories tab: a sort button at the end of the chips row (Recommended / coins low to high / high to low, spec §63).
 - The catalog sends every reward with `category`, `description`, `badge`, `showOnHome`.
 - HSB's endpoints moved to `/app/point`, all POST; the guest catalog is the same endpoint with `clientId` null.
 - Events for the store: 4 new (38 in all), new parameters, `affordable` no longer sent for guests (`HANDOFF-7.md` §9).
   `DATA.md` and `STATES.md` changed (see `HANDOFF-7.md` §5).
 - Files: new `pages/store.*`, `pages/reward.*`, `shared/store.js`, `mock/store.json`, images in `assets/images/store/`,
-  `nav/` and `rewards/`; changed `shared/components.js`, `data-source.js`, `api-adapter.js`, `activity-feed.js`,
+  `nav/` and `rewards/`; changed `shared/components.js`, `components.css` (`.option` / `.radio` moved from
+  `pages/trading-task.css`), `icons.svg` (`sort`), `data-source.js`, `api-adapter.js`, `activity-feed.js`,
   `app.js`, `pages/dashboard.js`, `point-balance.js`, `redemptions.js`, every `mock/*.json`,
   `mock/api/loyalty-catalog*.json`, `mock/api/check.mjs`, `copy/en.json`, `tokens/`, `tools/check-tracking.mjs`,
   `HANDOFF.md`, `TRACKING.md`.

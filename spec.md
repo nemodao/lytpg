@@ -809,3 +809,11 @@ Planned by 3 reviews (business, engineering, UI coverage) with a cross-review; a
 - `affordable` is no longer sent for guests (their balance is always 0), on Home too.
 - **Before Plan B is turned on:** register the 9 new GA4 dimensions; mark `loyalty_checkout_click` and `loyalty_earn_more_click` as key events; confirm the price and shortfall cut-offs against the real catalog.
 
+## 63. Sort on the Categories tab (decided 23 Oct 2026, handoff 7)
+
+- A round sort button (icon) at the right end of the category chips row. It stays put while the chips scroll, and sticks to the top with them.
+- Tapping it opens a bottom sheet "Sort by" with three choices: **Recommended** (the catalog's order, the default), **Coins: low to high**, **Coins: high to low**. Tapping a choice applies it at once and closes the sheet; there is no Apply button. (The owner asked for "A–Z / Z–A by coin price"; Recommended was added so the list can go back to its first order.)
+- The order applies to every category and stays when the category changes. Rewards with the same price keep the catalog's order. Kept in the address (`sort=price_asc|price_desc`), like the tab and the category, so a reward's Back returns to the same order.
+- Once the list is sorted by price, the button turns solid white (like the selected chip). It is off on "More categories" (no list there).
+- If the row is stuck at the top when a new order is chosen, the page scrolls back so the first reward shows under the row.
+- Not tracked yet (no event for sorting).

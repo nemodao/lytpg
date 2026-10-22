@@ -14,18 +14,18 @@
 .store-look .store-head:not(.is-stuck) .store-head__title,
 .store-banner + .store-section .store-section__head, .store-banner + .store-section .text-btn { color: var(--on-brand); }
 /* Category chips on the blue: glass with white text, the selected one solid white. */
-.store-look .store-chips .chip { background: color-mix(in srgb, var(--color-neutral-0) 16%, transparent); border-color: color-mix(in srgb, var(--color-neutral-0) 28%, transparent); color: var(--on-brand); -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur); }
-.store-look .store-chips .chip[aria-pressed="true"] { background: var(--color-neutral-0); border-color: var(--color-neutral-0); color: var(--accent-surface-brand); }
-/* Categories: the top bar scrolls away; the chips row sticks to the top instead, same size. Once stuck (.is-stuck,
+.store-look .store-chips .chip, .store-look .store-sort { background: color-mix(in srgb, var(--color-neutral-0) 16%, transparent); border-color: color-mix(in srgb, var(--color-neutral-0) 28%, transparent); color: var(--on-brand); -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur); }
+.store-look .store-chips .chip[aria-pressed="true"], .store-look .store-sort.is-on { background: var(--color-neutral-0); border-color: var(--color-neutral-0); color: var(--accent-surface-brand); }
+/* Categories: the top bar scrolls away; the chips row (with the sort button) sticks to the top instead, same size. Once stuck (.is-stuck,
    store.js) it sits on a band of the background's top blue, blurred, so cards passing under it do not show through
    the gaps, with room for the safe area above. */
 .store-tab--rewards .store-head { position: relative; }
-.store-tab--rewards .store-chips {
+.store-tab--rewards .store-filters {
   position: sticky; z-index: 30; top: 0;
   margin-block: calc(var(--spacing-8) * -1); padding-block: var(--spacing-8);
   transition: background-color 0.2s ease;
 }
-.store-tab--rewards .store-chips.is-stuck {
+.store-tab--rewards .store-filters.is-stuck {
   padding-top: calc(env(safe-area-inset-top, 0px) + var(--spacing-8));
   background-color: color-mix(in srgb, var(--accent-surface-brand) 92%, transparent);
   -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur);
@@ -293,13 +293,25 @@
 }
 
 /* ---- Categories tab (tab=rewards) ---- */
+/* The chips row, edge to edge: the chips scroll sideways, the sort button stays at the right end. The chips fade out
+   just before the button, so a chip passing under that edge does not look cut. */
+.store-filters { display: flex; align-items: center; gap: var(--spacing-4); margin-inline: calc(var(--spacing-gutter) * -1); padding-right: var(--spacing-gutter); }
 .store-chips {
-  display: flex; gap: var(--spacing-8); overflow-x: auto; scrollbar-width: none;
-  margin-inline: calc(var(--spacing-gutter) * -1); padding-inline: var(--spacing-gutter);
+  flex: 1; min-width: 0; display: flex; gap: var(--spacing-8); overflow-x: auto; scrollbar-width: none;
+  padding-inline: var(--spacing-gutter) var(--spacing-16);
+  -webkit-mask-image: linear-gradient(90deg, black calc(100% - var(--spacing-16)), transparent);
+  mask-image: linear-gradient(90deg, black calc(100% - var(--spacing-16)), transparent);
 }
 .store-chips::-webkit-scrollbar { display: none; }
 .store-chips .chip { flex: none; white-space: nowrap; }
 .chip--more { border-style: dashed; }
+/* Sort: round, the chips' height and look (store-look above: glass on the blue, solid white once the list is sorted). */
+.store-sort {
+  flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm);
+  border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--ui-stroke-soft); background: var(--ui-surface-pure); color: var(--ui-text-secondary);
+}
+.store-sort.is-on { background: var(--ui-chip-surface-selected); border-color: var(--ui-chip-stroke-selected); color: var(--ui-text-brand); }
+.store-sort:disabled { opacity: 0.4; cursor: default; }
 .store-note { flex-direction: row; align-items: center; gap: var(--spacing-12); }
 .store-note--stacked { flex-direction: column; text-align: center; gap: var(--spacing-12); padding-block: var(--spacing-24); }
 .store-note__art { display: block; width: 72%; height: auto; }

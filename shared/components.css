@@ -237,6 +237,14 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 }
 .sheet__grab { align-self: center; width: var(--spacing-40); height: var(--spacing-4); border-radius: var(--radius-pill); background: var(--ui-surface-soft); }
 
+/* A list of choices in a sheet, one per row, a radio on the right (account sheet on Earn, sort sheet in the store). */
+.option { display: flex; align-items: center; gap: var(--spacing-12); width: 100%; min-height: var(--size-control-lg); padding: var(--spacing-8) 0; border-top: var(--size-stroke) solid var(--ui-line-soft); font: var(--font-small-medium); }
+.option:first-child { border-top: 0; }
+.option--muted { color: var(--ui-text-disabled); }
+.radio { width: var(--size-check); height: var(--size-check); flex: none; display: grid; place-items: center; border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--ui-text-disabled); background: var(--card-surface); }
+.radio--on { border-color: var(--accent-surface-brand); }
+.radio--on::after { content: ""; width: 70%; height: 70%; border-radius: var(--radius-pill); background: var(--accent-surface-brand); }
+
 /* "How to start" sheet that Redeem opens (spec §49): blend-pale-theme gives the step marks their colours, as on the
    Earn card; room under the button for the tapping finger, which would otherwise be cut by the sheet's edge. */
 .sheet--join .join__cta { margin-bottom: var(--size-control-lg); }

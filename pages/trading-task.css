@@ -1,4 +1,5 @@
-/* Trading Task-only styles: account selector, rules, history, account options. */
+/* Trading Task-only styles: account selector, rules, history. (The options in the account sheet, .option / .radio, are
+   shared: components.css.) */
 
 /* Night sky behind the header and cup, the same in both themes. It ends in a clean edge halfway down the Today card:
    .hero-bg covers the header and cup, and the card's .hero-card__sky continues the plain dark surface down to its middle.
@@ -75,13 +76,6 @@
 .day__figures { display: grid; grid-template-columns: calc(var(--spacing-40) * 2) 1fr; align-items: center; }
 .day__points { display: flex; align-items: center; gap: var(--spacing-4); white-space: nowrap; }
 .day__capped { margin-left: auto; color: var(--ui-text-brand); font: var(--font-x-small-medium); }
-
-.option { display: flex; align-items: center; gap: var(--spacing-12); width: 100%; min-height: var(--size-control-lg); padding: var(--spacing-8) 0; border-top: var(--size-stroke) solid var(--ui-line-soft); font: var(--font-small-medium); }
-.option:first-child { border-top: 0; }
-.option--muted { color: var(--ui-text-disabled); }
-.radio { width: var(--size-check); height: var(--size-check); flex: none; display: grid; place-items: center; border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--ui-text-disabled); background: var(--card-surface); }
-.radio--on { border-color: var(--accent-surface-brand); }
-.radio--on::after { content: ""; width: 70%; height: 70%; border-radius: var(--radius-pill); background: var(--accent-surface-brand); }
 
 /* ---- Account tiers (spec §51) ---- */
 /* The tier badge colours (.tier--*) are in shared/components.css: Home and Coins show the badge too (spec §55). */

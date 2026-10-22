@@ -15,16 +15,20 @@ const app = document.getElementById('app');
 const query = new URLSearchParams(location.search);
 
 // The only state that changes without a reload: the tab and, on Categories (`tab=rewards`), the category ('all', a
-// category key or 'more'). Both are kept in the address (history.replaceState), so a reward's Back returns to the
-// same view. Only `tab`, `cat` and `back` are rewritten; every other parameter of the address is kept.
+// category key or 'more') and the order of the list (`sort`, spec §63: 'default' = the catalog's order, or by coin
+// price, 'price_asc' / 'price_desc'). All are kept in the address (history.replaceState), so a reward's Back returns to
+// the same view. Only `tab`, `cat`, `sort` and `back` are rewritten; every other parameter of the address is kept.
 let tab = query.get('tab') === 'rewards' ? 'rewards' : 'home';
 let category = ['all', 'more', ...STORE_CATEGORIES].includes(query.get('cat')) ? query.get('cat') : 'all';
+const SORTS = ['default', 'price_asc', 'price_desc'];
+let sort = SORTS.includes(query.get('sort')) ? query.get('sort') : 'default';
 const back = backParam() || ui.href('dashboard.html');
 const selfHref = () => {
   const keep = new URLSearchParams(location.search);
-  ['tab', 'cat', 'back', 'via'].forEach((name) => keep.delete(name));
+  ['tab', 'cat', 'sort', 'back', 'via'].forEach((name) => keep.delete(name));
   const rest = keep.toString().replace(/%2C/g, ',');
-  return withParams(`store.html${rest ? `?${rest}` : ''}`, { tab: tab === 'rewards' ? 'rewards' : '', cat: tab === 'rewards' && category !== 'all' ? category : '', back });
+  const onList = tab === 'rewards';
+  return withParams(`store.html${rest ? `?${rest}` : ''}`, { tab: onList ? 'rewards' : '', cat: onList && category !== 'all' ? category : '', sort: onList && sort !== 'default' ? sort : '', back });
 };
 const rewards = page.rewards;
 const viewName = () => (!rewards.length ? 'empty' : tab === 'home' ? 'home' : 'categories');
@@ -124,6 +128,27 @@ function homeTab() {
 const chip = (key, label) =>
   `<button class="chip${key === 'more' ? ' chip--more' : ''}" type="button" data-action="category" data-cat="${key}" aria-pressed="${key === category}">${label}</button>`;
 
+// Sort (spec §63): a round button at the right end of the chips row (it stays put while the chips scroll) opens a sheet
+// with the three orders; tapping one applies it and closes the sheet. The button is solid once the list is sorted by
+// price, and off on "More categories" (no list there). Same coin price: the catalog's order.
+const sortButton = () =>
+  `<button class="store-sort${sort !== 'default' ? ' is-on' : ''}" type="button" data-action="open-sort" aria-label="${ui.t('store.sort.title')}"${category === 'more' ? ' disabled' : ''}>${ui.icon('sort')}</button>`;
+const sorted = (list) => (sort === 'default' ? list : [...list].sort((a, b) => (sort === 'price_asc' ? a.points - b.points : b.points - a.points)));
+const sortSheet = () => `
+  <div class="scrim" data-sort-sheet data-action="close-sort">
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="${ui.t('store.sort.title')}">
+      <span class="sheet__grab"></span>
+      <h2 class="t-title-s">${ui.t('store.sort.title')}</h2>
+      <div>
+        ${SORTS.map((key) => `
+          <button class="option" type="button" data-action="sort" data-sort="${key}" aria-pressed="${key === sort}">
+            <span class="grow">${ui.t(`store.sort.${key}`)}</span>
+            <span class="radio${key === sort ? ' radio--on' : ''}"></span>
+          </button>`).join('')}
+      </div>
+    </div>
+  </div>`;
+
 // `icon`: a line icon's name, or 'clock' for the 3D clock picture (assets/images/store/clock.webp).
 const noteCard = (title, body, icon) => `
   <div class="card store-note">
@@ -132,7 +157,7 @@ const noteCard = (title, body, icon) => `
   </div>`;
 
 function rewardsTab() {
-  const chips = `<div class="store-chips" role="group" aria-label="${ui.t('store.categories')}">${chip('all', ui.t('store.cat.all'))}${STORE_CATEGORIES.map((key) => chip(key, categoryName(ui, key))).join('')}${chip('more', ui.t('store.cat.more'))}</div>`;
+  const chips = `<div class="store-filters"><div class="store-chips" role="group" aria-label="${ui.t('store.categories')}">${chip('all', ui.t('store.cat.all'))}${STORE_CATEGORIES.map((key) => chip(key, categoryName(ui, key))).join('')}${chip('more', ui.t('store.cat.more'))}</div>${sortButton()}</div>`;
   // "More categories": a centred card with the pile of rewards from the banner on top.
   if (category === 'more') {
     return `${chips}
@@ -141,7 +166,7 @@ function rewardsTab() {
         <span class="stack stack--tight"><span class="t-body-strong">${ui.t('store.more.title')}</span><span class="t-caption c-2">${ui.t('store.more.body')}</span></span>
       </div>`;
   }
-  const shown = category === 'all' ? rewards : rewards.filter((item) => item.category === category);
+  const shown = sorted(category === 'all' ? rewards : rewards.filter((item) => item.category === category));
   return `${chips}
     ${shown.length ? `<div class="store-grid">${shown.map((item, index) => card(item, index + 1, 'list', category)).join('')}</div>` : ''}
     ${noteCard(ui.t('store.soon.title'), ui.t('store.soon.body'), 'clock')}`;
@@ -176,7 +201,7 @@ function trackCategory() {
   else trackView('loyalty_category_view', params, `${categoryFrom}:${category}`);
 }
 
-function render() {
+function render({ quiet = false } = {}) {
   const chipsScroll = app.querySelector('.store-chips')?.scrollLeft ?? null;
   const empty = !rewards.length;
   app.innerHTML = `
@@ -203,7 +228,7 @@ function render() {
     else button.setAttribute('data-track', 'loyalty_nav_click');
   });
   setPageParams({ view: viewName() });
-  if (!empty && tab === 'rewards') trackCategory();
+  if (!empty && tab === 'rewards' && !quiet) trackCategory(); // quiet: only the order changed, the same list
   if (!empty && tab === 'home') watchSections();
   try { history.replaceState(null, '', selfHref()); } catch { /* some file:// viewers refuse it: the view still changes */ }
 }
@@ -237,11 +262,12 @@ nav.addEventListener('click', (event) => {
   window.scrollTo(0, 0);
 });
 
-// Categories: the chips row is .is-stuck once it has reached the top (its band shows then; store.css).
+// Categories: the chips row (with the sort button) is .is-stuck once it has reached the top (its band shows then;
+// store.css).
 let chipsFrame = 0;
 const watchChips = () => {
-  const chips = app.querySelector('.store-chips');
-  if (chips) chips.classList.toggle('is-stuck', window.scrollY > 0 && chips.getBoundingClientRect().top <= 0);
+  const bar = app.querySelector('.store-filters');
+  if (bar) bar.classList.toggle('is-stuck', window.scrollY > 0 && bar.getBoundingClientRect().top <= 0);
 };
 addEventListener('scroll', () => { if (!chipsFrame) chipsFrame = requestAnimationFrame(() => { chipsFrame = 0; watchChips(); }); }, { passive: true });
 
@@ -250,6 +276,22 @@ app.addEventListener('click', (event) => {
   if (!button) return;
   if (button.dataset.action === 'see-all') { tab = 'rewards'; category = button.dataset.cat; categoryFrom = 'see_all'; app.querySelector('.store-chips')?.remove(); render(); window.scrollTo(0, 0); }
   if (button.dataset.action === 'category' && button.dataset.cat !== category) { category = button.dataset.cat; categoryFrom = 'chip'; render(); }
+  if (button.dataset.action === 'open-sort') { closeSort(); app.insertAdjacentHTML('beforeend', sortSheet()); }
+  if (button.dataset.action === 'close-sort' && event.target === button) closeSort(); // taps inside the sheet do not close it
+  if (button.dataset.action === 'sort') {
+    closeSort();
+    if (button.dataset.sort === sort) return;
+    // Scrolled down (the row stuck at the top): the new order is shown from its first reward, under the row.
+    const stuck = app.querySelector('.store-filters')?.classList.contains('is-stuck');
+    sort = button.dataset.sort;
+    render({ quiet: true });
+    const grid = app.querySelector('.store-grid');
+    const bar = app.querySelector('.store-filters');
+    if (stuck && grid && bar) window.scrollTo(0, grid.getBoundingClientRect().top + window.scrollY - bar.offsetHeight);
+    watchChips();
+  }
 });
+const closeSort = () => app.querySelector('[data-sort-sheet]')?.remove();
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeSort(); });
 
 render();
