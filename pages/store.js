@@ -5,7 +5,7 @@
 import { load } from '../shared/app.js';
 import { coin } from '../shared/components.js';
 import { STORE_CATEGORIES } from '../shared/api-adapter.js';
-import { backParam, categoryName, rewardBadge, rewardHref, shortPoints, storeHead, withParams } from '../shared/store.js';
+import { backParam, categoryName, rewardBadge, rewardHref, storeHead, withParams } from '../shared/store.js';
 
 const { common, page, ui } = await load('store');
 const app = document.getElementById('app');
@@ -60,16 +60,18 @@ const voucher = (item) => `
   </a>`;
 
 // Tour & Travel: its own promo panel (lilac with light rays, a big outlined title and a dark ribbon) holding a row of
-// white cards that scrolls sideways; each card has a scalloped sticker with the price ("70K coins"). `See all` sits on
-// the panel's bottom edge. First draft from a reference picture; details to come.
+// cards that scrolls sideways, about 1.7 on screen. Each card is a white card drawn slightly tilted (its top-left corner
+// raised) over a purple layer showing at the bottom right; a diagonal "Special" sash crosses its picture's top-left
+// corner (fixed in the front end, not from the API); the price is under the name. `See all` sits on the panel's
+// bottom edge. The panel keeps its light colours in both themes (data-theme="light").
 const trip = (item) => `
   <a class="trip-card" href="${href(item)}">
-    <span class="trip-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</span>
-    <span class="trip-sticker num"><b>${shortPoints(item.points)}</b>${ui.t('store.coins')}</span>
+    <span class="trip-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}<span class="trip-sash">${ui.t('store.special')}</span></span>
     <span class="trip-card__name">${ui.esc(item.name)}</span>
+    ${price(item)}
   </a>`;
 const tripPanel = (items) => `
-  <section class="trip-promo">
+  <section class="trip-promo" data-theme="light">
     <div class="trip-promo__head">
       <p class="trip-promo__title">${ui.t('store.travel')}</p>
       <p class="trip-promo__ribbon">${ui.t('store.travel.ribbon')}</p>

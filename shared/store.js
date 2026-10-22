@@ -30,9 +30,6 @@ export const storeHead = (ui, common, { back = '' } = {}) => (requestAnimationFr
     </span>
   </header>`);
 
-// "70K": a short price for the stickers of the Tour & Travel cards.
-const compact = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
-export const shortPoints = (value) => compact.format(value);
 
 // "Hot" / "New" on a reward's image.
 export const rewardBadge = (ui, item) =>
