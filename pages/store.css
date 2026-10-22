@@ -68,9 +68,19 @@
 .store-price { display: inline-flex; align-items: center; gap: var(--spacing-4); font: var(--font-small-semibold); color: var(--ui-text-brand); white-space: nowrap; }
 
 /* "Hot" / "New" on a reward's picture. */
-.store-badge { position: absolute; top: var(--spacing-8); left: var(--spacing-8); padding: var(--spacing-2) var(--spacing-8); border-radius: var(--radius-pill); font: var(--font-x-small-semibold); }
-.store-badge--hot { background: var(--ui-icon-red); color: var(--on-brand); } /* solid: it sits on pictures */
-.store-badge--new { background: var(--accent-surface-brand); color: var(--on-brand); }
+/* Flush with the picture's top-left corner, part of the picture (the picture's own rounding clips its corner): square
+   top corners, rounded bottom ones. Solid colours: it sits on pictures. Hot is a deep red melting into burnt orange,
+   with a faint highlight on top. */
+.store-badge {
+  position: absolute; z-index: 1; top: 0; left: 0; padding: var(--spacing-4) var(--spacing-10);
+  border-radius: 0 0 var(--radius-control) var(--radius-control); font: var(--font-x-small-semibold); color: var(--on-brand);
+}
+.store-badge--hot {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-neutral-0) 22%, transparent), transparent 55%),
+    linear-gradient(110deg, var(--color-red-500), var(--color-red-400) 45%, var(--color-orange-400));
+}
+.store-badge--new { background: var(--accent-surface-brand); }
 
 /* Square card, two per row: Popular and the Rewards tab. Same look as Home's reward cards. */
 .store-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-12); }
