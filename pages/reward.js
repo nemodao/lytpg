@@ -1,5 +1,5 @@
-// Reward Store · one reward (spec §59): picture, category, name, price, the user's balance against the price, the
-// one-line description, and Checkout at the bottom. Checkout is not live. A signed-in user without enough coins gets a
+// Reward Store · one reward (spec §59): one card holding the picture, then parts split by thin lines: category, name and
+// price; the user's balance against the price; the one-line description. Checkout at the bottom. Checkout is not live. A signed-in user without enough coins gets a
 // sheet saying so, with "Learn how to earn coins" (to Earn); otherwise the sheet says checkout is coming soon (guests
 // also get Sign up there). Back returns to where the user came from (?back=: the store, or a Loyalty page).
 // The data is the store's (the catalog list); the reward is picked by ?id=.
@@ -17,12 +17,12 @@ const guest = common.guest;
 // The user's balance against the price: enough, or how many more coins (with a bar).
 function balanceLine() {
   const have = common.balance.available;
-  if (have >= item.points) return `<section class="card reward-balance reward-balance--enough">${ui.icon('check')}<p>${ui.t('reward.enough')}</p></section>`;
+  if (have >= item.points) return `<div class="reward-part reward-balance reward-balance--enough">${ui.icon('check')}<p>${ui.t('reward.enough')}</p></div>`;
   return `
-    <section class="card reward-balance">
+    <div class="reward-part reward-balance">
       <p>${ui.md('reward.need', { have: ui.num(have), need: ui.num(item.points - have) })}</p>
       <span class="reward-balance__bar"><span style="width:${Math.max(2, Math.floor((have / item.points) * 100))}%"></span></span>
-    </section>`;
+    </div>`;
 }
 
 function render() {
@@ -37,14 +37,16 @@ function render() {
   const category = categoryName(ui, item.category);
   app.innerHTML = `
     ${storeHead(ui, common, { back })}
-    <div class="reward-art${item.category === 'tour_travel' ? ' reward-art--trip' : ''}">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</div>
-    <section class="reward-info">
-      ${category ? `<p class="reward-info__category">${category}</p>` : ''}
-      <h2 class="reward-info__name">${rewardBadge(ui, item, { inline: true })}${ui.esc(item.name)}</h2>
-      <p class="reward-info__price num">${coin('coin--sm')}${ui.num(item.points)}</p>
+    <section class="card reward-sheet">
+      <div class="reward-art${item.category === 'tour_travel' ? ' reward-art--trip' : ''}">${item.image ? `<img src="${ui.esc(item.image)}" alt="">` : ''}</div>
+      <div class="reward-part reward-info">
+        ${category ? `<p class="reward-info__category">${category}</p>` : ''}
+        <h2 class="reward-info__name">${rewardBadge(ui, item, { inline: true })}${ui.esc(item.name)}</h2>
+        <p class="reward-info__price num">${coin('coin--sm')}${ui.num(item.points)}</p>
+      </div>
+      ${guest ? '' : balanceLine()}
+      ${item.description ? `<div class="reward-part reward-about"><h3 class="t-body-strong">${ui.t('reward.about')}</h3><p class="t-body c-2">${ui.esc(item.description)}</p></div>` : ''}
     </section>
-    ${guest ? '' : balanceLine()}
-    ${item.description ? `<section class="card reward-about"><h3 class="t-body-strong">${ui.t('reward.about')}</h3><p class="t-body c-2">${ui.esc(item.description)}</p></section>` : ''}
     <div class="reward-cta"><button class="btn btn--primary btn--lg btn--block" type="button" data-action="checkout">${ui.t('reward.checkout')}</button></div>`;
 }
 

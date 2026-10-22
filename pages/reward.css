@@ -3,28 +3,30 @@
 /* Room under the content for the Checkout bar. */
 .app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--size-control-lg) + var(--spacing-40)); }
 
+/* One card: the picture at the top (inside the card's padding, inner rounding, like the store's reward cards), then
+   the parts, each after a thin line. */
+.reward-sheet { gap: 0; padding: var(--spacing-8) var(--spacing-8) 0; }
 .reward-art {
-  position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-card);
+  position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-card-inner);
   background: linear-gradient(160deg, color-mix(in srgb, var(--color-purple-main) 16%, var(--card-surface)), color-mix(in srgb, var(--color-purple-main) 6%, var(--card-surface)));
 }
 .reward-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .reward-art--trip { aspect-ratio: 4 / 3; }
 .reward-art--trip img { object-fit: cover; }
+.reward-part { display: flex; flex-direction: column; gap: var(--spacing-6); padding: var(--spacing-16) var(--spacing-8); }
+.reward-part + .reward-part { border-top: var(--size-stroke) solid var(--card-stroke); }
 
-.reward-info { display: flex; flex-direction: column; gap: var(--spacing-6); }
 .reward-info__category { font: var(--font-small-semibold); color: var(--ui-text-brand); }
 .reward-info__name { font: var(--font-title-m); }
 .reward-info__price { display: flex; align-items: center; gap: var(--spacing-6); font: var(--font-title-m); color: var(--ui-text-brand); }
 
-/* The balance against the price, in a card like "About this reward": how many more coins, with a bar; or, when it is
-   enough, a green tick and line. */
+/* The balance against the price: how many more coins, with a bar; or, when it is enough, a green tick and line. */
 .reward-balance { gap: var(--spacing-10); font: var(--font-small-regular); color: var(--ui-text-secondary); }
 .reward-balance strong { color: var(--ui-text-primary); }
 .reward-balance--enough { flex-direction: row; align-items: center; color: var(--ui-text-green); }
 .reward-balance__bar { display: block; height: var(--spacing-6); border-radius: var(--radius-pill); background: var(--ui-surface-soft); overflow: hidden; }
 .reward-balance__bar span { display: block; height: 100%; border-radius: inherit; background: var(--accent-surface-brand); }
 
-.reward-about { gap: var(--spacing-6); }
 .reward-missing { gap: var(--spacing-8); }
 
 /* Checkout, always at the bottom of the screen. */
