@@ -1,16 +1,20 @@
 /* Reward Store only (spec §59). The top bar (.store-head) and the "Hot" / "New" badge are shared with reward.html. */
 
-/* ---- Home Store tab only (the Rewards tab and the reward page follow the design tokens, 22 Oct 2026): a background
-   after a reference picture: solid deep brand blue behind the header, the banner and Popular Rewards' heading (white
-   text there), fading to a light tint behind Popular's cards, so the dark text further down stays readable.
-   store.js sets .store-tab--home on <body> while that tab is shown. ---- */
-.store-tab--home .app {
-  background:
+/* ---- The store's look (spec §59): every page of the store (<body class="store-look">, set by store.js / reward.js).
+   A deep brand blue background after a reference picture: solid behind the header, fading to a light tint further
+   down; white title on it. On Home Store it scrolls with the page (behind the banner and Popular Rewards' white
+   heading); on Categories and the reward page (.store-look--fixed) it stays put while the page scrolls. ---- */
+.store-look { --store-bg:
     radial-gradient(90% 260px at 80% 0, color-mix(in srgb, var(--color-purple-main) 45%, transparent), transparent 75%),
-    linear-gradient(180deg, var(--accent-surface-brand) 0, color-mix(in srgb, var(--accent-surface-brand) 86%, var(--ui-surface-weak)) 400px, color-mix(in srgb, var(--bg-blend) 16%, var(--ui-surface-weak)) 640px, var(--ui-surface-weak) 1000px);
-}
-.store-tab--home .store-head:not(.is-stuck) .store-head__title,
+    linear-gradient(180deg, var(--accent-surface-brand) 0, color-mix(in srgb, var(--accent-surface-brand) 86%, var(--ui-surface-weak)) 400px, color-mix(in srgb, var(--bg-blend) 16%, var(--ui-surface-weak)) 640px, var(--ui-surface-weak) 1000px); }
+.store-tab--home .app { background: var(--store-bg); }
+.store-look--fixed .app { background: none; }
+.store-look--fixed::before { content: ""; position: fixed; z-index: -1; inset: 0; background: var(--store-bg); pointer-events: none; }
+.store-look .store-head:not(.is-stuck) .store-head__title,
 .store-banner + .store-section .store-section__head, .store-banner + .store-section .text-btn { color: var(--on-brand); }
+/* Category chips on the blue: glass with white text, the selected one solid white. */
+.store-look .store-chips .chip { background: color-mix(in srgb, var(--color-neutral-0) 16%, transparent); border-color: color-mix(in srgb, var(--color-neutral-0) 28%, transparent); color: var(--on-brand); -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur); }
+.store-look .store-chips .chip[aria-pressed="true"] { background: var(--color-neutral-0); border-color: var(--color-neutral-0); color: var(--accent-surface-brand); }
 
 /* ---- Top of the store: icon, "Reward Redemption", balance ---- */
 /* Sticks to the top like Loyalty's header (spec §57): plain at the top of the page; once it scrolls (.is-stuck) the icon
@@ -135,17 +139,19 @@
 .voucher__name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: var(--font-small-semibold); }
 .voucher__stub { flex: none; display: grid; place-items: center; width: var(--stub); border-left: var(--size-stroke) dashed var(--ui-stroke-soft); }
 
-/* Home Store in dark mode: the reward and voucher cards are frosted glass over the blue background (chosen 22 Oct 2026 over a light,
+/* Dark mode, every page of the store: the reward and voucher cards (and the reward page's card) are frosted glass over the blue background (chosen 22 Oct 2026 over a light,
    a blue-black and the plain dark card). On glass the blue price would sink into the blue behind it, so the number is
    white and the coin gets a soft white glow behind it (a gradient, not a filter: spec §48). */
-[data-theme="dark"] .store-tab--home .store-card, [data-theme="dark"] .store-tab--home .voucher {
+[data-theme="dark"] .store-look .store-card, [data-theme="dark"] .store-look .voucher, [data-theme="dark"] .store-look .reward-sheet {
   background: color-mix(in srgb, var(--color-neutral-0) 12%, transparent); border-color: color-mix(in srgb, var(--color-neutral-0) 22%, transparent);
   -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur);
 }
-[data-theme="dark"] .store-tab--home .store-card__art { background: radial-gradient(80% 80% at 50% 40%, color-mix(in srgb, var(--color-neutral-0) 28%, transparent), color-mix(in srgb, var(--color-neutral-0) 6%, transparent)); }
-[data-theme="dark"] .store-tab--home .voucher__stub { border-color: color-mix(in srgb, var(--color-neutral-0) 30%, transparent); }
-[data-theme="dark"] .store-tab--home .store-card .store-price, [data-theme="dark"] .store-tab--home .voucher .store-price { color: var(--on-brand); }
-[data-theme="dark"] .store-tab--home .store-card .store-price .coin, [data-theme="dark"] .store-tab--home .voucher .store-price .coin {
+[data-theme="dark"] .store-look .store-card__art, [data-theme="dark"] .store-look .reward-art { background: radial-gradient(80% 80% at 50% 40%, color-mix(in srgb, var(--color-neutral-0) 28%, transparent), color-mix(in srgb, var(--color-neutral-0) 6%, transparent)); }
+[data-theme="dark"] .store-look .voucher__stub { border-color: color-mix(in srgb, var(--color-neutral-0) 30%, transparent); }
+[data-theme="dark"] .store-look .store-card .store-price, [data-theme="dark"] .store-look .voucher .store-price { color: var(--on-brand); }
+[data-theme="dark"] .store-look .reward-info__price, [data-theme="dark"] .store-look .reward-info__category { color: var(--on-brand); }
+[data-theme="dark"] .store-look .reward-part + .reward-part { border-color: color-mix(in srgb, var(--color-neutral-0) 18%, transparent); }
+[data-theme="dark"] .store-look .store-card .store-price .coin, [data-theme="dark"] .store-look .voucher .store-price .coin {
   border-radius: var(--radius-pill); background: radial-gradient(closest-side, color-mix(in srgb, var(--color-neutral-0) 70%, transparent), transparent);
 }
 

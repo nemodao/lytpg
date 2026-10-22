@@ -13,6 +13,7 @@ const id = new URLSearchParams(location.search).get('id');
 const item = page.rewards.find((reward) => reward.id === id);
 const back = backParam() || ui.href('store.html');
 const guest = common.guest;
+document.body.classList.add('store-look', 'store-look--fixed'); // the store's look, background fixed (store.css)
 
 // The user's balance against the price: enough, or how many more coins (with a bar).
 function balanceLine() {

@@ -139,7 +139,10 @@ function render() {
     if (chipsScroll != null) chips.scrollLeft = chipsScroll;
     else chips.querySelector('[aria-pressed="true"]')?.scrollIntoView({ inline: 'center', block: 'nearest' });
   }
-  document.body.classList.toggle('store-tab--home', tab === 'home' && !empty); // the Home Store look (store.css)
+  // The store's look (store.css): its background scrolls on Home Store and stays put on Categories.
+  document.body.classList.add('store-look');
+  document.body.classList.toggle('store-tab--home', tab === 'home' && !empty);
+  document.body.classList.toggle('store-look--fixed', tab !== 'home' || empty);
   nav.querySelectorAll('[data-tab]').forEach((button) => (button.dataset.tab === tab ? button.setAttribute('aria-current', 'page') : button.removeAttribute('aria-current')));
   try { history.replaceState(null, '', selfHref()); } catch { /* some file:// viewers refuse it: the view still changes */ }
 }
