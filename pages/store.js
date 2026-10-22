@@ -20,7 +20,7 @@ const query = new URLSearchParams(location.search);
 // the same view. Only `tab`, `cat`, `sort` and `back` are rewritten; every other parameter of the address is kept.
 let tab = query.get('tab') === 'rewards' ? 'rewards' : 'home';
 let category = ['all', 'more', ...STORE_CATEGORIES].includes(query.get('cat')) ? query.get('cat') : 'all';
-const SORTS = ['default', 'price_asc', 'price_desc'];
+const SORTS = ['price_asc', 'price_desc'];
 let sort = SORTS.includes(query.get('sort')) ? query.get('sort') : 'default';
 const back = backParam() || ui.href('dashboard.html');
 const selfHref = () => {
@@ -129,7 +129,8 @@ const chip = (key, label) =>
   `<button class="chip${key === 'more' ? ' chip--more' : ''}" type="button" data-action="category" data-cat="${key}" aria-pressed="${key === category}">${label}</button>`;
 
 // Sort (spec §63): a round button at the right end of the chips row (it stays put while the chips scroll) opens a sheet
-// with the three orders; tapping one applies it and closes the sheet. The button is solid once the list is sorted by
+// with the two orders by price; tapping one applies it and closes the sheet, tapping the one already chosen takes it
+// off (back to the catalog's order). The button is solid once the list is sorted by
 // price, and off on "More categories" (no list there). Same coin price: the catalog's order.
 const sortButton = () =>
   `<button class="store-sort${sort !== 'default' ? ' is-on' : ''}" type="button" data-action="open-sort" aria-label="${ui.t('store.sort.title')}"${category === 'more' ? ' disabled' : ''}>${ui.icon('sort')}</button>`;
@@ -280,10 +281,9 @@ app.addEventListener('click', (event) => {
   if (button.dataset.action === 'close-sort' && event.target === button) closeSort(); // taps inside the sheet do not close it
   if (button.dataset.action === 'sort') {
     closeSort();
-    if (button.dataset.sort === sort) return;
     // Scrolled down (the row stuck at the top): the new order is shown from its first reward, under the row.
     const stuck = app.querySelector('.store-filters')?.classList.contains('is-stuck');
-    sort = button.dataset.sort;
+    sort = button.dataset.sort === sort ? 'default' : button.dataset.sort;
     render({ quiet: true });
     const grid = app.querySelector('.store-grid');
     const bar = app.querySelector('.store-filters');

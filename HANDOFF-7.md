@@ -89,11 +89,12 @@ card with a 3D clock. `More categories` shows one centred card: the pile of rewa
 
 **Sort** (spec §63): a round button at the right end of the chips row (`.store-sort`, icon `sort` in `icons.svg`); the
 chips scroll under a short fade before it, and the whole row (`.store-filters`, which now holds `.store-chips` and the
-button) is what sticks. It opens a bottom sheet "Sort by": Recommended (the catalog's order, default), Coins: low to
-high, Coins: high to low; tapping one applies it and closes the sheet. Sorting is done in the page on the catalog list
+button) is what sticks. It opens a bottom sheet "Sort by": Coins: low to high, Coins: high to low (none chosen at
+first = the catalog's order); tapping one applies it and closes the sheet, tapping the chosen one again takes it off
+(back to the catalog's order). Sorting is done in the page on the catalog list
 (stable: same price keeps the API's order), for every category; the button is solid once sorted (`.is-on`) and
 disabled on More categories. The sheet's rows are the account sheet's `.option` / `.radio`, moved from
-`trading-task.css` to `components.css` (same class names, nothing else changes on Earn). Not tracked.
+`trading-task.css` to `components.css` (same class names, nothing else changes on Earn). Not tracked, by decision.
 
 **No rewards at all** (catalog empty, or the call fails: `rewards = []`): both tabs show only the top bar and a
 "Rewards are on their way" card (`store.empty.*`; state `catalog-empty`), and every reward page says "This reward is

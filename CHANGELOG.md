@@ -10,7 +10,7 @@ and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 - A browse-only Reward Store in the webview (Home Store and Categories tabs, one page per reward, Checkout "coming
   soon"), behind a switch `common.rewardStore` that is off by default (Plan B, if Tada is not ready).
 - With the switch on, Redeem and reward cards open the store, and the recent activity shows coin entries only.
-- Categories tab: a sort button at the end of the chips row (Recommended / coins low to high / high to low, spec §63).
+- Categories tab: a sort button at the end of the chips row (coins low to high / high to low; tap the chosen one again to undo; spec §63).
 - The catalog sends every reward with `category`, `description`, `badge`, `showOnHome`.
 - HSB's endpoints moved to `/app/point`, all POST; the guest catalog is the same endpoint with `clientId` null.
 - Events for the store: 4 new (38 in all), new parameters, `affordable` no longer sent for guests (`HANDOFF-7.md` §9).
