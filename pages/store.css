@@ -11,7 +11,6 @@
 }
 .store-tab--home .store-head:not(.is-stuck) .store-head__title,
 .store-banner + .store-section .store-section__head, .store-banner + .store-section .text-btn { color: var(--on-brand); }
-.store-tab--home .store-head:not(.is-stuck) .store-head__icon { background: var(--ui-surface-pure); color: var(--ui-text-brand); box-shadow: none; }
 
 /* ---- Top of the store: icon, "Reward Redemption", balance ---- */
 /* Sticks to the top like Loyalty's header (spec §57): plain at the top of the page; once it scrolls (.is-stuck) the icon
@@ -42,10 +41,7 @@
 /* No icon in front of the title (the reward page, which has a back button instead): the same room on both sides. */
 .store-head.is-stuck .store-head__brand--plain { padding-left: var(--spacing-16); }
 .store-head__back { flex: none; transform-origin: left center; }
-.store-head__icon {
-  flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm);
-  border-radius: var(--radius-pill); background: var(--blend-theme-bg); color: var(--blend-theme-fg); box-shadow: var(--blend-stroke);
-}
+.store-head__icon { flex: none; display: block; width: var(--size-control-sm); height: var(--size-control-sm); object-fit: contain; }
 .store-head__title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--font-large-semibold); }
 /* The balance: one pill, a thin line between the coin and the number. */
 .store-head__balance {
