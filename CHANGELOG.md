@@ -3,6 +3,17 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 7 — Reward Store (Plan B), early handoff (22 Oct 2026)
+
+**Full description for developers: `HANDOFF-7.md`.** Spec §59–§61.
+
+- A browse-only Reward Store in the webview (Home Store and Categories tabs, one page per reward, Checkout "coming
+  soon"), behind a switch `common.rewardStore` that is off by default (Plan B, if Tada is not ready).
+- With the switch on, Redeem and reward cards open the store, and the recent activity shows coin entries only.
+- The catalog sends every reward with `category`, `description`, `badge`, `showOnHome`.
+- HSB's endpoints moved to `/app/point`, all POST; the guest catalog is the same endpoint with `clientId` null.
+- No new events. `DATA.md` and `STATES.md` changed (see `HANDOFF-7.md` §5).
+
 ## Handoff 6 — phase 3, replaces handoff 5 (20 Oct 2026)
 
 **Full description for developers: `HANDOFF-6.md`** (everything since handoff 4; exact changes in
