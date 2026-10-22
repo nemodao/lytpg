@@ -156,6 +156,7 @@
   --ui-hot-amber: #fda60b;
   --ui-hot-glow: #fde83c;
   --ui-hot-gloss: #fdb192;
+  --ui-progress-done: #29896e;
 
   /* Effect strengths (light) */
   --bg-blend-strength: 16%;
@@ -389,6 +390,7 @@
   --ui-hot-amber: #fda60b;
   --ui-hot-glow: #fde83c;
   --ui-hot-gloss: #fdb192;
+  --ui-progress-done: #37b793;
 
   /* Effect strengths (dark) */
   --bg-blend-strength: 30%;

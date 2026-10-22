@@ -25,7 +25,9 @@
 .reward-balance strong { color: var(--ui-text-primary); }
 .reward-balance--enough { flex-direction: row; align-items: center; color: var(--ui-text-green); }
 .reward-balance__bar { display: block; height: var(--spacing-6); border-radius: var(--radius-pill); background: var(--ui-surface-soft); overflow: hidden; }
-.reward-balance__bar span { display: block; height: 100%; border-radius: inherit; background: var(--accent-surface-brand); }
+/* The part already collected is green (--ui-progress-done: a darker green in light mode, the bright one in dark, each at
+   least 3:1 against the bar's track and the card). */
+.reward-balance__bar span { display: block; height: 100%; border-radius: inherit; background: var(--ui-progress-done); }
 
 .reward-missing { gap: var(--spacing-8); }
 

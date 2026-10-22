@@ -38,6 +38,7 @@ Token theo vai trò nên dùng trước khi tìm tới primitive:
 | Lớp phủ sau sheet, dialog | `--ui-overlay-scrim` |
 | Nhãn hạng tài khoản (Micro, Standard, VIP, Platinum) | `--ui-tier-<hạng>-surface`, `--ui-tier-<hạng>-text` |
 | Nhãn "Hot" (cháy rực, theo nhãn HOT ở thanh menu) | `--ui-hot-deep`, `-red`, `-orange`, `-amber`, `-glow`, `-gloss` |
+| Phần đã đạt của thanh tiến độ (xanh lá) | `--ui-progress-done` |
 | Thanh điều hướng dưới | `--ui-nav-surface`, `--ui-nav-stroke`, `--ui-nav-tab-active` |
 
 Heading `--font-heading-h1` tới `h4` là cỡ desktop, không dùng trên mobile.

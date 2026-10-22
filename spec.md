@@ -817,3 +817,8 @@ Planned by 3 reviews (business, engineering, UI coverage) with a cross-review; a
 - Once the list is sorted by price, the button turns solid white (like the selected chip). It is off on "More categories" (no list there).
 - If the row is stuck at the top when a new order is chosen, the page scrolls back so the first reward shows under the row.
 - Not tracked: no event for sorting (owner's decision).
+
+## 64. Reward page: the balance bar's filled part is green (decided 23 Oct 2026, handoff 7)
+
+- The part of the bar already collected is green instead of brand blue, so it stands out. New token `--ui-progress-done`: `#29896e` (Green/500) in light mode, `#37b793` (Green/400) in dark mode.
+- Measured on the page: light 3.7:1 against the bar's track and 4.3:1 against the card; dark 4.8:1 against the track and 3.8:1 against the glass card (at least 3:1 for a graphic). The brighter green in light mode would be only 2.1:1 against the track.

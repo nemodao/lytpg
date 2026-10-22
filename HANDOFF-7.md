@@ -103,7 +103,7 @@ no longer available". Neither store page has a loading or error view yet (the sp
 
 **Reward page:** one card: the picture, then parts split by thin lines: category, `Hot` / `New` before the name, the
 price; for signed-in users, the balance against the price (how many more, with a bar; or a green tick when enough;
-guests see none); "About this reward" (`description`). A Tour & Travel picture is shown 4:3 and cropped
+guests see none; the bar's filled part is green, `--ui-progress-done`); "About this reward" (`description`). A Tour & Travel picture is shown 4:3 and cropped
 (`.reward-art--trip`). `Checkout` sticks to the bottom. Checkout is not live; it opens a sheet:
 - signed in without enough coins: "Not enough coins yet", how many more, and `Learn how to earn coins` → Earn (left
   out when there is no trading task);
@@ -181,7 +181,8 @@ In `shared/data-source.js`: `getOrders(path, body)` now takes the path and the b
 ## 6. Tokens and copy
 
 - **New tokens** (`tokens/tokens.json`, `tokens.css` rebuilt): `--ui-hot-deep`, `--ui-hot-red`, `--ui-hot-orange`,
-  `--ui-hot-amber`, `--ui-hot-glow`, `--ui-hot-gloss` (the Hot label and the Special sash).
+  `--ui-hot-amber`, `--ui-hot-glow`, `--ui-hot-gloss` (the Hot label and the Special sash); `--ui-progress-done`
+  (the green filled part of the reward page's balance bar: `#29896e` light, `#37b793` dark).
 - **New copy** (`copy/en.json`): `store.*` (top bar, tabs, sections, categories `store.cat.*`, badges, notes, sort
   `store.sort.*`) and
   `reward.*` (the reward page and its sheets). Nothing removed or renamed.
