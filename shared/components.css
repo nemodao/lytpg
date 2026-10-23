@@ -190,7 +190,9 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .coin--lg { position: relative; width: var(--size-control-lg); height: var(--size-control-lg); }
 .coin-glow { position: relative; display: grid; place-items: center; flex: none; }
 .coin-glow::before { content: ""; position: absolute; inset: calc(var(--spacing-10) * -1); border-radius: var(--radius-pill); background: radial-gradient(closest-side, color-mix(in srgb, var(--bg-blend) 60%, transparent), transparent); pointer-events: none; }
-.balance-number { font: var(--font-display-m); }
+/* One line, shrunk as a whole to fit its column when too wide: --balance-fit is set by fitBalanceNumber() in
+   components.js (spec §71). */
+.balance-number { font: var(--font-display-m); white-space: nowrap; zoom: var(--balance-fit, 1); }
 /* Tier of the chosen trading account next to "Coin Balance" (spec §55); tapping it opens Earn on the account field. */
 .balance-label { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-6); }
 .balance-label > span { white-space: nowrap; } /* "Coin Balance" never breaks */

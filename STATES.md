@@ -7,7 +7,7 @@ A state is a named override of the mock data that shows one situation of a page.
 `mock/common.json` plus its own `mock/<page>.json`; a state merges its `common` and `page` parts over the
 default data (objects merge key by key, arrays and plain values replace).
 
-**Shared states** mean the same thing on every page and carry over through links between pages: `guest`, `empty`, `needs-kyc`, `needs-deposit`, `expiring`, `activity-empty`, `plan-b`.
+**Shared states** mean the same thing on every page and carry over through links between pages: `guest`, `empty`, `needs-kyc`, `needs-deposit`, `expiring`, `activity-empty`, `plan-b`, `big-balance`.
 
 Guided tour: `?tour=<step>` resumes a step, `?tour=off` keeps it closed (use it for screenshots).
 
@@ -30,6 +30,7 @@ File: `mock/dashboard.json` · page: `pages/dashboard.html`
 | Participation | `needs-deposit` · shared | User passed KYC but has not made a first deposit. Redeem (balance and reward cards) opens a sheet with “How to start” (step 1 checked, step 2 is the one to do, button “Deposit now”) instead of going to Tada. | `common.program.joinRequirement = "deposit"` |
 | Coin Balance | `empty` · shared | Balance is 0: no available, pending or expiring coins. | `common.balance.available = 0`<br>`common.balance.expiring = null` |
 | Coin Balance | `expiring` · shared | 1,200 coins expire within 10 days: red warning under the balance. | `common.balance.expiring.points = 1200` |
+| Coin Balance | `big-balance` ("Big balance") · shared | A very large balance (9,876,543,210): the number shrinks as a whole until it fits the room left of Redeem, on one line, never cut. | `common.balance.available = 9876543210` |
 | Activity | `activity-empty` · shared | The backend sent no recent activity: the “Trader … just redeemed / earned” card is hidden (Home and Earn). | `common.activity = []` |
 | Rewards grid | `rewards-empty` ("No rewards") | The rewards API sent nothing, or failed (it is a different backend): the “Redeem coins for rewards” title and the grid (with its “Earn more coins” card) are left out; the rest of Home stays, including “Looking for something else?”. | `page.rewards = []` |
 | Rewards grid | `big-prices` ("Big prices") | Some rewards cost a lot of coins (99,999 to 12,500,000). When one price and its Redeem do not fit on one row (about 6 digits and up), Redeem moves under the price, at the right, on every card of the grid; the number is never cut. | `page.rewards = [9 items]` |
@@ -77,6 +78,7 @@ File: `mock/point-balance.json` · page: `pages/point-balance.html`
 | Participation | `needs-deposit` · shared | User passed KYC but has not made a first deposit. Redeem opens a sheet with “How to start” (button “Deposit now”) instead of going to Tada. | `common.program.joinRequirement = "deposit"` |
 | Coin Balance | `empty` · shared | Balance is 0: no available, pending or expiring coins. Tabs still show their lists. | `common.balance.available = 0`<br>`common.balance.expiring = null` |
 | Coin Balance | `expiring` · shared | 1,200 coins expire within 10 days: red warning under the balance; that lot is highlighted in Available. | `common.balance.expiring.points = 1200`<br>`page.items = [8 items]` |
+| Coin Balance | `big-balance` ("Big balance") · shared | A very large balance (9,876,543,210): the number shrinks as a whole until it fits the room left of Redeem, on one line, never cut. | `common.balance.available = 9876543210` |
 | Tabs | `available-empty` | The Available tab has no lots: it shows “No available coins.” | `page.empty.available = true` |
 | Tabs | `expired-empty` | The Expired tab has nothing: “No expired coins in this period.” | `page.empty.expired = true` |
 | Tabs | `history-empty` | The History tab has nothing: “No activity in this period.” | `page.empty.history = true` |

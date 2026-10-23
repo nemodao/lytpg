@@ -280,6 +280,28 @@ function fitBalanceTier(label) {
   if (fit < 1 && fit >= TIER_MIN_FIT) badge.style.setProperty('--tier-fit', fit);
 }
 
+// The balance number stays on one line in the room its column leaves (spec §71): when it is wider, it shrinks as a whole
+// by the ratio that makes it fit (CSS zoom, --balance-fit), with no lower limit; it never wraps or is cut. Measured
+// again when the column changes size (screen rotation), once the web font has loaded, and whenever the number changes
+// (the guided tour counts it up).
+const balanceObserver = typeof ResizeObserver === 'function'
+  ? new ResizeObserver((entries) => entries.forEach((entry) => fitBalanceNumber(entry.target.querySelector('.balance-number'))))
+  : null;
+function watchBalanceNumber(number) {
+  if (number.dataset.fitWatched) return;
+  number.dataset.fitWatched = '';
+  fitBalanceNumber(number);
+  balanceObserver?.observe(number.parentElement);
+  if (typeof MutationObserver === 'function') new MutationObserver(() => fitBalanceNumber(number)).observe(number, { childList: true, characterData: true, subtree: true });
+  document.fonts?.ready.then(() => fitBalanceNumber(number));
+}
+function fitBalanceNumber(number) {
+  if (!number?.isConnected) return;
+  number.style.removeProperty('--balance-fit');
+  const fit = Math.floor((number.clientWidth / number.scrollWidth) * 100) / 100;
+  if (fit < 1) number.style.setProperty('--balance-fit', fit);
+}
+
 // Balance block: coin, label, number, Redeem button and the expiry warning. Coins that are not credited yet are never
 // shown (spec §41), so the API's `pending` total is not used.
 // Dashboard: bare on the page background, the whole block links to Point Balance (href).
@@ -289,6 +311,7 @@ export function balanceBlock(ui, common, { href = '', card = false, history = ''
   const { available, expiring } = common.balance;
   if (expiring) trackView('loyalty_expiring_notice_view');
   const tier = balanceTier(ui, common, card);
+  requestAnimationFrame(() => document.querySelectorAll('.balance-number').forEach(watchBalanceNumber));
   return `
   <section class="balance ${card ? 'card card--soft' : ''}" data-tour="balance">
     ${card ? tier : ''}

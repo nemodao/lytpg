@@ -38,11 +38,16 @@
       "title": "Coin Balance",
       "states": [
         "empty",
-        "expiring"
+        "expiring",
+        "big-balance"
       ],
       "descriptions": {
         "empty": "Balance is 0: no available, pending or expiring coins. Tabs still show their lists.",
-        "expiring": "1,200 coins expire within 10 days: red warning under the balance; that lot is highlighted in Available."
+        "expiring": "1,200 coins expire within 10 days: red warning under the balance; that lot is highlighted in Available.",
+        "big-balance": "A very large balance (9,876,543,210): the number shrinks as a whole until it fits the room left of Redeem, on one line, never cut."
+      },
+      "labels": {
+        "big-balance": "Big balance"
       }
     },
     {
@@ -558,6 +563,13 @@
     "plan-b": {
       "common": {
         "rewardStore": true
+      }
+    },
+    "big-balance": {
+      "common": {
+        "balance": {
+          "available": 9876543210
+        }
       }
     }
   }

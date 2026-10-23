@@ -862,3 +862,7 @@ The Tada integration backend QA'd the endpoints on UAT (34 of 34 calls passed, d
 ## 70. Order detail finished later (decided 23 Oct 2026)
 
 The order detail (§66) is wired from Tada's documentation only: a real answer exists only once the Tada integration is live with real orders. Its field names are checked against a real answer then, and the adapter corrected in a later handoff. Not urgent: launch can go ahead with it unfinished.
+
+## 71. The coin balance shrinks to fit (decided 23 Oct 2026, handoff 8)
+
+The balance number (Home, and the balance card on Coins) stays on one line. When it is wider than the room left next to Redeem, the whole number shrinks by the ratio that makes it fit, with no lower limit; it never wraps, is never cut and never runs under Redeem. Measured again on rotation, once the web font has loaded and whenever the number changes (the tour's count-up). Preview: state `big-balance`.
