@@ -3,9 +3,9 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
-## Handoff 7 — Reward Store (Plan B), early handoff (22 Oct 2026)
+## Handoff 7 — Reward Store (Plan B) and the /app/point API (23 Oct 2026)
 
-**Full description for developers: `HANDOFF-7.md`.** Spec §59–§63.
+**Full description for developers: `HANDOFF-7.md`.** Spec §59–§70.
 
 - A browse-only Reward Store in the webview (Home Store and Categories tabs, one page per reward, Checkout "coming
   soon"), behind a switch `common.rewardStore` that is off by default (Plan B, if Tada is not ready).
@@ -17,7 +17,13 @@ and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
   smaller; store icon resized (`HANDOFF-7.md` §7).
 - Categories tab: a sort button at the end of the chips row (coins low to high / high to low; tap the chosen one again to undo; spec §63).
 - The catalog sends every reward with `category`, `description`, `badge`, `showOnHome`.
-- HSB's endpoints moved to `/app/point`, all POST; the guest catalog is the same endpoint with `clientId` null.
+- HSB's endpoints moved to `/app/point`, all POST, in the loyalty API's request envelope (`timestamp` required,
+  `x-auth-key` on every call); guests send `clientId` 0; orders take `pageNo`; one order is `POST /app/point/order/detail`
+  (Tada's order passed through, joined with its list row; field names to be checked once Tada is live). Settled after
+  the backend's QA on UAT (`HANDOFF-7.md` §4, spec §65–§70).
+- Redemption history: no amount when an order has no coin transaction yet, "Reward" when it has no item name, an
+  "E-wallet top-up" label (`item_type` `ewallet`).
+- `client_id` kept on every event of a signed-in user (`TRACKING.md`, spec §67).
 - Events for the store: 4 new (38 in all), new parameters, `affordable` no longer sent for guests (`HANDOFF-7.md` §9).
   `DATA.md` and `STATES.md` changed (see `HANDOFF-7.md` §5).
 - Files: new `pages/store.*`, `pages/reward.*`, `shared/store.js`, `mock/store.json`, images in `assets/images/store/`,

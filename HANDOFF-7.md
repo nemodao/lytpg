@@ -1,16 +1,20 @@
 # Handoff 7 — what changed since handoff 6
 
 **Who this is for:** developers (and their AI assistants) who have already applied handoff 6, or are applying it now.
-Everything not named here is unchanged. Behaviour: `spec.md` §59–§62. Exact line changes: `CHANGES-since-handoff-6.diff`
+Everything not named here is unchanged. Behaviour: `spec.md` §59–§70. Exact line changes: `CHANGES-since-handoff-6.diff`
 in the package (images are not in it: see §7).
 
-This is an **early handoff**: the Reward Store's UI is done, sent before the backend has delivered the API changes it
-reads (§3, §4). The pages already run on sample answers in `mock/api/`.
+**API status:** the backend has delivered the `/app/point` endpoints and QA'd them on UAT (23 Oct 2026); requests,
+headers and answers are settled in §4. The pages run on sample answers in `mock/api/` shaped like the real ones. One
+part waits for the Tada integration to be live: the order detail's field names (§4, spec §70); it does not block
+launch.
 
 **In one line:** a browse-only Reward Store inside the webview ("Plan B", in case the Tada integration is not ready for
 launch), behind a switch that is **off by default**; and HSB's own endpoints (the Tada integration backend: catalog,
 activity, orders, redeem session) moved from `/loyalty/…` to `/app/point/…`, all POST, on the same host and base as
-the loyalty API (`{host}/pointSys/app/point/…`). It also lists fixes from the review of your handoff 6 work (§10).
+the loyalty API (`{host}/pointSys/app/point/…`), in the loyalty API's request envelope. Also: a sort on the Categories
+tab, a green balance bar on the reward page, an "E-wallet top-up" label in Redemption history, lighter images, and
+fixes from the review of your handoff 6 work (§10).
 
 ---
 
