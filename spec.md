@@ -847,3 +847,13 @@ The developer's version sends `client_id` (read from the app's token) with every
 ## 68. E-wallet top-ups get their own label (decided 23 Oct 2026)
 
 Tada's `itemType` `ewallet` (an e-wallet top-up, e.g. OVO or GoPay) shows as "E-wallet top-up" (`orders.type.ewallet`) in Redemption history instead of the generic "Reward", and is sent as `item_type` = `ewallet` (it was `other`). Its `vendorDetail` shows like a PLN or mobile-credit item. Other unknown kinds still read "Reward" / `other`.
+
+## 69. /app/point settled after QA on UAT (23 Oct 2026, handoff 7)
+
+The Tada integration backend QA'd the endpoints on UAT (34 of 34 calls passed, database checked). On top of §65–§66:
+
+- `x-auth-key` (the app's static key) on every call; without it, `ERROR_EMPTY_AUTH`. Signed in, also `authorization`. Guests send `clientId` 0 (null is read the same).
+- Catalog: exactly 8 fields per reward, no money value; every enabled reward (Home picks with `showOnHome`). A client group with no programme gets an empty list.
+- Orders: exactly 6 fields per order; `pageSize` 20 by default, at most 100. `coinSpent` null until the order has a coin transaction: no amount is shown. `firstItemName` null when the order has no items: the row reads "Reward".
+- Activity: body `{}`, a public feed for guests too (the backend's access setting for guests is being opened). Masked client ids: 2 first + `***` + 3 last; ids of 5 characters or fewer: `***`.
+- Order detail: voucher codes, PINs and serial numbers come only to the order's owner and stay hidden until Show (§52).

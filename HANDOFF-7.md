@@ -150,21 +150,29 @@ order). The answers' shapes are unchanged.
 `{host}/pointSys/app/point/catalog` (and `/activity`, `/orders`, `/order/detail`, `/redeem/session`).
 **Request: exactly like the loyalty API you already call** (corrected 23 Oct 2026 from the backend's delivered code,
 spec §65; this replaces "no timestamp"): the same envelope (signed body with `timestamp` in seconds, **required**, and
-refused outside a 24-hour window), the same headers: signed in `authorization` = the app's JWT; guests (no token) only
-`x-auth-key` with the same static value as the loyalty API's no-login calls. Only the path and the business fields
-inside the payload differ (table below; `clientId` as in your loyalty envelope, null for guests).
+refused outside a 24-hour window), the same headers: `x-auth-key` (the same static value as the loyalty API's no-login
+calls) on every call, without it the answer is `ERROR_EMPTY_AUTH`; signed in, also `authorization` = the app's JWT.
+Only the path and the business fields inside the payload differ (table below). `clientId` as in your loyalty
+envelope; **guests send `clientId` 0** (null is read the same). QA'd by the Tada integration backend on UAT, 23 Oct
+2026 (spec §69).
 
 | Was (handoff 6) | Now |
 |---|---|
-| `GET /loyalty/catalog?clientId=…` and `GET /loyalty/catalog-guest` (app key) | `POST /app/point/catalog`, `{ clientId }`; **guests send `clientId` null** (one endpoint: the default group's rewards). Signed in: `authorization`. Guests: `x-auth-key` only |
-| `GET /loyalty/activity` | `POST /app/point/activity`, no business field; `x-auth-key` only (no token, no clientId) |
-| `GET /loyalty/orders?clientId=…&page=…&pageSize=…` | `POST /app/point/orders`, `{ clientId, pageNo, pageSize }` (**`pageNo`**, from 1) |
+| `GET /loyalty/catalog?clientId=…` and `GET /loyalty/catalog-guest` (app key) | `POST /app/point/catalog`, `{ clientId }`; **guests send `clientId` 0** (one endpoint: the default group's rewards) |
+| `GET /loyalty/activity` | `POST /app/point/activity`, body `{}` (no business field, no clientId, no token needed): a public feed, guests included |
+| `GET /loyalty/orders?clientId=…&page=…&pageSize=…` | `POST /app/point/orders`, `{ clientId, pageNo, pageSize }` (**`pageNo`**, from 1; `pageSize` 20 by default, at most 100); only that client's orders |
 | `GET /loyalty/orders/{orderReference}` | `POST /app/point/order/detail` (**`order`**, singular), `{ orderReference }` (with `clientId` as in the envelope) |
 | `POST /loyalty/redeem/session` (app; app token, **no body**) | `POST /app/point/redeem/session`, `{ clientId }` in the same envelope: the app calls it for the `redeem` / `reward` intents, i.e. whenever Plan B is off |
 
 **Answers, from the backend's DTOs (23 Oct 2026):** every answer is `{ success, code, message, result }`.
-- Catalog: as in the samples (§3).
-- Orders list: `{ orders, page, pageSize, total }`: the **request** says `pageNo`, the **answer** `page`.
+- Catalog: as in the samples (§3): exactly `id`, `name`, `points`, `image`, `category`, `description`, `badge`,
+  `showOnHome`; no money value. Every enabled reward comes back; `showOnHome` is only for the front end to pick Home's
+  rewards. A client group with no programme gets `rewards: []` (Home shows "Find rewards for your coins", the store
+  "Rewards are on their way").
+- Orders list: `{ orders, page, pageSize, total }`: the **request** says `pageNo`, the **answer** `page`. Each order has
+  exactly `orderReference`, `orderNumber`, `status`, `orderDate`, `firstItemName`, `coinSpent`. `coinSpent` is null
+  until the order has a coin transaction: no amount is shown (row and detail). `firstItemName` is null when the order
+  has no items: the row reads "Reward".
 - Dates of the order endpoints (`orderDate`) come as `"YYYY-MM-DD HH:mm:ss"` with no zone (GMT+7 by the backend's
   setting; still an open point with the backend developer, as the database holds UTC). Safari cannot parse that form:
   new `apiTime()` in `shared/api-adapter.js` reads it as +07:00 and gives ISO UTC like every other date; change

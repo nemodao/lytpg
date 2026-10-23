@@ -166,8 +166,8 @@ export const toOrders = (list) =>
       orderNumber: order.orderNumber ?? '',
       status: orderStatus(order.status),
       orderDate: apiTime(order.orderDate),
-      firstItemName: order.firstItemName ?? '',
-      coinSpent: order.coinSpent ?? 0,
+      firstItemName: order.firstItemName ?? '', // null when the order has no items: the page shows "Reward"
+      coinSpent: order.coinSpent ?? null, // null until the order has a coin transaction: no coins shown
     }))
     .sort((a, b) => Date.parse(b.orderDate) - Date.parse(a.orderDate));
 
@@ -208,7 +208,7 @@ export const toOrder = (order, summary = null) => ({
   status: orderStatus(order.status ?? summary?.status),
   orderDate: apiTime(summary?.orderDate ?? order.orderDate) ?? null,
   lastStatusAt: order.lastStatusAt ? apiTime(order.lastStatusAt) : null,
-  coinSpent: summary?.coinSpent ?? order.coinSpent ?? 0,
+  coinSpent: summary?.coinSpent ?? order.coinSpent ?? null,
   refunded: order.refunded === true,
   items: (order.orderItems ?? order.items ?? []).map(toOrderItem),
   recipient: order.recipient

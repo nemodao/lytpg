@@ -19,14 +19,15 @@ const orderHref = (orderReference) => `${listHref}${listHref.includes('?') ? '&'
 // Status badge (spec §52). The backend sends one of ORDER_STATUSES; anything else shows as a grey badge with its text.
 const STATUS_TONE = { new: 'blue', 'on process': 'yellow', completed: 'green', canceled: 'neutral', failed: 'red' };
 const statusBadge = (status) => badge(STATUS_TONE[status] ?? 'neutral', STATUS_TONE[status] ? ui.t(`orders.status.${status}`) : ui.esc(status));
-const coins = (points) => `<span class="order-coins num">${coin('coin--xs')}${ui.num(points)}</span>`;
+// No coin transaction yet (coinSpent null, spec §69): no amount.
+const coins = (points) => (points == null ? '' : `<span class="order-coins num">${coin('coin--xs')}${ui.num(points)}</span>`);
 
 // ---- List ----
 
 const orderRow = (order) => `
   <a class="list__row order-row" href="${orderHref(order.orderReference)}" data-track="loyalty_order_open" data-track-status="${ui.esc(order.status)}">
     <span class="grow stack stack--tight">
-      <span class="t-body-strong order-row__name">${ui.esc(order.firstItemName)}</span>
+      <span class="t-body-strong order-row__name">${ui.esc(order.firstItemName || ui.t('orders.type.other'))}</span>
       <span class="t-caption c-2 num">${ui.date(order.orderDate)}</span>
       <span class="t-caption c-3 num order-row__number">${ui.esc(order.orderNumber)}</span>
     </span>
@@ -161,11 +162,11 @@ function orderView(order) {
     <section class="card order-head">
       <div class="order-head__status">${statusBadge(order.status)}${order.lastStatusAt ? `<span class="t-caption c-3 num">${ui.t('orders.updated', { date: ui.date(order.lastStatusAt), time: ui.time(order.lastStatusAt) })}</span>` : ''}</div>
       <h2 class="t-title-s">${title}</h2>
-      ${order.refunded ? notice(ui, { icon: 'check', tone: 'success', text: ui.t('orders.refunded', { points: ui.num(order.coinSpent) }) }) : ''}
+      ${order.refunded && order.coinSpent != null ? notice(ui, { icon: 'check', tone: 'success', text: ui.t('orders.refunded', { points: ui.num(order.coinSpent) }) }) : ''}
       <div class="facts">
         ${copyable('order', 'order', ui.t('orders.number'), order.orderNumber, about(order))}
         ${fact(ui.t('orders.date'), `${ui.date(order.orderDate)}, ${ui.time(order.orderDate)}`)}
-        ${fact(ui.t('orders.coins'), coins(order.coinSpent))}
+        ${order.coinSpent == null ? '' : fact(ui.t('orders.coins'), coins(order.coinSpent))}
       </div>
     </section>
     <h2 class="group-title">${ui.t('orders.items')}</h2>
