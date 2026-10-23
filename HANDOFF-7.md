@@ -159,7 +159,7 @@ envelope; **guests send `clientId` 0** (null is read the same). QA'd by the Tada
 | Was (handoff 6) | Now |
 |---|---|
 | `GET /loyalty/catalog?clientId=…` and `GET /loyalty/catalog-guest` (app key) | `POST /app/point/catalog`, `{ clientId }`; **guests send `clientId` 0** (one endpoint: the default group's rewards) |
-| `GET /loyalty/activity` | `POST /app/point/activity`, body `{}` (no business field, no clientId, no token needed): a public feed, guests included |
+| `GET /loyalty/activity` | `POST /app/point/activity`, body `{}` (no business field, no clientId, no token needed): a public feed, guests included (granted by the backend) |
 | `GET /loyalty/orders?clientId=…&page=…&pageSize=…` | `POST /app/point/orders`, `{ clientId, pageNo, pageSize }` (**`pageNo`**, from 1; `pageSize` 20 by default, at most 100); only that client's orders |
 | `GET /loyalty/orders/{orderReference}` | `POST /app/point/order/detail` (**`order`**, singular), `{ orderReference }` (with `clientId` as in the envelope) |
 | `POST /loyalty/redeem/session` (app; app token, **no body**) | `POST /app/point/redeem/session`, `{ clientId }` in the same envelope: the app calls it for the `redeem` / `reward` intents, i.e. whenever Plan B is off |
@@ -347,8 +347,12 @@ the tap is tracked first. Reward cards use a native `onClick` and are fine.
 ## Waiting on others
 
 - **Backend (Tada integration):** the catalog changes of §3 and the `/app/point` paths of §4, on UAT when the backend
-  says so. Headers, envelope and answers are settled (§4). Still open: the order detail's field names checked on a
-  real Tada order; the guests' access to `/activity` (being opened by the backend).
+  says so. Headers, envelope and answers are settled (§4); guests may call `/activity` (access granted by the
+  backend, 23 Oct 2026).
+- **Order detail, later (not a launch blocker):** `order/detail` passes Tada's live order through, so a real answer
+  exists only once the Tada integration is live. Until then `toOrder` follows Tada's documentation (§4). When real
+  orders exist, the field names are checked against a real answer and the adapter is corrected in a later handoff.
+  Launch can go ahead without it (owner, 23 Oct 2026).
 - **Do not ship** the `/app/point` paths before the backend has them on UAT.
 - **App team, to confirm (from the review, §10):** the app calls `initWebview` also when there is no token (guests);
   otherwise the pages stay on their loading view (seen on UAT opened outside the app). The Deposit intent's
