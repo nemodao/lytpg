@@ -318,6 +318,10 @@ port close to complete and faithful. These need fixing in this round. Paths are 
    a new page view; the store's own tab switch is not (it only changes `view`, as the reference does with
    `setPageParams`).
 
+**Kept as you did it:** `client_id` with every event of a signed-in user (read from the token, none for guests).
+`TRACKING.md` now documents it (spec §67); keep it in the base sent with every push, and clear it when a guest
+follows a signed-in session, as you do now.
+
 **To check on a real device (GTM preview), not a confirmed bug:** the Redeem button on the balance card, the "Find
 rewards" card and the empty history's Explore use HeroUI `onPress` (fires on pointer up, then `setTimeout(0)` in
 `core/redeem-gate/index.ts`), while the tap itself is tracked on the later `click`. On a touch webview the sheet's

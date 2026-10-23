@@ -5,7 +5,8 @@ sent, and with which parameters.
 
 - **Destination:** Google Tag Manager → GA4. The pages push `{ event: <name>, ...parameters }` onto `window.dataLayer`.
   The GTM container snippet is added by the host page; it is not part of this code.
-- **Client id:** not sent by the pages. GTM sets it as the user property `client_id` at sign-in.
+- **Client id:** `client_id` goes with every event of a signed-in user, read from the app's token (see the table
+  below; kept by decision, 23 Oct 2026). Guests have none. The reference demo has no token, so it never sends it.
 - **One place in the code:** `shared/tracking.js` (`track`, `trackView`, `initTracking`). Nothing else touches
   `dataLayer`.
 - **Clicks need no code:** an element with `data-track="<event>"` is tracked by one listener; extra parameters are
@@ -24,6 +25,7 @@ sent, and with which parameters.
 | Parameter | Values | Meaning |
 |---|---|---|
 | `page` | `home` \| `earn` \| `coins` \| `orders` \| `store` \| `reward` | Page the event happened on (`orders`: Redemption history; `store`: the Reward Store, both tabs; `reward`: one reward's page) |
+| `client_id` | the user's client id | Signed-in users only, read from the app's token when the webview opens; not sent for guests. Joins the events to the backend's trades and coins. Not sent by the reference demo (no token) |
 | `theme` | `light` \| `dark` | Colour mode on screen |
 | `has_task` | `true` \| `false` | Whether the user has a trading task |
 | `join_step` | `signup` \| `kyc` \| `deposit` \| `none` | Step the user still has to take before earning; `signup` = guest, not signed in (spec §53) |

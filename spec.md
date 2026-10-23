@@ -839,3 +839,7 @@ From the backend code, settled with the owner through the Tada integration sessi
 - The detail's coins, order date and status come from that order's row of `/app/point/orders` (the front end joins them); the backend does not enrich the detail for now.
 - Not sent by any endpoint for now: when the status last changed (the "Updated …" line is hidden) and whether the coins were refunded (no green note). To be added later if needed.
 - Never shown (IDR): items' `price`, `fees[].amount`, any amount in `payment`. Statuses as §52 (`onprocess` is read as `on process`), for the order and each item.
+
+## 67. `client_id` on every event (decided 23 Oct 2026)
+
+The developer's version sends `client_id` (read from the app's token) with every event of a signed-in user; guests have none. Kept by the owner's decision; `TRACKING.md` now lists it among the parameters sent with every event. The reference demo has no token and does not send it.
