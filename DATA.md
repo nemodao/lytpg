@@ -141,7 +141,7 @@ Example file: `mock/redemptions.json` (`default`)
 | `details[].coinSpent` | number | `30000` | Coins taken for the order. |
 | `details[].refunded` | boolean | `false` | true when the coins went back to the balance: a green note. No endpoint sends it for now (always false with the API). |
 | `details[].items[].name` | string | `"Nintendo Switch"` | Reward name. |
-| `details[].items[].type` | "egift" | "physical" | "pln" | "pulsa" | … | `"physical"` | Kind: decides the block shown. egift: evoucher; pln / pulsa: token; physical: tracking. Others: label "Reward". |
+| `details[].items[].type` | "egift" | "physical" | "pln" | "pulsa" | "ewallet" | … | `"physical"` | Kind: decides the block shown. egift: evoucher; pln / pulsa / ewallet: token (the Tada vendorDetail); physical: tracking. Others: label "Reward". |
 | `details[].items[].quantity` | number | `1` | Quantity. |
 | `details[].items[].status` | string | `"new"` | Item status; shown only when it differs from the order's. |
 | `details[].items[].evoucher` | object or null | `null` | E-gift items only; null otherwise. Each item has at most one of evoucher, token, tracking. |

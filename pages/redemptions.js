@@ -84,7 +84,7 @@ const revealed = new Set();
 const values = new Map(); // key -> text, for Copy
 // `about`: data-track attributes naming the item's kind and the order's status (item_type, status), for the Show, Copy
 // and Open voucher events.
-const ITEM_TYPES = ['egift', 'physical', 'pln', 'pulsa'];
+const ITEM_TYPES = ['egift', 'physical', 'pln', 'pulsa', 'ewallet'];
 const about = (order, item) => `${item ? ` data-track-item_type="${ITEM_TYPES.includes(item.type) ? item.type : 'other'}"` : ''} data-track-status="${ui.esc(order.status)}"`;
 function secret(key, kind, label, value, extra = '') {
   values.set(key, value);
@@ -113,7 +113,7 @@ function copyable(key, kind, label, value, extra = '') {
     </div>`;
 }
 const fact = (label, value) => `<div class="fact"><span class="t-caption c-3">${label}</span><span class="t-body-strong num">${value}</span></div>`;
-const typeLabel = (type) => ui.t(['egift', 'physical', 'pln', 'pulsa'].includes(type) ? `orders.type.${type}` : 'orders.type.other');
+const typeLabel = (type) => ui.t(ITEM_TYPES.includes(type) ? `orders.type.${type}` : 'orders.type.other');
 
 // One item: name, kind, quantity, then the one block its kind carries (spec §52).
 function itemCard(item, index, order) {

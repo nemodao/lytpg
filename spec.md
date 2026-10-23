@@ -843,3 +843,7 @@ From the backend code, settled with the owner through the Tada integration sessi
 ## 67. `client_id` on every event (decided 23 Oct 2026)
 
 The developer's version sends `client_id` (read from the app's token) with every event of a signed-in user; guests have none. Kept by the owner's decision; `TRACKING.md` now lists it among the parameters sent with every event. The reference demo has no token and does not send it.
+
+## 68. E-wallet top-ups get their own label (decided 23 Oct 2026)
+
+Tada's `itemType` `ewallet` (an e-wallet top-up, e.g. OVO or GoPay) shows as "E-wallet top-up" (`orders.type.ewallet`) in Redemption history instead of the generic "Reward", and is sent as `item_type` = `ewallet` (it was `other`). Its `vendorDetail` shows like a PLN or mobile-credit item. Other unknown kinds still read "Reward" / `other`.

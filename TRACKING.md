@@ -109,7 +109,8 @@ opening: count one or the other, never both added together. Guests' events carry
 | `loyalty_code_copy` | `Copy` is tapped | `kind`: `code` \| `pin` \| `serial` \| `awb` \| `order`; `item_type` (not for `order`); `status` | `pages/redemptions.js` |
 | `loyalty_voucher_open` | `Open voucher` is tapped | `item_type`; `status` | `pages/redemptions.js` |
 
-`item_type`: `egift` \| `physical` \| `pln` \| `pulsa` \| `other`, the item's kind. `status`: the order's status, as on
+`item_type`: `egift` \| `physical` \| `pln` \| `pulsa` \| `ewallet` \| `other`, the item's kind (`ewallet`: e-wallet
+top-up, added 23 Oct 2026). `status`: the order's status, as on
 `loyalty_order_open`.
 
 ### G. Problems

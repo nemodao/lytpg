@@ -175,7 +175,8 @@ inside the payload differ (table below; `clientId` as in your loyalty envelope, 
   `{ status, orderReference, orderNumber, recipient, orderItems, payment, fees }`. `toOrder(detail, summary)` in
   `shared/api-adapter.js` reads it: items from `orderItems` (`itemName`, `itemType`, `quantity`, `status`;
   `egiftDetail` → code / PIN / link / valid until, `vendorDetail.serialNumber` and `vendorMessage` → the PLN or credit
-  serial, `tracking` as before); the recipient's name, address and postal code. **Never read** `price`, `fees` or
+  serial, `tracking` as before; `itemType` `ewallet` is a new kind: label "E-wallet top-up", `item_type` = `ewallet`,
+  spec §68); the recipient's name, address and postal code. **Never read** `price`, `fees` or
   `payment` (IDR). The coins, order date and status come from the order's row of `/orders` (`summary`):
   `fetchOrder(ref)` in `shared/data-source.js` keeps the rows shown this session (`rememberOrders`, sessionStorage
   `hsb-loyalty-orders-v1`) and, for an order opened from elsewhere, looks it up in the list (100 a page). No endpoint
@@ -207,7 +208,7 @@ In `shared/data-source.js`: `getOrders(path, body)` now takes the path and the b
   (the green filled part of the reward page's balance bar: `#29896e` light, `#37b793` dark).
 - **New copy** (`copy/en.json`): `store.*` (top bar, tabs, sections, categories `store.cat.*`, badges, notes, sort
   `store.sort.*`) and
-  `reward.*` (the reward page and its sheets). Nothing removed or renamed.
+  `reward.*` (the reward page and its sheets), `orders.type.ewallet` ("E-wallet top-up", spec §68). Nothing removed or renamed.
 
 ## 7. Images (not in the diff file)
 

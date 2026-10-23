@@ -240,6 +240,7 @@
   "orders.type.physical": "Delivered item",
   "orders.type.pln": "PLN token",
   "orders.type.pulsa": "Mobile credit",
+  "orders.type.ewallet": "E-wallet top-up",
   "orders.type.other": "Reward",
   "orders.code": "Voucher code",
   "orders.pin": "PIN",

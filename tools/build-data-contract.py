@@ -132,7 +132,7 @@ FIELDS = {
         'details[].coinSpent': ('Coins taken for the order.', ''),
         'details[].refunded': ('true when the coins went back to the balance: a green note. No endpoint sends it for now (always false with the API).', ''),
         'details[].items[].name': ('Reward name.', ''),
-        'details[].items[].type': ('Kind: decides the block shown. egift: evoucher; pln / pulsa: token; physical: tracking. Others: label "Reward".', '"egift" | "physical" | "pln" | "pulsa" | …'),
+        'details[].items[].type': ('Kind: decides the block shown. egift: evoucher; pln / pulsa / ewallet: token (the Tada vendorDetail); physical: tracking. Others: label "Reward".', '"egift" | "physical" | "pln" | "pulsa" | "ewallet" | …'),
         'details[].items[].quantity': ('Quantity.', ''),
         'details[].items[].status': ('Item status; shown only when it differs from the order\'s.', ''),
         'details[].items[].evoucher': ('E-gift items only; null otherwise. Each item has at most one of evoucher, token, tracking.', 'object or null'),
