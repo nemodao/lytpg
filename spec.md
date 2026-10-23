@@ -855,5 +855,6 @@ The Tada integration backend QA'd the endpoints on UAT (34 of 34 calls passed, d
 - `x-auth-key` (the app's static key) on every call; without it, `ERROR_EMPTY_AUTH`. Signed in, also `authorization`. Guests send `clientId` 0 (null is read the same).
 - Catalog: exactly 8 fields per reward, no money value; every enabled reward (Home picks with `showOnHome`). A client group with no programme gets an empty list.
 - Orders: exactly 6 fields per order; `pageSize` 20 by default, at most 100. `coinSpent` null until the order has a coin transaction: no amount is shown. `firstItemName` null when the order has no items: the row reads "Reward".
-- Activity: body `{}`, a public feed for guests too (the backend's access setting for guests is being opened). Masked client ids: 2 first + `***` + 3 last; ids of 5 characters or fewer: `***`.
+- Activity: body `{}`, a public feed for guests too (the backend's access setting for guests is being opened). Coin entries `{ type, client, points, at }`, gift entries `{ type, client, reward, at }`. Masked client ids: 2 first + `***` + 3 last; ids of 5 characters or fewer: `***`. An entry without `client` is kept and reads `***`.
+- Order dates are ISO 8601 UTC (`2026-10-23T03:00:00Z`), not the zone-less form first reported (§65); the zone-less form is still read, as WIB.
 - Order detail: voucher codes, PINs and serial numbers come only to the order's owner and stay hidden until Show (§52).

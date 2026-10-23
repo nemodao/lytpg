@@ -173,12 +173,12 @@ envelope; **guests send `clientId` 0** (null is read the same). QA'd by the Tada
   exactly `orderReference`, `orderNumber`, `status`, `orderDate`, `firstItemName`, `coinSpent`. `coinSpent` is null
   until the order has a coin transaction: no amount is shown (row and detail). `firstItemName` is null when the order
   has no items: the row reads "Reward".
-- Dates of the order endpoints (`orderDate`) come as `"YYYY-MM-DD HH:mm:ss"` with no zone (GMT+7 by the backend's
-  setting; still an open point with the backend developer, as the database holds UTC). Safari cannot parse that form:
-  new `apiTime()` in `shared/api-adapter.js` reads it as +07:00 and gives ISO UTC like every other date; change
-  `WIB_OFFSET` there if the final answer is UTC. The samples now use this form.
-- Activity: every entry carries both `reward` and `points`, the one that does not apply is `null` (the adapter already
-  keeps gift entries by `reward` and coin entries by `points`); samples updated.
+- Dates of the order endpoints (`orderDate`): ISO 8601 UTC, e.g. `"2026-10-23T03:00:00Z"` (confirmed after the
+  backend's QA). `apiTime()` in `shared/api-adapter.js` passes ISO through and still reads an older
+  `"YYYY-MM-DD HH:mm:ss"` form (as WIB) in case it comes back; Safari cannot parse that form on its own.
+- Activity: coin entries `{ type, client, points, at }`, gift entries `{ type, client, reward, at }` (the field that does
+  not apply is left out). `client` is always sent, masked (2 first + `***` + 3 last; `***` for ids of 5 characters or
+  fewer); the adapter keeps an entry without it and shows `***`, rather than losing it.
 - **Order detail** (`order/detail`, spec §66): HSB reads Tada's order live and passes it through:
   `{ status, orderReference, orderNumber, recipient, orderItems, payment, fees }`. `toOrder(detail, summary)` in
   `shared/api-adapter.js` reads it: items from `orderItems` (`itemName`, `itemType`, `quantity`, `status`;
@@ -347,8 +347,8 @@ the tap is tracked first. Reward cards use a native `onClick` and are fine.
 ## Waiting on others
 
 - **Backend (Tada integration):** the catalog changes of §3 and the `/app/point` paths of §4, on UAT when the backend
-  says so. Headers and envelope are settled (§4). Still open: the order detail's field names checked on a real Tada
-  order, and the zone of `orderDate` (GMT+7 or UTC).
+  says so. Headers, envelope and answers are settled (§4). Still open: the order detail's field names checked on a
+  real Tada order; the guests' access to `/activity` (being opened by the backend).
 - **Do not ship** the `/app/point` paths before the backend has them on UAT.
 - **App team, to confirm (from the review, §10):** the app calls `initWebview` also when there is no token (guests);
   otherwise the pages stay on their loading view (seen on UAT opened outside the app). The Deposit intent's

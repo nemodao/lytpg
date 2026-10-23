@@ -137,11 +137,9 @@ export function toPointBalancePage(available, expired, ledger, task) {
 export const ORDER_STATUSES = ['new', 'on process', 'completed', 'canceled', 'failed'];
 const orderStatus = (value) => String(value ?? '').trim().toLowerCase().replace(/^onprocess$/, 'on process');
 
-// Dates of the order endpoints. The backend's DTO sends "YYYY-MM-DD HH:mm:ss" with no zone (GMT+7 by its @JsonFormat,
-// 23 Oct 2026); Safari cannot parse that form, so it is read as +07:00 and given as ISO 8601 UTC, like every other
-// date the pages read. ISO values pass through.
-// API: the zone is still an open point with the backend developer (the database holds UTC): change WIB_OFFSET if the
-// final answer is UTC.
+// Dates of the order endpoints: ISO 8601 UTC ("2026-10-23T03:00:00Z", confirmed after the backend's QA, 23 Oct 2026),
+// which passes through. A "YYYY-MM-DD HH:mm:ss" value with no zone (an earlier setting of the backend; Safari cannot
+// parse it) is still read, as WIB (+07:00), and given as ISO UTC.
 const WIB_OFFSET = '+07:00';
 export const apiTime = (value) => {
   const match = /^(\d{4}-\d\d-\d\d)[ T](\d\d:\d\d(?::\d\d)?)$/.exec(String(value ?? '').trim());
@@ -240,11 +238,15 @@ export const toRewards = (catalog) =>
 // POST /app/point/activity (no token, no clientId; x-auth-key only) -> common.activity (spec §50). One list for everyone,
 // guests included: the latest trading-coin credits and the latest redemptions, each kind at most N (backend config),
 // newest first; the page sorts and interleaves them itself. Gift: { type, client, reward, at }; coin: { type, client,
-// points, at }; `client` masked by the backend, `at` ISO 8601 UTC. Entries of another kind, or missing a field, are dropped.
+// points, at }; `client` masked by the backend, `at` ISO 8601 UTC. Entries of another kind, or missing `at`, `reward`
+// (gift) or a positive `points` (coin), are dropped.
 export const toActivity = (answer) =>
   (answer?.activity ?? []).flatMap((item) => {
-    if (!item?.client || !item.at) return [];
-    if (item.type === 'gift' && item.reward) return [{ type: 'gift', client: item.client, reward: item.reward, at: item.at }];
-    if (item.type === 'coin' && item.points > 0) return [{ type: 'coin', client: item.client, points: item.points, at: item.at }];
+    if (!item?.at) return [];
+    // `client` is always sent, masked; a missing one (a null client id in the backend) reads "***", the backend's own
+    // mask for short ids, rather than losing the entry (spec §69).
+    const client = item.client || '***';
+    if (item.type === 'gift' && item.reward) return [{ type: 'gift', client, reward: item.reward, at: item.at }];
+    if (item.type === 'coin' && item.points > 0) return [{ type: 'coin', client, points: item.points, at: item.at }];
     return [];
   });
