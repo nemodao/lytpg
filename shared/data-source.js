@@ -84,25 +84,23 @@ const activityList = () => {
 // send the range of the date filter and ask for the next page as the user scrolls (spec §43, §44). The demo asks
 // once and filters and pages in the browser.
 // Guest mode (spec §53): the app opened the page without a token. API: decide it from the token the app gives (none =
-// guest). In this demo: ?source=api&guest=1. Guests call guest/tradingTask/get (no Authorization, no clientId; still
-// the x-auth-key header): the same answer as tradingTask/get for a user with no live account (today not_started, all
-// 0, accounts []), so the same adapter reads it. They never call an endpoint that needs a token.
+// guest). In this demo: ?source=api&guest=1. Guests have no trading task for now (spec §72, the backend's call): no
+// trading-task call at all, the programme reads as "no trading task" (no Earn tab, no "Earn more coins" card), and the
+// time is the device's. They never call an endpoint that needs a token.
 const GUEST = USE_API && new URLSearchParams(location.search).get('guest') === '1';
-const TASK_ENDPOINT = GUEST ? 'guest/tradingTask/get' : 'tradingTask/get';
-const taskGet = () => result(TASK_ENDPOINT);
+const taskGet = () => result('tradingTask/get');
 
 async function commonFromApi() {
   const activity = activityList(); // asked for at once, alongside the other calls
   if (GUEST) {
-    const [taskAnswer, ui] = await Promise.all([request(TASK_ENDPOINT), uiOnly()]);
-    const task = taskAnswer.result;
+    const ui = await uiOnly();
     return {
       guest: true,
       rewardStore: REWARD_STORE,
-      now: new Date(taskAnswer.timestamp).toISOString(),
+      now: new Date().toISOString(), // no server answer to take the time from
       balance: { available: 0, expiring: null },
-      program: { ...toProgram(task, null), joinRequirement: 'signup' },
-      accounts: toAccounts(task),
+      program: { ...toProgram(null, null), joinRequirement: 'signup' },
+      accounts: [],
       selectedAccountId: null,
       tiers: [],
       activity: await activity, // the recent activity API needs no token (spec §53)
@@ -158,6 +156,8 @@ function rewardsList() {
 async function pageFromApi(page) {
   if (GUEST && page === 'point-balance') return toPointBalancePage(null, null, null, null); // nothing to ask for
   if (GUEST && page === 'redemptions') return { orders: [], total: 0 }; // guests never reach it
+  if (GUEST && page === 'dashboard') return toDashboardPage(null, { ...(await uiOnly()), rewards: await rewardsList() });
+  if (GUEST && page === 'trading-task') return toTradingTaskPage(null, null); // no Earn tab for guests; opened directly
   if (page === 'store') return { rewards: await rewardsList() }; // the Reward Store and its reward page (spec §59)
   if (page === 'redemptions') {
     const first = toOrdersPage(await getOrders('app/point/orders', { pageNo: 1, pageSize: ORDERS_PAGE_SIZE }));
@@ -167,7 +167,7 @@ async function pageFromApi(page) {
   if (page === 'dashboard') return toDashboardPage(task, { ...(await uiOnly()), rewards: await rewardsList() });
   if (page === 'trading-task') {
     // No history call for a user without a trading task.
-    return toTradingTaskPage(task, task.tradingTask && !GUEST ? await result('tradingTask/getHistory') : null);
+    return toTradingTaskPage(task, task.tradingTask ? await result('tradingTask/getHistory') : null);
   }
   const tz = task.tradingTask ? { tzMinutes: task.program.tzMinutes } : {}; // without a task the backend uses GMT+7
   const [available, expired, ledger] = await Promise.all([

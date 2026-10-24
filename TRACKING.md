@@ -27,7 +27,7 @@ sent, and with which parameters.
 | `page` | `home` \| `earn` \| `coins` \| `orders` \| `store` \| `reward` | Page the event happened on (`orders`: Redemption history; `store`: the Reward Store, both tabs; `reward`: one reward's page) |
 | `client_id` | the user's client id | Signed-in users only, read from the app's token when the webview opens; not sent for guests. Joins the events to the backend's trades and coins. Not sent by the reference demo (no token) |
 | `theme` | `light` \| `dark` | Colour mode on screen |
-| `has_task` | `true` \| `false` | Whether the user has a trading task |
+| `has_task` | `true` \| `false` | Whether the user has a trading task (always `false` for guests for now, spec §72) |
 | `join_step` | `signup` \| `kyc` \| `deposit` \| `none` | Step the user still has to take before earning; `signup` = guest, not signed in (spec §53) |
 | `credit_mode` | `in-day` \| `delayed` \| `none` | How the programme credits coins |
 | `balance_range` | `0` \| `1-999` \| `1000-4999` \| `5000+` | Available coins, as a range (the exact balance is never sent) |

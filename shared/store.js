@@ -40,16 +40,17 @@ export function readEntry() {
 // The icon is a 3D gift box (assets/images/store/store-icon.webp). It sticks to the top like Loyalty's header: once the page
 // scrolls (.is-stuck, watchHeader in components.js) the icon and the title become one pill and shrink together with
 // the balance. The balance pill has a thin line between the coin and the number.
-export const storeHead = (ui, common, { back = '' } = {}) => (requestAnimationFrame(watchHeader), `
+// `balance: false` leaves the balance pill out (the loading and error views, spec §73: nothing to show yet).
+export const storeHead = (ui, common, { back = '', balance = true } = {}) => (requestAnimationFrame(watchHeader), `
   <header class="store-head">
     ${back ? `<a class="header-action store-head__back" href="${ui.esc(back)}" aria-label="${ui.t('orders.back')}" data-back data-track="loyalty_nav_click" data-track-target="back">${ui.icon('back')}</a>` : ''}
     <span class="store-head__brand${back ? ' store-head__brand--plain' : ''}">
       ${back ? '' : '<span class="store-head__icon"><img src="../assets/images/store/store-icon.webp" alt=""></span>'}
       <h1 class="store-head__title">${ui.t('store.title')}</h1>
     </span>
-    <span class="store-head__balance" aria-label="${ui.t('store.balance', { points: ui.num(common.balance.available) })}">
+    ${balance ? `<span class="store-head__balance" aria-label="${ui.t('store.balance', { points: ui.num(common.balance.available) })}">
       <span class="store-head__coin">${coin('coin--xs')}</span><span class="num">${ui.num(common.balance.available)}</span>
-    </span>
+    </span>` : ''}
   </header>`);
 
 

@@ -4,7 +4,7 @@
 // Events (spec §62, TRACKING.md): page view with `view` and `entry`; section views; category views; reward clicks;
 // the bottom bar.
 import { load } from '../shared/app.js';
-import { coin } from '../shared/components.js';
+import { coin, showStatus } from '../shared/components.js';
 import { STORE_CATEGORIES } from '../shared/api-adapter.js';
 import { initTracking, priceRange, setPageParams, track, trackView } from '../shared/tracking.js';
 import { backParam, categoryName, readEntry, rewardBadge, rewardHref, storeHead, withParams } from '../shared/store.js';
@@ -258,7 +258,7 @@ document.body.appendChild(nav);
 document.body.classList.add('has-nav');
 nav.addEventListener('click', (event) => {
   const button = event.target.closest('[data-tab]');
-  if (!button || button.dataset.tab === tab) return;
+  if (!button || button.dataset.tab === tab || common.view) return; // loading / error: the tabs wait for the data
   tab = button.dataset.tab;
   categoryFrom = 'tab';
   render();
@@ -296,4 +296,9 @@ app.addEventListener('click', (event) => {
 const closeSort = () => app.querySelector('[data-sort-sheet]')?.remove();
 document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeSort(); });
 
-render();
+// Loading or failed to load (spec §44, §73): the top bar without the balance, then the placeholder or the error card.
+// The bottom bar stays, so Back still leaves the store and the tabs still work.
+if (showStatus(ui, common, app, storeHead(ui, common, { balance: false }))) {
+  document.body.classList.add('store-look', 'store-look--fixed');
+  nav.querySelector(`[data-tab="${tab}"]`)?.setAttribute('aria-current', 'page');
+} else render();

@@ -51,11 +51,9 @@ rule.forEach(([input, want]) => { if (joinRequirementFrom(input) !== want) probl
 // An empty Terms & Conditions address hides the button, like null.
 if (toProgram({ tradingTask: true, program: { ...task.program, termsUrl: '' } }, null).termsUrl !== null) problems.push('toProgram: empty termsUrl should become null');
 if (toProgram({ tradingTask: true, program: { ...task.program, minHoldSeconds: 0 } }, null).minHoldSeconds !== 0) problems.push('toProgram: minHoldSeconds 0 not kept');
-// Guest mode (spec §53): guest/tradingTask/get reads like tradingTask/get for a user with no live account.
-const guestTask = api('guest-tradingTask-get');
-if (toAccounts(guestTask).length !== 0) problems.push('guest: expected no accounts');
-if (JSON.stringify(toProgram(guestTask, null).rateRange) !== JSON.stringify(mockCommon.program.rateRange)) problems.push('guest: program should match the signed-in one');
-if (toTradingTaskPage(guestTask, null).today.status !== 'not_started') problems.push('guest: today should be not_started');
+// Guest mode (spec §72): no trading-task call; the programme reads as "no trading task" and Earn's page still builds.
+if (toProgram(null, null).tradingTask !== false) problems.push('guest: no task should read as tradingTask false');
+if (toTradingTaskPage(null, null).today.status !== 'not_started') problems.push('guest: today should be not_started');
 // A user without a trading task.
 if (toProgram({ tradingTask: false }, null).tradingTask !== false) problems.push('toProgram: tradingTask false not kept');
 if (toAccounts({ tradingTask: false }).length !== 0) problems.push('toAccounts: expected no accounts without a task');

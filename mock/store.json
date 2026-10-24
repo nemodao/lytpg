@@ -13,6 +13,17 @@
       }
     },
     {
+      "title": "Page",
+      "states": [
+        "loading",
+        "error"
+      ],
+      "descriptions": {
+        "loading": "The page is waiting for its data: the top bar and grey placeholder cards; on the store the bottom bar stays (Back and the two tabs), on a reward's page Back is in the top bar.",
+        "error": "The data could not be loaded: a message and “Try again”. Back stays: in the store's bottom bar, or in the top bar on a reward's page (spec §73)."
+      }
+    },
+    {
       "title": "Coin Balance",
       "states": [
         "empty"
@@ -570,9 +581,30 @@
           "expiring": null
         },
         "program": {
+          "tradingTask": false,
+          "ended": null,
+          "creditMode": null,
+          "dailyMaxPoints": null,
+          "minHoldMinutes": null,
+          "minHoldSeconds": null,
+          "creditDelayDays": null,
+          "expiryDays": null,
+          "termsUrl": null,
+          "rateRange": null,
+          "tzMinutes": null,
           "joinRequirement": "signup"
         },
         "accounts": []
+      }
+    },
+    "loading": {
+      "common": {
+        "view": "loading"
+      }
+    },
+    "error": {
+      "common": {
+        "view": "error"
       }
     },
     "empty": {

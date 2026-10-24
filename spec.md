@@ -866,3 +866,23 @@ The order detail (§66) is wired from Tada's documentation only: a real answer e
 ## 71. The coin balance shrinks to fit (decided 23 Oct 2026, handoff 8)
 
 The balance number (Home, and the balance card on Coins) stays on one line. When it is wider than the room left next to Redeem, the whole number shrinks by the ratio that makes it fit, with no lower limit; it never wraps, is never cut and never runs under Redeem. Measured again on rotation, once the web font has loaded and whenever the number changes (the tour's count-up). Preview: state `big-balance`.
+
+## 72. Guests have no trading task, for now (decided 24 Oct 2026, handoff 8)
+
+The backend has no guest trading-task endpoint and told the developer guests do not need one, so for now a guest has no trading task. This replaces the Earn and API parts of §53: no `guest/tradingTask/get` call (the endpoint was only ever our proposal); the programme reads as "no trading task" for guests, as for a signed-in user without one: no Earn tab in the bottom bar, no "Earn more coins" card on Home, a 3-step tour (steps 1, 3, 4; `Finish tour` on step 4), no rate line in the sign-up sheet, the time from the device, and events with `has_task` = `false` and `credit_mode` = `none`. Everything else in §53 stands (balance 0, the sign-up sheet, rewards and activity, the Coins card). Earn opened directly shows "How to start" and the rules the front end holds, nothing to tap but Sign up / Log in; nothing links there. If product wants Earn back for guests, the backend adds the endpoint and §53 applies again.
+
+## 73. The Reward Store and a reward's page: loading and failed to load (decided 24 Oct 2026, handoff 8)
+
+Like the other pages (§44): while the data is on the way, the top bar and grey placeholder cards; when it could not be loaded, the error card with `Try again`. The balance pill is left out of the top bar (nothing to show yet). Back always stays: in the store, the bottom bar keeps Back and the two tabs (the tabs do nothing until the data is there); a reward's page has no bottom bar, so its Back is in the top bar, as on an order's details. Rule for any page: Back goes in the bottom bar only when the page has one, otherwise at the top left. Preview states `loading` and `error` on both.
+
+## 74. The Plan B switch lives in Firebase Remote Config (decided 24 Oct 2026, handoff 8)
+
+The developer reads Plan B (`common.rewardStore`, §61) from Firebase Remote Config, so it can be turned on and off from the Firebase console without a new build; accepted. Rules:
+
+- **UAT and production use separate switches** (a separate key or project), so testing Plan B on UAT never turns it on for real users.
+- **Waits at most 3 seconds** for Firebase. When it is slow or fails, the last value the device fetched is used; off only when the device has never fetched one. So a slow network never flips a user between the store and Tada from one visit to the next.
+- A change on the console reaches a user the next time the loyalty pages are opened, once the device's fetch interval has passed (30 seconds on UAT, 5 minutes in production); an open page keeps its value.
+
+## 75. Interface language: Indonesian or English, from the app (decided 24 Oct 2026)
+
+The pages will be in Indonesian. The app tells the pages its language: Indonesian → Indonesian; English and Chinese → English (no Chinese version). Replaces "Final UI language TBD" (§1, §8). How the app passes it, the Indonesian copy and number and date formats are still to settle.

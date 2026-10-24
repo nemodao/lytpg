@@ -9,7 +9,7 @@
         "guest": "Guest (not signed in)"
       },
       "descriptions": {
-        "guest": "Not signed in: “How to start” with four steps (Create your free account first), the rate line, “Coins per lot depend on your trading account type.” and Sign up / Log in in place of today's figures; then the rules and Terms; no account, no History tab, no trade button."
+        "guest": "Not signed in. Guests have no trading task for now (spec §72), so the Earn tab is hidden and nothing links here; opened directly, the page shows “How to start” (four steps, Sign up / Log in, no rate line) and the rules the front end holds; no account, no History tab, no trade button, no Terms."
       }
     },
     {
@@ -1380,6 +1380,17 @@
           "expiring": null
         },
         "program": {
+          "tradingTask": false,
+          "ended": null,
+          "creditMode": null,
+          "dailyMaxPoints": null,
+          "minHoldMinutes": null,
+          "minHoldSeconds": null,
+          "creditDelayDays": null,
+          "expiryDays": null,
+          "termsUrl": null,
+          "rateRange": null,
+          "tzMinutes": null,
           "joinRequirement": "signup"
         },
         "accounts": []

@@ -6,7 +6,7 @@
 // Events (spec §62, TRACKING.md): page view (`view` detail | missing, `entry`, the reward's parameters, which every event
 // of the page carries), Checkout (`outcome`), Learn how to earn coins, the guests' sign-up prompt, Back.
 import { load } from '../shared/app.js';
-import { coin } from '../shared/components.js';
+import { coin, showStatus } from '../shared/components.js';
 import { initTracking, priceRange, shortRange, track } from '../shared/tracking.js';
 import { backParam, categoryName, readEntry, rewardBadge, storeHead } from '../shared/store.js';
 
@@ -24,7 +24,7 @@ initTracking('reward', common, item ? {
   badge: item.badge || 'none', price_range: priceRange(item.points),
   affordable: guest ? undefined : common.balance.available >= item.points,
 } : { view: 'missing', entry, reward_id: id ?? undefined });
-if (!item) track('loyalty_error_view', { error_scope: 'reward', reward_count: page.rewards.length }); // 0: catalog empty or failed
+if (!item && !common.view) track('loyalty_error_view', { error_scope: 'reward', reward_count: page.rewards.length }); // 0: catalog empty or failed
 document.body.classList.add('store-look', 'store-look--fixed'); // the store's look, background fixed (store.css)
 
 // The user's balance against the price: enough, or how many more coins (with a bar).
@@ -114,4 +114,6 @@ app.addEventListener('click', (event) => {
 });
 document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeSheet(); });
 
-render();
+// Loading or failed to load (spec §44, §73): no bottom bar here, so Back stays in the top bar (as on an order's
+// details), then the placeholder or the error card.
+if (!showStatus(ui, common, app, storeHead(ui, common, { back, balance: false }))) render();

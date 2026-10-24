@@ -3,9 +3,9 @@
   Loyalty · Reward Store · one reward (spec §59): reward.html?id=<reward id>&back=<page to go back to>
   e.g. ?id=101 (Hot, a gadget), ?id=130 (cheap F&B voucher: enough coins), ?id=120 (New, a trip), ?id=109 (no category),
   ?id=999 (not in the catalog)
-  Data: the store's (mock/store.json), so the store's states apply: guest, empty, catalog-empty, no-travel, few-rewards,
-  plan-b
-  Shared states (guest, empty, needs-kyc, needs-deposit, expiring, activity-empty, plan-b) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
+  Data: the store's (mock/store.json), so the store's states apply: guest, loading, error, empty, catalog-empty,
+  no-travel, few-rewards, plan-b
+  Shared states (guest, empty, needs-kyc, needs-deposit, expiring, activity-empty, plan-b, big-balance) carry over between pages.   Theme: ?theme=dark|light (default follows the device)
 -->
 <html lang="en">
 <head>

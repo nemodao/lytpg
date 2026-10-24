@@ -222,16 +222,17 @@ export const loadMoreRow = (ui, failed) => (failed
 // "How it works" rules. One list, shown in the Trading Task's How it works tab and in the guided tour (step 2):
 // change it here and both change.
 // API: the holding-time rule is left out when `program.minHoldSeconds` is 0 (no minimum), the daily-maximum rule when
-// `program.dailyMaxPoints` is null, and the expiry rule when `program.expiryDays` is null.
+// `program.dailyMaxPoints` is null, the expiry rule when `program.expiryDays` is null, and the crediting rule when
+// `program.creditMode` is missing (no trading task: guests for now, spec §72).
 export function rulesList(ui, common) {
   const { program } = common;
-  const credit = program.creditMode === 'in-day'
-    ? ui.md('rule.credit.inDay', { minutes: program.creditWithinMinutes })
-    : ui.md(program.creditDelayDays === 1 ? 'rule.credit.delayed.one' : 'rule.credit.delayed', { days: program.creditDelayDays });
+  const credit = program.creditMode === 'in-day' ? ui.md('rule.credit.inDay', { minutes: program.creditWithinMinutes })
+    : program.creditMode === 'delayed' ? ui.md(program.creditDelayDays === 1 ? 'rule.credit.delayed.one' : 'rule.credit.delayed', { days: program.creditDelayDays })
+      : '';
   return `
     <ul class="rules">
       ${program.minHoldSeconds > 0 ? `<li><span>${program.minHoldSeconds % 60 ? ui.md('rule.hold.seconds', { seconds: program.minHoldSeconds }) : ui.md(program.minHoldMinutes === 1 ? 'rule.hold.one' : 'rule.hold', { minutes: program.minHoldMinutes })}</span></li>` : ''}
-      <li><span>${credit}</span></li>
+      ${credit ? `<li><span>${credit}</span></li>` : ''}
       ${program.expiryDays != null ? `<li><span>${ui.md(program.expiryDays === 1 ? 'rule.expire.one' : 'rule.expire', { days: program.expiryDays })}</span></li>` : ''}
       <li><span>${ui.md('rule.reset', { time: program.resetTime, tz: ui.t('tz') })}</span></li>
       ${program.dailyMaxPoints ? `<li><span class="num">${ui.md('rule.max', { points: ui.num(program.dailyMaxPoints) })}</span></li>` : ''}
