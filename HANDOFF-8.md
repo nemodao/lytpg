@@ -57,7 +57,7 @@ What to change in yours: **Back must stay.**
 
 ## 4. The Plan B switch in Firebase Remote Config (spec §74)
 
-Firebase Remote Config for the switch is accepted. Three changes in `core/remote-config/index.ts`:
+Firebase Remote Config for the switch is accepted. Four changes in `core/remote-config/index.ts`:
 
 1. **Separate UAT and production.** `.env.uat` and `.env.prod` point at the same Firebase project and app, and both
    read `reward_store`, so turning Plan B on to test it on UAT turns it on for real users. Give UAT its own switch
@@ -68,6 +68,10 @@ Firebase Remote Config for the switch is accepted. Three changes in `core/remote
    values in IndexedDB (`await ensureInitialized(config)`, then `getValue`). `false` only when nothing has ever been
    fetched. Today a slow network turns Plan B off for that visit and sends Redeem to Tada, even when the device
    already has `true`.
+4. **The default (no value ever fetched on that device) is the launch's mode: on.** The launch runs Plan B (owner,
+   24 Oct 2026), so a first visit must not fall back to Tada. Make `REWARD_STORE_DEFAULT` an environment setting
+   (for example `NEXT_PUBLIC_REWARD_STORE_DEFAULT=true` in `.env.uat` and `.env.prod`), so that when Tada is ready it
+   goes back to `false` with a config change, at the same time as the switch on the console.
 
 Also correct the comment at the top of the file: a change on the console reaches a user on the next full open of the
 pages after the fetch interval, not "within that time".

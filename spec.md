@@ -880,7 +880,8 @@ Like the other pages (§44): while the data is on the way, the top bar and grey 
 The developer reads Plan B (`common.rewardStore`, §61) from Firebase Remote Config, so it can be turned on and off from the Firebase console without a new build; accepted. Rules:
 
 - **UAT and production use separate switches** (a separate key or project), so testing Plan B on UAT never turns it on for real users.
-- **Waits at most 3 seconds** for Firebase. When it is slow or fails, the last value the device fetched is used; off only when the device has never fetched one. So a slow network never flips a user between the store and Tada from one visit to the next.
+- **Waits at most 3 seconds** for Firebase. When it is slow or fails, the last value the device fetched is used. So a slow network never flips a user between the store and Tada from one visit to the next.
+- **When the device has never fetched a value** (its first visit, Firebase slow or failing), the switch reads as the mode of the launch: **on (Plan B)**, since the launch runs Plan B (owner, 24 Oct 2026). The default is set per environment, so it can go back to off when Tada is ready, together with the switch on the console. Seen on UAT: on a first visit Firebase needs two calls and missed the 1.5-second wait, so the first page read off.
 - A change on the console reaches a user the next time the loyalty pages are opened, once the device's fetch interval has passed (30 seconds on UAT, 5 minutes in production); an open page keeps its value.
 
 ## 75. Interface language: English, Indonesian or Chinese, from the app (decided 24 Oct 2026, handoff 8)
