@@ -111,7 +111,8 @@ anything else → English.
   with the copy's `months`. **Times:** always `HH:mm` with a colon (`en-GB`), in every language.
 - **Calendar** (`shared/date-filter.js`): the month header is `cal.month`.
 - Not translated, by design: `HSB Loyalty`, tier names, `WIB`, `PIN`, the "HOT" artwork, and everything the backend
-  sends (reward names, descriptions, order item names).
+  sends (reward names, descriptions, order item names). Reward names and descriptions and the Terms & Conditions
+  document are in Indonesian only (owner, 24 Oct 2026): show them as sent in every language.
 - Events are unchanged (no event value is on-screen text).
 - Checked on every page, sheet and tour step in both languages at 375px: no text cut or overflowing; Indonesian is
   longer (a few titles take two lines, as designed).

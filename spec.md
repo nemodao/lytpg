@@ -894,4 +894,4 @@ The pages follow the app's language: Indonesian → Indonesian, Chinese → Chin
 - **Chinese text** uses the phone's own Chinese font (the bundled Inter has no Chinese letters); the page's `lang` is set so the phone picks it.
 - **How the app tells the pages:** with the token and theme when it opens them (`initWebview`); the field's name and values are to agree with the app team. The pages accept `id` (also Android's old `in`), `zh` (any `zh-…`) and treat anything else, or nothing, as English. Preview: `?lang=id|zh` (kept on every link), or Language in the States panel.
 - **Events** are unchanged: their values never carry on-screen text.
-- **Open:** whether the backend will send reward names and descriptions in the user's language, and a Terms & Conditions document per language.
+- **Backend content stays Indonesian** (owner, 24 Oct 2026): reward names and descriptions, and the Terms & Conditions document, exist in Indonesian only and show as sent in every language; the pages never translate them.
