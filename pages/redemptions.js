@@ -165,7 +165,7 @@ function orderView(order) {
       ${order.refunded && order.coinSpent != null ? notice(ui, { icon: 'check', tone: 'success', text: ui.t('orders.refunded', { points: ui.num(order.coinSpent) }) }) : ''}
       <div class="facts">
         ${copyable('order', 'order', ui.t('orders.number'), order.orderNumber, about(order))}
-        ${fact(ui.t('orders.date'), `${ui.date(order.orderDate)}, ${ui.time(order.orderDate)}`)}
+        ${fact(ui.t('orders.date'), ui.t('orders.dateTime', { date: ui.date(order.orderDate), time: ui.time(order.orderDate) }))}
         ${order.coinSpent == null ? '' : fact(ui.t('orders.coins'), coins(order.coinSpent))}
       </div>
     </section>

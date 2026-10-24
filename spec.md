@@ -883,6 +883,15 @@ The developer reads Plan B (`common.rewardStore`, §61) from Firebase Remote Con
 - **Waits at most 3 seconds** for Firebase. When it is slow or fails, the last value the device fetched is used; off only when the device has never fetched one. So a slow network never flips a user between the store and Tada from one visit to the next.
 - A change on the console reaches a user the next time the loyalty pages are opened, once the device's fetch interval has passed (30 seconds on UAT, 5 minutes in production); an open page keeps its value.
 
-## 75. Interface language: Indonesian or English, from the app (decided 24 Oct 2026)
+## 75. Interface language: English, Indonesian or Chinese, from the app (decided 24 Oct 2026, handoff 8)
 
-The pages will be in Indonesian. The app tells the pages its language: Indonesian → Indonesian; English and Chinese → English (no Chinese version). Replaces "Final UI language TBD" (§1, §8). How the app passes it, the Indonesian copy and number and date formats are still to settle.
+The pages follow the app's language: Indonesian → Indonesian, Chinese → Chinese (Simplified), anything else → English. Replaces "Final UI language TBD" (§1, §8). Built in handoff 8.
+
+- **Copy:** one file per language, the same keys: `copy/en.json`, `copy/id.json`, `copy/zh.json`. Indonesian and Chinese are translated by Claude; Chinese is final as it is (no human review, the owner's call). Indonesian will be reviewed later by a native speaker, through a review page listing every text by key, with the screen where it appears (to build later).
+- **Kept as they are in every language:** `HSB Loyalty`, the tier names (Micro, Standard, VIP, Platinum), `WIB`, `PIN`, the "HOT" artwork on the Earn tab and Earn's cup, and what the backend sends (reward names and descriptions, the activity's reward names, order item names).
+- **Numbers:** English and Chinese 12,450 and 3.5; Indonesian 12.450 and 3,5 (`copy.locale` `en-GB`, `id-ID`, `zh-CN`). Amounts in dollars likewise ($1.000 in Indonesian).
+- **Dates:** English `19 Oct 2026`, Indonesian `19 Okt 2026`, Chinese `2026年10月19日` (the copy's `date.format` and `months`); the calendar's month header `Oct 2026` / `Okt 2026` / `2026年10月` (`cal.month`). **Times** read `14:12` in every language (24-hour, with a colon, as in the rules' `00:00 WIB`).
+- **Chinese text** uses the phone's own Chinese font (the bundled Inter has no Chinese letters); the page's `lang` is set so the phone picks it.
+- **How the app tells the pages:** with the token and theme when it opens them (`initWebview`); the field's name and values are to agree with the app team. The pages accept `id` (also Android's old `in`), `zh` (any `zh-…`) and treat anything else, or nothing, as English. Preview: `?lang=id|zh` (kept on every link), or Language in the States panel.
+- **Events** are unchanged: their values never carry on-screen text.
+- **Open:** whether the backend will send reward names and descriptions in the user's language, and a Terms & Conditions document per language.

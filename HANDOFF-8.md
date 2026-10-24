@@ -90,8 +90,29 @@ page, the `/app/point` endpoints and the fixes of `HANDOFF-7.md` §10 faithful. 
    - Categories lists about 50 `next/link`s to `/reward?id=…`: check in a production build that they are not all
      prefetched (if they are, `prefetch={false}`).
 
-## Coming next (not in this handoff)
+## 6. Indonesian and Chinese (spec §75)
 
-- **Indonesian** (spec §75): the pages will be in Indonesian when the app's language is Indonesian, English otherwise
-  (the app's Chinese → English). How the app passes its language is to agree with the app team; the copy and formats
-  follow in a later handoff. Keep all text in the copy file as today.
+The pages now come in three languages and follow the app's: Indonesian → Indonesian, Chinese → Chinese (Simplified),
+anything else → English.
+
+- **Copy:** `copy/id.json` and `copy/zh.json` next to `copy/en.json`, the same 295 keys in the same order. Three new
+  keys in all three: `date.format` and `cal.month` (the order of day, month and year differs: `2026年10月19日`) and
+  `orders.dateTime` (the order's date and time, was `${date}, ${time}` in `pages/redemptions.js`).
+  `python3 tools/check-copy.py` checks that every file has every key, the same `{placeholders}` and the same `**`
+  marks; run it (or its port) whenever a key changes. Load only the user's language.
+- **Choosing the language** (`shared/app.js`): `pickLanguage(code)` maps `id` and Android's old `in` to `id`, any
+  `zh…` to `zh`, anything else (or nothing) to `en`; `LANG` is passed to `fetchCopy(lang)` (`shared/data-source.js`)
+  and sets `<html lang>` (`en`, `id`, `zh-CN`), which also makes the phone use its Chinese font (Inter has none).
+  In your app: read it from the app when it opens the page (`initWebview`, with the token and theme). **Agree the
+  field's name and values with the app team** and tell the owner. Preview: `?lang=id|zh`, kept on every link by
+  `ui.href` like `theme`.
+- **Numbers:** `ui.num` / `ui.lots` / `ui.signed` format with `copy.locale` (`en-GB`, `id-ID`, `zh-CN`) instead of
+  the fixed `en-US`: Indonesian reads 12.450 and 3,5. **Dates:** `ui.date` / `ui.dateYear` fill `date.format`
+  with the copy's `months`. **Times:** always `HH:mm` with a colon (`en-GB`), in every language.
+- **Calendar** (`shared/date-filter.js`): the month header is `cal.month`.
+- Not translated, by design: `HSB Loyalty`, tier names, `WIB`, `PIN`, the "HOT" artwork, and everything the backend
+  sends (reward names, descriptions, order item names).
+- Events are unchanged (no event value is on-screen text).
+- Checked on every page, sheet and tour step in both languages at 375px: no text cut or overflowing; Indonesian is
+  longer (a few titles take two lines, as designed).
+- Preview panel (demo only): a Language choice under Theme.

@@ -68,7 +68,7 @@ export function createDateFilter(ui, now, id) {
           <h2 class="t-title-s">${ui.t('filter.sheet')}</h2>
           <div class="cal-head">
             <button class="cal-nav" type="button" data-action="cal-month" data-step="-1" aria-label="${ui.t('cal.prev')}">${ui.icon('back')}</button>
-            <p class="t-body-strong grow num">${ui.list('months')[monthNumber - 1]} ${year}</p>
+            <p class="t-body-strong grow num">${ui.t('cal.month', { month: ui.list('months')[monthNumber - 1], year })}</p>
             <button class="cal-nav" type="button" data-action="cal-month" data-step="1" aria-label="${ui.t('cal.next')}" ${nextDisabled ? 'disabled' : ''}>${ui.icon('right')}</button>
           </div>
           <div class="cal num">

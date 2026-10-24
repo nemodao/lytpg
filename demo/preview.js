@@ -18,6 +18,7 @@ const stateGroups = [...(file.stateGroups || []), { title: 'Other', states: stat
 // Single-choice groups. Each maps to one URL parameter; the first option is the default and is left out of the URL.
 const groups = [
   { param: 'theme', title: 'Theme', options: [['auto', 'auto'], ['light', 'light'], ['dark', 'dark']] },
+  { param: 'lang', title: 'Language (spec §75)', options: [['en', 'English'], ['id', 'Bahasa Indonesia'], ['zh', '中文']] },
 ];
 const current = (group) => {
   const value = params.get(group.param);
@@ -52,8 +53,7 @@ root.innerHTML = `
         ? [['', group.defaultLabel || 'Default', group.defaultDescription || ''], ...group.states.map((name) => [name, (group.labels || {})[name] || name, (group.descriptions || {})[name] || ''])]
           .map(([value, label, desc]) => `<label data-desc="${desc.replace(/"/g, '&quot;')}"><input type="radio" name="state-group-${index}" data-state value="${value}" ${(value ? active.has(value) : !group.states.some((name) => active.has(name))) ? 'checked' : ''}>${label}</label>`).join('')
         : group.states.map((name) => `<label data-desc="${((group.descriptions || {})[name] || '').replace(/"/g, '&quot;')}"><input type="checkbox" name="state" data-state value="${name}" ${active.has(name) ? 'checked' : ''}>${(group.labels || {})[name] || name}</label>`).join('')}`).join('')}
-    <p class="preview__title">Theme</p>
-    ${groups.map(groupMarkup).join('')}
+    ${groups.map((group) => `<p class="preview__title">${group.title}</p>${groupMarkup(group)}`).join('')}
     <button class="preview__reset" type="button">Reset to default</button>
   </div>
   <button class="preview__toggle" type="button" aria-expanded="false">States${active.size ? ` (${active.size})` : ''}</button>`;

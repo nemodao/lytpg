@@ -5,6 +5,19 @@ import { fetchCommon, fetchCopy, fetchPage, fetchPreview } from './data-source.j
 
 const params = new URLSearchParams(location.search);
 
+// Interface language (spec §75): Indonesian or Chinese when the app is in that language, English otherwise.
+// API: the app gives its language when it opens the page (in initWebview, with the token and theme; the field's name
+// is to agree with the app team). Android may send the old code `in` for Indonesian. In this demo: ?lang=id|zh|en.
+export const LANGUAGES = ['en', 'id', 'zh'];
+export const pickLanguage = (code) => {
+  const base = String(code || '').toLowerCase().split(/[-_]/)[0];
+  if (base === 'id' || base === 'in') return 'id';
+  if (base === 'zh') return 'zh';
+  return 'en';
+};
+export const LANG = pickLanguage(params.get('lang'));
+document.documentElement.lang = { en: 'en', id: 'id', zh: 'zh-CN' }[LANG]; // also picks the system font for Chinese
+
 // No long-press menu (Android) or right-click menu: the pages should feel like the app (spec §48).
 document.addEventListener('contextmenu', (event) => event.preventDefault());
 
@@ -31,7 +44,6 @@ function merge(target, patch) {
 }
 
 const WIB = 'Asia/Jakarta';
-const NUMBER_LOCALE = 'en-US'; // spec §2: comma for thousands, dot for decimals, e.g. 3,100 and 3.5
 
 const escapeHtml = (value) =>
   String(value).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -45,9 +57,13 @@ function makeUi(copy, common) {
     return copy[key];
   };
 
-  const integer = new Intl.NumberFormat(NUMBER_LOCALE);
-  const oneDecimal = new Intl.NumberFormat(NUMBER_LOCALE, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  const hourMinute = new Intl.DateTimeFormat(copy.locale, { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: WIB });
+  // Numbers follow the language (spec §75): en and zh 3,100 and 3.5 (spec §2); id 3.100 and 3,5.
+  const integer = new Intl.NumberFormat(copy.locale);
+  const oneDecimal = new Intl.NumberFormat(copy.locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  // "19 Oct 2026", "19 Okt 2026", "2026年10月19日": the copy's `date.format` with its month names.
+  const fullDate = (iso) => { const [year, month, day] = dayKey(iso).split('-'); return fill(text('date.format'), { day: Number(day), month: copy.months[Number(month) - 1], year }, String); };
+  // Times read 14:12 in every language (id-ID would write 14.12; the rules' "00:00 WIB" keeps the colon too).
+  const hourMinute = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: WIB });
   const dayKey = (iso) => new Intl.DateTimeFormat('en-CA', { timeZone: WIB }).format(new Date(iso));
   // API: `common.now` is the server's current time. The mock pins it so the demo always looks the same; with a real
   // API send the real time (or drop the field and use the device clock here).
@@ -70,9 +86,9 @@ function makeUi(copy, common) {
     // "12 Oct" — month names come from the copy file so they follow the UI language.
     // Arrays from the copy file (month and weekday names).
     list: (key) => text(key),
-    dateYear: (iso) => { const [year, month, day] = dayKey(iso).split('-'); return `${Number(day)} ${copy.months[Number(month) - 1]} ${year}`; },
+    dateYear: fullDate,
     // Day, month and year, always: "19 Oct 2026" (spec §48; replaces the "year only when not this year" rule of §47).
-    date: (iso) => { const [year, month, day] = dayKey(iso).split('-'); return `${Number(day)} ${copy.months[Number(month) - 1]} ${year}`; },
+    date: fullDate,
     time: (iso) => hourMinute.format(new Date(iso)),
     dayKey,
     isToday: (iso) => dayKey(iso) === today,
@@ -85,6 +101,7 @@ function makeUi(copy, common) {
       const carried = [...new Set([...states, ...activeStates.filter((name) => SHARED_STATES.includes(name))])];
       if (carried.length) query.set('state', carried.join(','));
       if (params.get('theme')) query.set('theme', params.get('theme'));
+      if (params.get('lang')) query.set('lang', params.get('lang'));
       const qs = query.toString().replace(/%2C/g, ',');
       return qs ? `${file}?${qs}` : file;
     },
@@ -95,7 +112,7 @@ function makeUi(copy, common) {
 // Loads everything a page needs. Data comes only from data-source.js (mock today, API later).
 // Returns { common, page, ui }: `common` and `page` are plain data (see DATA.md), `ui` is the formatting helper set.
 export async function load(page) {
-  const [common, pageData, copy, states] = await Promise.all([fetchCommon(), fetchPage(page), fetchCopy(), fetchPreview(page)]);
+  const [common, pageData, copy, states] = await Promise.all([fetchCommon(), fetchPage(page), fetchCopy(LANG), fetchPreview(page)]);
   const data = { common, page: structuredClone(pageData) };
   // PREVIEW ONLY: ?state=a,b merges named overrides over the data, in the order they are declared in the mock file.
   for (const name of Object.keys(states)) {

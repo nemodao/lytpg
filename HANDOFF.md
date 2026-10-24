@@ -28,7 +28,7 @@ Run it: `python3 -m http.server 8000` in this folder, then open `http://localhos
 | Product rules and decisions | `spec.md` — sections 1–8 are the original brief, later sections are dated decisions and **the later one wins**. Start with the "How to read this spec" note at the top. |
 | Data shapes (the API contract) | `DATA.md` — every field, its type, an example and what it controls |
 | Every UI situation to support | `STATES.md` — each named state, what it shows and exactly which data it changes |
-| All on-screen text | `copy/en.json` — key → text. No text is written in the JS or HTML. `{name}` = placeholder, `**bold**` = bold |
+| All on-screen text | `copy/en.json`, `copy/id.json`, `copy/zh.json` (one per language, the same keys; spec §75, `HANDOFF-8.md` §6) — key → text. No text is written in the JS or HTML. `{name}` = placeholder, `**bold**` = bold |
 | Design tokens | `tokens/tokens.json` (source) → `tokens/tokens.css` (generated). Light on `:root`, dark on `[data-theme="dark"]` |
 | Images | `assets/images/` (pages), `assets/tour/` (tour). Already sized at 3x their display size |
 | What changed since the last drop | `CHANGELOG.md`, `VERSION.txt`, and from the second drop on a `CHANGES-since-handoff-N.diff` |

@@ -57,7 +57,7 @@ Heading `--font-heading-h1` tới `h4` là cỡ desktop, không dùng trên mobi
 - `API/`: tài liệu API nội bộ và trao đổi với backend. **Không đưa lên git** (đã nằm trong `.gitignore`).
 - `mock/api/`: response mẫu đúng hình dạng API thật, một file mỗi endpoint; phải khớp với dữ liệu trong `mock/*.json` (lệnh check ở trên sẽ báo nếu lệch).
 - `mock/`: dữ liệu mẫu. `common.json` dùng chung; mỗi trang một file gồm `default` và `states` (mỗi state là phần ghi đè).
-- `copy/en.json`: toàn bộ chữ trên UI. Không viết chữ thẳng vào trang.
+- `copy/`: toàn bộ chữ trên UI, mỗi ngôn ngữ một file cùng bộ key: `en.json` (gốc), `id.json` (tiếng Indonesia), `zh.json` (tiếng Trung giản thể) (spec §75). Không viết chữ thẳng vào trang. Thêm hay sửa key thì sửa cả ba file rồi chạy `python3 tools/check-copy.py` (báo thiếu key, sai `{placeholder}` hay `**`). Xem ngôn ngữ khác bằng `?lang=id|zh`, hoặc mục Language trong bảng States.
 - `assets/fonts/`: font woff2 đóng gói sẵn. Không dùng Google Fonts.
 - `assets/images/`: hình đã thu về đúng **3 lần kích thước hiển thị lớn nhất** (đo ở màn hình 430px). Hình lớn (quà, cup) dùng WebP; icon nhỏ dùng PNG. File gốc để ở `Design Elements/`, không đưa vào web.
 - `review/`: mockup review element.

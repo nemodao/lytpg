@@ -85,7 +85,7 @@ def script_bundle(page):
 
 
 def data_bundle(page):
-    files = ['mock/common.json', f'mock/{MOCK_OF.get(page, page)}.json', 'copy/en.json', 'demo/intents.en.json']
+    files = ['mock/common.json', f'mock/{MOCK_OF.get(page, page)}.json', 'copy/en.json', 'copy/id.json', 'copy/zh.json', 'demo/intents.en.json']
     # ?source=api also works offline: the sample API answers and the UI-only parts it reads are inlined too.
     files += sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'mock' / 'api').glob('*.json'))
     files += [f for f in ('mock/dashboard.json',) if f not in files]

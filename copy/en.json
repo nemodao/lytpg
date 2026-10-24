@@ -14,6 +14,8 @@
     "Nov",
     "Dec"
   ],
+  "date.format": "{day} {month} {year}",
+  "cal.month": "{month} {year}",
   "tz": "WIB",
   "unit.points": "coins",
   "unit.lot": "lot",
@@ -229,6 +231,7 @@
   "orders.status.canceled": "Cancelled",
   "orders.status.failed": "Failed",
   "orders.updated": "Updated {date}, {time}",
+  "orders.dateTime": "{date}, {time}",
   "orders.number": "Order number",
   "orders.date": "Order date",
   "orders.coins": "Coins spent",

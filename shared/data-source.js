@@ -2,7 +2,7 @@
 //
 //   fetchCommon()      -> data shared by all pages          (shape: mock/common.json)
 //   fetchPage(page)    -> data of one page                  (shape: the "default" object of mock/<page>.json)
-//   fetchCopy()        -> UI strings, key -> text           (copy/en.json; swap the file to localise)
+//   fetchCopy(lang)    -> UI strings, key -> text           (copy/<lang>.json: en, id or zh, spec §75)
 //   fetchPreview(page) -> PREVIEW ONLY: the named state overrides used by ?state=...; return {} with a real API
 //
 //   fetchOrder(ref)    -> one reward order, for Redemption history (spec §52)
@@ -214,7 +214,8 @@ export const fetchOrder = async (ref) => {
   return toOrder(detail, summary);
 };
 
-export const fetchCopy = () => getJSON('../copy/en.json');
+// One file per language, the same keys (tools/check-copy.py checks them). `lang` comes from shared/app.js.
+export const fetchCopy = (lang) => getJSON(`../copy/${lang}.json`);
 
 // PREVIEW ONLY: state overrides for the ?state= switcher. With a real API this returns {} (no states).
 export const fetchPreview = (page) => getJSON(`../mock/${page}.json`).then((file) => file.states);
