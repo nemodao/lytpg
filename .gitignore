@@ -19,3 +19,6 @@ pages/_*
 
 # Playwright for tools/check-tracking.mjs (npm install --no-save playwright)
 node_modules/
+
+# Documents from the front-end developer (may hold UAT screenshots)
+Thong's documents/
