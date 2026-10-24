@@ -89,6 +89,16 @@ page, the `/app/point` endpoints and the fixes of `HANDOFF-7.md` §10 faithful. 
      screen the order may flip. If it does, open the sheet from a native `onClick`, as the reward cards do.
    - Categories lists about 50 `next/link`s to `/reward?id=…`: check in a production build that they are not all
      prefetched (if they are, `prefetch={false}`).
+3. **`tradingTask/get` is asked twice** on Earn, Coins and the other signed-in pages (once for the common data, once
+   for the page), seen on UAT. The reference asks once per page load and reuses the answer (the `cache` in
+   `request()`, `shared/data-source.js`). Minor: reuse the common call's answer.
+
+**Checked on UAT** (24 Oct 2026, the deployed `uat` build, as a guest and signed in with a test account, every
+page): every call is answered with `success: true` (the timestamp with decimals is accepted), guests send
+`clientId: 0` and call only the activity and the catalog, no mock data shows, `client_id` is on every signed-in
+event, the Redemption history's empty view, the unknown reward's view and an order that cannot be loaded show as
+designed. Seen live: on a phone's first visit Plan B read as off (`redeem_mode` = `tada` on the first page, `store`
+on the next ones): the 1.5-second wait of §4.
 
 ## 6. Indonesian and Chinese (spec §75)
 
