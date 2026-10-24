@@ -3,6 +3,26 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 8 — Three languages, a safe Plan B switch, fixes from the review (24 Oct 2026)
+
+**Full description for developers: `HANDOFF-8.md`.** Spec §71–§75.
+
+- The pages come in English, Indonesian and Chinese (Simplified), following the app's language; Indonesian numbers
+  and dates (12.450, 19 Okt 2026), Chinese dates (2026年10月19日); times 14:12 everywhere. Reward names,
+  descriptions and Terms stay as the backend sends them (Indonesian).
+- Plan B switch in Firebase Remote Config: separate UAT and production, waits 3 s, keeps the last value fetched, and
+  reads as on when a device has never fetched it (the launch runs Plan B).
+- Guests have no trading task for now (no Earn tab, no "Earn more coins" card, a 3-step tour), until the backend's
+  guest endpoint is on UAT.
+- Reward Store and reward page: loading and error views, with Back always reachable.
+- The coin balance shrinks to fit its column instead of running under Redeem.
+- Fixes for the developer from the review of the handoff 7 conversion and the UAT check (`HANDOFF-8.md` §5).
+- Files: new `copy/id.json`, `copy/zh.json`, `tools/check-copy.py`; changed `shared/app.js`, `shared/data-source.js`,
+  `shared/components.js` / `.css`, `shared/store.js`, `shared/date-filter.js`, `pages/store.js`, `pages/reward.js`,
+  `pages/redemptions.js`, `copy/en.json` (3 new keys), mock guest states; removed
+  `mock/api/guest-tradingTask-get.json`. `DATA.md` unchanged; `STATES.md` changed (`big-balance`, store `loading` /
+  `error`, guest descriptions).
+
 ## Handoff 7 — Reward Store (Plan B) and the /app/point API (23 Oct 2026)
 
 **Full description for developers: `HANDOFF-7.md`.** Spec §59–§70.

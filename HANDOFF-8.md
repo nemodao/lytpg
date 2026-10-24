@@ -1,8 +1,22 @@
-# Handoff 8 — what changed since handoff 7 (in progress)
+# Handoff 8 — what changed since handoff 7
 
 **Who this is for:** developers (and their AI assistants) who have already applied handoff 7, or are applying it now.
-Everything not named here is unchanged. Behaviour: `spec.md` §71 on. Exact line changes:
+Everything not named here is unchanged. Behaviour: `spec.md` §71–§75. Exact line changes:
 `CHANGES-since-handoff-7.diff` in the package.
+
+**In one line:** three languages (English, Indonesian, Chinese) picked from the app's language; the Plan B switch in
+Firebase made safe (separate UAT and production, a longer wait, the last value kept, on by default since the launch
+runs Plan B); guests stay without a trading task; Back on the store's loading and error views; a balance that shrinks
+to fit; and the fixes from the review of your handoff 7 work.
+
+| § | What | You |
+|---|---|---|
+| 1 | The coin balance shrinks to fit its column | New |
+| 2 | Guests have no trading task, for now | Already done in your `bf4222e`; one small fix (the crediting rule) |
+| 3 | Store and reward page: loading and error views keep Back | Change yours |
+| 4 | Plan B switch in Firebase: 4 changes | Change yours (the important one: separate UAT and production) |
+| 5 | Fixes from the review (event sent twice, two checks on a phone, one call made twice) | Fix |
+| 6 | Indonesian and Chinese | New; ask the app team how the app passes its language |
 
 ---
 
@@ -131,3 +145,17 @@ anything else → English.
 - Checked on every page, sheet and tour step in both languages at 375px: no text cut or overflowing; Indonesian is
   longer (a few titles take two lines, as designed).
 - Preview panel (demo only): a Language choice under Theme.
+
+## Waiting on others
+
+- **Backend (sent by the owner 24 Oct 2026):** `tradingTask/get` adds `accounts[].group`,
+  `accounts[].lifetimeDeposit` and `tiers[]` (spec §51; today they come back null / missing on UAT, so the tier
+  label, the upgrade row and the tier table do not show), and `guest/tradingTask/get` (guests' Earn, spec §53). When
+  both are on UAT, they are tested together and guest Earn comes back in a later handoff; until then keep §2.
+- **Backend:** sample rewards in the UAT catalog (it answers `rewards: []`), so the rewards grid, the store and the
+  reward page can be checked with real data.
+- **App team, through you:** the name and values of the language field (§6); `initWebview` also for guests; the
+  Deposit intent's parameter names (from `HANDOFF-7.md`).
+- **Order detail:** still waits for the Tada integration to be live (`HANDOFF-7.md`, spec §70). On UAT, `order/detail`
+  answers `ERROR_TADA_UNAVAILABLE` today; the error view shows, as designed.
+
