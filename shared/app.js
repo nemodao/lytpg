@@ -59,7 +59,8 @@ function makeUi(copy, common) {
 
   // Numbers follow the language (spec §75): en and zh 3,100 and 3.5 (spec §2); id 3.100 and 3,5.
   const integer = new Intl.NumberFormat(copy.locale);
-  const oneDecimal = new Intl.NumberFormat(copy.locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  // Lots: up to 2 decimals, the size of the smallest MT5 order (0.01), and no trailing zeros: 11.02, 1.5, 10 (spec §79).
+  const lotNumber = new Intl.NumberFormat(copy.locale, { maximumFractionDigits: 2 });
   // "19 Oct 2026", "19 Okt 2026", "2026年10月19日": the copy's `date.format` with its month names.
   const fullDate = (iso) => { const [year, month, day] = dayKey(iso).split('-'); return fill(text('date.format'), { day: Number(day), month: copy.months[Number(month) - 1], year }, String); };
   // Times read 14:12 in every language (id-ID would write 14.12; the rules' "00:00 WIB" keeps the colon too).
@@ -79,8 +80,8 @@ function makeUi(copy, common) {
     md: (key, vars = {}) => escapeHtml(fill(text(key), vars, String)).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'),
     num: (value) => integer.format(value),
     signed: (value) => (value < 0 ? '−' : '+') + integer.format(Math.abs(value)),
-    lots: (value) => oneDecimal.format(value),
-    // Spec examples: "1,0 lot", "0,5 lot", "3,5 lots".
+    lots: (value) => lotNumber.format(value),
+    // "1 lot", "0.5 lot", "0.01 lot", "3.5 lots", "0 lots".
     lotUnit: (value) => text(value > 0 && value <= 1 ? 'unit.lot' : 'unit.lots'),
     ptUnit: (value) => text(value === 1 ? 'unit.pt' : 'unit.pts'),
     // "12 Oct" — month names come from the copy file so they follow the UI language.

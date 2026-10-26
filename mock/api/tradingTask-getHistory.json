@@ -26,8 +26,8 @@
       },
       {
         "date": "2026-10-10",
-        "lots": 4.2,
-        "points": 360,
+        "lots": 11.02,
+        "points": 940,
         "status": "credited",
         "capped": false
       },
@@ -54,8 +54,8 @@
       },
       {
         "date": "2026-09-29",
-        "lots": 0.9,
-        "points": 80,
+        "lots": 0.02,
+        "points": 2,
         "status": "credited",
         "capped": false
       },

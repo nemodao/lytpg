@@ -911,3 +911,11 @@ The backend has put `guest/tradingTask/get` (G-1) and the tier fields of §51 (G
 - **Guests:** the app calls `initWebview` also without a token; the pages then run as a guest (§53). Settled.
 - **Deposit from the tier sheet:** the developer passes the account and the amount (§51) and handles them on the client portal side himself. Settled.
 
+
+## 79. Lots show up to 2 decimals (decided 26 Oct 2026, handoff 10)
+
+Bug found on UAT: a day of 11.02 lots read "11.0 lots" (the page rounded every lot figure to one decimal, so a 0.01-lot trade read "0.0 lots"). The smallest MT5 order is 0.01 lot, so lots now show **up to 2 decimals, without trailing zeros**: `11.02 lots`, `1.5 lots`, `10 lots`, `0.01 lot`, `0 lots` (Indonesian `11,02 lot`). Applies to "You traded" on Earn's Today card and to every day of the Earn history. Replaces the one-decimal examples of earlier sections ("2.0 lots" now reads "2 lots").
+
+Also: in the tier sheet, the amount deposited rounds **down** to whole dollars and the amount still to deposit rounds up (as the Deposit button's amount does), so "$999 of $1,000 deposited" never reads as "$1,000 of $1,000" next to "Deposit $1 more".
+
+**Open, for product:** "You traded" shows `today.lotsValid` (lots already turned into coins), so on a capped day it stops rising: a client who closed 31.02 lots read 20.2. The alternative is `today.lots` (every valid closed position, coins or not). Note: the Earn history's `days[].lots` is also the converted figure, so choosing `today.lots` for Today would need the backend to add the total to the history too, or the Today card and today's history row would differ.

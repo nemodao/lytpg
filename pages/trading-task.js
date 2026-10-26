@@ -71,7 +71,9 @@ const tierBadge = (item) => (item.eligible && tierAt(item) >= 0
   ? `<span class="badge tier tier--${tiers[tierAt(item)].key}">${tierName(tiers[tierAt(item)])}</span>`
   : '');
 const maxRate = (rates) => Math.max(0, ...rates.map((rate) => rate.ptsPerLot));
-const usd = (amount) => ui.t('money.usd', { amount: ui.num(Math.ceil(amount)) });
+// Whole dollars: amounts still to deposit round up (the Deposit button's amount does too), what was deposited rounds
+// down, so "$999 of $1,000" never reads as reached.
+const usd = (amount, round = Math.ceil) => ui.t('money.usd', { amount: ui.num(round(amount)) });
 
 // The hero always keeps the sky and the cup; the Today card under the cup changes with the page state (spec §23).
 // Ended: the programme is over. The page shows only this message under the cup: no figures, no account, no rules or
@@ -266,7 +268,7 @@ function upgradeSheet() {
     const missing = deposited == null ? 0 : Math.max(0, Math.ceil(target.minDeposit - deposited));
     const progress = deposited == null ? '' : `
       <div class="upgrade-progress">
-        <p class="t-caption c-2 num">${ui.t('upgrade.progress', { deposited: usd(deposited), target: usd(target.minDeposit) })}</p>
+        <p class="t-caption c-2 num">${ui.t('upgrade.progress', { deposited: usd(deposited, Math.floor), target: usd(target.minDeposit) })}</p>
         <span class="upgrade-progress__bar"><i style="width:${Math.min(100, Math.round((deposited / target.minDeposit) * 100))}%"></i></span>
         <p class="t-body num">${deposited < target.minDeposit
           ? ui.md('upgrade.need', { amount: usd(target.minDeposit - deposited), tier: tierName(target) })
