@@ -102,13 +102,13 @@ function progressCard() {
   const hasTrades = today.lots > 0;
   // Same Today panel as the Dashboard's task card, laid flat on the blend card (spec §15).
   const foot = (icon, text) => `<div class="today__foot today__foot--icon num">${ui.icon(icon, 'icon--sm')}<span>${text}</span></div>`;
-  // API: `today.status` decides the line. Lots and coins only rise once coins have arrived, so right after the first
-  // trade of the day the card can read 0 lots and 0 coins while the status is already "earning".
+  // API: `today.status` decides the line. Lots are the positions closed today (spec §79); their coins arrive up to 15
+  // minutes later, so right after a trade the card can read some lots and 0 coins while the status is "earning".
   let footer;
   if (today.capped) { footer = foot('trophy', ui.t('task.capped')); trackView('loyalty_daily_cap_view'); }
   else if (today.status === 'earning') footer = foot('clock', ui.t('tt.status.earning'));
   // `pending` (delayed programmes): coins that are not credited yet are never shown, so no line at all (spec §41).
-  // Checked before "no trade yet": while coins wait, the lots read 0 although the user has traded (spec §47).
+  // Checked before "no trade yet" (spec §47).
   else if (today.status === 'pending') footer = '';
   else if (!hasTrades) footer = foot('chart', ui.t('tt.empty.body'));
   else if (today.status === 'credited') footer = foot('check', ui.t('tt.status.credited'));

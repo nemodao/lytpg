@@ -84,7 +84,7 @@ Example file: `mock/trading-task.json` (`default`)
 
 | Field | Type | Example | Meaning |
 |---|---|---|---|
-| `today.lots` | number | `3.5` | Lots already counted for coins today (the API's today.lotsValid). It rises together with today.points, when the coins of a closed position arrive. |
+| `today.lots` | number | `4.3` | Lots traded today: every valid position closed today (the API's today.lots), whether its coins have arrived or not; it keeps rising after the daily maximum. Up to 2 decimals (spec §79). |
 | `today.points` | number | `310` | Coins earned today. |
 | `today.status` | "not_started" | "earning" | "credited" | "pending" | `"earning"` | Where today's coins stand. Picks the line under the figures: earning = coins are arriving (shown even while lots and coins still read 0), credited = all in the balance, not_started = no trade yet, pending (delayed programmes) = no line. |
 | `today.capped` | boolean | `false` | true when today's maximum is reached. |

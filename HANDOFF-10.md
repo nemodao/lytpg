@@ -25,8 +25,17 @@ figure to one decimal (a 0.01-lot trade read "0.0 lots").
 button's `data-amount` already did), the amount deposited in "$… of $… deposited" rounds down. Before, $999.50
 deposited read "$1,000 of $1,000 deposited" next to "Deposit $1 more".
 
-## Open, for product (spec §79)
+## 3. "You traded" shows the lots actually traded (spec §79)
 
-"You traded" reads `today.lotsValid` (lots already turned into coins), so it stops rising on a capped day (31.02
-lots closed, 20.2 shown). Product decides whether it should read `today.lots`. Until then, no change. If it does
-change, the history's `days[].lots` (also the converted figure) needs the backend to send the total too.
+Decided by the owner (26 Oct 2026). Found on UAT: a client who closed 31.02 lots on a capped day read 20.2.
+
+- **Reference** (`shared/api-adapter.js`, `toToday`): `today.lots` (the API's `today.lots`: every valid position
+  closed today, coins arrived or not, still rising after the daily maximum) instead of `today.lotsValid` (lots
+  already turned into coins, which stops at the cap). `DATA.md` updated.
+- **Yours:** `core/data-source/api-adapter.ts`, `toToday`: `lots: today.lots ?? 0`.
+- What changes on screen: right after a trade the card reads its lots and 0 coins, with "Coins are being credited…",
+  until the coins arrive; on a capped day the lots keep rising; a delayed programme shows the day's lots and 0 coins.
+- Mock: `today.lots` 4.3 by default (the sample answer's `lots`), 0.5 in `first-trade`, 31.02 in `capped`, 2 in
+  `delayed`.
+- Not changed: the Earn history's rows still read `days[].lots`, the converted figure, until the backend sends the
+  lots traded per day too; until then today's row can read fewer lots than the Today card.

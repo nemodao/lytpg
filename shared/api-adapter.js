@@ -78,11 +78,12 @@ export const toBalance = (summary) => ({
   expiring: summary.expiring > 0 ? { points: summary.expiring } : null,
 });
 
-// tradingTask/get -> Earn's `today`. "You traded" is `lotsValid` (lots already counted for coins), so it matches the
-// lots of the history rows and rises together with `points`.
+// tradingTask/get -> Earn's `today`. "You traded" is `lots`: every valid position closed today, whether its coins have
+// arrived or not, and still rising after the daily maximum (spec §79; was `lotsValid`, the lots already turned into
+// coins, which stops at the cap).
 const toToday = (task) => {
   const today = task?.today ?? {};
-  return { lots: today.lotsValid ?? 0, points: today.points ?? 0, status: today.status ?? 'not_started', capped: today.capped === true };
+  return { lots: today.lots ?? 0, points: today.points ?? 0, status: today.status ?? 'not_started', capped: today.capped === true };
 };
 
 // The Home page's data (spec §49). Nothing on Home comes from tradingTask/get any more. `rewards` comes from HSB's
