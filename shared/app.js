@@ -6,8 +6,8 @@ import { fetchCommon, fetchCopy, fetchPage, fetchPreview } from './data-source.j
 const params = new URLSearchParams(location.search);
 
 // Interface language (spec §75): Indonesian or Chinese when the app is in that language, English otherwise.
-// API: the app gives its language when it opens the page (in initWebview, with the token and theme; the field's name
-// is to agree with the app team). Android may send the old code `in` for Indonesian. In this demo: ?lang=id|zh|en.
+// API: the app adds its language to the page's address, ?lang=<code> (app team, 26 Oct 2026); keep it on every link
+// between pages. Android may send the old code `in` for Indonesian. In this demo too: ?lang=id|zh|en.
 export const LANGUAGES = ['en', 'id', 'zh'];
 export const pickLanguage = (code) => {
   const base = String(code || '').toLowerCase().split(/[-_]/)[0];

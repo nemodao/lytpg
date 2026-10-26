@@ -893,7 +893,7 @@ The pages follow the app's language: Indonesian → Indonesian, Chinese → Chin
 - **Numbers:** English and Chinese 12,450 and 3.5; Indonesian 12.450 and 3,5 (`copy.locale` `en-GB`, `id-ID`, `zh-CN`). Amounts in dollars likewise ($1.000 in Indonesian).
 - **Dates:** English `19 Oct 2026`, Indonesian `19 Okt 2026`, Chinese `2026年10月19日` (the copy's `date.format` and `months`); the calendar's month header `Oct 2026` / `Okt 2026` / `2026年10月` (`cal.month`). **Times** read `14:12` in every language (24-hour, with a colon, as in the rules' `00:00 WIB`).
 - **Chinese text** uses the phone's own Chinese font (the bundled Inter has no Chinese letters); the page's `lang` is set so the phone picks it.
-- **How the app tells the pages:** with the token and theme when it opens them (`initWebview`); the field's name and values are to agree with the app team. The pages accept `id` (also Android's old `in`), `zh` (any `zh-…`) and treat anything else, or nothing, as English. Preview: `?lang=id|zh` (kept on every link), or Language in the States panel.
+- **How the app tells the pages:** the app adds its language to the page's address (answer from the app team via the developer, 26 Oct 2026), as `?lang=` like the preview, kept on every link between pages. The pages accept `id` (also Android's old `in`), `zh` (any `zh-…`, `zh_CN`) and treat anything else, or nothing, as English. Preview: `?lang=id|zh`, or Language in the States panel.
 - **Events** are unchanged: their values never carry on-screen text.
 - **Backend content stays Indonesian** (owner, 24 Oct 2026): reward names and descriptions, and the Terms & Conditions document, exist in Indonesian only and show as sent in every language; the pages never translate them.
 
@@ -904,3 +904,10 @@ Refines §51. When an account's lifetime deposit already passes the threshold of
 ## 77. Guests see Earn again (decided 26 Oct 2026, handoff 9)
 
 The backend has put `guest/tradingTask/get` (G-1) and the tier fields of §51 (G-2) on UAT, accepted on 26 Oct 2026 (`POST /pointSys/app/point/guest/tradingTask/get`, no token, `x-auth-key`; the same `program` as a signed-in client without a live account, `today` all 0, `accounts` [], no `tiers`). §72 is withdrawn and §53 applies again: guests have the Earn tab, the "Earn more coins" card, a 4-step tour, the rate line in the sign-up sheet, the server's time, and events with the programme's `has_task` and `credit_mode`. If the guest call fails, the page shows its error view, as for any other failed call (§44).
+
+## 78. Answers from the app team (via the developer, 26 Oct 2026)
+
+- **Language:** the app puts it in the page's address (§75).
+- **Guests:** the app calls `initWebview` also without a token; the pages then run as a guest (§53). Settled.
+- **Deposit from the tier sheet:** the developer passes the account and the amount (§51) and handles them on the client portal side himself. Settled.
+
