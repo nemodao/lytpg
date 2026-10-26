@@ -60,6 +60,12 @@ const eligibleBadge = (item) =>
 const tiers = TIERS.map((tier) => ({ ...tier, rates: (common.tiers ?? []).find((item) => sameGroup(item.group, tier.group))?.rates ?? null }));
 const tierAt = (item) => tiers.findIndex((tier) => sameGroup(item.group, tier.group));
 const tierName = (tier) => ui.t(`tier.${tier.key}`);
+// The tier the way up points to (spec §76): the highest tier above the account's that its lifetime deposit already
+// reaches (its group has not been changed yet), else the next one. Null on the top tier. Events keep the next tier.
+const targetTier = (item, at) => {
+  const above = tiers.slice(at + 1);
+  return above.filter((tier) => item.lifetimeDeposit != null && item.lifetimeDeposit >= tier.minDeposit).pop() ?? above[0] ?? null;
+};
 // Right after the account number, for eligible accounts only.
 const tierBadge = (item) => (item.eligible && tierAt(item) >= 0
   ? `<span class="badge tier tier--${tiers[tierAt(item)].key}">${tierName(tiers[tierAt(item)])}</span>`
@@ -192,10 +198,11 @@ function upgradeRow(item) {
   const at = tierAt(item);
   if (at < 0 || ended) return '';
   const next = tiers[at + 1];
+  const target = targetTier(item, at);
   const title = next ? ui.t('upgrade.row.title') : ui.t('upgrade.row.topTitle', { tier: tierName(tiers[at]) });
   const body = !next ? ui.t('upgrade.row.topBody')
-    : next.rates ? ui.t('upgrade.row.body', { tier: tierName(next), max: ui.num(maxRate(next.rates)) })
-      : ui.t('upgrade.row.bodyNoRate', { tier: tierName(next) });
+    : target.rates ? ui.t('upgrade.row.body', { tier: tierName(target), max: ui.num(maxRate(target.rates)) })
+      : ui.t('upgrade.row.bodyNoRate', { tier: tierName(target) });
   // Seen: once per page load for each tier shown (the row changes with the selected account); the denominator of
   // loyalty_upgrade_open.
   trackView('loyalty_upgrade_row_view', { tier: tiers[at].key, next_tier: next ? next.key : 'none' }, tiers[at].key);
@@ -238,11 +245,13 @@ function tierTable(nowKey = null) {
 }
 
 // Tier sheet (spec §51) for the selected account: its tier among the four, then either the way up (lifetime deposit
-// against the next threshold, rates now and next, Deposit now) or, on the top tier, its rates and the trade button.
+// against the threshold of the target tier, §76: the highest one already reached, else the next; rates; Deposit now)
+// or, on the top tier, its rates and the trade button.
 function upgradeSheet() {
   const item = account(selectedId);
   const at = tierAt(item);
   const next = tiers[at + 1];
+  const target = next ? targetTier(item, at) : null;
   const ladder = tiers.map((tier, index) => {
     const state = index < at ? 'done' : index === at ? 'current' : 'later';
     return `<li class="ladder__step ladder__step--${state}"${state === 'current' ? ' aria-current="step"' : ''}><span class="ladder__dot">${state === 'current' ? ui.icon('check', 'icon--sm') : ''}</span><span class="ladder__name">${tierName(tier)}</span></li>`;
@@ -254,14 +263,14 @@ function upgradeSheet() {
     // API: Deposit opens the app's Deposit screen for this account with the amount still needed already filled in
     // (data-account, data-amount: whole USD, rounded up; none once the deposit is reached or unknown). The names of
     // these parameters on the app side are to be agreed with the app team.
-    const missing = deposited == null ? 0 : Math.max(0, Math.ceil(next.minDeposit - deposited));
+    const missing = deposited == null ? 0 : Math.max(0, Math.ceil(target.minDeposit - deposited));
     const progress = deposited == null ? '' : `
       <div class="upgrade-progress">
-        <p class="t-caption c-2 num">${ui.t('upgrade.progress', { deposited: usd(deposited), target: usd(next.minDeposit) })}</p>
-        <span class="upgrade-progress__bar"><i style="width:${Math.min(100, Math.round((deposited / next.minDeposit) * 100))}%"></i></span>
-        <p class="t-body num">${deposited < next.minDeposit
-          ? ui.md('upgrade.need', { amount: usd(next.minDeposit - deposited), tier: tierName(next) })
-          : ui.md('upgrade.reached', { tier: tierName(next) })}</p>
+        <p class="t-caption c-2 num">${ui.t('upgrade.progress', { deposited: usd(deposited), target: usd(target.minDeposit) })}</p>
+        <span class="upgrade-progress__bar"><i style="width:${Math.min(100, Math.round((deposited / target.minDeposit) * 100))}%"></i></span>
+        <p class="t-body num">${deposited < target.minDeposit
+          ? ui.md('upgrade.need', { amount: usd(target.minDeposit - deposited), tier: tierName(target) })
+          : ui.md('upgrade.reached', { tier: tierName(target) })}</p>
       </div>`;
     body = `
       ${progress}

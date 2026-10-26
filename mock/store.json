@@ -581,17 +581,6 @@
           "expiring": null
         },
         "program": {
-          "tradingTask": false,
-          "ended": null,
-          "creditMode": null,
-          "dailyMaxPoints": null,
-          "minHoldMinutes": null,
-          "minHoldSeconds": null,
-          "creditDelayDays": null,
-          "expiryDays": null,
-          "termsUrl": null,
-          "rateRange": null,
-          "tzMinutes": null,
           "joinRequirement": "signup"
         },
         "accounts": []

@@ -9,7 +9,7 @@
         "guest": "Guest (not signed in)"
       },
       "descriptions": {
-        "guest": "Not signed in. Guests have no trading task for now (spec §72), so the Earn tab is hidden and nothing links here; opened directly, the page shows “How to start” (four steps, Sign up / Log in, no rate line) and the rules the front end holds; no account, no History tab, no trade button, no Terms."
+        "guest": "Not signed in: “How to start” with four steps (Create your free account first), the rate line, “Coins per lot depend on your trading account type.” and Sign up / Log in in place of today's figures; then the rules and Terms; no account, no History tab, no trade button."
       }
     },
     {
@@ -82,6 +82,7 @@
         "tier-standard",
         "tier-top",
         "tier-reached",
+        "tier-reached-far",
         "tier-unknown"
       ],
       "labels": {
@@ -89,14 +90,16 @@
         "tier-standard": "Tier: Standard",
         "tier-top": "Tier: Platinum (top)",
         "tier-reached": "Tier: deposit reached",
-        "tier-unknown": "Tier: unknown group"
+        "tier-unknown": "Tier: unknown group",
+        "tier-reached-far": "Tier: deposit reached, tiers skipped"
       },
       "descriptions": {
         "tier-micro": "Selected account is Micro (MT5 group Direct\\Mini400), $50 deposited: the upgrade row offers Standard; the sheet asks for $150 more.",
         "tier-standard": "Selected account is Standard (Direct\\Mini10), $450 deposited: the upgrade row offers VIP; the sheet asks for $550 more.",
         "tier-top": "Selected account is Platinum (Direct\\MIVIP), the top tier: a quiet row (crown, no border, grey) reads “Platinum: our highest rates”; the sheet says the account is on the top tier and offers to trade.",
         "tier-reached": "Selected account is still VIP (Direct\\VIP1) but has $5,200 deposited, past Platinum's $5,000 (the dealing team changes groups by hand): the sheet says the upgrade is on its way instead of asking for more.",
-        "tier-unknown": "Selected account's MT5 group is not one of the four tiers (1F\\Direct\\Mini10, matched exactly): no tier label and no upgrade row."
+        "tier-unknown": "Selected account's MT5 group is not one of the four tiers (1F\\Direct\\Mini10, matched exactly): no tier label and no upgrade row.",
+        "tier-reached-far": "Selected account is still Micro (Direct\\Mini400) but has $50,000 deposited, past every threshold up to Platinum: the row and the sheet point to Platinum (“$50,000 of $5,000 deposited”, the upgrade is on its way), not to Standard (spec §76)."
       }
     },
     {
@@ -1237,6 +1240,141 @@
         "previewAccountId": "50000234"
       }
     },
+    "tier-reached-far": {
+      "common": {
+        "accounts": [
+          {
+            "id": "50000234",
+            "eligible": true,
+            "group": "Direct\\Mini400",
+            "lifetimeDeposit": 50000,
+            "rates": [
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 70
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 60
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 55
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 50
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 45
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 40
+              }
+            ]
+          },
+          {
+            "id": "50000519",
+            "eligible": true,
+            "group": "Direct\\MIVIP",
+            "lifetimeDeposit": 6200,
+            "rates": [
+              {
+                "type": "symbol",
+                "value": "XAUUSD",
+                "ptsPerLot": 130
+              },
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 120
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 110
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 95
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 85
+              }
+            ]
+          },
+          {
+            "id": "50000642",
+            "eligible": true,
+            "group": "Direct\\VIP1",
+            "lifetimeDeposit": 1200,
+            "rates": [
+              {
+                "type": "symbol_group",
+                "value": "metal",
+                "ptsPerLot": 100
+              },
+              {
+                "type": "symbol_group",
+                "value": "index",
+                "ptsPerLot": 90
+              },
+              {
+                "type": "symbol_group",
+                "value": "energy",
+                "ptsPerLot": 85
+              },
+              {
+                "type": "symbol_group",
+                "value": "forex",
+                "ptsPerLot": 80
+              },
+              {
+                "type": "symbol_group",
+                "value": "stocks",
+                "ptsPerLot": 75
+              },
+              {
+                "type": "any",
+                "value": "other",
+                "ptsPerLot": 70
+              }
+            ]
+          },
+          {
+            "id": "50000871",
+            "eligible": false,
+            "group": "1F\\Direct\\Mini10",
+            "lifetimeDeposit": 300,
+            "rates": []
+          }
+        ]
+      },
+      "page": {
+        "previewAccountId": "50000234"
+      }
+    },
     "tier-unknown": {
       "common": {
         "accounts": [
@@ -1380,17 +1518,6 @@
           "expiring": null
         },
         "program": {
-          "tradingTask": false,
-          "ended": null,
-          "creditMode": null,
-          "dailyMaxPoints": null,
-          "minHoldMinutes": null,
-          "minHoldSeconds": null,
-          "creditDelayDays": null,
-          "expiryDays": null,
-          "termsUrl": null,
-          "rateRange": null,
-          "tzMinutes": null,
           "joinRequirement": "signup"
         },
         "accounts": []

@@ -896,3 +896,11 @@ The pages follow the app's language: Indonesian → Indonesian, Chinese → Chin
 - **How the app tells the pages:** with the token and theme when it opens them (`initWebview`); the field's name and values are to agree with the app team. The pages accept `id` (also Android's old `in`), `zh` (any `zh-…`) and treat anything else, or nothing, as English. Preview: `?lang=id|zh` (kept on every link), or Language in the States panel.
 - **Events** are unchanged: their values never carry on-screen text.
 - **Backend content stays Indonesian** (owner, 24 Oct 2026): reward names and descriptions, and the Terms & Conditions document, exist in Indonesian only and show as sent in every language; the pages never translate them.
+
+## 76. The way up points to the highest tier the deposit already reaches (decided 26 Oct 2026, handoff 9)
+
+Refines §51. When an account's lifetime deposit already passes the threshold of more than one tier above its own (its group has not been changed yet), the upgrade row and the tier sheet point to the **highest** of them, not to the next one: a Micro account with $50,000 deposited reads "Upgrade to Platinum and earn up to …", "$50,000 of $5,000 deposited" and "Your deposits already reach Platinum. Your account moves up soon." When the deposit reaches no tier above, nothing changes: the next tier and "Deposit $… more" as before. Events keep `next_tier` = the next tier. Front end only (thresholds are in the front end; `group` and `lifetimeDeposit` come from the API). Preview: state `tier-reached-far` on Earn.
+
+## 77. Guests see Earn again (decided 26 Oct 2026, handoff 9)
+
+The backend has put `guest/tradingTask/get` (G-1) and the tier fields of §51 (G-2) on UAT, accepted on 26 Oct 2026 (`POST /pointSys/app/point/guest/tradingTask/get`, no token, `x-auth-key`; the same `program` as a signed-in client without a live account, `today` all 0, `accounts` [], no `tiers`). §72 is withdrawn and §53 applies again: guests have the Earn tab, the "Earn more coins" card, a 4-step tour, the rate line in the sign-up sheet, the server's time, and events with the programme's `has_task` and `credit_mode`. If the guest call fails, the page shows its error view, as for any other failed call (§44).

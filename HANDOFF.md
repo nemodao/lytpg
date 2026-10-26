@@ -89,7 +89,7 @@ The mapping is written. Three pieces:
 
 | Piece | File | What it is |
 |---|---|---|
-| Converter | `shared/api-adapter.js` | Pure functions that turn the answers of the loyalty endpoints (the six of handoff 2 and HSB's catalog, activity and orders endpoints under `/app/point`; see `HANDOFF-6.md` and `HANDOFF-7.md` §3–§4) and the two sign-in fields into the shapes in `DATA.md`. No fetch, no DOM. Convert it once to your language and keep it as the single place that knows API field names |
+| Converter | `shared/api-adapter.js` | Pure functions that turn the answers of the loyalty endpoints (the six of handoff 2, the guest trading task, and HSB's catalog, activity and orders endpoints under `/app/point`; see `HANDOFF-6.md` and `HANDOFF-7.md` §3–§4) and the two sign-in fields into the shapes in `DATA.md`. No fetch, no DOM. Convert it once to your language and keep it as the single place that knows API field names |
 | Data source | `shared/data-source.js` | Calls the endpoints through `request(endpoint, body)` and hands the results to the converter. With `?source=api` it runs on sample answers |
 | Sample answers | `mock/api/*.json` | One file per endpoint, in the real response shape (`{ success, code, result, timestamp }`), plus `signin.json` with the two fields read from the app sign-in |
 

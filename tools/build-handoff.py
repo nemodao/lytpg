@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'dist' / 'handoff'
-INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'HANDOFF.md', 'HANDOFF-2.md', 'HANDOFF-3.md', 'HANDOFF-4.md', 'HANDOFF-6.md', 'HANDOFF-7.md', 'HANDOFF-8.md', 'TRACKING.md', 'tools/check-tracking.mjs', 'tools/check-copy.py', 'CHANGELOG.md', 'DATA.md', 'STATES.md', 'spec.md']
+INCLUDE = ['pages', 'shared', 'tokens', 'mock', 'copy', 'assets', 'HANDOFF.md', 'HANDOFF-2.md', 'HANDOFF-3.md', 'HANDOFF-4.md', 'HANDOFF-6.md', 'HANDOFF-7.md', 'HANDOFF-8.md', 'HANDOFF-9.md', 'TRACKING.md', 'tools/check-tracking.mjs', 'tools/check-copy.py', 'CHANGELOG.md', 'DATA.md', 'STATES.md', 'spec.md']
 SKIP = shutil.ignore_patterns('.DS_Store', '_*', 'coin-hex.png', '__pycache__')
 # A handoff that replaces the one before it (sent but never converted) is compared with the one before that:
 # handoff 6 holds all of handoff 5, so its diff and its "read this" note start from handoff 4. HANDOFF-5.md stays in
