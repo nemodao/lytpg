@@ -3,6 +3,18 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 9 — Guests see Earn again, the way up to the highest tier reached (26 Oct 2026)
+
+**Full description for developers: `HANDOFF-9.md`.** Spec §76–§77.
+
+- The backend's guest trading-task endpoint and the tier fields are on UAT and accepted: guests get the Earn tab,
+  the "Earn more coins" card and the 4-step tour back (handoff 8 §2 withdrawn).
+- When an account's deposit already passes several tier thresholds, the upgrade row and the tier sheet name the
+  highest one reached ("$50,000 of $5,000 deposited · already reach Platinum"), not the next one.
+- Files: `shared/data-source.js`, `pages/trading-task.js`, `mock/api/check.mjs`, mock guest states,
+  `mock/trading-task.json` (state `tier-reached-far`), back: `mock/api/guest-tradingTask-get.json`; `TRACKING.md`,
+  `HANDOFF.md` notes. `DATA.md` unchanged; `STATES.md` changed.
+
 ## Handoff 8 — Three languages, a safe Plan B switch, fixes from the review (24 Oct 2026)
 
 **Full description for developers: `HANDOFF-8.md`.** Spec §71–§75.

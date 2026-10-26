@@ -1,8 +1,16 @@
-# Handoff 9 — what changed since handoff 8 (in progress)
+# Handoff 9 — what changed since handoff 8
 
 **Who this is for:** developers (and their AI assistants) who have already applied handoff 8, or are applying it now.
-Everything not named here is unchanged. Behaviour: `spec.md` §76 on. Exact line changes:
-`CHANGES-since-handoff-8.diff` in the package.
+Everything not named here is unchanged. Behaviour: `spec.md` §76–§77. Exact line changes:
+`CHANGES-since-handoff-8.diff` in the package. Small: it can be applied together with handoff 8.
+
+**In one line:** the backend's guest endpoint and tier fields are on UAT, so guests get Earn back, and the way up
+names the highest tier a deposit already reaches.
+
+| § | What | You |
+|---|---|---|
+| 1 | Guests see Earn again | Revert your `bf4222e` (withdraws `HANDOFF-8.md` §2) |
+| 2 | The way up points to the highest tier already reached | Small change on Earn's upgrade row and tier sheet |
 
 ---
 
@@ -39,3 +47,12 @@ deposited" and "Your deposits already reach Standard", although the deposit pass
 - Preview: new state `tier-reached-far` on Earn (Micro, $50,000 deposited).
 - Checked on UAT with K4, K5, K9 (26 Oct 2026): tier labels, the upgrade row, the sheet and the tier table read the
   API's new fields correctly; only K9's case changes with this rule.
+
+## Waiting on others
+
+- **Backend:** sample rewards in the UAT catalog (still `rewards: []`), so the rewards grid, the store and the
+  reward page can be checked with real data.
+- **App team, through you:** as in `HANDOFF-8.md` (the language field; `initWebview` also for guests; the Deposit
+  intent's parameter names).
+- **Order detail:** still waits for the Tada integration to be live (spec §70).
+
