@@ -1,8 +1,19 @@
-# Handoff 10 — what changed since handoff 9 (in progress)
+# Handoff 10 — what changed since handoff 9
 
 **Who this is for:** developers (and their AI assistants) who have already applied handoff 9, or are applying it now.
-Everything not named here is unchanged. Behaviour: `spec.md` §79 on. Exact line changes:
+Everything not named here is unchanged. Behaviour: `spec.md` §78–§79. Exact line changes:
 `CHANGES-since-handoff-9.diff` in the package.
+
+**In one line:** lots read the way they were traded (up to 2 decimals, and the lots actually traded today), and the
+fixes from the review of your handoff 8 and 9 work, the separate UAT / production Plan B switch first.
+
+| § | What | You |
+|---|---|---|
+| 4.1 | Separate UAT and production Plan B switches | **First**: the owner cannot test Plan B on UAT safely until this is done |
+| 1 | Lots show up to 2 decimals | One formatter |
+| 3 | "You traded" shows the lots actually traded | One line in `toToday` |
+| 2 | Tier sheet: deposited rounds down | One argument |
+| 4.2–4.6 | Other review fixes | Small |
 
 ---
 
@@ -78,4 +89,13 @@ To fix:
 6. **Still to check on a phone** (from `HANDOFF-8.md` §5.2, untouched): a guest's Checkout must send
    `loyalty_checkout_click` before `loyalty_login_prompt_view` (`RewardContainer.tsx`, HeroUI `onPress` +
    `setTimeout`); Categories must not prefetch the ~50 reward links (`StoreCards.tsx`, `prefetch={false}`).
+
+## Waiting on others
+
+- **Backend:** the lots traded per day in `tradingTask/getHistory` (today `days[].lots` is the converted figure, §3);
+  sample rewards in the UAT catalog (still `rewards: []`).
+- **App team:** the language in the address as `?lang=` (spec §78).
+- **Order detail:** still waits for the Tada integration to be live (spec §70).
+- **Events:** the GTM container now forwards all 40 parameters (checked on UAT, 28 Oct 2026); nothing to do on your
+  side.
 

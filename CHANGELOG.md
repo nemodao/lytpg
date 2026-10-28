@@ -3,6 +3,20 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 10 — Lots as traded, fixes from the review of handoffs 8 and 9 (28 Oct 2026)
+
+**Full description for developers: `HANDOFF-10.md`.** Spec §78–§79.
+
+- Lots show up to 2 decimals without trailing zeros (11.02, 0.01, 10), on Earn's Today card and in its history.
+- "You traded" shows the lots actually traded today (`today.lots`), still rising after the daily maximum.
+- Tier sheet: the amount deposited rounds down.
+- Fixes for the developer from the review of the handoff 8 and 9 conversion: separate UAT and production Plan B
+  switches, store tab events on the loading / error views, `<html lang>` before the first paint, locale state on the
+  server, minor items (`HANDOFF-10.md` §4).
+- Files: `shared/app.js`, `shared/api-adapter.js`, `pages/trading-task.js`, `mock/trading-task.json`,
+  `mock/api/tradingTask-getHistory.json`, `tools/build-data-contract.py`. `DATA.md` changed (`today.lots`);
+  `STATES.md` changed (Today state descriptions).
+
 ## Handoff 9 — Guests see Earn again, the way up to the highest tier reached (26 Oct 2026)
 
 **Full description for developers: `HANDOFF-9.md`.** Spec §76–§77.
