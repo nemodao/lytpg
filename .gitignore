@@ -22,3 +22,6 @@ node_modules/
 
 # Documents from the front-end developer (may hold UAT screenshots)
 Thong's documents/
+
+# Stolzl is licensed: never on the public web. Local files for previews and private reviews only (HANDOFF-11)
+assets/fonts/stolzl/

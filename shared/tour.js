@@ -295,14 +295,18 @@ export function mountTour(ui, common, page) {
     const frame = app.getBoundingClientRect();
     const card = layer.querySelector('.tour__card');
     const spot = layer.querySelector('.tour__spot');
-    const gutter = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spacing-gutter')) || 16;
+    // The coach card sits 16 in from each side, not the page's 20 gutter (TOKENS 7.29, specs/loyalty.md Tour).
+    const gutter = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spacing-16')) || 16;
     card.style.left = `${frame.left + gutter}px`;
     card.style.width = `${frame.width - gutter * 2}px`;
     let rect = null;
     if (target) {
       rect = target.getBoundingClientRect();
-      const pad = 6;
-      spot.style.cssText = `left:${rect.left - pad}px;top:${rect.top - pad}px;width:${rect.width + pad * 2}px;height:${rect.height + pad * 2}px;border-radius:${getComputedStyle(target).borderRadius}`;
+      // Coins: the tier tag hangs above the balance card's top edge; the highlight takes it in rather than cut it.
+      const hanging = target.querySelector('.balance-tier--edge');
+      if (hanging) { const top = Math.min(rect.top, hanging.getBoundingClientRect().top); rect = new DOMRect(rect.left, top, rect.width, rect.bottom - top); }
+      const pad = 4;
+      spot.style.cssText = `left:${rect.left - pad}px;top:${rect.top - pad}px;width:${rect.width + pad * 2}px;height:${rect.height + pad * 2}px;border-radius:${Math.max(16, parseFloat(getComputedStyle(target).borderTopLeftRadius) + pad)}px`;
       const under = step.below ? app.querySelector(step.below) : null;
       const below = Math.max(rect.bottom + pad, under ? under.getBoundingClientRect().bottom : 0) + 12;
       const above = rect.top - pad - 12 - card.offsetHeight;

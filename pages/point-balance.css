@@ -1,15 +1,44 @@
 /* Point Balance-only styles. */
 
+/* Rhythm. The page's blocks are a section apart (32); inside the tab's part they bind closer: the tabs to what they
+   show 16, the note to its list 12, the date chips to the first day 12, a day's title to its card 8, one day to the
+   next 20, the end-of-list row 16. */
+.tabs-box + * { margin-top: calc(var(--spacing-16) - var(--spacing-section)); }
+.tabs-box ~ .chips + * { margin-top: calc(var(--spacing-12) - var(--spacing-section)); }
+.tabs-box ~ .notice + .card { margin-top: calc(var(--spacing-12) - var(--spacing-section)); }
+.tabs-box ~ .group-title + .card { margin-top: calc(var(--spacing-8) - var(--spacing-section)); }
+.tabs-box ~ .card + .group-title { margin-top: calc(var(--spacing-20) - var(--spacing-section)); }
+.tabs-box ~ .load-more { margin-top: calc(var(--spacing-16) - var(--spacing-section)); }
+
+/* No coins left: the coin in the empty orb, at the orb's icon size (greyed in components.css, like a used-up lot's). */
+.coin--empty { width: var(--size-empty-icon); height: var(--size-empty-icon); }
+/* On the orb's white it would all but vanish at the used-up lot's .45. */
+.list-none__orb .coin--empty { opacity: 0.7; }
+
+/* "Coins expiring soonest are used first.": a quiet line over the list, not a box. */
+.tabs-box ~ .notice--neutral { padding: 0 var(--spacing-4); background: none; text-wrap: pretty; }
+
+/* Loading (spec §44): the page's own blocks at their real sizes, so nothing moves when the data lands. */
+.skeleton--coins .balance .skeleton__dot { width: var(--size-control-lg); height: var(--size-control-lg); }
+.skeleton--coins .balance-number { display: flex; align-items: center; height: var(--size-control-sm); height: 1lh; } /* 36, the figure's line, where lh is not known */
+.skeleton__redeem { width: calc(var(--size-control-lg) + var(--spacing-24)); height: var(--size-control-sm); border-radius: var(--radius-pill); }
+.skeleton--coins .balance-history { display: flex; align-items: center; }
+.skeleton--coins .tab { display: grid; place-items: center; }
+.skeleton--coins .list__end { width: var(--size-control-lg); }
+.skeleton--coins .list__end > p { align-self: stretch; }
+
 .amount { display: flex; align-items: center; justify-content: flex-end; gap: var(--spacing-4); }
 .amount-label { font: var(--font-small-regular); }
 
-/* Lots expiring within the warning window. */
-.expiring-soon { display: flex; align-items: center; gap: var(--spacing-4); color: var(--ui-text-red); font: var(--font-x-small-medium); }
+/* Lots expiring within the warning window: the same amber as the balance card's expiry warning (TOKENS 7.23b). */
+.expiring-soon { display: flex; align-items: center; gap: var(--spacing-4); color: var(--warn-text); font: var(--font-x-small-medium); }
+.expiring-soon .icon { color: var(--warn); }
 
 .points--plus { color: var(--ui-text-green); }
 
 /* Guests (spec §53): an invitation to sign up or log in, in place of the tabs. */
 .guest-card { align-items: center; text-align: center; }
 .guest-card__art img { display: block; width: calc(var(--size-avatar-lg) + var(--spacing-24)); height: auto; }
-.guest-card__login { align-self: center; font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.guest-card .t-title-s { text-wrap: balance; }
+.guest-card__login { align-self: center; gap: var(--spacing-4); font: var(--font-small-regular); color: var(--ui-text-secondary); }
 .guest-card__login strong { color: var(--ui-text-brand); }

@@ -15,7 +15,12 @@ class NoCacheHandler(SimpleHTTPRequestHandler):
         super().end_headers()
 
 
+class Server(ThreadingHTTPServer):
+    # A page asks for about 30 files at once; the default queue of 5 dropped some on a busy machine.
+    request_queue_size = 128
+
+
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
     print(f"Serving on http://localhost:{port}/pages/dashboard.html")
-    ThreadingHTTPServer(("", port), NoCacheHandler).serve_forever()
+    Server(("", port), NoCacheHandler).serve_forever()

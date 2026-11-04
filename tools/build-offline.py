@@ -22,6 +22,9 @@ MOCK_OF = {'reward': 'store'}
 EXTRA_CSS = {'reward': ['pages/store.css']}
 # Shared modules in dependency order, with the variable each one is bound to in the bundle.
 MODULES = {
+    '../shared/nav-lens.js': '__navLens',
+    '../shared/bubble.js': '__bubble',
+    '../shared/sheet.js': '__sheet',
     '../shared/tiers.js': '__tiers',
     '../shared/tracking.js': '__tracking',
     '../shared/api-adapter.js': '__apiAdapter',
@@ -63,6 +66,8 @@ def strip_module(code):
     code = re.sub(r'^export ', '', code, flags=re.M)
     imports = re.findall(r"^import \{([^}]+)\} from '([^']+)';\n", code, flags=re.M)
     code = re.sub(r"^import \{[^}]+\} from '[^']+';\n", '', code, flags=re.M)
+    # Imports for their effect only (components.js: './bubble.js', './sheet.js'): those modules run once, above, as bundled.
+    code = re.sub(r"^import '[^']+';\n", '', code, flags=re.M)
     # Shared modules import each other with './x.js'; pages import them with '../shared/x.js'.
     bindings = ''.join(f'const {{{names_}}} = {MODULES[path.replace("./", "../shared/", 1) if path.startswith("./") else path]};\n' for names_, path in imports)
     return bindings + code, names

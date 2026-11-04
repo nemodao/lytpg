@@ -5,7 +5,8 @@ import { createActivityFeed } from '../shared/activity-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { initTracking, trackView } from '../shared/tracking.js';
 import { TIERS, chosenAccountId, rememberAccount, sameGroup } from '../shared/tiers.js';
-import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList, showStatus } from '../shared/components.js';
+import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList, showStatus, waitChip, watchAccountTags } from '../shared/components.js';
+import { mountBarLens } from '../shared/nav-lens.js';
 
 const { common, page, ui } = await load('trading-task');
 const { program, accounts } = common;
@@ -16,21 +17,23 @@ initTracking('earn', common);
 const ended = program.ended;
 const app = document.getElementById('app');
 
-// Decorative sky behind the top of the page: diagonal light streaks. Positions come from a fixed seed, so the sky is
-// the same on every load. Most streaks are faint; about 1 in 5 is a bright key streak with a glow.
-let seed = 7;
-const rand = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-function streakField(count = 90) {
-  const widths = ['s', 's', 's', 'm', 'm', 'l'];
-  const streaks = Array.from({ length: count }, (_, index) => {
-    const key = index % 5 === 0;
-    const width = key ? 'm' : widths[Math.floor(rand() * widths.length)];
-    const style = `left:${(rand() * 100).toFixed(1)}%;top:${(rand() * 55).toFixed(1)}%;height:${(25 + rand() * 45).toFixed(1)}%;opacity:${(key ? 0.75 + rand() * 0.25 : 0.12 + rand() * 0.23).toFixed(2)}`;
-    return `<i class="streak streak--${width}" style="${style}"></i>`;
-  });
-  return `<div class="hero-bg" data-theme="dark" aria-hidden="true"><div class="streaks-fade"><div class="streaks">${streaks.join('')}</div></div></div>`;
-}
-const heroBg = streakField();
+// Decorative sky behind the top of the page: a halo and rays of light spreading out from the cup (CSS only).
+const heroBg = '<div class="hero-bg" data-theme="dark" aria-hidden="true"><div class="hero-rays"></div></div>';
+
+// Rewards close behind the cup, in an arc that frames it: name, x and y of its centre from the cup's centre (px), width
+// (px), tilt (deg), and how far it dims (opacity at rest; the whitest ones dim further). Listed back to front, so the
+// nearer ones cover the ones behind. On the first draw they burst out from behind the cup, the nearest first, while the
+// cup pops up with a flash of light and the HOT badge; then they dim so only the cup and the badge stay bright. Later
+// draws (an account switch, a sheet) show them settled.
+const GIFTS = [
+  ['starbucks', -116, 10, 50, -8], ['ewallet', 104, 18, 56, 8],
+  ['switch', -92, -22, 62, -12, 0.25], ['marshall', 92, -20, 52, 10],
+  ['ps5', -52, -18, 34, -4, 0.22], ['watch', 52, -12, 26, 6],
+  ['almaz', -72, 36, 70, 0, 0.22], ['airpods', 60, 46, 34, 8],
+];
+let heroPlayed = false;
+const giftField = () => `<div class="hero-gifts" aria-hidden="true">${GIFTS.map(([name, x, y, w, tilt, rest]) =>
+  `<img class="hero-gift" src="../assets/images/earn/gifts/${name}.webp" alt="" style="--x:${x}px;--y:${y}px;--w:${w}px;--tilt:${tilt}deg;--delay:${Math.round(60 + Math.hypot(x, y) * 1.2)}ms${rest ? `;--gift-rest:${rest}` : ''}">`).join('')}</div>`;
 
 // The only piece of state that changes without a reload: which account is selected.
 // It opens on the account chosen for the session (spec §55, shared/tiers.js): the one picked earlier, else the eligible
@@ -51,7 +54,9 @@ if (new URLSearchParams(location.search).get('cal') === '1') historyFilter.openC
 let tab = new URLSearchParams(location.search).get('tab') === 'history' ? 'history' : 'rules';
 
 const account = (id) => accounts.find((item) => item.id === id) || accounts[0];
-const accountName = (item) => ui.esc(item.id);
+// One account in the field and in the sheet: number and tier on the left, eligible on the right, on one line as handoff
+// 10. Long labels shrink to fit (watchAccountTags); past that the eligible tag wraps under the number, still on the right.
+const accountLines = (item) => `<span class="grow account-lines"><span class="account-name"><span class="num">${ui.esc(item.id)}</span>${tierBadge(item)}</span>${eligibleBadge(item)}</span>`;
 const eligibleBadge = (item) =>
   item.eligible ? badge('green', ui.t('badge.eligible')) : badge('neutral', ui.t('badge.notEligible'));
 
@@ -79,11 +84,11 @@ const usd = (amount, round = Math.ceil) => ui.t('money.usd', { amount: ui.num(ro
 // Ended: the programme is over. The page shows only this message under the cup: no figures, no account, no rules or
 // history, nothing to tap (spec §47). No HOT badge.
 const endedCard = () => `
-  <section class="card card--blend blend-pale-theme hero-card hero-message">
+  <section class="card hero-card hero-message">
     <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
     <span class="hero-message__icon">${ui.icon('info')}</span>
     <div class="stack stack--tight">
-      <h2 class="t-body-strong">${ui.t('tt.ended.title')}</h2>
+      <h2 class="t-card">${ui.t('tt.ended.title')}</h2>
     </div>
   </section>`;
 
@@ -92,7 +97,7 @@ const feed = createActivityFeed(ui, common, common.activity);
 
 // Not yet allowed to take part (KYC or first deposit missing): "How to start" in place of today's progress (spec §39).
 const joinCard = () => `
-  <section class="card card--blend blend-pale-theme hero-card">
+  <section class="card hero-card">
     <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
     ${joinPanel(ui, common, { flat: true, nudged })}
   </section>`;
@@ -114,16 +119,16 @@ function progressCard() {
   else if (today.status === 'credited') footer = foot('check', ui.t('tt.status.credited'));
   else footer = '';
   return `
-    <section class="card card--blend blend-pale-theme hero-card">
+    <section class="card hero-card">
       <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
       <div class="today today--flat">
         <div class="today__label">
-          <h2 class="t-body-strong grow">${ui.t('task.todayLabel')}</h2>
-          <p class="t-caption blend-faint num">${ui.t('task.updateEvery', { minutes: program.creditWithinMinutes })}</p>
+          <h2 class="t-card grow">${ui.t('task.todayLabel')}</h2>
+          <p class="t-caption c-2 num">${ui.t('task.updateEvery', { minutes: program.creditWithinMinutes })}</p>
         </div>
         <div class="today__stats">
-          <div><p class="t-caption c-3">${ui.t('task.traded')}</p><p class="today__value num">${ui.lots(today.lots)}<small>${ui.lotUnit(today.lots)}</small></p></div>
-          <div><p class="t-caption c-3">${ui.t('task.earned')}</p><p class="today__value num">${coin('coin--sm')}${ui.num(today.points)}</p></div>
+          <div><p class="t-caption c-2">${ui.t('task.traded')}</p><p class="today__value num">${ui.lots(today.lots)}<small>${ui.lotUnit(today.lots)}</small></p></div>
+          <div><p class="t-caption c-2">${ui.t('task.earned')}</p><p class="today__value num">${coin('coin--sm')}${ui.num(today.points)}</p></div>
         </div>
         ${footer}
       </div>
@@ -151,9 +156,9 @@ const ratesList = (item) => `<div class="list">${item.rates.map(rateRow).join(''
 
 function accountsCard() {
   const rates = (item) => `
-      <div class="stack stack--tight"><h3 class="t-label num">${ui.t('tt.rates', { account: item.id })}</h3><p class="t-body c-3">${ui.t('tt.rates.intro')}</p></div>
-      <div class="rates-frame">${ratesList(item)}</div>
-      <p class="t-caption c-3">${ui.t('tt.rates.note')}</p>`;
+      <div class="stack stack--tight"><h3 class="t-label num">${ui.t('tt.rates', { account: item.id })}</h3><p class="t-note c-2">${ui.t('tt.rates.intro')}</p></div>
+      <div class="rates-frame sunk sunk--inset">${ratesList(item)}</div>
+      <p class="t-caption c-2">${ui.t('tt.rates.note')}</p>`;
   // Users who still need KYC or a first deposit have no trading account, and so no rates table: the Today card
   // carries their rate range and their button (spec §39, §42).
   if (program.joinRequirement) return '';
@@ -164,11 +169,11 @@ function accountsCard() {
     return `
     <section class="card">
       <div class="stack stack--tight">
-        <h2 class="t-title-s">${ui.t('tt.accounts.label')}</h2>
-        <p class="t-body c-3">${ui.t('tt.noAccount.body')}</p>
+        <h2 class="t-card">${ui.t('tt.accounts.label')}</h2>
+        <p class="t-note c-2">${ui.t('tt.noAccount.body')}</p>
       </div>
       ${rateRangeLine(ui, common)}
-      <p class="t-caption c-3">${ui.t('join.ratesByAccount')}</p>
+      <p class="t-caption c-2">${ui.t('join.ratesByAccount')}</p>
       ${ended ? '' : `<button class="btn btn--primary btn--lg btn--block" type="button" data-intent="open-account" data-track="loyalty_open_account_click">${ui.t('tt.noAccount.cta')}</button>`}
     </section>`;
   }
@@ -177,19 +182,19 @@ function accountsCard() {
   const eligibleCount = accounts.filter((item) => item.eligible).length;
 
   const selector = single
-    ? `<div class="select select--static"><span class="grow account-name">${accountName(selected)}${tierBadge(selected)}</span>${eligibleBadge(selected)}</div>`
-    : `<button class="select" type="button" data-action="open-sheet" aria-haspopup="dialog"><span class="grow account-name">${accountName(selected)}${tierBadge(selected)}</span>${eligibleBadge(selected)}${ui.icon('down')}</button>`;
+    ? `<div class="select select--static sunk sunk--inset">${accountLines(selected)}</div>`
+    : `<button class="select sunk sunk--inset" type="button" data-action="open-sheet" aria-haspopup="dialog">${accountLines(selected)}<span class="select__chevron">${ui.icon('down')}</span></button>`;
   return `
     <section class="card" data-account-card>
       <div class="stack stack--tight">
-        <h2 class="t-title-s">${ui.t('tt.accounts.label')}</h2>
-        ${single ? '' : `<p class="t-body c-3 num">${ui.t('tt.accounts.summary', { eligible: eligibleCount, total: accounts.length })}</p>`}
+        <h2 class="t-card">${ui.t('tt.accounts.label')}</h2>
+        ${single ? '' : `<p class="t-note c-2 num">${ui.t('tt.accounts.summary', { eligible: eligibleCount, total: accounts.length })}</p>`}
       </div>
       ${selector}
       ${selected.eligible ? upgradeRow(selected) : ''}
       ${selected.eligible
         ? rates(selected)
-        : notice(ui, { icon: 'info', tone: 'warning', text: ui.t('tt.accounts.ineligible') })}
+        : notice(ui, { icon: 'alert', tone: 'warning', text: ui.t('tt.accounts.ineligible') })}
       ${tradeButton()}
     </section>`;
 }
@@ -209,9 +214,9 @@ function upgradeRow(item) {
   // loyalty_upgrade_open.
   trackView('loyalty_upgrade_row_view', { tier: tiers[at].key, next_tier: next ? next.key : 'none' }, tiers[at].key);
   return `
-    <button class="upgrade-row${next ? '' : ' upgrade-row--top'}" type="button" data-action="open-upgrade" aria-haspopup="dialog" data-track="loyalty_upgrade_open" data-track-tier="${tiers[at].key}" data-track-next_tier="${next ? next.key : 'none'}">
+    <button class="upgrade-row${next ? '' : ' upgrade-row--top sunk sunk--inset'}" type="button" data-action="open-upgrade" aria-haspopup="dialog" data-track="loyalty_upgrade_open" data-track-tier="${tiers[at].key}" data-track-next_tier="${next ? next.key : 'none'}">
       <img class="upgrade-row__art" src="../assets/images/earn/${next ? 'money-bag' : 'crown'}.webp" alt="">
-      <span class="grow stack stack--tight"><span class="t-body-strong">${title}</span><span class="t-caption c-2 num">${body}</span></span>
+      <span class="grow stack stack--tight"><span class="t-row">${title}</span><span class="t-caption c-2 num">${body}</span></span>
       ${ui.icon('right', 'icon--sm')}
     </button>`;
 }
@@ -243,7 +248,7 @@ function tierTable(nowKey = null) {
         <tbody>${rows.map((row) => `<tr><th scope="row">${rateLabel(row)}</th>${shown.map((tier) => cell(tier, row)).join('')}</tr>`).join('')}</tbody>
       </table>
     </div>
-    <p class="t-caption c-3">${ui.t('upgrade.table.unit')}</p>`;
+    <p class="t-caption c-2">${ui.t('upgrade.table.unit')}</p>`;
 }
 
 // Tier sheet (spec §51) for the selected account: its tier among the four, then either the way up (lifetime deposit
@@ -267,32 +272,34 @@ function upgradeSheet() {
     // these parameters on the app side are to be agreed with the app team.
     const missing = deposited == null ? 0 : Math.max(0, Math.ceil(target.minDeposit - deposited));
     const progress = deposited == null ? '' : `
-      <div class="upgrade-progress">
+      <div class="upgrade-progress sunk sunk--inset">
         <p class="t-caption c-2 num">${ui.t('upgrade.progress', { deposited: usd(deposited, Math.floor), target: usd(target.minDeposit) })}</p>
         <span class="upgrade-progress__bar"><i style="width:${Math.min(100, Math.round((deposited / target.minDeposit) * 100))}%"></i></span>
-        <p class="t-body num">${deposited < target.minDeposit
+        <p class="t-note num">${deposited < target.minDeposit
           ? ui.md('upgrade.need', { amount: usd(target.minDeposit - deposited), tier: tierName(target) })
           : ui.md('upgrade.reached', { tier: tierName(target) })}</p>
       </div>`;
     body = `
       ${progress}
       ${table}
-      <p class="t-caption c-3">${ui.t('upgrade.note')}</p>
+      <p class="t-caption c-2">${ui.t('upgrade.note')}</p>
       <div class="sheet__sticky"><button class="btn btn--primary btn--lg btn--block" type="button" data-intent="deposit" data-account="${ui.esc(item.id)}"${missing > 0 ? ` data-amount="${missing}"` : ''} data-track="loyalty_deposit_click" data-track-source="upgrade" data-track-tier="${tiers[at].key}" data-track-next_tier="${next.key}">${ui.t('upgrade.deposit')}</button></div>`;
   } else {
     body = `
-      <p class="t-body c-2 num">${ui.md('upgrade.topBody', { max: ui.num(maxRate(item.rates)) })}</p>
+      <p class="t-note c-2 num">${ui.md('upgrade.topBody', { max: ui.num(maxRate(item.rates)) })}</p>
       ${table}
-      <p class="t-caption c-3">${ui.t('upgrade.note')}</p>
+      <p class="t-caption c-2">${ui.t('upgrade.note')}</p>
       <div class="sheet__sticky">${tradeButton('upgrade', tiers[at].key)}</div>`;
   }
   return `
     <div class="scrim" data-action="close-sheet">
       <div class="sheet sheet--upgrade" role="dialog" aria-modal="true" aria-label="${next ? ui.t('upgrade.sheet.title') : ui.t('upgrade.sheet.topTitle')}">
-        <span class="sheet__grab"></span>
-        <div class="sheet__head">
-          <h2 class="t-title-s grow">${next ? ui.t('upgrade.sheet.title') : ui.t('upgrade.sheet.topTitle')}</h2>
-          <button class="header-action" type="button" data-action="close-upgrade" aria-label="${ui.t('common.close')}">${ui.icon('close')}</button>
+        <div class="sheet__top">
+          <span class="sheet__grab"></span>
+          <div class="sheet__head">
+            <h2 class="t-title-s grow">${next ? ui.t('upgrade.sheet.title') : ui.t('upgrade.sheet.topTitle')}</h2>
+            <button class="header-action" type="button" data-action="close-upgrade" aria-label="${ui.t('common.close')}">${ui.icon('close')}</button>
+          </div>
         </div>
         <p class="t-label num">${ui.t('upgrade.account', { account: item.id })}</p>
         <ol class="ladder">${ladder}</ol>
@@ -328,7 +335,7 @@ function historyList() {
           <p class="t-label num grow">${ui.isToday(day.date) ? ui.t('tt.history.today') : ui.dateYear(day.date)}</p>
           ${statusBadge[day.status]}
         </div>
-        <div class="day__figures t-caption c-3 num">
+        <div class="day__figures t-caption c-2 num">
           <span>${ui.lots(day.lots)} ${ui.lotUnit(day.lots)}</span>
           <span class="day__points">${coin('coin--xs')}${ui.num(day.points)}${day.capped ? `<span class="day__capped">${ui.t('badge.capped')}</span>` : ''}</span>
         </div>
@@ -339,7 +346,7 @@ function historyList() {
     ${historyFilter.chips()}
     ${shown.length
       ? `<div class="list">${shown.map(row).join('')}</div>`
-      : `<p class="t-body c-3 list-none">${ui.t('tt.history.none')}</p>`}`;
+      : `<div class="list-none"><span class="list-none__orb sunk sunk--inset">${ui.icon('calendar')}</span><p class="t-body c-2">${ui.t('tt.history.none')}</p></div>`}`;
 }
 
 function infoCard() {
@@ -349,13 +356,16 @@ function infoCard() {
   if (common.guest) {
     return `
     <section class="card">
-      <h2 class="t-title-s">${ui.t('tt.rules')}</h2>
+      <h2 class="t-card">${ui.t('tt.rules')}</h2>
       ${rulesList(ui, common)}${termsButton()}
     </section>`;
   }
   return `
     <section class="card">
-      <div class="tabs" role="tablist">${tabButton('rules', 'tt.rules')}${tabButton('history', 'tt.history')}</div>
+      <div class="tabs-box">
+        <div class="tabs" role="tablist"><i class="nav__sel"></i>${tabButton('rules', 'tt.rules')}${tabButton('history', 'tt.history')}</div>
+        <div class="nav__lens" aria-hidden="true"><i class="nav__mag"><span class="nav__lrow" style="--tabs:2"><span class="tab">${ui.t('tt.rules')}</span><span class="tab">${ui.t('tt.history')}</span></span></i><i class="nav__hole"></i></div>
+      </div>
       ${tab === 'rules' ? rulesList(ui, common) + termsButton() : historyList()}
     </section>`;
 }
@@ -393,13 +403,11 @@ function sheet() {
   return `
     <div class="scrim" data-action="close-sheet">
       <div class="sheet" role="dialog" aria-modal="true" aria-label="${ui.t('tt.accounts.sheet')}">
-        <span class="sheet__grab"></span>
-        <h2 class="t-title-s">${ui.t('tt.accounts.sheet')}</h2>
+        <div class="sheet__top"><span class="sheet__grab"></span><h2 class="t-title-s">${ui.t('tt.accounts.sheet')}</h2></div>
         <div>
           ${sorted.map((item) => `
             <button class="option ${item.eligible ? '' : 'option--muted'}" type="button" data-action="select-account" data-id="${ui.esc(item.id)}" data-track="loyalty_account_select" data-track-eligible="${item.eligible}">
-              <span class="grow account-name">${accountName(item)}${tierBadge(item)}</span>
-              ${eligibleBadge(item)}
+              ${accountLines(item)}
               <span class="radio ${item.id === selectedId ? 'radio--on' : ''}"></span>
             </button>`).join('')}
         </div>
@@ -410,10 +418,12 @@ function sheet() {
 function render() {
   app.innerHTML = `
     ${appHeader(ui, { title: ui.t('task.title') })}
-    <div class="hero">
+    <div class="hero${ended ? ' hero--ended' : heroPlayed ? ' hero--settled' : ' hero--burst'}">
       ${heroBg}
+      ${ended ? '' : giftField()}
       <div class="today-cup-wrap">
-        <img class="today-cup" src="../assets/images/cups/purple-chart.webp" alt="">
+        ${ended ? '' : '<span class="hero-glow" aria-hidden="true"></span>'}
+        <img class="today-cup" src="../assets/images/cups/lime.webp" alt="">
         ${ended ? '' : '<img class="hero-hot" src="../assets/images/hot-badge.png" alt="">'}
       </div>
     </div>
@@ -424,6 +434,13 @@ function render() {
     ${historyFilter.sheet()}`;
   feed.start(app);
   nudged = true;
+  heroPlayed = true;
+  mountBarLens(app.querySelector('.tabs-box'));
+  watchAccountTags(app);
+  // API: `waitChip()` while the app switches the account. PREVIEW ONLY: ?pending=1 shows it.
+  if (new URLSearchParams(location.search).get('pending') === '1' && !document.querySelector('.wait')) document.body.insertAdjacentHTML('beforeend', waitChip(ui));
+  historyFilter.watchChips(app);
+  watchSky();
   // Tier sheet: when the table scrolls sideways, open it with the account's column as near the middle of the scrolling
   // part as it goes, so the tiers on both sides of it show (e.g. VIP with Standard and Platinum).
   const box = app.querySelector('.sheet [data-tier-table]');
@@ -456,14 +473,126 @@ app.addEventListener('click', (event) => {
   render();
 });
 
+// The hero answers touch; decorative, so no event is sent. A tap on the cup bounces it with its badge. Holding the
+// hero (not on Ended) brings the rewards back, lights the halo and rays and zooms the cup, until the finger lifts; a
+// tap on the cup or a reward shows that at 30% for PEEK_MS (.hero--peek), a taste of the hold.
+// Moving more than MOVE_PX before the hold starts is a scroll, and cancels it. While the first draw's burst still runs
+// on the rewards or rays, the hold waits for it to end, or the burst would dim what the finger lights. Only the finger
+// that started counts, a press as long as a hold is not a tap, and a tap during a bounce is ignored, so it never snaps.
+const HOLD_MS = 300;
+const MOVE_PX = 8;
+const TAP_GAP_MS = 500; // the bounce's length
+const PEEK_MS = 550; // 0.3s in, a moment at 30%, then back
+// How long the burst still runs on the rewards and rays (0 once it is over, and under reduced motion).
+const burstLeft = (hero) => Math.max(0, ...hero.getAnimations({ subtree: true })
+  .filter((anim) => anim.effect.target.matches('.hero-gift, .hero-rays') && anim.playState !== 'finished')
+  .map((anim) => anim.effect.getComputedTiming().endTime - (anim.currentTime || 0)));
+function watchHeroTouch() {
+  let press = null;
+  let tappedAt = 0;
+  let peekTimer = 0;
+  const release = () => {
+    if (!press) return;
+    clearTimeout(press.timer);
+    press.hero.classList.remove('hero--held');
+    press = null;
+  };
+  app.addEventListener('pointerdown', (event) => {
+    const hero = event.target.closest('.hero');
+    if (!event.isPrimary || !hero || hero.matches('.hero--loading')) return;
+    release();
+    const current = { hero, id: event.pointerId, x: event.clientX, y: event.clientY, at: performance.now(), held: false, onCup: Boolean(event.target.closest('.today-cup-wrap')), onGift: Boolean(event.target.closest('.hero-gift')) };
+    if (!hero.matches('.hero--ended')) current.timer = setTimeout(() => { current.held = true; hero.classList.add('hero--held'); }, Math.max(HOLD_MS, burstLeft(hero) + 20));
+    press = current;
+  });
+  app.addEventListener('pointermove', (event) => {
+    if (press && event.pointerId === press.id && !press.held && Math.hypot(event.clientX - press.x, event.clientY - press.y) > MOVE_PX) release();
+  });
+  // On the document: a mouse can be let go over the bottom bar, outside #app.
+  document.addEventListener('pointerup', (event) => {
+    if (!press || event.pointerId !== press.id) return;
+    const tap = !press.held && performance.now() - press.at < HOLD_MS;
+    if (tap && press.onCup && performance.now() - tappedAt > TAP_GAP_MS) {
+      tappedAt = performance.now();
+      const wrap = press.hero.querySelector('.today-cup-wrap');
+      wrap.classList.remove('is-tapped');
+      void wrap.offsetWidth; // restart the bounce on a later tap
+      wrap.classList.add('is-tapped');
+    }
+    // Not during the burst: it would dim the peek, as it would a hold.
+    if (tap && (press.onCup || press.onGift) && !press.hero.matches('.hero--ended') && !burstLeft(press.hero)) {
+      const { hero } = press;
+      hero.classList.add('hero--peek');
+      clearTimeout(peekTimer);
+      peekTimer = setTimeout(() => hero.classList.remove('hero--peek'), PEEK_MS);
+    }
+    release();
+  });
+  document.addEventListener('pointercancel', (event) => { if (press && event.pointerId === press.id) release(); });
+  // iPadOS can lift a long-pressed image for drag and drop, which would end the hold.
+  app.addEventListener('dragstart', (event) => { if (event.target.closest('.hero')) event.preventDefault(); });
+}
+watchHeroTouch();
+
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && (sheetOpen || termsOpen || upgradeOpen || historyFilter.isOpen())) { sheetOpen = false; termsOpen = false; upgradeOpen = false; historyFilter.close(); render(); }
 });
 
 // Loading or failed to load: the header on its sky and a placeholder, nothing else (spec §44).
-if (!showStatus(ui, common, app, `${appHeader(ui, { title: ui.t('task.title') })}<div class="hero">${heroBg}</div>`)) {
+const bar = (size) => `<span class="skeleton__bar skeleton__bar--${size}"></span>`;
+// A bar on one line of the real text style, inside the page's real blocks, so nothing moves when the data lands.
+const line = (style, size) => `<p class="${style} skeleton__line">${bar(size)}</p>`;
+const lines = (style, sizes) => sizes.map((size) => line(style, size)).join('');
+const skeletonRow = `<div class="list__row"><div class="grow">${line('t-label', 'm')}</div>${line('t-body skeleton__end', 'full')}</div>`;
+const earnSkeleton = `
+  <div class="skeleton skeleton--earn" role="status" aria-label="${ui.t('common.loading')}">
+    <section class="card hero-card"><span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
+      <div class="today today--flat">
+        <div class="today__label"><div class="grow">${line('t-card', 's')}</div>${line('t-caption skeleton__end', 'full')}</div>
+        <div class="today__stats">
+          <div>${line('t-caption', 'm')}${line('today__value', 'l')}</div>
+          <div>${line('t-caption', 'm')}${line('today__value', 'l')}</div>
+        </div>
+        <div class="today__foot"><div class="grow">${line('t-caption', 'l')}</div></div>
+      </div>
+    </section>
+    <div class="sunk activity"><div class="activity__row"><span class="skeleton__dot activity__icon"></span><div class="grow">${bar('l')}</div></div></div>
+    <section class="card skeleton__card">
+      <div class="stack stack--tight">${line('t-card', 'm')}${line('t-note', 'l')}</div>
+      <div class="select sunk sunk--inset"><div class="grow account-lines"><div class="account-name">${line('t-row skeleton__number', 'full')}<span class="skeleton__bar skeleton__tier"></span></div><span class="skeleton__bar skeleton__tier"></span></div><span class="skeleton__dot skeleton__chevron"></span></div>
+      <div class="upgrade-row sunk sunk--inset"><span class="skeleton__dot upgrade-row__art"></span><div class="grow stack stack--tight">${line('t-row', 'm')}<div>${lines('t-caption', ['full', 'm'])}</div></div></div>
+      <div class="stack stack--tight">${line('t-label', 'm')}<div>${lines('t-note', ['full', 'full', 'm'])}</div></div>
+      <div class="rates-frame sunk sunk--inset"><div class="list">${skeletonRow.repeat(6)}</div></div>
+      <div>${lines('t-caption', ['full', 'm'])}</div>
+      <span class="skeleton__bar skeleton__button"></span>
+    </section>
+    <section class="card skeleton__card">
+      <div class="tabs"><span class="tab" aria-selected="true">${ui.t('tt.rules')}</span><span class="tab">${ui.t('tt.history')}</span></div>
+      <ul class="rules">${`<li><span class="grow">${lines('t-body', ['full', 'l'])}</span></li>`.repeat(4)}<li><span class="grow">${line('t-body', 'full')}</span></li></ul>
+      <div class="text-btn">${bar('s')}</div>
+    </section>
+  </div>`;
+const cup = '<div class="today-cup-wrap"><img class="today-cup" src="../assets/images/cups/lime.webp" alt=""></div>';
+// While the night sky is under the header, the pill and title stay on the sky, and the fade behind them takes the
+// sky's colour, turning into the page's as the sky's edge passes under it. The pill turns as soon as the card's top
+// reaches its middle: the card is in the page's colour, so a sky pill over it would be a dark blob in light mode.
+function watchSky() {
+  const header = app.querySelector('.app-header');
+  const sky = app.querySelector('.hero-card, .page-error');
+  if (!header || !sky) return;
+  const top = sky.getBoundingClientRect().top;
+  const edge = top + sky.offsetHeight / 2;
+  const middle = header.offsetHeight / 2 + header.getBoundingClientRect().top;
+  // 2 either side, so a finger resting at the edge does not flick it.
+  header.classList.toggle('is-over-sky', header.classList.contains('is-over-sky') ? top > middle - 2 : top > middle + 2);
+  header.style.setProperty('--sky-over', Math.max(0, Math.min(1, edge / header.getBoundingClientRect().bottom)).toFixed(3));
+}
+addEventListener('scroll', watchSky, { passive: true });
+// Loading or failed to load: the header on its sky and a placeholder, nothing else (spec §44).
+if (!showStatus(ui, common, app, `${appHeader(ui, { title: ui.t('task.title') })}<div class="hero hero--loading">${heroBg}${common.view === 'loading' ? cup : ''}</div>`, 'page', earnSkeleton)) {
   render();
   // Opened from the tier label on Home or Coins (?focus=account, spec §55): bring the account field into view.
   if (new URLSearchParams(location.search).get('focus') === 'account') app.querySelector('[data-account-card]')?.scrollIntoView({ block: 'start' });
 }
+watchSky();
 mountNav(ui, common, 'earn');

@@ -5,6 +5,7 @@ import { createDateFilter } from '../shared/date-filter.js';
 import { mountTour } from '../shared/tour.js';
 import { initTracking, trackView } from '../shared/tracking.js';
 import { appHeader, badge, balanceBlock, coin, loadMoreRow, mountJoinSheet, mountStoreLinks, notice, showStatus } from '../shared/components.js';
+import { mountBarLens } from '../shared/nav-lens.js';
 
 const { common, page, ui } = await load('point-balance');
 // Preview states can empty one tab (`page.empty.available|expired|history`) without touching the others.
@@ -41,6 +42,8 @@ let loadFailed = Boolean(page.loadMoreError); // PREVIEW ONLY: the `more-error` 
 if (loadFailed) trackView('loyalty_error_view', { error_scope: 'more' }, 'more');
 const moreRow = (total) => (total > shown[tab] ? loadMoreRow(ui, loadFailed) : '');
 
+// A date never breaks inside itself at narrow widths ("25 Sep / 2026"): its spaces are non-breaking.
+const day = (iso) => ui.date(iso).replace(/ /g, '\u00a0');
 const source = (item) => (['trading', 'daily_checkin', 'adjust'].includes(item.source) ? ui.t(`pb.source.${item.source}`) : ui.esc(item.source));
 
 const expiredLots = empty.expired ? [] : items.filter(inExpired);
@@ -48,8 +51,13 @@ const expiredLots = empty.expired ? [] : items.filter(inExpired);
 const filters = { expired: createDateFilter(ui, common.now, 'expired'), history: createDateFilter(ui, common.now, 'history') };
 if (new URLSearchParams(location.search).get('cal') === '1' && filters[tab]) filters[tab].openCalendar(); // preview aid
 
+// Labels (Earned, Remain, Expired) are tertiary; the lighter figure (Earned) secondary, the one that matters primary.
 const amount = (label, points, strong) =>
-  `<p class="amount t-label num ${strong ? '' : 'amount-label c-3'}"><span class="amount-label c-3">${label}</span> ${strong ? coin('coin--xs') : ''}${ui.num(points)}</p>`;
+  `<p class="amount t-label num ${strong ? '' : 'amount-label c-2'}"><span class="amount-label c-3">${label}</span> ${strong ? coin('coin--xs') : ''}${ui.num(points)}</p>`;
+// Nothing to list: the same empty line as Earn's history, an icon in a sunk orb over the text. No coins left shows the
+// coin itself, greyed like a used-up lot's.
+const emptyLine = (icon, key) =>
+  `<section class="card"><div class="list-none"><span class="list-none__orb sunk sunk--inset">${icon === 'coin' ? coin('coin--empty') : ui.icon(icon)}</span><p class="t-body c-2">${ui.t(key)}</p></div></section>`;
 
 // One lot. Right side: "Earned 2,000" (lighter) over the figure that matters for this row, with the coin.
 function itemRow(item) {
@@ -58,15 +66,15 @@ function itemRow(item) {
   const used = item.status === 'used';
   const view = used ? usedView(item) : {
     earning: () => ({ meta: ui.t('pb.item.earning.meta'), badge: badge('blue', ui.t('badge.earning')) }),
-    active: () => ({ meta: ui.t('pb.item.active.meta', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.remain') }),
-    expired: () => ({ meta: ui.t('pb.item.expired', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.expiredAmount') }),
+    active: () => ({ meta: ui.t('pb.item.active.meta', { date: day(item.expiresAt) }), second: ui.t('pb.item.remain') }),
+    expired: () => ({ meta: ui.t('pb.item.expired', { date: day(item.expiresAt) }), second: ui.t('pb.item.expiredAmount') }),
   }[item.status]();
   // A fully used lot still in Available is muted; once past expiry it shows like any expired lot, with 0 expired.
   const muted = used && !isPastExpiry(item);
   return `
     <div class="list__row ${muted ? 'list__row--muted' : ''}">
       <div class="grow stack stack--tight">
-        <p class="t-label num">${source(item)} · ${ui.date(item.earnedOn)}</p>
+        <p class="t-label num">${source(item)} · ${day(item.earnedOn)}</p>
         <p class="t-caption num ${soon ? 'expiring-soon' : 'c-3'}">${soon ? ui.icon('clock', 'icon--sm') : ''}${view.meta}</p>
       </div>
       <div class="list__end">
@@ -79,8 +87,8 @@ function itemRow(item) {
 
 // A fully used lot: like an active lot (expiry, Earned over Remain 0) while it lasts, like an expired lot after.
 const usedView = (item) => (isPastExpiry(item)
-  ? { meta: ui.t('pb.item.expired', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.expiredAmount') }
-  : { meta: ui.t('pb.item.active.meta', { date: ui.date(item.expiresAt) }), second: ui.t('pb.item.remain') });
+  ? { meta: ui.t('pb.item.expired', { date: day(item.expiresAt) }), second: ui.t('pb.item.expiredAmount') }
+  : { meta: ui.t('pb.item.active.meta', { date: day(item.expiresAt) }), second: ui.t('pb.item.remain') });
 
 function availableTab() {
   // Order: earning, active (soonest expiry first), then the "Fully used" section (soonest expiry first).
@@ -95,11 +103,11 @@ function availableTab() {
     <section class="card"><div class="list">${usedUp.map(itemRow).join('')}</div></section>` : '';
   if (!current.length && !usedUp.length) {
     // Nothing available: a plain line, no call to action (spec §27).
-    return `<section class="card"><p class="t-body c-3 list-none">${ui.t('pb.noActive')}</p></section>`;
+    return emptyLine('coin', 'pb.noActive');
   }
   return `
     ${notice(ui, { icon: 'info', tone: 'neutral', text: ui.t('pb.note') })}
-    ${current.length ? `<section class="card"><div class="list">${current.map(itemRow).join('')}</div></section>` : `<section class="card"><p class="t-body c-3 list-none">${ui.t('pb.noActive')}</p></section>`}
+    ${current.length ? `<section class="card"><div class="list">${current.map(itemRow).join('')}</div></section>` : emptyLine('coin', 'pb.noActive')}
     ${usedSection}
     ${moreRow(ordered.length)}`;
 }
@@ -108,9 +116,7 @@ function expiredTab() {
   const lots = expiredLots.filter((item) => filters.expired.includes(item.expiresAt)).sort((a, b) => b.expiresAt.localeCompare(a.expiresAt));
   return `
     ${filters.expired.chips()}
-    <section class="card">
-      ${lots.length ? `<div class="list">${lots.slice(0, shown.expired).map(itemRow).join('')}</div>` : `<p class="t-body c-3 list-none">${ui.t('pb.expired.none')}</p>`}
-    </section>
+    ${lots.length ? `<section class="card"><div class="list">${lots.slice(0, shown.expired).map(itemRow).join('')}</div></section>` : emptyLine('calendar', 'pb.expired.none')}
     ${moreRow(lots.length)}`;
 }
 
@@ -145,7 +151,7 @@ function historyTab() {
     ${groups.size ? [...groups].map(([date, entries]) => `
       <p class="group-title">${ui.isToday(date) ? ui.t('hist.today') : ui.date(date)}</p>
       <section class="card"><div class="list list--compact">${entries.map(historyRow).join('')}</div></section>`).join('')
-      : `<section class="card"><p class="t-body c-3 list-none">${ui.t('pb.history.none')}</p></section>`}
+      : emptyLine('calendar', 'pb.history.none')}
     ${moreRow(entries.length)}`;
 }
 
@@ -153,7 +159,10 @@ function body() {
   const tabButton = (id, key) =>
     `<button class="tab" type="button" role="tab" aria-selected="${tab === id}" data-action="tab" data-tab="${id}" data-track="loyalty_tab_click" data-track-tab="${id}">${ui.t(key)}</button>`;
   return `
-    <div class="tabs" role="tablist" data-tour="tabs">${tabButton('available', 'pb.tab.available')}${tabButton('expired', 'pb.tab.expired')}${tabButton('history', 'pb.tab.history')}</div>
+    <div class="tabs-box">
+      <div class="tabs" role="tablist" data-tour="tabs"><i class="nav__sel"></i>${tabButton('available', 'pb.tab.available')}${tabButton('expired', 'pb.tab.expired')}${tabButton('history', 'pb.tab.history')}</div>
+      <div class="nav__lens" aria-hidden="true"><i class="nav__mag"><span class="nav__lrow" style="--tabs:3"><span class="tab">${ui.t('pb.tab.available')}</span><span class="tab">${ui.t('pb.tab.expired')}</span><span class="tab">${ui.t('pb.tab.history')}</span></span></i><i class="nav__hole"></i></div>
+    </div>
     ${{ available: availableTab, expired: expiredTab, history: historyTab }[tab]()}`;
 }
 
@@ -175,6 +184,10 @@ function render() {
     ${appHeader(ui, { title: ui.t('pb.title') })}
     ${balanceBlock(ui, common, { card: true, history: ui.href('redemptions.html') })}
     ${common.guest ? guestCard() : `${body()}${filters.expired.sheet()}${filters.history.sheet()}`}`;
+  // The tabs are a capsule with the glass lens, as on Earn (TOKENS 8.3).
+  mountBarLens(app.querySelector('.tabs-box'));
+  // The selected date chip scrolls into view, and the row's ends fade, as on Earn.
+  if (!common.guest) filters[tab]?.watchChips(app);
   watchEnd();
 }
 
@@ -199,7 +212,7 @@ app.addEventListener('click', (event) => {
   if (!target) return;
   // A new range starts again from the first page.
   if (filters.expired.handle(target, event) || filters.history.handle(target, event)) { shown[tab] = PAGE_SIZE; render(); return; }
-  if (target.dataset.action === 'load-more') { render(); loadMore(); return; }
+  if (target.dataset.action === 'load-more') { loadMore(); render(); return; } // loadMore first: the row turns to the spinner
   if (target.dataset.action === 'tab') tab = target.dataset.tab;
   else return;
   render();
@@ -211,8 +224,27 @@ document.addEventListener('keydown', (event) => {
   render();
 });
 
-// Loading or failed to load: the header and a placeholder, nothing else (spec §44).
-if (showStatus(ui, common, app, appHeader(ui, { title: ui.t('pb.title') }))) {
+// Loading or failed to load: the header and a placeholder, nothing else (spec §44). The placeholder is the page's own
+// blocks at their real sizes (balance card with its history row, the tabs, the note, a list of lots), so nothing
+// moves when the data lands.
+const bar = (size) => `<span class="skeleton__bar skeleton__bar--${size}"></span>`;
+const line = (style, size) => `<p class="${style} skeleton__line">${bar(size)}</p>`;
+const skeletonLot = `<div class="list__row"><div class="grow stack stack--tight">${line('t-label', 'l')}${line('t-caption', 'm')}</div><div class="list__end">${line('amount-label', 'full')}${line('t-label', 'full')}</div></div>`;
+const coinsSkeleton = `
+  <div class="skeleton skeleton--coins" role="status" aria-label="${ui.t('common.loading')}">
+    <section class="balance card card--soft">
+      <div class="balance-row">
+        <span class="skeleton__dot"></span>
+        <div class="grow">${line('balance-label', 'm')}<p class="balance-number">${bar('l')}</p></div>
+        <div class="balance-side"><span class="skeleton__bar skeleton__redeem"></span></div>
+      </div>
+      <div class="balance-history">${bar('m')}</div>
+    </section>
+    <div class="tabs-box"><div class="tabs"><span class="tab" aria-selected="true">${ui.t('pb.tab.available')}</span><span class="tab">${ui.t('pb.tab.expired')}</span><span class="tab">${ui.t('pb.tab.history')}</span></div></div>
+    <p class="notice notice--neutral skeleton__line">${bar('l')}</p>
+    <section class="card"><div class="list">${skeletonLot.repeat(5)}</div></section>
+  </div>`;
+if (showStatus(ui, common, app, appHeader(ui, { title: ui.t('pb.title') }), 'page', coinsSkeleton)) {
   mountNav(ui, common, 'points');
 } else {
   render();

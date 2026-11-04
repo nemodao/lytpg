@@ -76,9 +76,9 @@ export function createActivityFeed(ui, common, items = []) {
   const row = (item, fresh = false) =>
     `<span class="activity__row${fresh ? ' activity__in' : ''}">${icon(item)}<span class="activity__text num">${message(item)}</span><span class="activity__time num">${ago(item.at)}</span></span>`;
 
-  // Markup for the card; empty when the backend sent nothing. While a reward entry is on screen the card takes a light
-  // purple tint (activity--gift), so redeemed rewards stand out from the coin entries.
-  const card = (item) => `card activity${item.type === 'gift' ? ' activity--gift' : ''}`;
+  // Markup for the card; empty when the backend sent nothing. While a reward entry is on screen the card takes the
+  // brand tint (activity--gift), so redeemed rewards stand out from the coin entries.
+  const card = (item) => `sunk activity${item.type === 'gift' ? ' activity--gift' : ''}`;
   let current = null;
   const html = () => {
     if (!sorted.length) return '';

@@ -29,6 +29,27 @@ export function createDateFilter(ui, now, id) {
     month = (pick.to || todayKey).slice(0, 7);
   }
 
+  // An end of the row fades only where more chips remain. Call after the chips are on the page.
+  function watchChips(root) {
+    const row = root.querySelector('.chips');
+    if (!row) return;
+    const fade = () => {
+      row.style.setProperty('--fade-start', row.scrollLeft > 1 ? '18px' : '0px');
+      row.style.setProperty('--fade-end', row.scrollLeft + row.clientWidth < row.scrollWidth - 1 ? '18px' : '0px');
+    };
+    row.addEventListener('scroll', fade, { passive: true });
+    // The row is redrawn at its start: the selected range must show, clear of the fade. The font can still widen the chips.
+    const reveal = () => {
+      const past = row.querySelector('[aria-pressed="true"]')?.getBoundingClientRect().right + 18 - row.getBoundingClientRect().right;
+      if (past > 0) row.scrollLeft += past;
+      fade();
+    };
+    reveal();
+    let touched = false;
+    row.addEventListener('pointerdown', () => { touched = true; }, { once: true });
+    document.fonts.ready.then(() => { if (!touched) reveal(); });
+  }
+
   function chips() {
     const chip = (mode, label) =>
       `<button class="chip" type="button" aria-pressed="${range.mode === mode}" data-action="range" data-filter="${id}" data-mode="${mode}">${label}</button>`;
@@ -76,7 +97,7 @@ export function createDateFilter(ui, now, id) {
             ${'<span></span>'.repeat(lead)}
             ${cells.join('')}
           </div>
-          <p class="t-caption c-3 cal-hint num">${ui.t('filter.max', { days: MAX_DAYS })}</p>
+          <p class="t-caption c-2 cal-hint num">${ui.t('filter.max', { days: MAX_DAYS })}</p>
           <div class="sheet__actions">
             <button class="btn btn--stroke btn--lg" type="button" data-action="cal-cancel">${ui.t('common.cancel')}</button>
             <button class="btn btn--primary btn--lg" type="button" data-action="cal-apply" ${from ? '' : 'disabled'}>${ui.t('common.apply')}</button>
@@ -116,6 +137,7 @@ export function createDateFilter(ui, now, id) {
   }
 
   return {
+    watchChips,
     chips,
     sheet,
     handle,

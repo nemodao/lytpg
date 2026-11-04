@@ -1,10 +1,8 @@
 /* Frame, safe areas, fonts and text helpers. Every value comes from tokens/tokens.css. */
 
-@font-face { font-family: "Inter"; font-weight: 400; font-style: normal; font-display: swap; src: url("../assets/fonts/inter-latin-400.woff2") format("woff2"); }
-@font-face { font-family: "Inter"; font-weight: 500; font-style: normal; font-display: swap; src: url("../assets/fonts/inter-latin-500.woff2") format("woff2"); }
-@font-face { font-family: "Inter"; font-weight: 600; font-style: normal; font-display: swap; src: url("../assets/fonts/inter-latin-600.woff2") format("woff2"); }
-@font-face { font-family: "Nunito Sans"; font-weight: 600; font-style: normal; font-display: swap; src: url("../assets/fonts/nunito-sans-latin-600.woff2") format("woff2"); }
-@font-face { font-family: "Nunito Sans"; font-weight: 700; font-style: normal; font-display: swap; src: url("../assets/fonts/nunito-sans-latin-700.woff2") format("woff2"); }
+@font-face { font-family: "Stolzl"; font-weight: 350; font-style: normal; font-display: swap; src: url("../assets/fonts/stolzl/Stolzl-Book.woff2") format("woff2"); }
+@font-face { font-family: "Stolzl"; font-weight: 400; font-style: normal; font-display: swap; src: url("../assets/fonts/stolzl/Stolzl-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Stolzl"; font-weight: 500; font-style: normal; font-display: swap; src: url("../assets/fonts/stolzl/Stolzl-Medium.woff2") format("woff2"); }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -26,10 +24,14 @@ body {
 }
 
 p, h1, h2, h3 { margin: 0; }
+/* Nothing heavier than Regular, except the section heading, which sets its own weight (TOKENS 2). */
+b, strong, h1, h2, h3 { font-weight: 400; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; text-align: inherit; }
 [hidden] { display: none !important; }
 :focus-visible { outline: var(--spacing-2) solid var(--ui-stroke-brand); outline-offset: var(--spacing-2); }
+/* Drives the press rim: registered, so it can animate (TOKENS 5). */
+@property --ang { syntax: "<angle>"; inherits: false; initial-value: 126deg; }
 
 /* Page width. Designed at 375px; on a phone (any width up to 600px) the page fills the whole screen edge to edge,
    on a computer it stays a centred 375px column. (Media queries cannot read tokens, hence the literal 600px.) */
@@ -40,14 +42,14 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top, 0px) + var(--spacing-12)) var(--spacing-gutter) calc(env(safe-area-inset-bottom, 0px) + var(--spacing-32));
+  padding: calc(env(safe-area-inset-top, 0px) + var(--spacing-6)) var(--spacing-gutter) calc(env(safe-area-inset-bottom, 0px) + var(--spacing-32));
   background: var(--surface-page);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-section);
 }
 
-.icon { width: var(--size-icon); height: var(--size-icon); flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.icon { width: var(--size-icon); height: var(--size-icon); flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .icon--sm { width: var(--size-icon-sm); height: var(--size-icon-sm); }
 .icon--lg { width: var(--size-icon-lg); height: var(--size-icon-lg); }
 
@@ -55,12 +57,15 @@ button { font: inherit; color: inherit; border: 0; background: none; padding: 0;
 .t-display { font: var(--font-display-m); }
 .t-title-l { font: var(--font-title-l); }
 .t-title-m { font: var(--font-title-m); }
-.t-title-s { font: var(--font-large-semibold); }
+.t-title-s { font: var(--font-role-section); letter-spacing: var(--letter-spacing-role-section); }
+.t-card { font: var(--font-role-card); }
+.t-row { font: var(--font-role-row); }
 .t-body-strong { font: var(--font-medium-semibold); }
 .t-label { font: var(--font-small-medium); }
 .t-body { font: var(--font-small-regular); }
 .t-caption { font: var(--font-x-small-regular); }
 .t-caption-strong { font: var(--font-x-small-medium); }
+.t-note { font: var(--font-role-label); }
 
 .c-2 { color: var(--ui-text-secondary); }
 .c-3 { color: var(--ui-text-tertiary); }

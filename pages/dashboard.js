@@ -28,10 +28,9 @@ function checkInCard() {
   const days = `<b class="checkin__count">${checkIn.checkedDays}</b>`;
   return `
     <section class="card checkin">
-      <span class="checkin__art" aria-hidden="true">${ui.icon('calendar')}</span>
       <div class="stack stack--tight">
-        <h2 class="t-title-s num">${ui.tHtml('checkin.title', { days })}</h2>
-        <p class="t-caption c-3 num">${ui.tHtml('checkin.subtitle', { points: `<span class="checkin__pts">${coin('coin--tiny')}${ui.num(Math.max(...checkIn.rewards))}</span>` })}</p>
+        <h2 class="t-card num">${ui.tHtml('checkin.title', { days })}</h2>
+        <p class="t-note c-2 num">${ui.tHtml('checkin.subtitle', { points: `<span class="checkin__pts">${coin('coin--tiny')}${ui.num(Math.max(...checkIn.rewards))}</span>` })}</p>
       </div>
       <ol class="checkin__days">${checkIn.rewards.map(day).join('')}</ol>
       ${checkIn.checkedToday
@@ -53,26 +52,25 @@ const EARN_CELL = 3; // the "earn coins" card is the 3rd cell
 // amount is sent; not sent for guests, whose balance is always 0: spec §62), and since spec §62 `section` = home, the
 // reward's `category`, `badge` = none (Home's cards show no label) and `price_range`.
 const rewardCard = (item, position) => `
-  <button class="card reward-card" type="button" ${redeemAttrs(common, 'reward', 'reward')} data-reward="${ui.esc(item.id)}" data-track="loyalty_reward_click" data-track-position="${position}" data-track-reward_id="${ui.esc(item.id)}" data-track-reward_name="${ui.esc(item.name)}"${common.guest ? '' : ` data-track-affordable="${common.balance.available >= item.points}"`} data-track-section="home" data-track-category="${ui.esc(item.category || 'none')}" data-track-badge="none" data-track-price_range="${priceRange(item.points)}">
+  <button class="card card--solid reward-card" type="button" ${redeemAttrs(common, 'reward', 'reward')} data-reward="${ui.esc(item.id)}" data-track="loyalty_reward_click" data-track-position="${position}" data-track-reward_id="${ui.esc(item.id)}" data-track-reward_name="${ui.esc(item.name)}"${common.guest ? '' : ` data-track-affordable="${common.balance.available >= item.points}"`} data-track-section="home" data-track-category="${ui.esc(item.category || 'none')}" data-track-badge="none" data-track-price_range="${priceRange(item.points)}">
     <span class="reward-card__art">${item.image ? `<img src="${ui.esc(item.image)}" alt="" loading="lazy" decoding="async">` : ''}</span>
     <span class="reward-card__name">${ui.esc(item.name)}</span>
     <span class="reward-card__foot">
       <span class="reward-card__price num">${coin('coin--xs')}${ui.num(item.points)}</span>
-      <span class="btn btn--xs btn--primary">${ui.t('balance.redeem')}</span>
+      <span class="btn btn--xs btn--soft">${ui.t('balance.redeem')}</span>
     </span>
   </button>`;
 
-// The "earn coins" card: opens Earn. Yellow so it stands out among the rewards; green plus signs twinkle around the
-// coins ("earn more"). Hidden without a trading task or once
-// the programme has ended.
+// The "earn coins" card: opens Earn. A brand card (TOKENS 4.4), so it stands out among the rewards. Hidden without a
+// trading task or once the programme has ended.
 const earnCard = () => {
   const max = common.program.rateRange?.max;
   return `
-  <a class="card card--blend blend-yellow reward-card reward-card--earn" href="${ui.href('trading-task.html')}" data-track="loyalty_card_click" data-track-target="earn">
+  <a class="card card--solid card--brand reward-card reward-card--earn" href="${ui.href('trading-task.html')}" data-track="loyalty_card_click" data-track-target="earn">
     <span class="reward-card__art"><img src="../assets/images/home/coin-cup.webp" alt=""><span class="earn-plus" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></span>
     <span class="reward-card__name">${ui.t('rewards.earn.title')}</span>
     <span class="t-caption reward-card__note num">${max ? ui.t('rewards.earn.body', { max: ui.num(max) }) : ui.t('rewards.earn.bodyNoRate')}</span>
-    <span class="btn btn--sm btn--onblend btn--block reward-card__cta">${ui.t('rewards.earn.button')}</span>
+    <span class="btn btn--sm btn--onbrand btn--block reward-card__cta">${ui.t('rewards.earn.button')}</span>
   </a>`;
 };
 
@@ -82,12 +80,12 @@ const earnCard = () => {
 const moreCard = () => {
   const { available } = common.balance;
   return `
-  <section class="card card--soft rewards-more">
+  <section class="card rewards-more">
     <div class="rewards-more__head">
       <img class="rewards-more__art" src="../assets/images/home/giftbox.webp" alt="">
       <div class="stack stack--tight grow">
-        <h3 class="t-title-s">${ui.t(rewards.length ? 'rewards.more.title' : 'rewards.more.titleAlone')}</h3>
-        <p class="t-body c-2 num">${available > 0 ? ui.t('rewards.more.body', { points: ui.num(available) }) : ui.t('rewards.more.bodyNoCoins')}</p>
+        <h3 class="t-card">${ui.t(rewards.length ? 'rewards.more.title' : 'rewards.more.titleAlone')}</h3>
+        <p class="t-note c-2 num">${available > 0 ? ui.t('rewards.more.body', { points: ui.num(available) }) : ui.t('rewards.more.bodyNoCoins')}</p>
         <button class="btn btn--primary btn--sm rewards-more__cta" type="button" ${redeemAttrs(common, 'redeem', 'explore')} data-track="loyalty_card_click" data-track-target="rewards">${ui.t('rewards.more.button')}${ui.icon('right', 'icon--sm')}</button>
       </div>
     </div>
@@ -129,8 +127,22 @@ function fitPrices() {
 const app = document.getElementById('app');
 const header = appHeader(ui, { title: ui.t('dash.title'), action: tourButton(ui) });
 
+// Loading: the same shapes as the page, so nothing jumps when the data lands (TOKENS 9.4b).
+const bar = (size) => `<span class="skeleton__bar skeleton__bar--${size}"></span>`;
+const line = (style, size) => `<span class="${style} skeleton__line">${bar(size)}</span>`;
+// The real words, unseen, give the bar its width in each language, so the block wraps where the page does.
+const fit = (key, style = '') => `<span class="skeleton__bar skeleton__fit ${style}" aria-hidden="true">${ui.t(key)}</span>`;
+const skeletonCard = `<div class="card card--solid reward-card"><span class="reward-card__art skeleton__bar"></span>${line('reward-card__name', 'l')}<span class="reward-card__foot">${line('reward-card__price', 'full')}${fit('balance.redeem', 'skeleton__redeem')}</span></div>`;
+const homeSkeleton = `
+  <div class="skeleton skeleton--home" role="status" aria-label="${ui.t('common.loading')}">
+    <section class="card balance"><div class="balance-row"><span class="skeleton__dot coin--lg"></span><div class="grow"><p class="balance-label"><span class="skeleton__line">${fit('balance.title')}</span><span class="skeleton__bar skeleton__tier"></span></p>${line('balance-number', 'm')}</div><div class="balance-side">${fit('balance.redeem', 'skeleton__action')}</div></div></section>
+    <div class="sunk activity"><div class="activity__row"><span class="skeleton__dot activity__icon"></span><div class="grow">${bar('l')}</div></div></div>
+    <div class="rewards-head">${line('section-title', 'l')}</div>
+    <div class="reward-grid">${skeletonCard.repeat(4)}</div>
+  </div>`;
+
 // Loading or failed to load: the header and a placeholder, nothing else (spec §44).
-if (showStatus(ui, common, app, header)) {
+if (showStatus(ui, common, app, header, 'page', homeSkeleton)) {
   mountNav(ui, common, 'home');
 } else {
   app.innerHTML = `
@@ -141,7 +153,6 @@ if (showStatus(ui, common, app, header)) {
     ${rewards.length ? `
     <div class="rewards-head">
       <h2 class="section-title">${ui.t('rewards.title')}</h2>
-      <p class="t-body c-3">${ui.t('rewards.subtitle')}</p>
     </div>
     ${rewardsGrid()}` : ''}
     ${moreCard()}`;

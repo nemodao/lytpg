@@ -1,47 +1,76 @@
 /* Trading Task-only styles: account selector, rules, history. (The options in the account sheet, .option / .radio, are
    shared: components.css.) */
 
-/* Night sky behind the header and cup, the same in both themes. It ends in a clean edge halfway down the Today card:
-   .hero-bg covers the header and cup, and the card's .hero-card__sky continues the plain dark surface down to its middle.
-   Elements carrying data-theme="dark" resolve the surface tokens to their dark values.
-   Hue: the theme blue. --sky-light colours the streaks; the sky is tinted at the top and loses its tint towards the cut. */
-.app { isolation: isolate; --sky-light: color-mix(in srgb, var(--bg-blend) 60%, var(--color-blue-300)); }
-.hero-bg, .hero-card { --sky: color-mix(in srgb, var(--color-blue-500) 20%, var(--ui-surface-weak)); --sky-base: var(--ui-surface-weak); }
-/* At the top of the page the title sits on the dark sky in both themes (once scrolled it is the common pill). */
-.app-header:not(.is-stuck) h1 { color: var(--on-brand); }
-.hero { position: relative; display: flex; flex-direction: column; gap: var(--spacing-section); }
+/* Night sky behind the header and cup, the same in both themes, gold on Premium. It ends in a clean edge halfway down
+   the Today card: .hero-bg covers the header and cup, and the card's .hero-card__sky continues it down to its middle.
+   Elements carrying data-theme="dark" resolve the surface tokens to their dark values. */
+/* --sky-light colours the rays. */
+.app { isolation: isolate; --sky-light: color-mix(in srgb, var(--accent-surface-brand) 62%, transparent); }
+.hero-bg, .hero-card { --sky: color-mix(in srgb, var(--accent-mark) 14%, var(--sky-base)); }
+.app-header { --header-fade: color-mix(in srgb, var(--sky-base) calc(var(--sky-over, 0) * 100%), var(--ui-surface-weak)); }
+/* On the sky the title is white in both themes and its pill stays dark; both turn when the sky's edge passes. */
+.app-header.is-over-sky h1 { color: var(--color-neutral-0); }
+.app-header.is-over-sky .app-header__pill { background: var(--sky-pill); }
+/* The pill's fill crosses over linearly while the title's colour flips in one step halfway, so the title never fades
+   into a mid-grey pill (light theme: dark pill to light). */
+.app-header__pill { transition: background-color 0.2s linear; }
+.app-header h1 { transition: color 0s linear 0.1s; }
+@media (prefers-reduced-motion: reduce) { .app-header h1, .app-header__pill { transition: none; } }
+/* --cup-gap is the space above and below the cup, --sky-below how far the sky runs past the hero; the rays and rewards
+   find the cup's centre from them. */
+.hero { --cup-size: calc(var(--size-avatar-lg) + var(--spacing-24)); --cup-gap: var(--spacing-8); --sky-below: var(--spacing-12); --gift-rest: 0.3; --rays-rest: 0.4; position: relative; display: flex; flex-direction: column; }
+/* The rewards' burst overshoots the screen's sides for a moment: no sideways scroll. clip keeps the sticky header. */
+.app { overflow-x: clip; }
+.hero + .card, .hero + .skeleton { margin-top: calc(var(--spacing-12) - var(--spacing-section)); }
+.hero + .card + .activity, .skeleton--earn .hero-card + .activity { margin-top: calc(var(--spacing-12) - var(--spacing-section)); }
 .hero-bg {
   position: absolute; z-index: -1; overflow: hidden; pointer-events: none;
   /* Up to the top of the screen: over the page's top padding and the sticky header, which sits just above .hero
      (outside it, so it can stay stuck while the page scrolls). */
-  top: calc(-1 * (env(safe-area-inset-top, 0px) + var(--spacing-12) + var(--size-icon-button) + var(--spacing-section))); left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); bottom: calc(-1 * var(--spacing-section));
+  --sky-top: calc(env(safe-area-inset-top, 0px) + var(--spacing-6) + var(--size-header-button) + var(--spacing-12));
+  top: calc(-1 * var(--sky-top)); left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); bottom: calc(-1 * var(--sky-below));
   background: linear-gradient(to bottom, var(--sky) 25%, var(--sky-base) 92%);
 }
 .hero-card { position: relative; }
 /* Ended: a message on the Today card in place of today's progress. */
-.hero-message { flex-direction: row; align-items: flex-start; gap: var(--spacing-12); }
-.hero-message__icon { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--blend-glass); }
+.hero-message { flex-direction: row; align-items: center; gap: var(--spacing-12); }
+.hero-message__icon { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--sunk-inset); color: var(--ui-text-secondary); }
 /* The dark sky continues behind the top half of the card. It is its own element carrying data-theme="dark", so the
-   card itself can follow the page theme (pale card options). */
+   card itself can follow the page theme. */
 .hero-card__sky {
   position: absolute; z-index: -1; top: 0; left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); height: 50%;
-  background: var(--ui-surface-weak);
+  background: var(--sky-base);
 }
-/* Light streaks: a layer larger than the sky, rotated, holding vertical lines that fade out at both ends.
-   They are strongest around the top centre and dissolve towards the side edges, the corners and the sky's lower
-   edge, so they do not stop dead at the Today card. */
-.streaks-fade { position: absolute; inset: 0; --streak-fade: radial-gradient(ellipse 80% 105% at 50% 15%, black 45%, transparent 100%); -webkit-mask-image: var(--streak-fade); mask-image: var(--streak-fade); }
-.streaks { position: absolute; inset: -70%; transform: rotate(28deg); }
-.streak { position: absolute; background: linear-gradient(to bottom, transparent, var(--sky-light) 50%, transparent); }
-.streak--s { width: var(--size-stroke); }
-.streak--m { width: var(--spacing-2); box-shadow: 0 0 var(--spacing-8) color-mix(in srgb, var(--sky-light) 50%, transparent); }
-.streak--l { width: var(--spacing-8); filter: blur(var(--spacing-4)); }
+/* The load error's card runs on the sky the same way. */
+.hero + .page-error::after { content: ""; position: absolute; z-index: -1; top: 0; left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); height: 50%; background: var(--sky-base); }
+/* The cup's glory: a soft halo and rays of light, centred on the cup, spreading out over the sky. Broad rays every
+   30deg, a thin one between each pair. They start behind the cup and fade towards the screen's top and sides, and a
+   fade at the bottom keeps them from stopping dead at the Today card. While loading or on a load error (.hero--loading):
+   no rays, so the burst is where they first appear. Bright during the burst, then the halo and rays dim together with the rewards so the
+   content below leads (--rays-rest). Ended: dimmer still, nothing to celebrate. */
+.hero-rays {
+  --ray: color-mix(in srgb, var(--sky-light) 45%, transparent);
+  --ray-thin: color-mix(in srgb, var(--sky-light) 28%, transparent);
+  position: absolute; left: 50%; top: calc(var(--sky-top) + var(--cup-gap) + var(--cup-size) / 2);
+  width: calc(var(--cup-size) * 6); aspect-ratio: 1; translate: -50% -50%;
+  background:
+    radial-gradient(closest-side, color-mix(in srgb, var(--sky-light) 70%, transparent), color-mix(in srgb, var(--sky-light) 25%, transparent) 22%, transparent 45%),
+    repeating-conic-gradient(from -4deg, transparent 0deg, var(--ray) 4deg, transparent 8deg, transparent 13deg, var(--ray-thin) 15deg, transparent 17deg, transparent 30deg);
+  /* Fades out from the cup, and towards the sky's bottom edge (half a cup, the cup's gap and the sky's overhang below
+     the cup's centre). */
+  --ray-fade: radial-gradient(closest-side, black 12%, color-mix(in srgb, black 45%, transparent) 45%, transparent 85%),
+    linear-gradient(to bottom, black calc(var(--cup-size) * 3), transparent calc(var(--cup-size) * 3.5 + var(--cup-gap) + var(--sky-below)));
+  -webkit-mask-image: var(--ray-fade); mask-image: var(--ray-fade);
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
+.hero--loading .hero-rays { display: none; }
+.hero--ended .hero-rays { --rays-rest: 0.25; }
 
 /* Programme cup, centred above the Today card, outside it. Decorative. A wide dark shadow that follows its outline
    dims the sky around it so the cup stands out. */
 .today-cup {
-  --cup-size: calc(var(--size-avatar-lg) + var(--spacing-24));
-  align-self: center; width: auto; max-width: 100%; height: var(--cup-size); margin-block: var(--spacing-8); object-fit: contain;
+  position: relative;
+  align-self: center; width: auto; max-width: 100%; height: var(--cup-size); margin-block: var(--cup-gap); object-fit: contain;
   filter: drop-shadow(0 var(--spacing-8) var(--spacing-32) color-mix(in srgb, var(--vivid-shade) 65%, transparent));
 }
 /* "HOT" badge floating at the cup's top-right. At the top of its drift it sits clear of the cup; at the bottom it
@@ -52,99 +81,192 @@
   animation: hero-hot-float 2.4s ease-in-out infinite;
 }
 @keyframes hero-hot-float { 0%, 100% { transform: translateY(calc(var(--spacing-6) * -1)) rotate(2deg); } 50% { transform: translateY(0) rotate(-1deg); } }
-@media (prefers-reduced-motion: reduce) { .hero-hot { animation: none; } }
 
-/* Earning rates sit in their own inner card inside the trading account card. */
-/* Rate value: number, coin, "/ lot" on one line. */
-.rate { display: inline-flex; align-items: center; gap: var(--spacing-4); white-space: nowrap; }
-.rates-frame { padding: var(--spacing-12); border: var(--size-stroke) solid var(--ui-stroke-soft); border-radius: var(--radius-card-inner); background: var(--ui-field-surface); }
-
-/* Account selector: looks like a field, opens the bottom sheet. */
-.select {
-  display: flex; align-items: center; gap: var(--spacing-8); width: 100%;
-  min-height: var(--size-field); padding: 0 var(--spacing-12);
-  border-radius: var(--radius-control); border: var(--size-stroke) solid var(--ui-stroke-soft);
-  background: var(--ui-field-surface); font: var(--font-small-medium);
+/* Rewards around the cup, from the cup's centre. Their photo ground is near black, so they lighten onto the sky and
+   their edges vanish into it. At rest they are dimmed: only the cup and its badge stay bright. */
+.hero-gifts { position: absolute; left: 50%; top: calc(var(--cup-gap) + var(--cup-size) / 2); pointer-events: none; }
+.hero-gift {
+  position: absolute; left: 0; top: 0; width: var(--w); height: auto; mix-blend-mode: lighten;
+  transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--tilt)); /* opacity: Touch, below */
 }
-.select--static { background: var(--ui-field-surface-locked); }
-.select .icon { color: var(--ui-icon-tertiary); }
-/* Account number with its tier right after it. */
-.account-name { display: inline-flex; align-items: center; gap: var(--spacing-8); min-width: 0; }
+/* The cup's light: a halo in the brand colour behind it, white hot at the centre. It only flashes as the cup pops. */
+.hero-glow {
+  position: absolute; left: 50%; top: 50%; width: calc(var(--cup-size) * 1.9); aspect-ratio: 1; border-radius: var(--radius-pill);
+  translate: -50% -50%; pointer-events: none; opacity: 0;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent-surface-brand) 45%, var(--color-neutral-0)), color-mix(in srgb, var(--accent-surface-brand) 70%, transparent) 22%, color-mix(in srgb, var(--accent-surface-brand) 22%, transparent) 50%, transparent 72%);
+}
+
+/* First draw: the rewards burst out of the cup to both sides, the cup pops up from the middle with a flash of its
+   halo, the badge lands on it; then the rewards dim. Later draws are .hero--settled: no motion, the rewards at rest. */
+/* backwards, not both: the last frame is the rest state, so once it ends the hold below can change it. */
+.hero--burst .hero-gift { animation: hero-gift-burst 2.6s var(--delay) backwards; }
+@keyframes hero-gift-burst {
+  0% { transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(0.2); opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1); }
+  10% { opacity: 1; }
+  30% { transform: translate(-50%, -50%) translate(calc(var(--x) * 1.05), calc(var(--y) * 1.05)) rotate(var(--tilt)) scale(1.03); animation-timing-function: ease-in-out; }
+  42%, 62% { transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--tilt)) scale(1); opacity: 1; animation-timing-function: ease-in-out; }
+  100% { transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--tilt)) scale(1); opacity: var(--gift-rest); }
+}
+.hero--burst .today-cup {
+  /* Same filter list as the pop's flash, so the light fades out smoothly; at rest it is the plain shadow. */
+  filter: brightness(1) drop-shadow(0 0 0 transparent) drop-shadow(0 var(--spacing-8) var(--spacing-32) color-mix(in srgb, var(--vivid-shade) 65%, transparent));
+  animation: hero-cup-pop 0.8s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+@keyframes hero-cup-pop {
+  0% { transform: translateY(var(--spacing-24)) scale(0.4); opacity: 0; }
+  40% { filter: brightness(1.3) drop-shadow(0 0 var(--spacing-16) color-mix(in srgb, var(--accent-surface-brand) 75%, transparent)) drop-shadow(0 var(--spacing-8) var(--spacing-32) color-mix(in srgb, var(--vivid-shade) 65%, transparent)); }
+  60% { opacity: 1; }
+}
+/* Spreads out with the pop (to 1.1s), holds bright, then dims to rest as the rewards do (2.75s). */
+.hero--burst .hero-rays { animation: hero-rays-spread 2.6s 0.15s backwards; }
+@keyframes hero-rays-spread {
+  0% { opacity: 0; scale: 0.3; rotate: -6deg; animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
+  36%, 62% { opacity: 1; scale: 1; rotate: 0deg; animation-timing-function: ease-in-out; }
+  100% { opacity: var(--rays-rest); scale: 1; rotate: 0deg; }
+}
+.hero--burst .hero-glow { animation: hero-glow-flash 1.2s ease-out both; }
+@keyframes hero-glow-flash { 0% { opacity: 0; scale: 0.3; } 35% { opacity: 1; scale: 1.15; } 100% { opacity: 0; scale: 1.3; } }
+.hero--burst .hero-hot { animation: hero-hot-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) 0.55s both, hero-hot-float 2.4s ease-in-out 1.05s infinite; }
+@keyframes hero-hot-pop { 0% { transform: scale(0) rotate(-20deg); opacity: 0; } 100% { transform: translateY(calc(var(--spacing-6) * -1)) rotate(2deg); opacity: 1; } }
+/* Touch (pages/trading-task.js, `watchHeroTouch`). Holding the hero: the rewards come back in full and push out a
+   little, the halo and rays light up, the cup and badge zoom; all of it settles back when the finger lifts. A tap on
+   the cup or a reward shows the same at 30% for a moment, a taste of the hold (.hero--peek); a tap on the cup also
+   bounces it with its badge. --lift is how far along: 0 at rest, .3 peeking, 1 held. Individual scale composes with
+   the transforms the burst and the badge's float use. */
+/* manipulation: repeated taps on the cup never become a double-tap zoom. */
+.hero { touch-action: manipulation; --lift: 0; }
+.hero--peek { --lift: 0.3; }
+.hero--held { --lift: 1; }
+/* The rewards take taps (their layer does not). */
+.hero-gift { pointer-events: auto; }
+.today-cup-wrap { scale: calc(1 + 0.12 * var(--lift)); transition: scale 0.45s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.hero--held .today-cup-wrap, .hero--peek .today-cup-wrap { transition-duration: 0.35s; }
+.today-cup-wrap.is-tapped { animation: hero-cup-tap 0.5s ease-out; }
+@keyframes hero-cup-tap {
+  0%, 100% { transform: none; }
+  30% { transform: translateY(calc(var(--spacing-6) * -1)) scale(1.05); }
+  60% { transform: translateY(0) scale(0.98); }
+  80% { transform: scale(1.01); }
+}
+.hero-gift {
+  opacity: calc(var(--gift-rest) + (1 - var(--gift-rest)) * var(--lift)); scale: calc(1 + 0.03 * var(--lift));
+  transition: opacity 0.45s ease, scale 0.45s ease;
+}
+.hero-rays { opacity: calc(var(--rays-rest) + (1 - var(--rays-rest)) * var(--lift)); transition: opacity 0.45s ease; }
+.hero--held :is(.hero-gift, .hero-rays), .hero--peek :is(.hero-gift, .hero-rays) { transition-duration: 0.3s; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-hot, .hero--burst .hero-gift, .hero--burst .today-cup, .hero--burst .hero-glow, .hero--burst .hero-hot, .hero--burst .hero-rays, .today-cup-wrap.is-tapped { animation: none; }
+  /* The hold and the peek still light things up, without the zoom. */
+  .today-cup-wrap, .hero-gift { scale: none; }
+}
+
+/* Earning rates sit in one sunk box inside the trading account card. */
+/* Rate value: number, coin, "/ lot" on one line. */
+.rate { display: inline-flex; align-items: center; gap: var(--spacing-4); white-space: nowrap; font: var(--font-role-body-em); }
+.rates-frame { padding: var(--spacing-12) var(--spacing-16); border-radius: var(--radius-box); background: var(--sunk-inset); }
+
+/* Account selector, a pick field (7.22) inside a card: it opens the bottom sheet. */
+.select {
+  display: flex; align-items: center; gap: var(--tag-gap, var(--spacing-8)); width: 100%;
+  min-height: var(--size-pick-field); padding: var(--spacing-8) var(--spacing-12) var(--spacing-8) var(--spacing-16);
+  border-radius: var(--radius-tile); background: var(--sunk-inset); font: var(--font-role-row);
+}
+.select--static { padding-right: var(--spacing-16); }
+.select__chevron { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--ui-text-brand); }
+/* Account number with its tier right after it, eligible on the right, on a second line where nothing else helps. */
+.account-lines { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-4) var(--tag-gap, var(--spacing-8)); min-width: 0; }
+.account-lines > .badge, .account-lines > .skeleton__tier { margin-left: auto; }
+.account-name { flex: 1 0 auto; display: inline-flex; align-items: center; gap: var(--tag-gap, var(--spacing-8)); }
 
 /* History: one row per day. Lots and points sit in fixed columns so they line up from row to row. */
 .day__head { display: flex; align-items: center; gap: var(--spacing-8); }
-.day__figures { display: grid; grid-template-columns: calc(var(--spacing-40) * 2) 1fr; align-items: center; }
-.day__points { display: flex; align-items: center; gap: var(--spacing-4); white-space: nowrap; }
-.day__capped { margin-left: auto; color: var(--ui-text-brand); font: var(--font-x-small-medium); }
+.day__figures { display: grid; grid-template-columns: calc(var(--spacing-40) * 2) 1fr; align-items: start; }
+.day__points { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-4); min-width: 0; }
+.day__capped { margin-left: auto; padding-left: var(--spacing-4); color: var(--ui-text-brand); font: var(--font-role-small-em); }
 
 /* ---- Account tiers (spec §51) ---- */
 /* The tier badge colours (.tier--*) are in shared/components.css: Home and Coins show the badge too (spec §55). */
 /* ?focus=account scrolls here: stop below the sticky header. */
-[data-account-card] { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + var(--spacing-8) + var(--size-icon-button) + var(--spacing-section)); }
+[data-account-card] { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + var(--spacing-6) + var(--size-header-button) + var(--spacing-16)); }
 
-/* Upgrade row under the rates table: a light purple strip, icon, two lines, chevron; the whole row opens the sheet. */
+/* Upgrade row under the account field: a brand tint, art, two lines, chevron; the whole row opens the sheet. */
 .upgrade-row {
-  display: flex; align-items: center; gap: var(--spacing-12); width: 100%; padding: var(--spacing-12);
-  border-radius: var(--radius-card-inner); border: var(--size-stroke) solid color-mix(in srgb, var(--color-purple-main) 24%, var(--card-stroke));
-  background: color-mix(in srgb, var(--color-purple-main) 8%, var(--card-surface)); font: inherit; color: var(--ui-text-primary); text-align: left; cursor: pointer;
+  display: flex; align-items: center; gap: var(--spacing-8); width: 100%; padding: var(--spacing-12) var(--spacing-16);
+  border-radius: var(--radius-box); background: var(--upgrade-row); font: inherit; color: var(--ui-text-primary); text-align: left; cursor: pointer;
 }
-.upgrade-row:active { background: color-mix(in srgb, var(--color-purple-main) 14%, var(--card-surface)); }
+.upgrade-row.pressed { background: var(--upgrade-row-pressed); }
 .upgrade-row__art { flex: none; width: var(--size-avatar); height: var(--size-avatar); object-fit: contain; }
-/* Top tier: nothing left to upgrade, so the row steps back: no border, a plain field surface, softer title. */
-.upgrade-row--top { border-color: transparent; background: var(--ui-field-surface); }
-.upgrade-row--top:active { background: var(--ui-field-surface); }
-.upgrade-row--top .t-body-strong { color: var(--ui-text-secondary); }
+/* Top tier: nothing left to upgrade, so the row steps back: a plain sunk box, softer title. */
+.upgrade-row--top { --control-fill: var(--sunk-inset); background: var(--control-fill); }
+.upgrade-row--top.pressed { background: var(--pressed-fill); }
+.upgrade-row--top .t-row { color: var(--ui-text-secondary); }
 .upgrade-row > .icon:last-child { flex: none; color: var(--ui-icon-tertiary); }
 
 /* Tier sheet. Its parts keep their height: the sheet scrolls as a whole (the table would otherwise shrink, since it
    scrolls sideways). */
 .sheet--upgrade > * { flex-shrink: 0; }
-/* The four tiers as steps on a line: done (check), current (ringed), later (plain). */
-.ladder { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; list-style: none; }
-.ladder__step { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-6); font: var(--font-x-small-regular); color: var(--ui-text-tertiary); }
-.ladder { --dot: var(--size-icon-lg); --gap: var(--spacing-6); }
+/* The four tiers as a stepper (7.10): the tiers below are filled green, the account's tier takes the brand fill and the
+   only tick (spec §51), later ones are grey. */
+.ladder { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; list-style: none; --dot: var(--size-icon-lg); --gap: var(--spacing-6); }
+.ladder__step { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-6); font: var(--font-role-meta); color: var(--ui-text-secondary); }
 /* Each connector runs from the previous dot's edge to this dot's edge (with a small gap), never behind a dot. */
 .ladder__step + .ladder__step::before {
   content: ''; position: absolute; top: calc(var(--dot) / 2 - var(--spacing-2) / 2); height: var(--spacing-2); border-radius: var(--radius-pill);
-  left: calc(-50% + var(--dot) / 2 + var(--gap)); right: calc(50% + var(--dot) / 2 + var(--gap)); background: var(--ui-surface-soft);
+  left: calc(-50% + var(--dot) / 2 + var(--gap)); right: calc(50% + var(--dot) / 2 + var(--gap)); background: var(--track);
 }
-.ladder__step--done + .ladder__step::before { background: color-mix(in srgb, var(--color-purple-main) 45%, var(--card-surface)); }
-.ladder__dot { display: grid; place-items: center; width: var(--dot); height: var(--dot); border-radius: var(--radius-pill); background: var(--ui-surface-soft); color: var(--on-brand); }
-.ladder__step--done .ladder__dot { background: color-mix(in srgb, var(--color-purple-main) 45%, var(--card-surface)); }
-.ladder__step--current .ladder__dot { background: var(--color-purple-main); box-shadow: 0 0 0 var(--spacing-4) color-mix(in srgb, var(--color-purple-main) 20%, transparent); }
-.ladder__step--current { font: var(--font-x-small-semibold); color: var(--ui-text-primary); }
-.ladder__step--done { color: var(--ui-text-secondary); }
+.ladder__step--done + .ladder__step::before { background: var(--accent-success); }
+.ladder__dot { display: grid; place-items: center; width: var(--dot); height: var(--dot); border-radius: var(--radius-pill); background: var(--control-fill); color: var(--color-neutral-0); }
+.ladder__dot .icon { width: var(--size-tick); height: var(--size-tick); stroke-width: 2.6; }
+.ladder__step--done .ladder__dot { background: var(--accent-success); }
+.ladder__step--current .ladder__dot { background: var(--brand-mark); color: var(--on-brand); }
+.ladder__step--current { font: var(--font-role-meta-em); color: var(--ui-text-primary); }
+.ladder__step--done { color: var(--ui-text-green); }
 
 /* Lifetime deposit against the next tier's threshold. */
-.upgrade-progress { display: flex; flex-direction: column; gap: var(--spacing-6); padding: var(--spacing-12); border-radius: var(--radius-card-inner); background: var(--ui-field-surface); }
-.upgrade-progress__bar { display: block; height: var(--spacing-6); border-radius: var(--radius-pill); background: var(--ui-surface-soft); overflow: hidden; }
-.upgrade-progress__bar i { display: block; height: 100%; border-radius: inherit; background: var(--color-purple-main); }
+.upgrade-progress { display: flex; flex-direction: column; gap: var(--spacing-8); padding: var(--spacing-12); border-radius: var(--radius-box); background: var(--sunk-inset); }
+.upgrade-progress__bar { display: block; height: var(--spacing-4); border-radius: var(--radius-pill); background: var(--track); overflow: hidden; }
+.upgrade-progress__bar i { display: block; height: 100%; border-radius: inherit; background: var(--brand-gradient); }
 
 /* Coins per lot on every tier. The group column stays put; the tier columns scroll sideways when the screen is too
-   narrow. The account's tier is tinted purple, with a "Now" tag. */
+   narrow. The account's tier takes the brand tint, with a "Now" tag. */
 .tier-table { overflow-x: auto; scrollbar-width: none; }
 .tier-table::-webkit-scrollbar { display: none; }
-.tier-table table { border-collapse: separate; border-spacing: 0; min-width: 100%; font: var(--font-small-regular); }
-.tier-table th, .tier-table td { padding: var(--spacing-8) var(--spacing-10); border-bottom: var(--size-stroke) solid var(--ui-stroke-soft); white-space: nowrap; }
-.tier-table tbody tr:last-child > * { border-bottom: 0; }
-.tier-table thead th { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); text-align: center; vertical-align: bottom; }
+.tier-table table { border-collapse: separate; border-spacing: 0; min-width: 100%; font: var(--font-role-label); }
+.tier-table th, .tier-table td { padding: var(--spacing-8); box-shadow: inset 0 calc(var(--size-stroke) * -1) 0 var(--ui-line-soft); white-space: nowrap; }
+.tier-table tbody tr:last-child > * { box-shadow: none; }
+.tier-table thead th { font: var(--font-role-meta-em); color: var(--ui-text-secondary); text-align: center; vertical-align: bottom; }
 .tier-table td { min-width: calc(var(--size-control-lg) + var(--spacing-10)); text-align: center; color: var(--ui-text-secondary); }
-.tier-table tbody th { text-align: left; font: var(--font-small-medium); color: var(--ui-text-primary); }
+.tier-table tbody th { text-align: left; font: var(--font-role-label-em); color: var(--ui-text-primary); }
 .tier-table tr > :first-child { position: sticky; left: 0; z-index: 1; padding-left: 0; background: var(--card-surface); }
-.tier-table .is-now { background: color-mix(in srgb, var(--color-purple-main) 10%, var(--card-surface)); color: var(--ui-text-primary); font-weight: 600; }
-.tier-table thead .is-now { color: color-mix(in srgb, var(--color-purple-main) 72%, var(--ui-text-primary)); border-radius: var(--radius-control) var(--radius-control) 0 0; }
-.tier-table tbody tr:last-child .is-now { border-radius: 0 0 var(--radius-control) var(--radius-control); }
-/* "Now" above the tier name, in a light pill. */
-.tier-table__now {
-  display: table; margin: 0 auto var(--spacing-4); padding: 0 var(--spacing-8); border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--color-purple-main) 18%, var(--card-surface)); font: var(--font-x-small-semibold);
-}
+.tier-table .is-now { background: var(--accent-soft); color: var(--ui-text-primary); font: var(--font-role-label-em); }
+.tier-table thead .is-now { color: var(--accent-tag-text); font: var(--font-role-meta-em); border-radius: var(--radius-inner) var(--radius-inner) 0 0; }
+.tier-table tbody tr:last-child .is-now { border-radius: 0 0 var(--radius-inner) var(--radius-inner); }
+/* "Now" above the tier name. */
+.tier-table__now { display: table; margin: 0 auto var(--spacing-4); padding: 0 var(--spacing-8); border-radius: var(--radius-pill); background: var(--card-surface); color: var(--accent-tag-text); font: var(--font-role-meta-em); }
+/* Nothing in this range: .list-none, shared (components.css). */
 
 /* The sheet's button stays in view at its bottom edge while the comparison scrolls under it. */
 /* It also covers the sheet's bottom padding (same amount as .sheet), so nothing scrolls into view below it. Above the
    table's frozen column. */
 .sheet__sticky {
-  --pad: calc(env(safe-area-inset-bottom, 0px) + var(--spacing-20));
+  --pad: max(env(safe-area-inset-bottom, 0px), var(--size-sheet-foot));
   position: sticky; bottom: calc(var(--pad) * -1); z-index: 2;
   margin-bottom: calc(var(--pad) * -1); padding: var(--spacing-8) 0 var(--pad); background: var(--card-surface);
 }
+
+/* The warning under the account field: no word left alone on its last line. */
+.notice { text-wrap: balance; }
+
+/* ---- Loading ---- */
+.skeleton--earn { gap: var(--spacing-section); }
+.skeleton--earn .skeleton__card { gap: var(--spacing-stack); }
+.skeleton--earn .rules { gap: var(--spacing-12); }
+.skeleton__end { flex: none; width: var(--size-control-lg); }
+.skeleton--earn .tab { display: grid; place-items: center; }
+/* No brand colour for data that hasn't come yet. */
+.skeleton--earn .upgrade-row { background: var(--sunk-inset); }
+.skeleton--earn .rules li::before { background: var(--shimmer-fill); }
+.skeleton--earn .text-btn { align-self: stretch; display: flex; }
+.skeleton__number { flex: none; width: var(--size-skeleton-price); }
+.skeleton__dot.skeleton__chevron { width: var(--size-control-sm); height: var(--size-control-sm); }
+.skeleton__button { height: var(--size-button); border-radius: var(--radius-pill); }

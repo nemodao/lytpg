@@ -19,7 +19,7 @@ sem = d["color"]["semantic"]
 fx = d["effect"]
 o = [
     "/* Loyalty design tokens — generated from tokens.json by build.py. Do not edit by hand.",
-    f"   Version {d['$version']}. Base values come from Figma (IB Partnership - UI); the Custom sections were added in review. */",
+    f"   Version {d['$version']}. {d['$source']['note']} */",
     "",
     ':root, [data-theme="light"] {',
     "  /* Color — primitives */",
@@ -45,6 +45,12 @@ for name, b in d["blend"].items():
 o += ["}", "", "/* Color — semantic (dark) */", '[data-theme="dark"] {']
 o += [decl(k, x) for k, x in sem["dark"].items()]
 o += ["", "  /* Effect strengths (dark) */"] + [decl(k, x) for k, x in fx["dark"].items()]
+o += ["}", ""]
+# Premium accounts swap the brand from lime to gold; everything else stays (TOKENS 1.3). data-premium sits on <html>.
+o += ["/* Premium: the brand turns gold, light then dark */", "[data-premium] {"]
+o += [decl(k, x) for k, x in sem["premiumLight"].items()]
+o += ["}", '[data-premium][data-theme="dark"], [data-premium] [data-theme="dark"] {']
+o += [decl(k, x) for k, x in sem["premiumDark"].items()]
 o += ["}", ""]
 o += [
     "/* Composed tokens — built from the variables above. Declared on every theme scope so they",

@@ -64,7 +64,7 @@ pages/<page>.js
 | Reward Store / one reward | `pages/store.js` / `pages/reward.js` | `arrange`, `homeTab`, `rewardsTab`, `tripPanel`, `voucher`, `card`, own bottom bar / `balanceLine`, `openSheet`, `shortSheet` |
 | Guided tour | `shared/tour.js` | Steps declared in the `STEPS` array; spec §38 |
 | Home | `pages/dashboard.js` | `rewardsGrid` (`rewardCard`, `earnCard`), `checkInCard` (future, off) |
-| Earn | `pages/trading-task.js` | `streakField` (decorative hero), `progressCard` / `endedCard`, `accountsCard`, `upgradeRow`, `upgradeSheet` (tier sheet, `tierTable`), `tradeButton`, `infoCard` (rules/history tabs), `sheet` (account picker) |
+| Earn | `pages/trading-task.js` | `heroBg`, `GIFTS` / `giftField` (decorative hero; `streakField` until handoff 11), `progressCard` / `endedCard`, `accountsCard`, `upgradeRow`, `upgradeSheet` (tier sheet, `tierTable`), `tradeButton`, `infoCard` (rules/history tabs), `sheet` (account picker) |
 | Coins | `pages/point-balance.js` | `availableTab`, `expiredTab`, `historyTab`, `itemRow` |
 | Redemption history | `pages/redemptions.js` | order list and one order (`?order=`) |
 

@@ -1,22 +1,44 @@
 /* Shared components. Every colour, size, radius, spacing and font comes from tokens/tokens.css. */
 
-.section-title { font: var(--font-large-semibold); }
+.section-title { font: var(--font-role-section); letter-spacing: var(--letter-spacing-role-section); }
 
-/* ---- Card ---- */
+/* ---- Materials (TOKENS 4). Two surfaces, no rim on cards, fields, tiles or secondary buttons (4.0). The rim is a 1px
+   ring drawn on ::before, kept on the brand card, the tab bar and the dark selected pill. ---- */
+.card--brand::before, .nav__exit::before, .nav__tabs::before, .tabs .nav__sel::before, .chip[aria-pressed="true"]::before {
+  content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; padding: var(--size-stroke); pointer-events: none;
+  background: var(--glass-rim);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+/* A block on the page takes the box colour; .sunk--inset on a card, sheet or dialog takes the page colour. */
+.sunk { position: relative; background: var(--sunk-page); }
+.sunk--inset { background: var(--sunk-inset); }
+.tabs .nav__sel::before, .chip[aria-pressed="true"]::before { opacity: var(--pill-rim-opacity); }
+
+/* Every surface takes the opposite of what is under it (4.0): a control is the box colour on the page, the page colour
+   on a card or sheet, and the box colour again on a block inside one. */
+.card, .sheet, .tour__card { --control-fill: var(--control-fill-on-card); --strip-pill: var(--strip-pill-on-card); --strip-pill-shadow: var(--strip-pill-shadow-on-card); --strip-track: var(--strip-track-on-card); --capsule-pill: var(--capsule-pill-on-card); --capsule-pill-shadow: none; }
+.sunk--inset { --control-fill: var(--card-surface); }
+/* Pressed (4.0): t1 at 8% over the surface the control is on. Set here, not in tokens, so it resolves after the flip. */
+.pressed { --pressed-fill: color-mix(in srgb, var(--ui-text-primary) var(--press-mix), var(--control-fill)); }
+
+/* ---- Card: solid fill, no blur, no shadow (4.1, 2 Nov) ---- */
 .card {
   position: relative;
   display: flex; flex-direction: column; gap: var(--spacing-stack);
   padding: var(--spacing-card);
-  border-radius: var(--radius-card);
-  background: var(--card-surface);
-  border: var(--size-stroke) solid var(--card-stroke);
-  box-shadow: var(--card-shadow);
+  border-radius: var(--radius-card-section);
+  background: var(--glass-bg);
+  box-shadow: var(--shadow-glass);
   min-width: 0;
 }
-.card--soft { background: var(--surface-brand-soft); border-color: var(--stroke-brand-soft); }
-/* No border on blend cards: the 1px light rim (--blend-stroke) is an inset shadow and must sit at the very
-   edge. With a transparent border the gradient shows outside the rim and the edge looks ragged. */
-.card--blend { background: var(--blend-bg); color: var(--blend-fg); border: 0; padding: calc(var(--spacing-card) + var(--size-stroke)); box-shadow: var(--blend-stroke); }
+/* Clickable cards in a grid or row: the smaller radius. */
+.card--solid { border-radius: var(--radius-card-row); background: var(--card-surface); box-shadow: var(--shadow-solid); }
+/* Brand card (4.4): gradient, brand rim, frosted grain, dark content, neutral shadow. */
+.card--brand { background: var(--brand-gradient); color: var(--brand-ink); box-shadow: var(--shadow-brand-card); isolation: isolate; }
+.card--brand::before { padding: var(--brand-rim-width); background: var(--brand-rim); }
+.card--brand::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; background: var(--grain) 0 0 / 160px 160px; mix-blend-mode: overlay; opacity: 0.32; }
+.card--blend { background: var(--blend-bg); color: var(--blend-fg); box-shadow: var(--blend-stroke); }
 .blend-theme { --blend-bg: var(--blend-theme-bg); --blend-fg: var(--blend-theme-fg); --blend-ink: var(--blend-theme-ink); }
 /* Theme-colour vivid surface (the original Partner Plus card). */
 .blend-vivid { --blend-bg: var(--surface-vivid); --blend-fg: var(--on-brand); --blend-ink: var(--accent-surface-brand); }
@@ -30,10 +52,9 @@
 /* Inner glass panel: dark glass under white text, white glass under dark text. */
 .blend-vivid, .blend-theme, .blend-red, .blend-green, .blend-pink, .blend-indigo { --blend-glass: var(--glass-surface-dark); }
 .blend-yellow, .blend-lime, .blend-cyan { --blend-glass: var(--glass-surface); }
-/* Pale theme card (review mockup "Theme · pale") used as a blend: soft blue fill and stroke, page text colours, a
-   mono button and a lighter inner panel. It follows the page theme. Used by the Daily Trading cards. */
-.blend-pale-theme { --blend-bg: var(--surface-brand-soft); --blend-fg: var(--ui-text-primary); --blend-ink: var(--card-surface); --blend-glass: color-mix(in srgb, var(--card-surface) 70%, transparent); }
-.card--blend.blend-pale-theme { box-shadow: inset 0 0 0 var(--size-stroke) var(--stroke-brand-soft); }
+/* Daily Trading cards and the "How to start" sheet: page text colours, sunk inner panel. */
+.blend-pale-theme { --blend-bg: var(--glass-bg); --blend-fg: var(--ui-text-primary); --blend-ink: var(--card-surface); --blend-glass: var(--sunk-inset); }
+.card--blend.blend-pale-theme { box-shadow: var(--shadow-glass); }
 /* Secondary text on a blend takes the blend's text colour, dimmed. */
 .card--blend .c-2, .card--blend .c-3 { color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
 /* Least prominent text on a blend (notes such as the update interval). */
@@ -44,55 +65,80 @@
 button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .above { position: relative; }
 
-/* ---- Buttons ---- */
+/* ---- Buttons (TOKENS 5). shared/bubble.js adds .pressed and the spring. ---- */
 .btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-6);
-  height: var(--size-control-md); padding: 0 var(--spacing-20);
-  border-radius: var(--radius-pill); border: var(--size-stroke) solid transparent;
-  font: var(--font-small-medium); white-space: nowrap;
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-6);
+  height: var(--size-button); padding: 0 var(--spacing-20);
+  border-radius: var(--radius-pill); border: 0;
+  font: var(--font-role-row); white-space: nowrap; cursor: pointer;
 }
-/* Small: the size of the row buttons in the review mockup's "Earn rewards" list. */
-.btn--sm { height: var(--size-control-sm); padding: 0 var(--spacing-16); }
-/* Extra small: secondary actions inside cards and tiles. */
-.btn--xs { height: var(--size-control-xs); padding: 0 var(--spacing-10); font: var(--font-x-small-medium); }
-.btn--lg { height: var(--size-control-lg); font: var(--font-medium-semibold); }
-.btn--block { width: 100%; }
-/* Buttons are flat: no drop shadows (the Figma button shadows were dropped in review, like card shadows). */
-.btn--primary { background: var(--accent-surface-brand); color: var(--on-brand); }
-.btn--primary:active { background: var(--ui-button-primary-pressed); }
+.btn--sm { height: var(--size-control-sm); padding: 0 var(--spacing-14); font: var(--font-role-label-em); }
+/* The small brand pill, the Copy row's at 28 high (7.27): the Redeem label on a reward card, small brand actions. */
+.btn--xs { height: var(--size-chip); padding: 0 var(--spacing-6); font: var(--font-role-small-em); }
+.btn--lg { height: var(--size-button); }
+.btn--block { width: 100%; height: auto; min-height: var(--size-button); padding-block: var(--spacing-4); padding-inline: var(--spacing-12); white-space: normal; text-align: center; }
+/* Primary, Kính B: one per view. */
+.btn--primary { background: var(--brand-gradient); color: var(--on-brand); box-shadow: var(--shadow-primary); }
+.btn--primary::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: var(--size-stroke); pointer-events: none;
+  background: var(--primary-rim);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.btn--primary.pressed, .btn--onbrand.pressed { filter: brightness(1.04) saturate(1.06); }
+.btn--primary.pressed::before { animation: rim-drift 1.6s ease-in-out infinite alternate; }
+@keyframes rim-drift { from { --ang: 116deg; } to { --ang: 162deg; } }
+@media (prefers-reduced-motion: reduce) { .btn--primary.pressed::before { animation: none; } }
+/* An action the user must wait for (9.4): the logo loader in its chip, over a light dim that blocks the page. */
+.wait { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: var(--wait-dim); }
+.wait__chip { display: grid; place-items: center; width: var(--size-loader-chip); height: var(--size-loader-chip); border-radius: var(--radius-3xl); background: var(--wait-chip); box-shadow: var(--wait-chip-shadow); animation: wait-in 0.32s cubic-bezier(0.3, 1.3, 0.5, 1); }
+@keyframes wait-in { from { transform: scale(0.92); } }
+.logo-loader { width: var(--size-loader); height: auto; }
+.logo-loader path { transform-box: fill-box; transform-origin: center; animation: logo-pulse 1.2s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+.logo-loader path + path { animation-delay: -0.6s; }
+@keyframes logo-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.9); opacity: 0.25; } }
+@keyframes logo-calm { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+@media (prefers-reduced-motion: reduce) { .logo-loader path { animation: logo-calm 1.6s ease-in-out infinite; } }
+/* Disabled (4.0): the surface colour with t3 text, no rim, no shadow, no press. */
+.btn:disabled { background: var(--control-fill); color: var(--ui-text-tertiary); box-shadow: none; cursor: default; }
+.btn:disabled::before { display: none; }
 .btn--mono { background: var(--ui-text-primary); color: var(--ui-text-dark); }
-.btn--mono:active { background: var(--ui-button-dark-pressed); }
-/* Secondary stroke (C4 in the review mockup). */
-.btn--stroke { background: var(--ui-surface-pure); border-color: var(--ui-stroke-soft); color: var(--ui-text-secondary); }
-.btn--stroke:active { background: var(--ui-surface-weak); }
-/* Glass: translucent, no stroke, no shadow. A quiet button for blend or image backgrounds; text takes the
-   blend's text colour. */
-.btn--glass { background: var(--ui-button-glass-surface); color: var(--blend-fg, var(--ui-text-primary)); -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur); }
-.btn--glass:active { background: var(--ui-button-glass-pressed); }
-.btn--tint { background: var(--ui-badge-blue); color: var(--ui-text-brand); }
-.btn--tint:active { background: var(--ui-button-tint-pressed); }
-.btn--onblend { background: var(--blend-fg); color: var(--blend-ink); }
+.btn--mono.pressed { background: var(--ui-button-dark-pressed); }
+/* Secondary button (gbtn): control fill, no rim. */
+.btn--glass, .btn--stroke {
+  background: var(--control-fill); color: var(--ui-text-primary); box-shadow: var(--shadow-secondary);
+  transition: background-color 0.45s ease, box-shadow 0.45s ease;
+}
+.btn--glass.pressed, .btn--stroke.pressed { background: var(--pressed-fill); transition-duration: 0.22s; }
+.option.pressed { background: var(--pressed-fill); }
 
-/* ---- Badge ---- */
-.badge { display: inline-flex; align-items: center; padding: var(--spacing-2) var(--spacing-8); border-radius: var(--radius-pill); font: var(--font-x-small-medium); white-space: nowrap; }
+.btn--tint, .btn--soft { background: var(--accent-soft); color: var(--accent-tag-text); }
+/* On a brand card: black with white text, no shadow (4.4). */
+.btn--onbrand { background: var(--brand-button); color: var(--brand-button-text); box-shadow: inset 0 0 0 var(--size-stroke) var(--brand-button-rim); }
+
+/* ---- Tag (TOKENS 6) ---- */
+.badge { display: inline-flex; align-items: center; height: var(--size-tag); padding: 0 var(--size-tag-pad); border-radius: var(--radius-pill); font: var(--font-role-meta-em); white-space: nowrap; }
 .badge--green { background: var(--ui-badge-green); color: var(--ui-text-green); }
-.badge--yellow { background: var(--ui-badge-yellow); color: var(--ui-text-yellow); }
-.badge--blue { background: var(--ui-badge-blue); color: var(--ui-text-brand); }
-.badge--teal { background: var(--ui-badge-teal); color: var(--ui-icon-teal); }
+.badge--yellow { background: var(--ui-badge-yellow); color: var(--warn-text); }
+.badge--blue { background: var(--ui-badge-blue); color: var(--accent-tag-text); }
+.badge--teal { background: var(--ui-badge-teal); color: var(--info-text); }
 .badge--red { background: var(--ui-badge-red); color: var(--ui-text-red); }
-.badge--neutral { background: var(--ui-surface-soft); color: var(--ui-text-tertiary); }
+.badge--neutral { background: var(--neutral-fill); color: var(--ui-text-secondary); }
 .badges { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--spacing-4); }
 
 /* ---- Notice ---- */
-.notice { display: flex; align-items: flex-start; gap: var(--spacing-8); padding: var(--spacing-8) var(--spacing-12); border-radius: var(--radius-card-inner); font: var(--font-small-regular); color: var(--ui-text-secondary); }
-.notice--neutral { background: var(--ui-field-surface); }
+.notice { display: flex; align-items: flex-start; gap: var(--spacing-8); padding: var(--spacing-12); border-radius: var(--radius-box); font: var(--font-role-label); color: var(--ui-text-secondary); }
+.notice .icon { width: var(--size-icon-sm); height: var(--size-icon-sm); margin-top: var(--size-stroke); }
+.notice--neutral { background: var(--sunk-inset); }
 .notice--neutral .icon { color: var(--ui-icon-secondary); }
 .notice--info { background: var(--ui-badge-blue); }
 .notice--info .icon { color: var(--ui-icon-brand); }
 .notice--success { background: var(--ui-badge-green); }
 .notice--success .icon { color: var(--ui-icon-green); }
-.notice--warning { background: var(--ui-badge-yellow); }
-.notice--warning .icon { color: var(--ui-icon-yellow); }
+/* Warning card (7.23b): what the user can lose by. */
+.notice--warning { padding: var(--spacing-12) var(--spacing-16); border-radius: var(--radius-tile); background: var(--warn-soft); box-shadow: inset 0 0 0 var(--size-stroke) color-mix(in srgb, var(--warn) 40%, transparent); color: var(--warn-text); }
+.notice--warning .icon { color: var(--warn); }
+.notice--warning p { text-wrap: pretty; } /* no lone "days" on the second line at 320 */
 .notice--danger { background: var(--ui-badge-red); }
 .notice--danger .icon { color: var(--ui-icon-red); }
 .notice--glass { background: var(--glass-surface); border: var(--size-stroke) solid var(--glass-border); color: var(--blend-fg); }
@@ -109,13 +155,17 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 
 /* ---- Lists ---- */
 .list { display: flex; flex-direction: column; }
-.list__row { display: flex; align-items: center; gap: var(--spacing-12); padding: var(--spacing-12) 0; border-top: var(--size-stroke) solid var(--ui-line-soft); min-width: 0; }
-.list > .list__row:first-child, .list > details:first-child > .list__row { border-top: 0; padding-top: 0; }
+.list__row { position: relative; display: flex; align-items: center; gap: var(--spacing-12); padding: var(--spacing-12) 0; min-width: 0; }
+/* One separator everywhere (4.5): it fades out at both ends. */
+.list__row::before, .today__foot::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: var(--separator-height); background: var(--separator); }
+.list > .list__row:first-child::before, .list > details:first-child > .list__row::before { display: none; }
+.list > .list__row:first-child, .list > details:first-child > .list__row { padding-top: 0; }
 .list > .list__row:last-child { padding-bottom: 0; }
 .list__row--sub { padding-left: var(--spacing-20); }
 .list__row--muted, .list__row--muted .c-2, .list__row--muted .c-3 { color: var(--ui-text-disabled); }
 /* Coins on muted rows fade and lose their colour, like the text around them. */
-.list__row--muted .coin { filter: grayscale(1); opacity: 0.45; }
+/* A used-up lot's coin, and Coins' empty Available tab (.coin--empty): greyed. */
+.list__row--muted .coin, .coin--empty { filter: grayscale(1); opacity: 0.45; }
 .list__chevron { color: var(--ui-icon-tertiary); }
 .list__end { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-4); text-align: right; }
 /* Compact list (Coins history: many short rows a day): tighter rows; the time sits after the label, quieter. */
@@ -124,39 +174,68 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .cal-hint { text-align: center; }
 .group-title { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); padding-top: var(--spacing-4); }
 
-/* ---- Filter chips (review mockup D3 / G6) ---- */
-.chips { display: flex; flex-wrap: wrap; gap: var(--spacing-8); }
-.chip { min-height: var(--size-control-sm); padding: 0 var(--spacing-12); border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--ui-stroke-soft); background: var(--ui-surface-pure); font: var(--font-small-medium); color: var(--ui-text-secondary); }
-.chip[aria-pressed="true"] { background: var(--ui-chip-surface-selected); border-color: var(--ui-chip-stroke-selected); color: var(--ui-text-brand); }
+/* ---- Filter chips, Bare, and tabs, Capsule (8.3). The pill follows what is behind it. ---- */
+/* Filter chips, not a category bar: no lens (UI Designer 1). One row: more items scroll sideways, and an end fades out
+   only where more remain (shared/date-filter.js). */
+.chips { display: flex; gap: var(--spacing-2); overflow-x: auto; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chips { --fade-start: 0px; --fade-end: 0px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent); mask-image: linear-gradient(90deg, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent); }
+.chip { position: relative; flex: 1 0 auto; height: var(--size-strip); white-space: nowrap; padding: 0 var(--spacing-8); border-radius: var(--radius-pill); font: var(--font-role-small); color: var(--tab-inactive); }
+.chip[aria-pressed="true"] { background: var(--strip-pill); box-shadow: var(--strip-pill-shadow); font: var(--font-role-small-em); color: var(--ui-text-brand); }
+.tabs-box { position: relative; --lens-backing: var(--strip-track); }
+.tabs { position: relative; display: flex; gap: var(--spacing-2); padding: var(--spacing-4); border-radius: var(--radius-pill); background: var(--strip-track); touch-action: pan-y; }
+.tab { position: relative; flex: 1; height: var(--size-strip); padding: 0 var(--spacing-8); border-radius: var(--radius-pill); font: var(--font-role-small); color: var(--tab-inactive); text-align: center; }
+.tab[aria-selected="true"] { background: var(--capsule-pill); box-shadow: var(--capsule-pill-shadow); font: var(--font-role-small-em); color: var(--ui-text-brand); }
+.tabs-box .tab[aria-selected="true"] { background: none; box-shadow: none; }
+.tabs .nav__sel { background: var(--capsule-pill); box-shadow: var(--capsule-pill-shadow); }
+.tabs-box.is-lensing .tab[aria-selected="true"] { font: var(--font-role-small); color: var(--tab-inactive); }
+.tabs-box .nav__lrow .tab { display: grid; place-items: center; font: var(--font-role-small-em); color: var(--ui-text-brand); }
+.tabs-box .nav__lens::after { opacity: calc(var(--lens-fringe-opacity) * 0.7); }
 
-/* ---- Segmented tabs (review mockup D4, option 1) ---- */
-.tabs { display: flex; gap: var(--spacing-2); padding: var(--spacing-2); border-radius: var(--radius-control); background: var(--ui-tab-surface-default); }
-.tab { flex: 1; min-height: var(--size-control-sm); border-radius: var(--radius-control-inner); font: var(--font-small-medium); color: var(--ui-text-tertiary); text-align: center; }
-.tab[aria-selected="true"] { background: var(--ui-tab-surface-active); color: var(--ui-text-primary); }
-
-/* ---- App header: centred title (no back button) ---- */
-/* The header sticks to the top of the screen. At the top of the page the title is plain text. Once the page scrolls
-   (.is-stuck, set by watchHeader() in components.js) it turns into a pill styled like the round header buttons (help,
-   back: same surface, stroke and height, the icon's colour for the text), and the pill and the buttons shrink
-   together to the same size. All eased. */
+/* ---- App header: Loyalty's own (the user, 3 Nov), the app's 7.26b pill on scroll but always centred ---- */
+/* The title is centred on the page whatever the sides hold: the back button (left) and the page's button (right) take
+   equal columns, at least a button wide, so the title stays centred and only a long one shrinks into them, ending in
+   an ellipsis. At the top it is plain text at the page title's size, 20. Over the first 40 of scroll (--p, set by
+   watchHeader in components.js) the pill behind it fades in, styled like the round header buttons (Home's ?), and the
+   title scales from 20 to 15 about its centre. --title-grow is how much bigger than 15 it starts: a third (20), less
+   when that would reach the buttons (watchHeader measures it). The fade from the screen's top edge comes in over 12
+   of scroll (--f). On Earn the dark sky pill and white title turn when the Today card reaches them
+   (trading-task.css). Content passes behind all of it. */
 .app-header {
-  position: sticky; z-index: 30; top: calc(env(safe-area-inset-top, 0px) + var(--spacing-8));
-  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--spacing-8); min-height: var(--size-icon-button);
-  --header-scale: 1;
+  position: sticky; z-index: 30; top: calc(env(safe-area-inset-top, 0px) + var(--spacing-6));
+  display: grid; grid-template-columns: minmax(var(--size-header-button), 1fr) minmax(0, max-content) minmax(var(--size-header-button), 1fr);
+  align-items: center; gap: var(--spacing-8); min-height: var(--size-header-button);
+  margin-bottom: calc(var(--spacing-12) - var(--spacing-section));
+  --p: 0; --f: 0; --title-grow: 0.3333; /* 20 / 15 - 1: --font-role-page against --font-role-row (TITLE_GROW in components.js) */
 }
-.app-header.is-stuck { --header-scale: 0.86; }
-.app-header h1, .header-action {
-  height: var(--size-control-sm); border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--ui-stroke-soft);
-  transform: scale(var(--header-scale)); transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+.app-header > * { grid-row: 1; }
+.app-header > [data-back] { grid-column: 1; justify-self: start; }
+.app-header > h1 { grid-column: 2; }
+.app-header > h1 ~ * { grid-column: 3; justify-self: end; }
+.app-header::before, .app-header::after {
+  content: ""; position: fixed; z-index: -1; top: 0; left: calc(50% - var(--app-width) / 2); width: var(--app-width);
+  height: calc(env(safe-area-inset-top, 0px) + var(--size-header-fade)); opacity: var(--f); pointer-events: none;
 }
-.app-header h1 {
-  display: flex; align-items: center; padding: 0 var(--spacing-16); font: var(--font-large-semibold);
-  color: var(--ui-text-primary); background-color: transparent; border-color: transparent;
+.app-header::before { background: linear-gradient(180deg, color-mix(in srgb, var(--header-fade) 92%, transparent) 0%, color-mix(in srgb, var(--header-fade) 78%, transparent) 40%, color-mix(in srgb, var(--header-fade) 38%, transparent) 70%, transparent 100%); }
+.app-header::after { -webkit-backdrop-filter: blur(var(--spacing-6)); backdrop-filter: blur(var(--spacing-6)); -webkit-mask-image: linear-gradient(#000 60%, transparent); mask-image: linear-gradient(#000 60%, transparent); }
+.app-header h1 { position: relative; display: flex; align-items: center; min-width: 0; height: var(--size-header-button); padding: 0 var(--spacing-16); border-radius: var(--radius-pill); color: var(--ui-text-primary); }
+/* Narrow screens: a little less padding, so the longest titles ("Redemption history") still fit beside the back button. */
+@media (max-width: 359px) { .app-header h1 { padding-inline: var(--spacing-12); } }
+.app-header__pill { position: absolute; inset: 0; border-radius: inherit; opacity: var(--p); background: var(--control-fill); box-shadow: var(--shadow-control); }
+.app-header__title {
+  position: relative; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--font-role-row); letter-spacing: -0.005em;
+  transform: scale(calc(1 + var(--title-grow) * (1 - var(--p))));
 }
-.app-header.is-stuck h1 { color: var(--ui-icon-secondary); background-color: var(--ui-surface-pure); border-color: var(--ui-stroke-soft); }
-@media (prefers-reduced-motion: reduce) { .app-header h1, .header-action { transition: none; } }
-.app-header > [data-back] { justify-self: start; }
-.header-action { justify-self: end; display: grid; place-items: center; width: var(--size-control-sm); background: var(--ui-surface-pure); color: var(--ui-icon-secondary); }
+/* Round icon button (5): 40, control fill. */
+.header-action {
+  position: relative; flex: none; display: grid; place-items: center; width: var(--size-header-button); height: var(--size-header-button); border-radius: var(--radius-pill);
+  background: var(--control-fill); color: var(--ui-text-primary); box-shadow: var(--shadow-control);
+  transition: background-color 0.45s ease;
+}
+.header-action.pressed { background: var(--pressed-fill); transition-duration: 0.22s; }
+/* 48 to touch. */
+.header-action::after { content: ""; position: absolute; inset: calc((var(--size-header-button) - var(--size-tap-target-min)) / 2 - var(--spacing-2)); }
+@media (prefers-reduced-motion: reduce) { .btn--glass, .btn--stroke, .header-action { transition: none; } }
 
 /* ---- Today panel (Dashboard task card, Trading Task progress card); sits on a blend card ---- */
 .coin--xs { width: var(--size-icon-sm); height: var(--size-icon-sm); }
@@ -168,43 +247,35 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
   -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur);
 }
 .today__label { display: flex; align-items: baseline; gap: var(--spacing-8); padding: var(--spacing-12) var(--spacing-12) 0; }
-.today__stats { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: var(--spacing-12); padding: var(--spacing-8) var(--spacing-12) var(--spacing-12); }
-.today__value { display: flex; align-items: baseline; gap: var(--spacing-4); font: var(--font-title-l); }
-.today__value small { font: var(--font-small-medium); color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
-.today__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-6); padding: var(--spacing-10) var(--spacing-12); border-top: var(--size-stroke) dashed color-mix(in srgb, var(--blend-fg) 30%, transparent); font: var(--font-x-small-regular); }
+.today__stats { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: var(--spacing-12); padding: var(--spacing-12); }
+.today__value { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--spacing-4); margin-top: var(--spacing-4); font: var(--font-title-l); }
+.today__value small { font: var(--font-role-label); color: var(--ui-text-secondary); }
+.today__foot { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-8); padding: var(--spacing-12); font: var(--font-role-small); color: var(--ui-text-primary); }
 
 .today__foot--icon { flex-wrap: nowrap; align-items: flex-start; }
-.today__foot--icon .icon { margin-top: var(--spacing-2); }
 /* Flat variant: the blend card itself is the panel, so no glass, border or inner padding. */
 .today--flat { overflow: visible; border: 0; border-radius: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 .today--flat .today__label { padding: 0; }
 .today--flat .today__stats { padding-inline: 0; }
 .today--flat .today__foot { padding-inline: 0; padding-bottom: 0; }
 
-/* ---- Balance block: bare on the Dashboard, inside a pale theme card on Point Balance ---- */
-.balance { position: relative; display: flex; flex-direction: column; gap: var(--spacing-stack); margin-block: var(--spacing-8); }
+/* ---- Balance block: a glass card on Home and on Coins ---- */
+.balance { position: relative; }
 .balance-row { display: flex; align-items: center; gap: var(--spacing-12); }
-/* Balance coin with a soft glow in the theme hue; drop-shadow follows the coin's outline, not its box. */
-/* Large coin with a soft glow. The glow is a radial gradient behind the image, not a CSS filter: a drop-shadow
-   filter is sometimes painted as a square box in mobile webviews (spec §48). */
 .coin--lg { position: relative; width: var(--size-control-lg); height: var(--size-control-lg); }
-.coin-glow { position: relative; display: grid; place-items: center; flex: none; }
-.coin-glow::before { content: ""; position: absolute; inset: calc(var(--spacing-10) * -1); border-radius: var(--radius-pill); background: radial-gradient(closest-side, color-mix(in srgb, var(--bg-blend) 60%, transparent), transparent); pointer-events: none; }
 /* One line, shrunk as a whole to fit its column when too wide: --balance-fit is set by fitBalanceNumber() in
    components.js (spec §71). */
-.balance-number { font: var(--font-display-m); white-space: nowrap; zoom: var(--balance-fit, 1); }
+.balance-number { font: var(--font-role-figure); letter-spacing: var(--letter-spacing-role-figure); white-space: nowrap; zoom: var(--balance-fit, 1); }
 /* Tier of the chosen trading account next to "Coin Balance" (spec §55); tapping it opens Earn on the account field. */
-.balance-label { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-6); }
+.balance-label { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-6); min-height: var(--size-tag); font: var(--font-role-label); color: var(--ui-text-secondary); }
 .balance-label > span { white-space: nowrap; } /* "Coin Balance" never breaks */
 /* The badge shrinks as a whole (text, padding, pill) to stay on the line: --tier-fit is set by fitBalanceTier() in
    components.js. Below the smallest scale it goes under "Coin Balance" instead. */
 .balance-tier { text-decoration: none; zoom: var(--tier-fit, 1); }
+.account-lines .badge { zoom: var(--tag-fit, 1); }
 /* Coins: on the card's top edge, middle on the border, at the card's left padding (above the coin). */
-.balance-tier--edge { position: absolute; z-index: 1; top: calc(var(--size-stroke) / -2); left: var(--spacing-card); transform: translateY(-50%); }
-/* Tier badge (spec §51, §55): one style for the four tiers, a tinted pill with the text in the tier's hue, so no tier
-   looks like a main button. Colours are tokens per mode (--ui-tier-*), picked to stand a little off all three places
-   the badge sits (account sheet, Home page background, Coins card edge) with the text at 5:1. They are opaque: on
-   Coins the badge sits across the card border, which must not show through. */
+.balance-tier--edge { position: absolute; z-index: 3; top: calc(var(--size-tag) / -2); left: var(--spacing-card); }
+/* Tier tag (spec §51, §55): grey, blue, violet, gold, in that order. Platinum never swaps on Premium. */
 .tier--micro { background: var(--ui-tier-micro-surface); color: var(--ui-tier-micro-text); }
 .tier--standard { background: var(--ui-tier-standard-surface); color: var(--ui-tier-standard-text); }
 .tier--vip { background: var(--ui-tier-vip-surface); color: var(--ui-tier-vip-text); }
@@ -212,46 +283,62 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .balance-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-8); }
 .balance.card { margin-block: 0; }
 
-/* Empty line under a filtered list. */
-.list-none { padding: var(--spacing-12) 0; text-align: center; }
+/* Empty line in place of a list (Earn's history, Coins' tabs): an icon in a sunk orb over the text. */
+.list-none { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-12); padding: var(--spacing-16) 0; text-align: center; }
+.list-none__orb { display: grid; place-items: center; width: var(--size-orb); height: var(--size-orb); border-radius: var(--radius-pill); color: var(--ui-text-tertiary); }
+.list-none__orb .icon { width: var(--size-empty-icon); height: var(--size-empty-icon); }
 
 /* ---- Date-range calendar (review mockup G5), shown in the bottom sheet ---- */
 .cal-head { display: flex; align-items: center; gap: var(--spacing-8); text-align: center; }
-.cal-nav { width: var(--size-control-sm); height: var(--size-control-sm); display: grid; place-items: center; border-radius: var(--radius-pill); color: var(--ui-icon-secondary); }
+.cal-nav { position: relative; width: var(--size-control-sm); height: var(--size-control-sm); display: grid; place-items: center; border-radius: var(--radius-pill); color: var(--ui-icon-secondary); }
 .cal-nav:disabled { color: var(--ui-text-disabled); }
-.cal { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: var(--spacing-4); text-align: center; font: var(--font-small-regular); }
-.cal__weekday { font: var(--font-x-small-regular); color: var(--ui-text-tertiary); padding-bottom: var(--spacing-4); }
-.cal__day { height: var(--size-control-sm); display: grid; place-items: center; text-align: center; }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: 0; text-align: center; font: var(--font-small-regular); }
+.cal__weekday { font: var(--font-x-small-regular); color: var(--ui-text-secondary); padding-bottom: var(--spacing-4); }
+.cal__day { height: var(--size-hit); padding-block: calc((var(--size-hit) - var(--size-cal-day)) / 2); background-clip: content-box; display: grid; place-items: center; text-align: center; }
 .cal__day--off { color: var(--ui-text-disabled); }
-.cal__day b { width: var(--size-control-sm); height: var(--size-control-sm); display: grid; place-items: center; border-radius: var(--radius-pill); background: var(--accent-surface-brand); color: var(--on-brand); font: var(--font-small-semibold); }
+.cal__day b { width: var(--size-control-sm); height: var(--size-control-sm); display: grid; place-items: center; border-radius: var(--radius-pill); background: var(--brand-mark); color: var(--on-brand); font: var(--font-small-semibold); }
 .cal__day--in { background: var(--ui-chip-surface-selected); }
 .cal__day--start { background: linear-gradient(90deg, transparent 50%, var(--ui-chip-surface-selected) 50%); }
 .cal__day--end { background: linear-gradient(90deg, var(--ui-chip-surface-selected) 50%, transparent 50%); }
-.sheet__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-12); }
+.sheet__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-8); }
 
-/* ---- Bottom sheet ---- */
-.scrim { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; background: var(--ui-overlay-scrim); }
+/* ---- Bottom sheet (7.14). shared/sheet.js adds the drag and the slide out. ---- */
+.scrim { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; background: var(--ui-overlay-scrim); -webkit-backdrop-filter: blur(var(--scrim-blur)); backdrop-filter: blur(var(--scrim-blur)); animation: scrim-in 0.28s ease; }
+.scrim.is-closing { opacity: 0; transition: opacity 0.28s ease; }
+.scrim.no-enter, .scrim.no-enter .sheet { animation: none; }
+.has-sheet { overflow: hidden; }
+@keyframes scrim-in { from { opacity: 0; } }
 .sheet {
   width: 100%; max-width: var(--app-width); max-height: var(--size-sheet-max-height); overflow-y: auto;
-  display: flex; flex-direction: column; gap: var(--spacing-12);
-  padding: var(--spacing-10) var(--spacing-gutter) calc(env(safe-area-inset-bottom, 0px) + var(--spacing-20));
-  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0; background: var(--card-surface);
+  display: flex; flex-direction: column; gap: var(--spacing-16);
+  padding: var(--spacing-8) var(--spacing-gutter) max(env(safe-area-inset-bottom, 0px), var(--size-sheet-foot));
+  border-radius: var(--radius-card-section) var(--radius-card-section) 0 0; background: var(--card-surface); box-shadow: var(--shadow-sheet);
+  overscroll-behavior: contain;
+  animation: sheet-in 0.42s cubic-bezier(0.2, 1.1, 0.3, 1);
 }
-.sheet__grab { align-self: center; width: var(--spacing-40); height: var(--spacing-4); border-radius: var(--radius-pill); background: var(--ui-surface-soft); }
+/* A sheet whose content scrolls keeps its grip and head. */
+.sheet__top { position: sticky; z-index: 3; top: calc(var(--spacing-8) * -1); display: flex; flex-direction: column; gap: var(--spacing-16); margin: calc(var(--spacing-8) * -1) calc(var(--spacing-gutter) * -1); padding: var(--spacing-8) var(--spacing-gutter); background: var(--card-surface); }
+.sheet.is-draggable, .sheet__top, .sheet__grab, .sheet__head { touch-action: none; }
+@keyframes sheet-in { from { transform: translateY(100%); } }
+@media (prefers-reduced-motion: reduce) { .sheet, .scrim { animation: none; } }
+/* Grip: 2 rows of 5 dots, 3px, 3px apart. */
+.sheet__grab { flex: none; align-self: center; width: var(--size-grip-width); height: var(--size-grip-height); opacity: 0.7; background: radial-gradient(circle at 1.5px 1.5px, var(--grip) 1.5px, transparent 1.6px) 0 0 / 6px 6px; }
 
-/* A list of choices in a sheet, one per row, a radio on the right (account sheet on Earn, sort sheet in the store). */
-.option { display: flex; align-items: center; gap: var(--spacing-12); width: 100%; min-height: var(--size-control-lg); padding: var(--spacing-8) 0; border-top: var(--size-stroke) solid var(--ui-line-soft); font: var(--font-small-medium); }
-.option:first-child { border-top: 0; }
-.option--muted { color: var(--ui-text-disabled); }
-.radio { width: var(--size-check); height: var(--size-check); flex: none; display: grid; place-items: center; border-radius: var(--radius-pill); border: var(--size-stroke) solid var(--ui-text-disabled); background: var(--card-surface); }
-.radio--on { border-color: var(--accent-surface-brand); }
-.radio--on::after { content: ""; width: 70%; height: 70%; border-radius: var(--radius-pill); background: var(--accent-surface-brand); }
+/* A list of choices in a sheet (7.16): selectable rows with the radio last; the selected row takes the plain brand rim. */
+.option { position: relative; display: flex; align-items: center; gap: var(--spacing-12); width: 100%; min-height: var(--size-control-lg); padding: var(--spacing-8) var(--spacing-16); border-radius: var(--radius-tile); background: var(--control-fill); font: var(--font-role-row); }
+.option + .option { margin-top: var(--spacing-8); }
+.option:has(.radio--on) { box-shadow: inset 0 0 0 var(--selected-rim) var(--ui-stroke-brand); }
+.option--muted { color: var(--ui-text-secondary); }
+/* Radio (7.16): 22, a ring when off, brand fill and a dark tick when on. */
+.radio { width: var(--size-tag); height: var(--size-tag); flex: none; display: grid; place-items: center; border-radius: var(--radius-pill); border: var(--size-rim-selected) solid color-mix(in srgb, var(--ui-text-tertiary) 55%, transparent); }
+.radio--on { border: 0; background: var(--brand-gradient); }
+.radio--on::after { content: ""; width: var(--spacing-10); height: var(--spacing-6); margin-top: calc(var(--spacing-2) * -1); border-left: var(--spacing-2) solid var(--brand-ink); border-bottom: var(--spacing-2) solid var(--brand-ink); transform: rotate(-45deg); }
 
 /* "How to start" sheet that Redeem opens (spec §49): blend-pale-theme gives the step marks their colours, as on the
    Earn card; room under the button for the tapping finger, which would otherwise be cut by the sheet's edge. */
 .sheet--join .join__cta { margin-bottom: var(--size-control-lg); }
 /* Guests: "Already have an account? Log in" under the button (and under the finger in the sheet). */
-.text-btn.join__login { align-self: center; gap: var(--spacing-4); font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.text-btn.join__login { align-self: center; gap: var(--spacing-4); font: var(--font-role-label); color: var(--ui-text-secondary); }
 .join__login strong { color: var(--ui-text-brand); }
 .join__cta:has(+ .join__login) { margin-bottom: var(--size-control-lg); } /* room for the finger above the line */
 
@@ -259,20 +346,29 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
    scrolls by itself. The document is served by the backend and keeps its own (light) look in both themes. */
 .sheet--doc { height: var(--size-sheet-max-height); overflow: hidden; }
 .sheet__head { display: flex; align-items: center; gap: var(--spacing-12); }
-.doc { position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: var(--radius-card-inner); border: var(--size-stroke) solid var(--card-stroke); background: var(--color-neutral-0); }
+.doc { position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: var(--radius-card-inner); background: var(--color-neutral-0); }
 .doc__loading { position: absolute; inset: 0; display: grid; place-items: center; }
 .doc__frame { position: relative; display: block; width: 100%; height: 100%; border: 0; }
-/* ---- Page status: loading skeleton and load error (spec §44) ---- */
+/* ---- Page status (spec §44): shimmer (9.4b) and load error ---- */
 .skeleton { display: flex; flex-direction: column; gap: var(--spacing-section); }
 .skeleton__card { gap: var(--spacing-12); }
 .skeleton__card--row { flex-direction: row; align-items: center; }
-.skeleton__bar, .skeleton__dot { display: block; border-radius: var(--radius-pill); background: var(--ui-surface-soft); animation: skeleton-pulse 1.2s ease-in-out infinite; }
-.skeleton__bar { height: var(--spacing-12); }
+/* One sweep across the page: the gradient is fixed to the screen, not to each bar. */
+.skeleton__bar, .skeleton__dot {
+  display: block; border-radius: var(--radius-xs);
+  background: linear-gradient(100deg, var(--shimmer-fill) 40%, var(--shimmer-sweep) 50%, var(--shimmer-fill) 60%) 0 0 / 780px 100% fixed;
+  animation: skeleton-sweep 1.4s linear infinite;
+}
+.skeleton__bar { height: var(--spacing-10); }
+/* A bar in the height of the line it stands for, so the block keeps its real height. */
+.skeleton .skeleton__line { display: flex; align-items: center; height: 1lh; }
+.skeleton__tier { flex: none; width: var(--size-skeleton-tier); height: var(--size-tag); border-radius: var(--radius-pill); }
 .skeleton__bar--s { width: 30%; } .skeleton__bar--m { width: 45%; } .skeleton__bar--l { width: 70%; } .skeleton__bar--full { width: 100%; }
-.skeleton__dot { flex: none; width: var(--size-avatar); height: var(--size-avatar); }
-@keyframes skeleton-pulse { 50% { opacity: 0.45; } }
+.skeleton__dot { flex: none; width: var(--size-avatar); height: var(--size-avatar); border-radius: var(--radius-pill); }
+@keyframes skeleton-sweep { from { background-position: -780px 0; } to { background-position: 780px 0; } }
 .page-error { align-items: center; text-align: center; gap: var(--spacing-16); padding-block: var(--spacing-32); }
-.page-error__icon { display: grid; place-items: center; width: var(--size-control-lg); height: var(--size-control-lg); border-radius: var(--radius-pill); background: var(--ui-surface-soft); color: var(--ui-icon-secondary); }
+.page-error__icon { position: relative; display: grid; place-items: center; width: var(--size-orb); height: var(--size-orb); border-radius: var(--radius-pill); background: var(--sunk-inset); color: var(--ui-text-tertiary); }
+.page-error__icon .icon { width: var(--size-empty-icon); height: var(--size-empty-icon); }
 /* End of a paged list: spinner or retry line. */
 .load-more { display: flex; align-items: center; justify-content: center; gap: var(--spacing-8); min-height: var(--size-control-sm); }
 .load-more .text-btn { align-self: auto; font: var(--font-x-small-semibold); }
@@ -281,75 +377,110 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .skeleton__bar, .skeleton__dot { animation: none; } .spinner { animation-duration: 2.4s; } }
 
 /* Text button: a quiet link-style button, e.g. "Terms & Conditions" under the rules. */
-.text-btn { align-self: flex-start; display: inline-flex; align-items: center; gap: var(--spacing-2); min-height: var(--size-control-sm); padding: 0; border: 0; background: none; font: var(--font-small-semibold); color: var(--ui-text-brand); cursor: pointer; }
-/* Coins: the small "Redemption history" link under Redeem (spec §52). */
-.balance-history { align-self: flex-end; min-height: 0; font: var(--font-x-small-semibold); }
+.text-btn .icon { width: var(--size-tick); height: var(--size-tick); }
+/* 44 to touch, whatever it looks like. */
+.text-btn::after { content: ""; position: absolute; inset: calc((var(--size-control-sm) - var(--size-hit)) / 2) 0; }
+.cal-nav::after { content: ""; position: absolute; inset: calc((var(--size-control-sm) - var(--size-hit)) / 2); }
+.text-btn { position: relative; align-self: flex-start; display: inline-flex; align-items: center; gap: var(--spacing-2); min-height: var(--size-control-sm); padding: 0; border: 0; background: none; font: var(--font-role-label-em); color: var(--ui-text-brand); cursor: pointer; }
+/* Coins: "Redemption history" is the card's last row, across it under a line, so the side column holds only Redeem and
+   the balance keeps its room (as on Home). Text t1 in the link style, chevron t3, like a row that opens a page. */
+.balance-history {
+  align-self: stretch; justify-content: space-between; min-height: var(--size-control-sm); padding-top: var(--spacing-12);
+  font: var(--font-role-label-em); color: var(--ui-text-primary);
+}
+/* The line above it, drawn like a list row's (--separator is a gradient). */
+.balance-history::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: var(--separator-height); background: var(--separator); }
+.balance-history .icon { color: var(--ui-icon-tertiary); }
 
-/* ---- Floating bottom navigation: [ Exit ]  [ Home | Earn | Points ] ---- */
-:root { --nav-height: calc(var(--size-control-lg) + var(--spacing-8)); --nav-gap: var(--spacing-12); }
+/* ---- Floating bottom navigation: (X) [ Home | Earn | Coins ], tab bar material (8.1), glass lens (8.2) ---- */
+:root { --nav-height: var(--size-tab-bar); --nav-gap: var(--spacing-8); }
 /* Room under the last item so the bar never covers it. */
-.has-nav .app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--nav-gap) + var(--nav-height) + var(--spacing-24)); }
+.has-nav .app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--nav-gap) + var(--nav-height) + var(--spacing-32)); }
 .nav {
-  /* Starts at the frame's left edge (the screen edge in the webview); keeps the gutter on the right. */
-  position: fixed; z-index: 40; left: calc(50% - var(--app-width) / 2);
+  position: fixed; z-index: 40; left: calc(50% - var(--app-width) / 2 + var(--spacing-gutter));
   bottom: calc(env(safe-area-inset-bottom, 0px) + var(--nav-gap));
-  width: calc(var(--app-width) - var(--spacing-gutter)); height: var(--nav-height);
-  display: flex; align-items: stretch; gap: var(--spacing-12); pointer-events: none;
+  width: calc(var(--app-width) - var(--spacing-gutter) * 2); height: var(--nav-height);
+  display: flex; align-items: stretch; gap: var(--spacing-8); pointer-events: none;
 }
 .sheet-open .app { position: relative; z-index: 41; }
 .nav__exit, .nav__tabs {
-  pointer-events: auto; border-radius: var(--radius-pill);
-  background: var(--ui-nav-surface); border: var(--size-stroke) solid var(--ui-nav-stroke);
-  -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur);
+  position: relative; pointer-events: auto; border-radius: var(--radius-pill);
+  background: var(--ui-nav-surface); box-shadow: var(--shadow-tab-bar);
+  -webkit-backdrop-filter: var(--bar-blur); backdrop-filter: var(--bar-blur);
 }
-/* Close sits flush against the left screen edge: square on that side, no border there, rounded on the right. */
-.nav__exit { border-left: 0; border-radius: 0 var(--radius-pill) var(--radius-pill) 0; padding-left: var(--spacing-8); }
-.nav__exit { flex: none; width: calc(var(--nav-height) + var(--spacing-8)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-2); font: var(--font-x-small-medium); color: var(--ui-text-secondary); }
-/* Dark mode: the button stays black with a faint red sheen just around the X, inside its own background (not a
-   shadow), so Close stands a little off the bar. The red fades out along an eased curve (several stops), so it has no
-   visible edge. Light mode keeps the plain bar (the glow token is transparent there). */
-.nav__exit { background: var(--nav-exit-surface); }
-/* The X is red and a little heavier than other line icons. */
-.nav__exit .icon { color: var(--ui-icon-red); stroke-width: 2.4; }
-.nav__tabs { flex: 1; display: flex; gap: var(--spacing-4); padding: var(--spacing-4); }
-.nav__tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-2); border-radius: var(--radius-pill); font: var(--font-x-small-medium); color: var(--ui-text-tertiary); }
-.nav__tab { color: var(--ui-text-secondary); }
-/* "HOT" badge on a tab's icon, top-right, overlapping the corner, floating up and down. */
+/* Exit: a circle the bar's height, in the bar's shadow. The X is red and heavier than other line icons. Dark mode: a
+   faint red sheen around it, part of the button's own background, not a filter or a shadow outside it (spec §48, §56). */
+.nav__exit { flex: none; width: var(--nav-height); display: grid; place-items: center; color: var(--ui-icon-red); background: var(--nav-exit-surface); }
+.nav__exit .icon { width: var(--size-icon-tab); height: var(--size-icon-tab); stroke-width: 2.4; }
+.nav__box { position: relative; flex: 1; min-width: 0; pointer-events: auto; }
+.nav__tabs { height: 100%; display: flex; gap: var(--spacing-2); padding: var(--spacing-4); touch-action: pan-y; }
+/* The resting pill; shared/nav-lens.js moves it and lifts it into the lens. */
+.nav__sel { position: absolute; left: 0; top: var(--spacing-4); bottom: var(--spacing-4); border-radius: var(--radius-pill); background: var(--ui-nav-tab-active); }
+.nav__tab { position: relative; }
+.nav__tab { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--size-stroke); padding: var(--spacing-4) 0; border-radius: var(--radius-pill); font: var(--font-role-tab); color: var(--tab-inactive); }
+.nav__tab[aria-current="page"] { color: var(--ui-text-brand); font: var(--font-role-tab-on); }
+/* While the lens is up every real tab is grey: the only colour on the bar is what the lens shows. */
+.nav__box.is-lensing .nav__tab[aria-current="page"] { color: var(--tab-inactive); font: var(--font-role-tab); }
+/* Until the app has said who this is (initWebview), no brand colour: gold could otherwise follow lime. */
+.is-unsettled .nav__tab[aria-current="page"] { color: var(--ui-text-primary); }
+/* The same for a selected tab in a loading skeleton (Earn, Coins). */
+.is-unsettled .tab[aria-selected="true"] { color: var(--ui-text-primary); }
+/* The lens (8.2): clear glass, bright rim, a soap-bubble fringe anchored top-left. Inside it a copy of the row at 118%,
+   on the bar's colour, cut to the bar's shape; behind it the screen is refracted (Chromium only). */
+.nav__lens {
+  position: absolute; z-index: 3; left: 0; top: var(--spacing-4); bottom: var(--spacing-4); overflow: hidden; opacity: 0; pointer-events: none; border-radius: var(--radius-pill);
+  -webkit-backdrop-filter: url(#lensBD); backdrop-filter: url(#lensBD); background: var(--lens-fill); box-shadow: var(--lens-shadow);
+}
+.nav__mag { position: absolute; z-index: 0; left: 0; right: 0; top: calc(var(--lift, 0px) - var(--spacing-4)); height: var(--barh, 0px); overflow: hidden; background: var(--lens-backing); font-style: normal; clip-path: inset(0 var(--cr, 0px) 0 var(--cl, 0px) round var(--rl, 0px) var(--rr, 0px) var(--rr, 0px) var(--rl, 0px)); filter: url(#lensRow); }
+.nav__lrow { position: absolute; top: 0; left: calc(-1 * var(--lx, 0px)); width: var(--barw, 0px); height: 100%; padding: var(--spacing-4); display: grid; grid-template-columns: repeat(var(--tabs), 1fr); gap: var(--spacing-2); transform-origin: var(--ox, 50%) 50%; transform: scale(var(--mag, 1)); }
+.nav__lrow .nav__tab { color: var(--ui-text-brand); font: var(--font-role-tab-on); }
+/* Light: the screen behind the lens is shaded a little, so the bar keeps its colour and stands out. */
+.nav__hole { position: absolute; z-index: 1; left: calc(-1 * var(--lx, 0px)); top: calc(var(--lift, 0px) - var(--spacing-4)); width: var(--barw, 0px); height: var(--barh, 0px); border-radius: var(--radius-pill); box-shadow: var(--lens-hole); }
+.nav__lens::before, .nav__lens::after { content: ""; position: absolute; z-index: 2; inset: 0; border-radius: inherit; }
+.nav__lens::before { padding: var(--size-stroke); background: var(--lens-rim); opacity: var(--lens-rim-opacity); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+@property --swirl { syntax: "<angle>"; inherits: true; initial-value: 286deg; }
+@property --swirl2 { syntax: "<angle>"; inherits: true; initial-value: 105deg; }
+.nav__lens::after {
+  opacity: var(--lens-fringe-opacity); filter: blur(var(--spacing-2)); background: var(--lens-fringe);
+  -webkit-mask-image: var(--lens-ring), var(--fmask, var(--lens-ring-idle));
+  mask-image: var(--lens-ring), var(--fmask, var(--lens-ring-idle));
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
 .nav__art { position: relative; display: block; }
+/* "HOT" badge on a tab's icon, top-right, overlapping the corner, floating up and down. */
 .nav__hot {
   position: absolute; top: calc(var(--spacing-8) * -1); left: calc(100% - var(--spacing-8));
   width: auto; height: var(--size-icon-sm); max-width: none;
   animation: nav-hot-float 2.4s ease-in-out infinite;
 }
-/* Unselected tab that draws attention: every 6.5 s its orange version fades in over the icon while the icon grows,
-   holds for about a second, then both go back. Timing: 0.5 s in, 0.9 s hold, 0.6 s out. */
+/* Unselected tab that draws attention: every 6.5 s its red version fades in over the icon while the icon grows, holds
+   for about a second, then both go back. Timing: 0.5 s in, 0.9 s hold, 0.6 s out. */
 .nav__art--flash .nav__image { animation: nav-pop 6.5s ease-in-out infinite; }
 .nav__art--flash .nav__image--flash { position: absolute; inset: 0; opacity: 0; animation-name: nav-flash-pop; }
 @keyframes nav-pop { 0%, 69%, 100% { transform: scale(1); } 77%, 91% { transform: scale(1.25); } }
 @keyframes nav-flash-pop { 0%, 69%, 100% { opacity: 0; transform: scale(1); } 77%, 91% { opacity: 1; transform: scale(1.25); } }
 @keyframes nav-hot-float { 50% { transform: translateY(calc(var(--spacing-4) * -1)) rotate(-4deg); } }
 @media (prefers-reduced-motion: reduce) { .nav__hot, .nav__art--flash .nav__image { animation: none; } }
-/* Glass artwork, one per tab. Unselected tabs carry two versions and show the one that suits the theme. */
-.nav__image { display: block; width: var(--size-icon-lg); height: var(--size-icon-lg); object-fit: contain; }
+/* Artwork, one per tab. Unselected tabs carry two versions and show the one that suits the theme. */
+.nav__image { display: block; width: var(--size-icon-tab); height: var(--size-icon-tab); object-fit: contain; }
 .nav__image--on-dark { display: none; }
 [data-theme="dark"] .nav__image--on-light { display: none; }
 [data-theme="dark"] .nav__image--on-dark { display: block; }
-.nav__tab[aria-current="page"] { background: var(--ui-nav-tab-active); color: var(--ui-text-brand); }
+.nav__image--gold { display: none; }
+[data-premium] .nav__image--gold { display: block; }
+[data-premium] .nav__image--brand { display: none; }
 
-/* ---- Live activity line on the Daily Trading cards (Dashboard, Trading Task) ---- */
-/* A small translucent box tinted with the card's text colour, so it reads as a slightly deeper shade of the card in
-   both themes. */
-/* Recent activity card on Home (spec §50): icon, message (two lines at most), time. Each new entry fades in. */
-.activity { flex-direction: row; padding: var(--spacing-10) var(--spacing-12); border-radius: var(--radius-card-inner); transition: background-color 0.4s ease, border-color 0.4s ease; }
-/* A reward entry: the card turns a light purple (brand purple mixed into the card surface, so it follows the theme). */
-.activity--gift { background: color-mix(in srgb, var(--color-purple-main) 10%, var(--card-surface)); border-color: color-mix(in srgb, var(--color-purple-main) 28%, var(--card-stroke)); }
+/* ---- Recent activity on Home and Earn (spec §50): flat sunk strip: icon, message (two lines at most), time. ---- */
+.activity { display: flex; padding: var(--spacing-8) var(--spacing-12); border-radius: var(--radius-box); transition: background-color 0.4s ease; }
+/* A reward entry takes the brand tint for as long as it is on screen. */
+.activity--gift { background: var(--activity-gift); }
 /* The row keeps the height of two lines of text whatever the message, so the card does not jump; a one-line message
    sits in the middle of it (align-items), like the icon and the time. 2lh is read from the row's own font: the text's. */
-.activity__row { display: flex; align-items: center; gap: var(--spacing-10); width: 100%; min-width: 0; min-height: 2lh; font: var(--font-small-regular); }
+.activity__row { display: flex; align-items: center; gap: var(--spacing-8); width: 100%; min-width: 0; min-height: 2lh; font: var(--font-role-label); }
 .activity__icon { flex: none; width: var(--size-icon-lg); height: var(--size-icon-lg); object-fit: contain; }
 /* At most two lines. */
-.activity__text { flex: 1; min-width: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: var(--font-small-regular); color: var(--ui-text-secondary); }
-.activity__time { flex: none; font: var(--font-x-small-regular); color: var(--ui-text-tertiary); white-space: nowrap; }
+.activity__text { flex: 1; min-width: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: var(--font-role-label); color: var(--ui-text-secondary); }
+.activity__time { flex: none; font: var(--font-role-meta); color: var(--ui-text-tertiary); white-space: nowrap; }
 .activity__in { animation: activity-in 0.4s ease-out; }
 @media (prefers-reduced-motion: reduce) { .activity__in { animation: none; } }
 
@@ -358,22 +489,26 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* Small "Details ›" style link. */
 .details { display: inline-flex; align-items: center; gap: var(--spacing-2); font: var(--font-small-medium); color: var(--ui-text-tertiary); }
 
-/* ---- "How to start" (users who still need KYC or a first deposit): steps in the Today panel, rates line, button ---- */
+/* ---- "How to start": the Go Real stepper (7.10), rates line, button ---- */
 .join { gap: var(--spacing-12); padding: var(--spacing-16); }
 .join.today--flat { padding: 0; }
-.join__title { font: var(--font-x-small-semibold); letter-spacing: var(--letter-spacing-subheading-2x-small); text-transform: uppercase; color: var(--ui-text-tertiary); }
-.join__steps { display: flex; flex-direction: column; gap: var(--spacing-10); margin: 0; padding: 0; list-style: none; }
-.join__step { display: flex; align-items: flex-start; gap: var(--spacing-10); font: var(--font-small-regular); color: var(--ui-text-tertiary); }
-.join__step > span:last-child { padding-top: var(--spacing-2); }
-.join__mark { flex: none; display: grid; place-items: center; width: var(--size-icon-lg); height: var(--size-icon-lg); border-radius: var(--radius-pill); background: color-mix(in srgb, var(--blend-fg) 10%, transparent); font: var(--font-x-small-semibold); }
-/* The step to do now: solid mark, bold text. */
-.join__step--current { font: var(--font-small-semibold); color: var(--ui-text-primary); }
-.join__step--current .join__mark { background: var(--blend-fg); color: var(--blend-ink); }
-/* Finished step: green check. */
-.join__step--done { color: var(--ui-text-secondary); }
-.join__step--done .join__mark { background: var(--accent-success); color: var(--on-brand); }
-.join__rates { display: flex; align-items: baseline; gap: var(--spacing-8); font: var(--font-x-small-regular); color: var(--ui-text-tertiary); }
-.join__rates strong { font: var(--font-x-small-semibold); color: var(--ui-text-primary); }
+.join__title { font: var(--font-role-meta-em); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ui-text-secondary); }
+.join__steps { display: flex; flex-direction: column; gap: var(--spacing-12); margin: 0; padding: 0; list-style: none; }
+.join__step { position: relative; display: flex; align-items: flex-start; gap: var(--spacing-8); font: var(--font-role-label); color: var(--ui-text-secondary); }
+.join__step > span:last-child { padding-top: calc((var(--size-icon-lg) - 1lh) / 2); }
+/* The track between two steps. */
+.join__step:not(:last-child)::before { content: ""; position: absolute; left: calc(var(--size-icon-lg) / 2 - var(--size-stroke)); top: var(--spacing-24); height: var(--spacing-12); width: var(--spacing-2); background: var(--track); }
+.join__mark { flex: none; display: grid; place-items: center; width: var(--size-icon-lg); height: var(--size-icon-lg); border-radius: var(--radius-pill); background: var(--control-fill); font: var(--font-role-small); color: var(--ui-text-secondary); }
+/* The step to do now: brand fill, primary text. */
+.join__step--current { font: var(--font-role-label-em); color: var(--ui-text-primary); }
+.join__step--current .join__mark { background: var(--brand-mark); color: var(--on-brand); font: var(--font-role-small-em); }
+/* Finished step: drawn tick on green; the label turns green too. */
+.join__step--done { color: var(--ui-text-green); }
+.join__step--done:not(:last-child)::before { background: var(--accent-success); }
+.join__step--done .join__mark { background: var(--accent-success); color: var(--color-neutral-0); }
+.join__step--done .join__mark .icon { width: var(--size-tick); height: var(--size-tick); stroke-width: 2.6; }
+.join__rates { display: flex; align-items: baseline; gap: var(--spacing-8); font: var(--font-role-small); color: var(--ui-text-secondary); }
+.join__rates strong { font: var(--font-role-small-em); color: var(--ui-text-primary); }
 
 /* Nudge towards the button: after --nudge-after the finger (the guided tour's hand) grows in from its fingertip under
    the button, then double-taps it (about 0.65 s), waits 4 s, and repeats. On each tap the button answers as if pressed: it sinks slightly and takes
@@ -392,7 +527,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
   3.5%, 10.5% { transform: translateY(calc(var(--spacing-8) * -1)); }
   35%, 78% { transform: translateY(var(--spacing-4)); }
 }
-@keyframes join-press { 0%, 7%, 14%, 100% { transform: scale(1); background: var(--accent-surface-brand); } 3.5%, 10.5% { transform: scale(0.97); background: var(--ui-button-primary-pressed); } }
+@keyframes join-press { 0%, 7%, 14%, 100% { transform: scale(1); filter: none; } 3.5%, 10.5% { transform: scale(0.97); filter: brightness(0.92); } }
 /* Already nudged (page re-rendered): no entrance, the tapping simply goes on. */
 .join__cta--nudged { --tap-start: 0s; }
 .join__cta--nudged .join__finger { opacity: 1; animation: join-tap 4.65s ease-in-out infinite; }
@@ -403,8 +538,8 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 
 /* ---- "How it works" rules list (Trading Task tab and guided tour) ---- */
 .rules { display: flex; flex-direction: column; gap: var(--spacing-12); margin: 0; padding: 0; list-style: none; }
-.rules li { display: flex; align-items: flex-start; gap: var(--spacing-10); font: var(--font-small-regular); color: var(--ui-text-secondary); }
-.rules li::before { content: ""; flex: none; width: var(--spacing-6); height: var(--spacing-6); margin-top: var(--spacing-6); border-radius: var(--radius-pill); background: var(--accent-surface-brand); }
+.rules li { display: flex; align-items: flex-start; gap: var(--spacing-8); font: var(--font-small-regular); color: var(--ui-text-secondary); }
+.rules li::before { content: ""; flex: none; width: var(--spacing-6); height: var(--spacing-6); margin-top: var(--spacing-6); border-radius: var(--radius-pill); background: var(--accent-mark); }
 .rules strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
 
 /* ---- Guided tour: a blocking layer with a highlighted area and one pop-up card ---- */
@@ -414,11 +549,11 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .tour-open .tour { pointer-events: auto; }
 .tour { position: fixed; inset: 0; z-index: 70; }
 /* The highlight is a hole in the scrim: a box whose huge shadow darkens everything around it. */
-.tour__spot { position: fixed; box-shadow: 0 0 0 200vmax var(--ui-overlay-scrim); pointer-events: none; }
+.tour__spot { position: fixed; box-shadow: 0 0 0 var(--spacing-2) var(--tour-ring), 0 0 0 200vmax var(--tour-scrim); pointer-events: none; }
 .tour__spot--none { left: 50%; top: 50%; width: 0; height: 0; }
 .tour__card {
-  position: fixed; display: flex; flex-direction: column; gap: var(--spacing-8); max-height: calc(100% - var(--spacing-32)); overflow-y: auto;
-  padding: var(--spacing-card); border-radius: var(--radius-card); background: var(--card-surface); border: var(--size-stroke) solid var(--card-stroke);
+  position: fixed; display: flex; flex-direction: column; gap: var(--spacing-4); max-height: calc(100% - var(--spacing-32)); overflow-y: auto;
+  padding: var(--spacing-card); border-radius: var(--radius-card-row); background: var(--card-surface); box-shadow: var(--shadow-coach);
 }
 /* Animation above the title: a fixed-height box, so the pop-up's height is known before the images load. */
 .tour__art { --path: calc(var(--size-reward-width) * 0.96); position: relative; width: 100%; height: calc(var(--path) / 1.5); overflow: hidden; }
@@ -449,18 +584,18 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
   .tour__flow-spark { display: none; }
 }
 .tour__top { display: flex; align-items: center; justify-content: space-between; min-height: var(--size-control-xs); }
-.tour__skip { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); padding: var(--spacing-4) 0; }
+.tour__skip { font: var(--font-role-small-em); color: var(--ui-text-secondary); padding: var(--spacing-4) 0; }
 .tour__list { display: flex; flex-direction: column; gap: var(--spacing-6); margin: 0; padding: 0; list-style: none; font: var(--font-small-regular); color: var(--ui-text-secondary); }
 /* Each line sits in its own small, quiet card (same surface as the rules card in step 2). */
-.tour__list li { display: flex; align-items: flex-start; gap: var(--spacing-8); padding: var(--spacing-8) var(--spacing-12); border-radius: var(--radius-control); background: var(--ui-field-surface); }
+.tour__list li { display: flex; align-items: flex-start; gap: var(--spacing-8); padding: var(--spacing-8) var(--spacing-12); border-radius: var(--radius-inner); background: var(--sunk-inset); }
 .tour__list img { flex: none; width: var(--size-icon-sm); height: var(--size-icon-sm); margin-top: var(--spacing-2); object-fit: contain; }
 .tour__list strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
 .tour__card p strong { font: var(--font-small-semibold); color: var(--ui-text-primary); }
 /* Buttons hug their text and sit at the right edge. */
-.tour__actions { display: flex; justify-content: flex-end; gap: var(--spacing-8); margin-top: var(--spacing-4); }
+.tour__actions { display: flex; justify-content: flex-end; gap: var(--spacing-8); margin-top: var(--spacing-12); }
 .tour__card:focus { outline: none; }
 /* The rules sit in a quiet, borderless inner card. */
-.tour__rules { padding: var(--spacing-12); border-radius: var(--radius-card-inner); background: var(--ui-field-surface); }
+.tour__rules { margin-top: var(--spacing-8); padding: var(--spacing-12); border-radius: var(--radius-box); background: var(--sunk-inset); }
 .tour__rules .rules { gap: var(--spacing-8); }
 /* Finger pointing at the main button: after --finger-after it grows in softly from its fingertip (like the sparkles
    do), then taps gently. Never catches taps. */
