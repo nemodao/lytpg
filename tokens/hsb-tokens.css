@@ -3713,6 +3713,10 @@
   --hsb-named-guide-flame-core: #FFE08A;
   --hsb-named-guide-hint-dot-dim-alpha: 0.25;
   --hsb-named-guide-badge-locked-fill-alpha: 0.18;
+  --hsb-named-home-message-highlight-height: 26px;
+  --hsb-named-home-message-image-height: 96px;
+  --hsb-named-home-message-marquee-gap: 32px;
+  --hsb-named-home-message-title-min-contrast: 3px;
   --hsb-customize-screen-hairline-width: 1px;
   --hsb-loyalty-kit-tier-micro-text: var(--hsb-color-t2);
   --hsb-loyalty-kit-title-size: 22px;

@@ -98,6 +98,14 @@ No new layout: they take the R3 surfaces, the rim and the shared header pieces o
 rimmed in light only, the header's balance pill too. The Reward Store is not part of this handoff (it is being
 removed; Redeem's target is unchanged for now).
 
+**Also:** a press or drag on the bottom bar or a capsule tab bar sends its click event exactly once, however long it
+lasts (`pointerClick` in `shared/nav-lens.js` drops the pointer's own click per gesture, not within 1.5 s). Port the
+same rule: one `loyalty_nav_click` / `loyalty_tab_click` per gesture. A lens no longer leaves its resize listener
+behind when the page redraws the bar, and the rim stops watching surfaces that left the page.
+
+**Later cleanup (no effect now):** the `card--soft` class is still emitted (`shared/components.js`,
+`pages/point-balance.js`) but has no CSS since the redesign. Leave it or drop it in your code.
+
 ## 6. Checks
 
 - `sh tools/check-tokens.sh ../hsb_app`: both token files byte-equal.

@@ -17,10 +17,14 @@ const RIM_TILT = Array.from({ length: RIM_POINTS }, (_, k) => 1 - 0.6 * Math.max
 const LANDED_BY = tokMs('loyalty-kit-lens-fallback-ms'); // the page changes by then even if animation frames stall
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
-// The lens picks the tab, so a pointer's own click on a bar is dropped. Only a click that follows a pointer: a screen
-// reader or the keyboard activates the tab directly.
-let pointerAt = 0;
-export const pointerClick = (event) => event.isTrusted && event.detail > 0 && performance.now() - pointerAt < 1500;
+// The lens picks the tab, so a pointer's own click on a bar is dropped, once per gesture whatever its length: the
+// click a press or drag on a bar ends in. Any new press, anywhere, ends that gesture. A screen reader or the keyboard
+// (detail 0) and the lens's own click (not trusted) activate the tab directly.
+let gestureBar = null;
+addEventListener('pointerdown', () => { gestureBar = null; }, true);
+export const pointerClick = (event) => event.isTrusted && event.detail > 0 && Boolean(gestureBar?.contains(event.target));
+// Lenses still mounted; a page that redraws its bar mounts a new one, and the old one's listeners go (none build up).
+const lenses = new Set();
 
 // `bar` is the row and `item` its tabs. The bottom bar takes the defaults; a category bar (TOKENS 8.3) runs at 70% of the
 // speed.
@@ -33,6 +37,9 @@ export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item
   const map = document.getElementById('lbdMap');
   const filter = document.getElementById('lensBD');
   const S = { x: 0, vx: 0, tx: 0, p: 0, vp: 0, tp: 0, q: 0, vq: 0, k: 1, full: true, ang: 315, down: false, raf: 0, last: 0, release: 0, sel: 0, fAcc: 0, fc: new Array(RIM_POINTS).fill(RIM_IDLE), hold: 0, id: null, from: 0, done: null };
+  for (const old of lenses) if (!old.bar.isConnected) { old.stop.abort(); lenses.delete(old); }
+  const stop = new AbortController();
+  lenses.add({ bar, stop });
   const local = (event) => event.clientX - bar.getBoundingClientRect().left;
   const nearest = (cx) => items.reduce((best, tab, i) => (Math.abs(tab.offsetLeft + tab.offsetWidth / 2 - cx) < Math.abs(items[best].offsetLeft + items[best].offsetWidth / 2 - cx) ? i : best), 0);
 
@@ -119,19 +126,19 @@ export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item
   const run = () => { if (!S.raf) { S.last = 0; S.raf = requestAnimationFrame(step); } };
 
   function rest() {
-    if (!bar.isConnected) { removeEventListener('resize', rest); return; } // the page redrew this bar
+    if (!bar.isConnected) return; // the page redrew this bar
     S.sel = Math.max(0, items.findIndex((tab) => tab.hasAttribute('aria-current') || tab.getAttribute('aria-selected') === 'true'));
     S.x = S.tx = items[S.sel].offsetLeft; S.vx = S.p = S.vp = S.tp = 0; S.down = false;
     draw();
   }
   rest();
-  addEventListener('resize', rest);
+  addEventListener('resize', rest, { signal: stop.signal });
   document.fonts?.ready.then(rest);
 
   // A link or picture must not start a native drag or a long-press menu: either would cancel the pointer.
   ['dragstart', 'contextmenu'].forEach((type) => bar.addEventListener(type, (event) => event.preventDefault()));
   bar.addEventListener('pointerdown', (event) => {
-    pointerAt = performance.now();
+    gestureBar = bar;
     clearTimeout(S.stall); S.done = null; // a new touch replaces a tab still waiting to land
     S.down = true; S.tp = 1; S.id = event.pointerId; S.full = false;
     try { bar.setPointerCapture(event.pointerId); } catch { /* the pointer has already gone */ }
@@ -162,7 +169,7 @@ export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item
       onChoose(items[chosen], 'chosen');
     }
     S.tx = items[S.sel].offsetLeft;
-    S.release = performance.now() + (S.full ? 105 : 60); // a tap drops in sooner
+    S.release = performance.now() + tokMs(S.full ? 'motion-lens-release-hold-dur' : 'motion-lens-tap-drop-dur'); // a tap drops in sooner
     if (reduced.matches) { S.x = S.tx; S.p = 0; S.tp = 0; draw(); S.done?.(); return; }
     run();
   }));

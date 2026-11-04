@@ -94,8 +94,9 @@ function paint(el) {
 }
 
 const sizes = new ResizeObserver((entries) => entries.forEach((entry) => paint(entry.target)));
-const watched = new WeakSet();
+const watched = new Set(); // surfaces observed; dropped once they leave the page, so nothing builds up
 function scan(root = document) {
+  watched.forEach((el) => { if (!el.isConnected) { sizes.unobserve(el); watched.delete(el); } });
   root.querySelectorAll(RIM_SELECTOR).forEach((el) => {
     if (watched.has(el)) { paint(el); return; }
     watched.add(el); sizes.observe(el); paint(el);
