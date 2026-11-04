@@ -3,6 +3,21 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 11 — The redesign on the app's design system, R3 (5 Nov 2026)
+
+**Full description for developers: `HANDOFF-11.md`.** Spec §80.
+
+- Visual only: data, API calls, events, intents, tour targets, states, copy and navigation are unchanged.
+- Home, Earn and Coins follow their approved designs on the app's R3 tokens: the two surfaces (light page `#F8F8FA`,
+  box `#E8E8EB`), the sweep rim on every neutral surface, one pressed model, Stolzl, the glass tab bar and lens, the
+  centred page header, Earn's sky with the cup, rays and rewards, Coins' capsule tabs and history row.
+- Reward detail and Redemption history keep their layout with the R3 surfaces and rim.
+- Files: `tokens/` (new `hsb-tokens.css`, `hsb-rim.g.json`; `tokens.json` is now an alias layer), new
+  `shared/tokens.js`, `shared/rim.js`, `shared/bubble.js`, `shared/sheet.js`, `shared/nav-lens.js`;
+  `shared/components.css`, `components.js`, `nav.js`, `theme.js`, `tour.js`, the Home, Earn and Coins page files,
+  `pages/*.html` (load `hsb-tokens.css`), new images under `assets/images/`, `tools/check-tokens.sh`,
+  `tools/build-offline.py`. `DATA.md` unchanged; `STATES.md` unchanged.
+
 ## Handoff 10 — Lots as traded, fixes from the review of handoffs 8 and 9 (28 Oct 2026)
 
 **Full description for developers: `HANDOFF-10.md`.** Spec §78–§79.
