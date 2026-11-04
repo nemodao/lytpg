@@ -5,20 +5,20 @@
    the Today card: .hero-bg covers the header and cup, and the card's .hero-card__sky continues it down to its middle.
    Elements carrying data-theme="dark" resolve the surface tokens to their dark values. */
 /* --sky-light colours the rays. */
-.app { isolation: isolate; --sky-light: color-mix(in srgb, var(--accent-surface-brand) 62%, transparent); }
-.hero-bg, .hero-card { --sky: color-mix(in srgb, var(--accent-mark) 14%, var(--sky-base)); }
+.app { isolation: isolate; --sky-light: var(--hsb-loyalty-earn-hero-sky-light); }
+.hero-bg, .hero-card { --sky: color-mix(in srgb, var(--hsb-loyalty-earn-hero-sky-top) calc(var(--hsb-loyalty-earn-hero-sky-top-fraction) * 100%), var(--sky-base)); }
 .app-header { --header-fade: color-mix(in srgb, var(--sky-base) calc(var(--sky-over, 0) * 100%), var(--ui-surface-weak)); }
 /* On the sky the title is white in both themes and its pill stays dark; both turn when the sky's edge passes. */
-.app-header.is-over-sky h1 { color: var(--color-neutral-0); }
-.app-header.is-over-sky .app-header__pill { background: var(--sky-pill); }
+.app-header.is-over-sky h1 { color: var(--hsb-loyalty-earn-hero-header-title); }
+.app-header.is-over-sky .app-header__pill { background: var(--hsb-loyalty-earn-hero-header-pill); }
 /* The pill's fill crosses over linearly while the title's colour flips in one step halfway, so the title never fades
    into a mid-grey pill (light theme: dark pill to light). */
-.app-header__pill { transition: background-color 0.2s linear; }
-.app-header h1 { transition: color 0s linear 0.1s; }
+.app-header__pill { transition: background-color var(--hero-header-turn) linear; }
+.app-header h1 { transition: color 0s linear var(--hero-header-flip-at); }
 @media (prefers-reduced-motion: reduce) { .app-header h1, .app-header__pill { transition: none; } }
 /* --cup-gap is the space above and below the cup, --sky-below how far the sky runs past the hero; the rays and rewards
    find the cup's centre from them. */
-.hero { --cup-size: calc(var(--size-avatar-lg) + var(--spacing-24)); --cup-gap: var(--spacing-8); --sky-below: var(--spacing-12); --gift-rest: 0.3; --rays-rest: 0.4; position: relative; display: flex; flex-direction: column; }
+.hero { --cup-size: var(--hsb-loyalty-earn-hero-cup-height); --cup-gap: var(--hsb-loyalty-earn-hero-cup-gap); --sky-below: var(--hsb-loyalty-earn-hero-ray-fade-vertical-clear-sky-below); --gift-rest: var(--hsb-loyalty-earn-hero-rewards-rest-opacity); --rays-rest: var(--hsb-loyalty-earn-hero-rays-rest-opacity); position: relative; display: flex; flex-direction: column; }
 /* The rewards' burst overshoots the screen's sides for a moment: no sideways scroll. clip keeps the sticky header. */
 .app { overflow-x: clip; }
 .hero + .card, .hero + .skeleton { margin-top: calc(var(--spacing-12) - var(--spacing-section)); }
@@ -29,7 +29,7 @@
      (outside it, so it can stay stuck while the page scrolls). */
   --sky-top: calc(env(safe-area-inset-top, 0px) + var(--spacing-6) + var(--size-header-button) + var(--spacing-12));
   top: calc(-1 * var(--sky-top)); left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); bottom: calc(-1 * var(--sky-below));
-  background: linear-gradient(to bottom, var(--sky) 25%, var(--sky-base) 92%);
+  background: linear-gradient(to bottom, var(--sky) calc(var(--hsb-loyalty-earn-hero-sky-top-hold-fraction) * 100%), var(--sky-base) calc(var(--hsb-loyalty-earn-hero-sky-base-by-fraction) * 100%));
 }
 .hero-card { position: relative; }
 /* Ended: a message on the Today card in place of today's progress. */
@@ -38,122 +38,122 @@
 /* The dark sky continues behind the top half of the card. It is its own element carrying data-theme="dark", so the
    card itself can follow the page theme. */
 .hero-card__sky {
-  position: absolute; z-index: -1; top: 0; left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); height: 50%;
+  position: absolute; z-index: -1; top: 0; left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); height: calc(var(--hsb-loyalty-earn-hero-sky-end-card-fraction) * 100%);
   background: var(--sky-base);
 }
 /* The load error's card runs on the sky the same way. */
-.hero + .page-error::after { content: ""; position: absolute; z-index: -1; top: 0; left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); height: 50%; background: var(--sky-base); }
+.hero + .page-error::after { content: ""; position: absolute; z-index: -1; top: 0; left: calc(-1 * var(--spacing-gutter)); right: calc(-1 * var(--spacing-gutter)); height: calc(var(--hsb-loyalty-earn-hero-sky-end-card-fraction) * 100%); background: var(--sky-base); }
 /* The cup's glory: a soft halo and rays of light, centred on the cup, spreading out over the sky. Broad rays every
    30deg, a thin one between each pair. They start behind the cup and fade towards the screen's top and sides, and a
    fade at the bottom keeps them from stopping dead at the Today card. While loading or on a load error (.hero--loading):
    no rays, so the burst is where they first appear. Bright during the burst, then the halo and rays dim together with the rewards so the
    content below leads (--rays-rest). Ended: dimmer still, nothing to celebrate. */
 .hero-rays {
-  --ray: color-mix(in srgb, var(--sky-light) 45%, transparent);
-  --ray-thin: color-mix(in srgb, var(--sky-light) 28%, transparent);
+  --ray: color-mix(in srgb, var(--sky-light) calc(var(--hsb-loyalty-earn-hero-rays-broad-opacity) * 100%), transparent);
+  --ray-thin: color-mix(in srgb, var(--sky-light) calc(var(--hsb-loyalty-earn-hero-rays-thin-opacity) * 100%), transparent);
   position: absolute; left: 50%; top: calc(var(--sky-top) + var(--cup-gap) + var(--cup-size) / 2);
-  width: calc(var(--cup-size) * 6); aspect-ratio: 1; translate: -50% -50%;
+  width: calc(var(--cup-size) * var(--hsb-loyalty-earn-hero-rays-box-cups-scale)); aspect-ratio: 1; translate: -50% -50%;
   background:
-    radial-gradient(closest-side, color-mix(in srgb, var(--sky-light) 70%, transparent), color-mix(in srgb, var(--sky-light) 25%, transparent) 22%, transparent 45%),
-    repeating-conic-gradient(from -4deg, transparent 0deg, var(--ray) 4deg, transparent 8deg, transparent 13deg, var(--ray-thin) 15deg, transparent 17deg, transparent 30deg);
+    radial-gradient(closest-side, color-mix(in srgb, var(--sky-light) calc(var(--hsb-loyalty-earn-hero-halo-centre-opacity) * 100%), transparent), color-mix(in srgb, var(--sky-light) calc(var(--hsb-loyalty-earn-hero-halo-mid-opacity) * 100%), transparent) calc(var(--hsb-loyalty-earn-hero-halo-mid-fraction) * 100%), transparent calc(var(--hsb-loyalty-earn-hero-halo-clear-fraction) * 100%)),
+    repeating-conic-gradient(from var(--hsb-loyalty-earn-hero-rays-conic-from-deg), transparent var(--hsb-loyalty-earn-hero-rays-broad-start-deg), var(--ray) var(--hsb-loyalty-earn-hero-rays-broad-peak-deg), transparent var(--hsb-loyalty-earn-hero-rays-broad-end-deg), transparent var(--hsb-loyalty-earn-hero-rays-thin-start-deg), var(--ray-thin) var(--hsb-loyalty-earn-hero-rays-thin-peak-deg), transparent var(--hsb-loyalty-earn-hero-rays-thin-end-deg), transparent var(--hsb-loyalty-earn-hero-rays-every-deg));
   /* Fades out from the cup, and towards the sky's bottom edge (half a cup, the cup's gap and the sky's overhang below
      the cup's centre). */
-  --ray-fade: radial-gradient(closest-side, black 12%, color-mix(in srgb, black 45%, transparent) 45%, transparent 85%),
-    linear-gradient(to bottom, black calc(var(--cup-size) * 3), transparent calc(var(--cup-size) * 3.5 + var(--cup-gap) + var(--sky-below)));
+  --ray-fade: radial-gradient(closest-side, var(--hsb-color-mask-opaque) calc(var(--hsb-loyalty-earn-hero-ray-fade-radial-opaque-fraction) * 100%), color-mix(in srgb, var(--hsb-color-mask-opaque) calc(var(--hsb-loyalty-earn-hero-ray-fade-radial-mid-opacity) * 100%), transparent) calc(var(--hsb-loyalty-earn-hero-ray-fade-radial-mid-fraction) * 100%), transparent calc(var(--hsb-loyalty-earn-hero-ray-fade-radial-clear-fraction) * 100%)),
+    linear-gradient(to bottom, var(--hsb-color-mask-opaque) calc(var(--cup-size) * var(--hsb-loyalty-earn-hero-ray-fade-vertical-opaque-cups-scale)), transparent calc(var(--cup-size) * var(--hsb-loyalty-earn-hero-ray-fade-vertical-clear-cups-scale) + var(--hsb-loyalty-earn-hero-ray-fade-vertical-clear-cup-gap) + var(--sky-below)));
   -webkit-mask-image: var(--ray-fade); mask-image: var(--ray-fade);
   -webkit-mask-composite: source-in; mask-composite: intersect;
 }
 .hero--loading .hero-rays { display: none; }
-.hero--ended .hero-rays { --rays-rest: 0.25; }
+.hero--ended .hero-rays { --rays-rest: var(--hsb-loyalty-earn-hero-rays-ended-opacity); }
 
 /* Programme cup, centred above the Today card, outside it. Decorative. A wide dark shadow that follows its outline
    dims the sky around it so the cup stands out. */
 .today-cup {
   position: relative;
   align-self: center; width: auto; max-width: 100%; height: var(--cup-size); margin-block: var(--cup-gap); object-fit: contain;
-  filter: drop-shadow(0 var(--spacing-8) var(--spacing-32) color-mix(in srgb, var(--vivid-shade) 65%, transparent));
+  filter: drop-shadow(var(--hsb-loyalty-earn-hero-cup-shadow));
 }
 /* "HOT" badge floating at the cup's top-right. At the top of its drift it sits clear of the cup; at the bottom it
    covers the corner of the rim. The drift is kept small (6px) so it does not pull attention away. */
 .today-cup-wrap { position: relative; align-self: center; display: flex; }
 .hero-hot {
-  position: absolute; left: calc(50% + var(--spacing-10)); top: var(--spacing-4); height: var(--spacing-24); width: auto;
-  animation: hero-hot-float 2.4s ease-in-out infinite;
+  position: absolute; left: calc(50% + var(--hsb-loyalty-earn-hero-hot-left-of-centre)); top: var(--hsb-loyalty-earn-hero-hot-top); height: var(--hsb-loyalty-earn-hero-hot-height); width: auto;
+  animation: hero-hot-float var(--hsb-loyalty-earn-hero-hot-float-ms) var(--hsb-loyalty-earn-hero-hot-float-curve) infinite;
 }
-@keyframes hero-hot-float { 0%, 100% { transform: translateY(calc(var(--spacing-6) * -1)) rotate(2deg); } 50% { transform: translateY(0) rotate(-1deg); } }
+@keyframes hero-hot-float { 0%, 100% { transform: translateY(calc(var(--hsb-loyalty-earn-hero-hot-float-up) * -1)) rotate(var(--hsb-loyalty-earn-hero-hot-float-up-deg)); } 50% { transform: translateY(0) rotate(var(--hsb-loyalty-earn-hero-hot-float-down-deg)); } }
 
 /* Rewards around the cup, from the cup's centre. Their photo ground is near black, so they lighten onto the sky and
    their edges vanish into it. At rest they are dimmed: only the cup and its badge stay bright. */
 .hero-gifts { position: absolute; left: 50%; top: calc(var(--cup-gap) + var(--cup-size) / 2); pointer-events: none; }
 .hero-gift {
-  position: absolute; left: 0; top: 0; width: var(--w); height: auto; mix-blend-mode: lighten;
+  position: absolute; left: 0; top: 0; width: var(--w); height: auto; mix-blend-mode: var(--hsb-loyalty-earn-hero-rewards-blend);
   transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--tilt)); /* opacity: Touch, below */
 }
 /* The cup's light: a halo in the brand colour behind it, white hot at the centre. It only flashes as the cup pops. */
 .hero-glow {
-  position: absolute; left: 50%; top: 50%; width: calc(var(--cup-size) * 1.9); aspect-ratio: 1; border-radius: var(--radius-pill);
+  position: absolute; left: 50%; top: 50%; width: calc(var(--cup-size) * var(--hsb-loyalty-earn-hero-pop-flash-size-cups-scale)); aspect-ratio: 1; border-radius: var(--radius-pill);
   translate: -50% -50%; pointer-events: none; opacity: 0;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent-surface-brand) 45%, var(--color-neutral-0)), color-mix(in srgb, var(--accent-surface-brand) 70%, transparent) 22%, color-mix(in srgb, var(--accent-surface-brand) 22%, transparent) 50%, transparent 72%);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--hsb-color-accent) calc(var(--hsb-loyalty-earn-hero-pop-flash-centre-brand-opacity) * 100%), var(--hsb-loyalty-earn-hero-pop-flash-centre-into)), color-mix(in srgb, var(--hsb-color-accent) calc(var(--hsb-loyalty-earn-hero-pop-flash-stop2-opacity) * 100%), transparent) calc(var(--hsb-loyalty-earn-hero-pop-flash-stop2-fraction) * 100%), color-mix(in srgb, var(--hsb-color-accent) calc(var(--hsb-loyalty-earn-hero-pop-flash-stop3-opacity) * 100%), transparent) calc(var(--hsb-loyalty-earn-hero-pop-flash-stop3-fraction) * 100%), transparent calc(var(--hsb-loyalty-earn-hero-pop-flash-clear-fraction) * 100%));
 }
 
 /* First draw: the rewards burst out of the cup to both sides, the cup pops up from the middle with a flash of its
    halo, the badge lands on it; then the rewards dim. Later draws are .hero--settled: no motion, the rewards at rest. */
 /* backwards, not both: the last frame is the rest state, so once it ends the hold below can change it. */
-.hero--burst .hero-gift { animation: hero-gift-burst 2.6s var(--delay) backwards; }
+.hero--burst .hero-gift { animation: hero-gift-burst var(--hsb-loyalty-earn-hero-burst-reward-ms) var(--delay) backwards; }
 @keyframes hero-gift-burst {
-  0% { transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(0.2); opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1); }
+  0% { transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(var(--hsb-loyalty-earn-hero-burst-from-scale)); opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1); }
   10% { opacity: 1; }
-  30% { transform: translate(-50%, -50%) translate(calc(var(--x) * 1.05), calc(var(--y) * 1.05)) rotate(var(--tilt)) scale(1.03); animation-timing-function: ease-in-out; }
+  30% { transform: translate(-50%, -50%) translate(calc(var(--x) * var(--hsb-loyalty-earn-hero-burst-overshoot-offset-scale)), calc(var(--y) * var(--hsb-loyalty-earn-hero-burst-overshoot-offset-scale))) rotate(var(--tilt)) scale(var(--hsb-loyalty-earn-hero-burst-overshoot-size-scale)); animation-timing-function: ease-in-out; }
   42%, 62% { transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--tilt)) scale(1); opacity: 1; animation-timing-function: ease-in-out; }
   100% { transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--tilt)) scale(1); opacity: var(--gift-rest); }
 }
 .hero--burst .today-cup {
   /* Same filter list as the pop's flash, so the light fades out smoothly; at rest it is the plain shadow. */
-  filter: brightness(1) drop-shadow(0 0 0 transparent) drop-shadow(0 var(--spacing-8) var(--spacing-32) color-mix(in srgb, var(--vivid-shade) 65%, transparent));
-  animation: hero-cup-pop 0.8s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  filter: brightness(1) drop-shadow(0 0 0 transparent) drop-shadow(var(--hsb-loyalty-earn-hero-cup-shadow));
+  animation: hero-cup-pop var(--hsb-loyalty-earn-hero-cup-pop-dur-ms) var(--hsb-loyalty-earn-hero-cup-pop-curve) both;
 }
 @keyframes hero-cup-pop {
-  0% { transform: translateY(var(--spacing-24)) scale(0.4); opacity: 0; }
-  40% { filter: brightness(1.3) drop-shadow(0 0 var(--spacing-16) color-mix(in srgb, var(--accent-surface-brand) 75%, transparent)) drop-shadow(0 var(--spacing-8) var(--spacing-32) color-mix(in srgb, var(--vivid-shade) 65%, transparent)); }
+  0% { transform: translateY(var(--hsb-loyalty-earn-hero-cup-pop-from-y)) scale(var(--hsb-loyalty-earn-hero-cup-pop-from-scale)); opacity: var(--hsb-loyalty-earn-hero-cup-pop-from-opacity); }
+  40% { filter: brightness(var(--hsb-loyalty-earn-hero-cup-pop-brightness)) drop-shadow(0 0 var(--hsb-loyalty-earn-hero-cup-pop-glow-blur) color-mix(in srgb, var(--hsb-color-accent) calc(var(--hsb-loyalty-earn-hero-cup-pop-glow-opacity) * 100%), transparent)) drop-shadow(var(--hsb-loyalty-earn-hero-cup-shadow)); }
   60% { opacity: 1; }
 }
 /* Spreads out with the pop (to 1.1s), holds bright, then dims to rest as the rewards do (2.75s). */
-.hero--burst .hero-rays { animation: hero-rays-spread 2.6s 0.15s backwards; }
+.hero--burst .hero-rays { animation: hero-rays-spread var(--hsb-loyalty-earn-hero-burst-rays-ms) var(--hsb-loyalty-earn-hero-burst-rays-delay-ms) backwards; }
 @keyframes hero-rays-spread {
-  0% { opacity: 0; scale: 0.3; rotate: -6deg; animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
+  0% { opacity: 0; scale: var(--hsb-loyalty-earn-hero-burst-rays-from-scale); rotate: var(--hsb-loyalty-earn-hero-burst-rays-from-deg); animation-timing-function: var(--hero-rays-spread-ease); }
   36%, 62% { opacity: 1; scale: 1; rotate: 0deg; animation-timing-function: ease-in-out; }
   100% { opacity: var(--rays-rest); scale: 1; rotate: 0deg; }
 }
-.hero--burst .hero-glow { animation: hero-glow-flash 1.2s ease-out both; }
-@keyframes hero-glow-flash { 0% { opacity: 0; scale: 0.3; } 35% { opacity: 1; scale: 1.15; } 100% { opacity: 0; scale: 1.3; } }
-.hero--burst .hero-hot { animation: hero-hot-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) 0.55s both, hero-hot-float 2.4s ease-in-out 1.05s infinite; }
-@keyframes hero-hot-pop { 0% { transform: scale(0) rotate(-20deg); opacity: 0; } 100% { transform: translateY(calc(var(--spacing-6) * -1)) rotate(2deg); opacity: 1; } }
+.hero--burst .hero-glow { animation: hero-glow-flash var(--hsb-loyalty-earn-hero-pop-flash-dur-ms) var(--hsb-loyalty-earn-hero-pop-flash-curve) both; }
+@keyframes hero-glow-flash { 0% { opacity: 0; scale: var(--hsb-loyalty-earn-hero-pop-flash-from-scale); } 35% { opacity: 1; scale: var(--hsb-loyalty-earn-hero-pop-flash-peak-scale); } 100% { opacity: 0; scale: var(--hsb-loyalty-earn-hero-pop-flash-end-scale); } }
+.hero--burst .hero-hot { animation: hero-hot-pop var(--hsb-loyalty-earn-hero-hot-land-ms) var(--hsb-loyalty-earn-hero-hot-land-curve) var(--hsb-loyalty-earn-hero-hot-land-at-ms) both, hero-hot-float var(--hsb-loyalty-earn-hero-hot-float-ms) var(--hsb-loyalty-earn-hero-hot-float-curve) calc(var(--hsb-loyalty-earn-hero-hot-land-at-ms) + var(--hsb-loyalty-earn-hero-hot-land-ms)) infinite; }
+@keyframes hero-hot-pop { 0% { transform: scale(var(--hsb-loyalty-earn-hero-hot-land-from-scale)) rotate(var(--hsb-loyalty-earn-hero-hot-land-from-deg)); opacity: 0; } 100% { transform: translateY(calc(var(--hsb-loyalty-earn-hero-hot-float-up) * -1)) rotate(var(--hsb-loyalty-earn-hero-hot-float-up-deg)); opacity: 1; } }
 /* Touch (pages/trading-task.js, `watchHeroTouch`). Holding the hero: the rewards come back in full and push out a
    little, the halo and rays light up, the cup and badge zoom; all of it settles back when the finger lifts. A tap on
    the cup or a reward shows the same at 30% for a moment, a taste of the hold (.hero--peek); a tap on the cup also
    bounces it with its badge. --lift is how far along: 0 at rest, .3 peeking, 1 held. Individual scale composes with
    the transforms the burst and the badge's float use. */
 /* manipulation: repeated taps on the cup never become a double-tap zoom. */
-.hero { touch-action: manipulation; --lift: 0; }
-.hero--peek { --lift: 0.3; }
-.hero--held { --lift: 1; }
+.hero { touch-action: manipulation; --lift: var(--hsb-loyalty-earn-hero-lift-rest-fraction); }
+.hero--peek { --lift: var(--hsb-loyalty-earn-hero-lift-tap-fraction); }
+.hero--held { --lift: var(--hsb-loyalty-earn-hero-lift-hold-fraction); }
 /* The rewards take taps (their layer does not). */
 .hero-gift { pointer-events: auto; }
-.today-cup-wrap { scale: calc(1 + 0.12 * var(--lift)); transition: scale 0.45s cubic-bezier(0.3, 1.4, 0.5, 1); }
-.hero--held .today-cup-wrap, .hero--peek .today-cup-wrap { transition-duration: 0.35s; }
-.today-cup-wrap.is-tapped { animation: hero-cup-tap 0.5s ease-out; }
+.today-cup-wrap { scale: calc(1 + var(--hsb-loyalty-earn-hero-lift-cup-gain-scale) * var(--lift)); transition: scale var(--hsb-loyalty-earn-hero-lift-out-ms) var(--hsb-loyalty-earn-hero-lift-cup-curve); }
+.hero--held .today-cup-wrap, .hero--peek .today-cup-wrap { transition-duration: var(--hsb-loyalty-earn-hero-lift-in-ms); }
+.today-cup-wrap.is-tapped { animation: hero-cup-tap var(--hsb-loyalty-earn-hero-lift-tap-bounce-ms) ease-out; }
 @keyframes hero-cup-tap {
   0%, 100% { transform: none; }
-  30% { transform: translateY(calc(var(--spacing-6) * -1)) scale(1.05); }
+  30% { transform: translateY(calc(var(--hsb-loyalty-earn-hero-lift-tap-bounce-up) * -1)) scale(var(--hsb-loyalty-earn-hero-lift-tap-bounce-scale)); }
   60% { transform: translateY(0) scale(0.98); }
   80% { transform: scale(1.01); }
 }
 .hero-gift {
-  opacity: calc(var(--gift-rest) + (1 - var(--gift-rest)) * var(--lift)); scale: calc(1 + 0.03 * var(--lift));
-  transition: opacity 0.45s ease, scale 0.45s ease;
+  opacity: calc(var(--gift-rest) + (1 - var(--gift-rest)) * var(--lift)); scale: calc(1 + var(--hsb-loyalty-earn-hero-lift-rewards-gain-scale) * var(--lift));
+  transition: opacity var(--hsb-loyalty-earn-hero-lift-out-ms) ease, scale var(--hsb-loyalty-earn-hero-lift-out-ms) ease;
 }
-.hero-rays { opacity: calc(var(--rays-rest) + (1 - var(--rays-rest)) * var(--lift)); transition: opacity 0.45s ease; }
-.hero--held :is(.hero-gift, .hero-rays), .hero--peek :is(.hero-gift, .hero-rays) { transition-duration: 0.3s; }
+.hero-rays { opacity: calc(var(--rays-rest) + (1 - var(--rays-rest)) * var(--lift)); transition: opacity var(--hsb-loyalty-earn-hero-lift-out-ms) ease; }
+.hero--held :is(.hero-gift, .hero-rays), .hero--peek :is(.hero-gift, .hero-rays) { transition-duration: var(--hsb-loyalty-earn-hero-lift-in-ms); }
 @media (prefers-reduced-motion: reduce) {
   .hero-hot, .hero--burst .hero-gift, .hero--burst .today-cup, .hero--burst .hero-glow, .hero--burst .hero-hot, .hero--burst .hero-rays, .today-cup-wrap.is-tapped { animation: none; }
   /* The hold and the peek still light things up, without the zoom. */
@@ -194,7 +194,7 @@
   display: flex; align-items: center; gap: var(--spacing-8); width: 100%; padding: var(--spacing-12) var(--spacing-16);
   border-radius: var(--radius-box); background: var(--upgrade-row); font: inherit; color: var(--ui-text-primary); text-align: left; cursor: pointer;
 }
-.upgrade-row.pressed { background: var(--upgrade-row-pressed); }
+.upgrade-row.pressed { filter: var(--hsb-pressed-brand-filter); }
 .upgrade-row__art { flex: none; width: var(--size-avatar); height: var(--size-avatar); object-fit: contain; }
 /* Top tier: nothing left to upgrade, so the row steps back: a plain sunk box, softer title. */
 .upgrade-row--top { --control-fill: var(--sunk-inset); background: var(--control-fill); }

@@ -7,6 +7,7 @@ import { initTracking, trackView } from '../shared/tracking.js';
 import { TIERS, chosenAccountId, rememberAccount, sameGroup } from '../shared/tiers.js';
 import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList, showStatus, waitChip, watchAccountTags } from '../shared/components.js';
 import { mountBarLens } from '../shared/nav-lens.js';
+import { tokMs, tokNum } from '../shared/tokens.js';
 
 const { common, page, ui } = await load('trading-task');
 const { program, accounts } = common;
@@ -18,7 +19,7 @@ const ended = program.ended;
 const app = document.getElementById('app');
 
 // Decorative sky behind the top of the page: a halo and rays of light spreading out from the cup (CSS only).
-const heroBg = '<div class="hero-bg" data-theme="dark" aria-hidden="true"><div class="hero-rays"></div></div>';
+const heroBg = '<div class="hero-bg" data-theme="dark" data-mode="dark" aria-hidden="true"><div class="hero-rays"></div></div>';
 
 // Rewards close behind the cup, in an arc that frames it: name, x and y of its centre from the cup's centre (px), width
 // (px), tilt (deg), and how far it dims (opacity at rest; the whitest ones dim further). Listed back to front, so the
@@ -85,7 +86,7 @@ const usd = (amount, round = Math.ceil) => ui.t('money.usd', { amount: ui.num(ro
 // history, nothing to tap (spec §47). No HOT badge.
 const endedCard = () => `
   <section class="card hero-card hero-message">
-    <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
+    <span class="hero-card__sky" data-theme="dark" data-mode="dark" aria-hidden="true"></span>
     <span class="hero-message__icon">${ui.icon('info')}</span>
     <div class="stack stack--tight">
       <h2 class="t-card">${ui.t('tt.ended.title')}</h2>
@@ -98,7 +99,7 @@ const feed = createActivityFeed(ui, common, common.activity);
 // Not yet allowed to take part (KYC or first deposit missing): "How to start" in place of today's progress (spec §39).
 const joinCard = () => `
   <section class="card hero-card">
-    <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
+    <span class="hero-card__sky" data-theme="dark" data-mode="dark" aria-hidden="true"></span>
     ${joinPanel(ui, common, { flat: true, nudged })}
   </section>`;
 
@@ -120,7 +121,7 @@ function progressCard() {
   else footer = '';
   return `
     <section class="card hero-card">
-      <span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
+      <span class="hero-card__sky" data-theme="dark" data-mode="dark" aria-hidden="true"></span>
       <div class="today today--flat">
         <div class="today__label">
           <h2 class="t-card grow">${ui.t('task.todayLabel')}</h2>
@@ -389,7 +390,7 @@ function termsSheet() {
           <h2 class="t-title-s grow">${ui.t('tt.terms')}</h2>
           <button class="header-action" type="button" data-action="close-terms" aria-label="${ui.t('common.close')}">${ui.icon('close')}</button>
         </div>
-        <div class="doc" data-theme="light">
+        <div class="doc" data-theme="light" data-mode="light">
           <p class="doc__loading t-body c-3">${ui.t('tt.terms.loading')}</p>
           <iframe class="doc__frame" src="${ui.esc(program.termsUrl)}" title="${ui.t('tt.terms')}"></iframe>
         </div>
@@ -479,10 +480,10 @@ app.addEventListener('click', (event) => {
 // Moving more than MOVE_PX before the hold starts is a scroll, and cancels it. While the first draw's burst still runs
 // on the rewards or rays, the hold waits for it to end, or the burst would dim what the finger lights. Only the finger
 // that started counts, a press as long as a hold is not a tap, and a tap during a bounce is ignored, so it never snaps.
-const HOLD_MS = 300;
-const MOVE_PX = 8;
-const TAP_GAP_MS = 500; // the bounce's length
-const PEEK_MS = 550; // 0.3s in, a moment at 30%, then back
+const HOLD_MS = tokMs('loyalty-earn-hero-lift-hold-delay-ms');
+const MOVE_PX = tokNum('bubble-scroll-slop');
+const TAP_GAP_MS = tokMs('loyalty-earn-hero-lift-tap-bounce-ms'); // the bounce's length
+const PEEK_MS = tokMs('loyalty-earn-hero-lift-tap-ms'); // 0.3s in, a moment at 30%, then back
 // How long the burst still runs on the rewards and rays (0 once it is over, and under reduced motion).
 const burstLeft = (hero) => Math.max(0, ...hero.getAnimations({ subtree: true })
   .filter((anim) => anim.effect.target.matches('.hero-gift, .hero-rays') && anim.playState !== 'finished')
@@ -546,7 +547,7 @@ const lines = (style, sizes) => sizes.map((size) => line(style, size)).join('');
 const skeletonRow = `<div class="list__row"><div class="grow">${line('t-label', 'm')}</div>${line('t-body skeleton__end', 'full')}</div>`;
 const earnSkeleton = `
   <div class="skeleton skeleton--earn" role="status" aria-label="${ui.t('common.loading')}">
-    <section class="card hero-card"><span class="hero-card__sky" data-theme="dark" aria-hidden="true"></span>
+    <section class="card hero-card"><span class="hero-card__sky" data-theme="dark" data-mode="dark" aria-hidden="true"></span>
       <div class="today today--flat">
         <div class="today__label"><div class="grow">${line('t-card', 's')}</div>${line('t-caption skeleton__end', 'full')}</div>
         <div class="today__stats">

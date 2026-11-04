@@ -98,7 +98,7 @@ const trip = (item, index) => `
     ${price(item)}
   </a>`;
 const tripPanel = (items) => `
-  <section class="trip-promo blend-pink" data-theme="light" data-section="travel" data-count="${items.length}">
+  <section class="trip-promo blend-pink" data-theme="light" data-mode="light" data-section="travel" data-count="${items.length}">
     <div class="trip-promo__head">
       <p class="trip-promo__title">${ui.t('store.travel')}</p>
       <p class="trip-promo__ribbon">${ui.t('store.travel.ribbon')}</p>

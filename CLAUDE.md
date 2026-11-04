@@ -4,7 +4,7 @@ Giao diện mobile cho chương trình loyalty/promotion của đối tác IB. C
 
 ## Quy tắc bắt buộc
 
-1. **Chỉ dùng giá trị từ `tokens/tokens.css`.** Không hard-code màu, spacing, font, bo góc hay kích thước component. Nếu không có token nào phù hợp, thêm token mới vào `tokens/tokens.json` rồi build lại; không viết giá trị thẳng vào trang.
+1. **Chỉ dùng giá trị từ token (`tokens/hsb-tokens.css` và `tokens/tokens.css`).** Không hard-code màu, spacing, font, bo góc, kích thước component hay thời gian chuyển động. Nếu không có token nào phù hợp thì dừng mục đó và gửi UI Designer 1 (file:line, giá trị, nguồn); không viết giá trị thẳng vào trang, không đặt giá trị tạm.
 2. **Khung 375px, có safe-area, chạy trong webview.** Thiết kế cho chiều rộng 375px. Chừa safe-area trên và dưới bằng `env(safe-area-inset-*)`. Không dựa vào thanh địa chỉ, hover hay tính năng chỉ có trên trình duyệt desktop.
 3. **Dữ liệu chỉ lấy từ `mock/*.json`.** Không viết cứng số liệu, tên, ngày tháng hay trạng thái trong HTML. Trang đọc dữ liệu từ file mock và render ra.
 4. **Mỗi trang phải chuyển được giữa các state.** Dùng query string, ví dụ `?state=capped`, để xem nhanh từng state mà không cần sửa code. Liệt kê các state trang hỗ trợ ở đầu file. Danh mục state đầy đủ nằm ở `STATES.md`, sinh từ `mock/*.json` bằng `python3 tools/build-states.py`: thêm, bớt hay sửa mô tả state thì chạy lại lệnh này.
@@ -16,10 +16,10 @@ Giao diện mobile cho chương trình loyalty/promotion của đối tác IB. C
 
 ## Design token
 
-- Nguồn chuẩn: `tokens/tokens.json`. Chỉ sửa file này.
-- `tokens/tokens.css` được sinh ra từ JSON, không sửa tay. Build lại bằng `python3 tokens/build.py`.
-- Light là mặc định trên `:root`; dark bật bằng `data-theme="dark"` trên phần tử gốc. Mỗi trang phải đúng ở cả hai mode.
-- Giá trị gốc lấy từ Figma nhưng đã được chỉnh qua review. Không đồng bộ lại từ Figma đè lên token hiện tại.
+- Nguồn chuẩn (từ 4/11/2026, người dùng duyệt): hệ token R3 của app, `hsb_app/docs/redesign/qa/tokens.json`, chỉ UI Designer 1 sửa. Loyalty dùng file sinh ra từ đó, `tokens/hsb-tokens.css`: **chép nguyên từ `hsb_app/docs/redesign/qa/tokens.css`, không sửa tay**; kiểm bằng `sh tools/check-tokens.sh` (so `cmp`).
+- `tokens/tokens.json` chỉ còn là lớp alias: mỗi tên cũ của Loyalty trỏ tới đúng một token `--hsb-*` cùng vai trò, không có giá trị số hay màu. `tokens/tokens.css` sinh từ đó bằng `python3 tokens/build.py`, không sửa tay. Code mới gọi thẳng `--hsb-*`.
+- Light là mặc định trên `:root`; dark bật bằng `data-theme="dark"` kèm `data-mode="dark"` (R3 đọc `data-mode`). Premium là `data-premium`. Mỗi trang phải đúng ở light, dark và Premium.
+- Kiểm theo `hsb_app/docs/redesign/qa/QA1.md` (G1–G5, `tokscan.py --strict` trên mọi file đã sửa) và các quy tắc developer ở QA1 §2b.
 
 Token theo vai trò nên dùng trước khi tìm tới primitive:
 

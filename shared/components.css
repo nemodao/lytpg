@@ -2,10 +2,10 @@
 
 .section-title { font: var(--font-role-section); letter-spacing: var(--letter-spacing-role-section); }
 
-/* ---- Materials (TOKENS 4). Two surfaces, no rim on cards, fields, tiles or secondary buttons (4.0). The rim is a 1px
-   ring drawn on ::before, kept on the brand card, the tab bar and the dark selected pill. ---- */
-.card--brand::before, .nav__exit::before, .nav__tabs::before, .tabs .nav__sel::before, .chip[aria-pressed="true"]::before {
-  content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; padding: var(--size-stroke); pointer-events: none;
+/* ---- Materials (TOKENS 4.0, R3). Two surfaces; every neutral surface takes the 4.0b sweep rim, painted by shared/rim.js
+   on ::before as a ring that takes no room. The brand card and the tab bar keep their own 126deg rim, drawn here. ---- */
+.card--brand::before, .nav__exit::before, .nav__tabs::before {
+  content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; padding: var(--bar-rim-width); pointer-events: none;
   background: var(--glass-rim);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
@@ -13,29 +13,30 @@
 /* A block on the page takes the box colour; .sunk--inset on a card, sheet or dialog takes the page colour. */
 .sunk { position: relative; background: var(--sunk-page); }
 .sunk--inset { background: var(--sunk-inset); }
-.tabs .nav__sel::before, .chip[aria-pressed="true"]::before { opacity: var(--pill-rim-opacity); }
 
 /* Every surface takes the opposite of what is under it (4.0): a control is the box colour on the page, the page colour
    on a card or sheet, and the box colour again on a block inside one. */
 .card, .sheet, .tour__card { --control-fill: var(--control-fill-on-card); --strip-pill: var(--strip-pill-on-card); --strip-pill-shadow: var(--strip-pill-shadow-on-card); --strip-track: var(--strip-track-on-card); --capsule-pill: var(--capsule-pill-on-card); --capsule-pill-shadow: none; }
 .sunk--inset { --control-fill: var(--card-surface); }
-/* Pressed (4.0): t1 at 8% over the surface the control is on. Set here, not in tokens, so it resolves after the flip. */
-.pressed { --pressed-fill: color-mix(in srgb, var(--ui-text-primary) var(--press-mix), var(--control-fill)); }
+/* Pressed (4.0, one model): the surface brightens (--hsb-pressed-neutral-filter) under a t1 overlay at 2% / 1.5%,
+   flattened into one fill by the ground the control sits on. Set here, not in tokens, so it resolves after the flip:
+   a box-colour control on the page presses to pressed-on-page, a page-colour control on a box to pressed-on-box. */
+:root, .sunk--inset { --pressed-fill: var(--hsb-color-pressed-on-page); }
+.card, .sheet, .tour__card { --pressed-fill: var(--hsb-color-pressed-on-box); }
 
-/* ---- Card: solid fill, no blur, no shadow (4.1, 2 Nov) ---- */
+/* ---- Card: solid fill, no blur, no shadow; the 4.0b rim (R3) ---- */
 .card {
   position: relative;
   display: flex; flex-direction: column; gap: var(--spacing-stack);
   padding: var(--spacing-card);
   border-radius: var(--radius-card-section);
   background: var(--glass-bg);
-  box-shadow: var(--shadow-glass);
   min-width: 0;
 }
 /* Clickable cards in a grid or row: the smaller radius. */
-.card--solid { border-radius: var(--radius-card-row); background: var(--card-surface); box-shadow: var(--shadow-solid); }
+.card--solid { border-radius: var(--radius-card-row); background: var(--card-surface); }
 /* Brand card (4.4): gradient, brand rim, frosted grain, dark content, neutral shadow. */
-.card--brand { background: var(--brand-gradient); color: var(--brand-ink); box-shadow: var(--shadow-brand-card); isolation: isolate; }
+.card--brand { background: var(--brand-gradient); color: var(--brand-ink); isolation: isolate; }
 .card--brand::before { padding: var(--brand-rim-width); background: var(--brand-rim); }
 .card--brand::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; background: var(--grain) 0 0 / 160px 160px; mix-blend-mode: overlay; opacity: 0.32; }
 .card--blend { background: var(--blend-bg); color: var(--blend-fg); box-shadow: var(--blend-stroke); }
@@ -54,7 +55,6 @@
 .blend-yellow, .blend-lime, .blend-cyan { --blend-glass: var(--glass-surface); }
 /* Daily Trading cards and the "How to start" sheet: page text colours, sunk inner panel. */
 .blend-pale-theme { --blend-bg: var(--glass-bg); --blend-fg: var(--ui-text-primary); --blend-ink: var(--card-surface); --blend-glass: var(--sunk-inset); }
-.card--blend.blend-pale-theme { box-shadow: var(--shadow-glass); }
 /* Secondary text on a blend takes the blend's text colour, dimmed. */
 .card--blend .c-2, .card--blend .c-3 { color: color-mix(in srgb, var(--blend-fg) 72%, transparent); }
 /* Least prominent text on a blend (notes such as the update interval). */
@@ -72,7 +72,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
   border-radius: var(--radius-pill); border: 0;
   font: var(--font-role-row); white-space: nowrap; cursor: pointer;
 }
-.btn--sm { height: var(--size-control-sm); padding: 0 var(--spacing-14); font: var(--font-role-label-em); }
+.btn--sm { height: var(--hsb-button-sm-height); padding: 0 var(--hsb-button-sm-pad-x); font: var(--hsb-button-sm-label); }
 /* The small brand pill, the Copy row's at 28 high (7.27): the Redeem label on a reward card, small brand actions. */
 .btn--xs { height: var(--size-chip); padding: 0 var(--spacing-6); font: var(--font-role-small-em); }
 .btn--lg { height: var(--size-button); }
@@ -80,25 +80,25 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* Primary, Kính B: one per view. */
 .btn--primary { background: var(--brand-gradient); color: var(--on-brand); box-shadow: var(--shadow-primary); }
 .btn--primary::before {
-  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: var(--size-stroke); pointer-events: none;
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: var(--hsb-button-primary-rim-width); pointer-events: none;
   background: var(--primary-rim);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
 }
-.btn--primary.pressed, .btn--onbrand.pressed { filter: brightness(1.04) saturate(1.06); }
-.btn--primary.pressed::before { animation: rim-drift 1.6s ease-in-out infinite alternate; }
-@keyframes rim-drift { from { --ang: 116deg; } to { --ang: 162deg; } }
+.btn--primary.pressed, .btn--onbrand.pressed { filter: var(--hsb-pressed-brand-filter); }
+.btn--primary.pressed::before { animation: rim-drift var(--hsb-button-primary-rim-drift-dur) var(--hsb-button-primary-rim-drift-ease) infinite alternate; }
+@keyframes rim-drift { from { --ang: var(--hsb-button-primary-rim-drift-from-deg); } to { --ang: var(--hsb-button-primary-rim-drift-to-deg); } }
 @media (prefers-reduced-motion: reduce) { .btn--primary.pressed::before { animation: none; } }
 /* An action the user must wait for (9.4): the logo loader in its chip, over a light dim that blocks the page. */
-.wait { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: var(--wait-dim); }
-.wait__chip { display: grid; place-items: center; width: var(--size-loader-chip); height: var(--size-loader-chip); border-radius: var(--radius-3xl); background: var(--wait-chip); box-shadow: var(--wait-chip-shadow); animation: wait-in 0.32s cubic-bezier(0.3, 1.3, 0.5, 1); }
-@keyframes wait-in { from { transform: scale(0.92); } }
-.logo-loader { width: var(--size-loader); height: auto; }
-.logo-loader path { transform-box: fill-box; transform-origin: center; animation: logo-pulse 1.2s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+.wait { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: var(--hsb-loader-chip-scrim); }
+.wait__chip { display: grid; place-items: center; width: var(--hsb-loader-chip-size); height: var(--hsb-loader-chip-size); border-radius: var(--hsb-loader-chip-radius); background: var(--hsb-loader-chip-fill); box-shadow: var(--hsb-loader-chip-shadow); animation: wait-in var(--hsb-motion-loader-chip-in-dur) var(--hsb-motion-loader-chip-in-ease); }
+@keyframes wait-in { from { transform: scale(var(--hsb-loader-chip-scale-from)); } }
+.logo-loader { width: var(--hsb-loader-chip-loader); height: auto; }
+.logo-loader path { transform-box: fill-box; transform-origin: center; animation: logo-pulse var(--hsb-motion-loader-cycle-dur) var(--hsb-motion-loader-cycle-ease) infinite; }
 .logo-loader path + path { animation-delay: -0.6s; }
 @keyframes logo-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.9); opacity: 0.25; } }
 @keyframes logo-calm { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
-@media (prefers-reduced-motion: reduce) { .logo-loader path { animation: logo-calm 1.6s ease-in-out infinite; } }
+@media (prefers-reduced-motion: reduce) { .logo-loader path { animation: logo-calm var(--hsb-motion-loader-reduced-pulse-dur) var(--hsb-motion-loader-reduced-pulse-ease) infinite; } }
 /* Disabled (4.0): the surface colour with t3 text, no rim, no shadow, no press. */
 .btn:disabled { background: var(--control-fill); color: var(--ui-text-tertiary); box-shadow: none; cursor: default; }
 .btn:disabled::before { display: none; }
@@ -106,15 +106,17 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .btn--mono.pressed { background: var(--ui-button-dark-pressed); }
 /* Secondary button (gbtn): control fill, no rim. */
 .btn--glass, .btn--stroke {
-  background: var(--control-fill); color: var(--ui-text-primary); box-shadow: var(--shadow-secondary);
-  transition: background-color 0.45s ease, box-shadow 0.45s ease;
+  background: var(--control-fill); color: var(--ui-text-primary);
+  transition: background-color var(--hsb-motion-press-out-dur) var(--hsb-motion-press-out-ease), filter var(--hsb-motion-press-out-dur) var(--hsb-motion-press-out-ease);
 }
-.btn--glass.pressed, .btn--stroke.pressed { background: var(--pressed-fill); transition-duration: 0.22s; }
-.option.pressed { background: var(--pressed-fill); }
+.btn--glass.pressed, .btn--stroke.pressed, .option.pressed, .header-action.pressed, .upgrade-row--top.pressed {
+  background: var(--pressed-fill); filter: var(--hsb-pressed-neutral-filter);
+  transition-duration: var(--hsb-motion-press-in-dur); transition-timing-function: var(--hsb-motion-press-in-ease);
+}
 
 .btn--tint, .btn--soft { background: var(--accent-soft); color: var(--accent-tag-text); }
 /* On a brand card: black with white text, no shadow (4.4). */
-.btn--onbrand { background: var(--brand-button); color: var(--brand-button-text); box-shadow: inset 0 0 0 var(--size-stroke) var(--brand-button-rim); }
+.btn--onbrand { background: var(--brand-button); color: var(--brand-button-text); box-shadow: inset 0 0 0 var(--hsb-button-primary-rim-width) var(--brand-button-rim); }
 
 /* ---- Tag (TOKENS 6) ---- */
 .badge { display: inline-flex; align-items: center; height: var(--size-tag); padding: 0 var(--size-tag-pad); border-radius: var(--radius-pill); font: var(--font-role-meta-em); white-space: nowrap; }
@@ -128,7 +130,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 
 /* ---- Notice ---- */
 .notice { display: flex; align-items: flex-start; gap: var(--spacing-8); padding: var(--spacing-12); border-radius: var(--radius-box); font: var(--font-role-label); color: var(--ui-text-secondary); }
-.notice .icon { width: var(--size-icon-sm); height: var(--size-icon-sm); margin-top: var(--size-stroke); }
+.notice .icon { width: var(--hsb-warn-card-icon); height: var(--hsb-warn-card-icon); margin-top: var(--hsb-warn-card-icon-nudge); }
 .notice--neutral { background: var(--sunk-inset); }
 .notice--neutral .icon { color: var(--ui-icon-secondary); }
 .notice--info { background: var(--ui-badge-blue); }
@@ -221,7 +223,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .app-header h1 { position: relative; display: flex; align-items: center; min-width: 0; height: var(--size-header-button); padding: 0 var(--spacing-16); border-radius: var(--radius-pill); color: var(--ui-text-primary); }
 /* Narrow screens: a little less padding, so the longest titles ("Redemption history") still fit beside the back button. */
 @media (max-width: 359px) { .app-header h1 { padding-inline: var(--spacing-12); } }
-.app-header__pill { position: absolute; inset: 0; border-radius: inherit; opacity: var(--p); background: var(--control-fill); box-shadow: var(--shadow-control); }
+.app-header__pill { position: absolute; inset: 0; border-radius: inherit; opacity: var(--p); background: var(--control-fill); }
 .app-header__title {
   position: relative; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--font-role-row); letter-spacing: -0.005em;
   transform: scale(calc(1 + var(--title-grow) * (1 - var(--p))));
@@ -229,12 +231,11 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* Round icon button (5): 40, control fill. */
 .header-action {
   position: relative; flex: none; display: grid; place-items: center; width: var(--size-header-button); height: var(--size-header-button); border-radius: var(--radius-pill);
-  background: var(--control-fill); color: var(--ui-text-primary); box-shadow: var(--shadow-control);
-  transition: background-color 0.45s ease;
+  background: var(--control-fill); color: var(--ui-text-primary);
+  transition: background-color var(--hsb-motion-press-out-dur) var(--hsb-motion-press-out-ease), filter var(--hsb-motion-press-out-dur) var(--hsb-motion-press-out-ease);
 }
-.header-action.pressed { background: var(--pressed-fill); transition-duration: 0.22s; }
-/* 48 to touch. */
-.header-action::after { content: ""; position: absolute; inset: calc((var(--size-header-button) - var(--size-tap-target-min)) / 2 - var(--spacing-2)); }
+/* 48 to touch (5, round-hit). */
+.header-action::after { content: ""; position: absolute; inset: calc((var(--hsb-button-round-size) - var(--hsb-button-round-hit)) / 2); }
 @media (prefers-reduced-motion: reduce) { .btn--glass, .btn--stroke, .header-action { transition: none; } }
 
 /* ---- Today panel (Dashboard task card, Trading Task progress card); sits on a blend card ---- */
@@ -303,31 +304,36 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .sheet__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-8); }
 
 /* ---- Bottom sheet (7.14). shared/sheet.js adds the drag and the slide out. ---- */
-.scrim { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; background: var(--ui-overlay-scrim); -webkit-backdrop-filter: blur(var(--scrim-blur)); backdrop-filter: blur(var(--scrim-blur)); animation: scrim-in 0.28s ease; }
-.scrim.is-closing { opacity: 0; transition: opacity 0.28s ease; }
+.scrim { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; background: var(--ui-overlay-scrim); -webkit-backdrop-filter: blur(var(--scrim-blur)); backdrop-filter: blur(var(--scrim-blur)); animation: scrim-in var(--hsb-motion-sheet-scrim-in-dur) var(--hsb-motion-sheet-scrim-in-ease); }
+.scrim.is-closing { opacity: 0; transition: opacity var(--hsb-sheet-scrim-out-dur) var(--hsb-sheet-scrim-out-ease); }
 .scrim.no-enter, .scrim.no-enter .sheet { animation: none; }
 .has-sheet { overflow: hidden; }
 @keyframes scrim-in { from { opacity: 0; } }
 .sheet {
-  width: 100%; max-width: var(--app-width); max-height: var(--size-sheet-max-height); overflow-y: auto;
+  width: 100%; max-width: var(--app-width); max-height: calc(var(--hsb-sheet-height-cap) * 100vh); overflow-y: auto;
   display: flex; flex-direction: column; gap: var(--spacing-16);
   padding: var(--spacing-8) var(--spacing-gutter) max(env(safe-area-inset-bottom, 0px), var(--size-sheet-foot));
-  border-radius: var(--radius-card-section) var(--radius-card-section) 0 0; background: var(--card-surface); box-shadow: var(--shadow-sheet);
+  border-radius: var(--hsb-sheet-radius-top) var(--hsb-sheet-radius-top) 0 0; background: var(--hsb-sheet-fill);
   overscroll-behavior: contain;
-  animation: sheet-in 0.42s cubic-bezier(0.2, 1.1, 0.3, 1);
+  animation: sheet-in var(--hsb-sheet-enter-dur) var(--hsb-sheet-enter-ease);
 }
 /* A sheet whose content scrolls keeps its grip and head. */
 .sheet__top { position: sticky; z-index: 3; top: calc(var(--spacing-8) * -1); display: flex; flex-direction: column; gap: var(--spacing-16); margin: calc(var(--spacing-8) * -1) calc(var(--spacing-gutter) * -1); padding: var(--spacing-8) var(--spacing-gutter); background: var(--card-surface); }
 .sheet.is-draggable, .sheet__top, .sheet__grab, .sheet__head { touch-action: none; }
 @keyframes sheet-in { from { transform: translateY(100%); } }
 @media (prefers-reduced-motion: reduce) { .sheet, .scrim { animation: none; } }
-/* Grip: 2 rows of 5 dots, 3px, 3px apart. */
-.sheet__grab { flex: none; align-self: center; width: var(--size-grip-width); height: var(--size-grip-height); opacity: 0.7; background: radial-gradient(circle at 1.5px 1.5px, var(--grip) 1.5px, transparent 1.6px) 0 0 / 6px 6px; }
+/* Grip (7.14): rows of dots, sized from the sheet's grip tokens (5 x 2 dots of 3, 3 apart: 27 x 9). */
+.sheet__grab {
+  --dot: var(--hsb-sheet-grip-dot); --pitch: calc(var(--dot) + var(--hsb-sheet-grip-gap));
+  flex: none; align-self: center; opacity: var(--hsb-sheet-grip-opacity);
+  width: calc(var(--hsb-sheet-grip-cols) * var(--pitch) - var(--hsb-sheet-grip-gap)); height: calc(var(--hsb-sheet-grip-rows) * var(--pitch) - var(--hsb-sheet-grip-gap));
+  background: radial-gradient(circle at calc(var(--dot) / 2) calc(var(--dot) / 2), var(--grip) calc(var(--dot) / 2), transparent calc(var(--dot) / 2 + 0.1px)) 0 0 / var(--pitch) var(--pitch);
+}
 
 /* A list of choices in a sheet (7.16): selectable rows with the radio last; the selected row takes the plain brand rim. */
 .option { position: relative; display: flex; align-items: center; gap: var(--spacing-12); width: 100%; min-height: var(--size-control-lg); padding: var(--spacing-8) var(--spacing-16); border-radius: var(--radius-tile); background: var(--control-fill); font: var(--font-role-row); }
 .option + .option { margin-top: var(--spacing-8); }
-.option:has(.radio--on) { box-shadow: inset 0 0 0 var(--selected-rim) var(--ui-stroke-brand); }
+.option:has(.radio--on) { box-shadow: inset 0 0 0 var(--hsb-option-selected-rim-width) var(--hsb-option-selected-rim); }
 .option--muted { color: var(--ui-text-secondary); }
 /* Radio (7.16): 22, a ring when off, brand fill and a dark tick when on. */
 .radio { width: var(--size-tag); height: var(--size-tag); flex: none; display: grid; place-items: center; border-radius: var(--radius-pill); border: var(--size-rim-selected) solid color-mix(in srgb, var(--ui-text-tertiary) 55%, transparent); }
@@ -344,7 +350,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 
 /* Document sheet (Terms & Conditions): fixed height, title row with a close button, and the document in a frame that
    scrolls by itself. The document is served by the backend and keeps its own (light) look in both themes. */
-.sheet--doc { height: var(--size-sheet-max-height); overflow: hidden; }
+.sheet--doc { height: calc(var(--hsb-sheet-height-cap) * 100vh); overflow: hidden; }
 .sheet__head { display: flex; align-items: center; gap: var(--spacing-12); }
 .doc { position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: var(--radius-card-inner); background: var(--color-neutral-0); }
 .doc__loading { position: absolute; inset: 0; display: grid; place-items: center; }
@@ -357,7 +363,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .skeleton__bar, .skeleton__dot {
   display: block; border-radius: var(--radius-xs);
   background: linear-gradient(100deg, var(--shimmer-fill) 40%, var(--shimmer-sweep) 50%, var(--shimmer-fill) 60%) 0 0 / 780px 100% fixed;
-  animation: skeleton-sweep 1.4s linear infinite;
+  animation: skeleton-sweep var(--hsb-shimmer-sweep-motion-dur) var(--hsb-shimmer-sweep-motion-ease) infinite;
 }
 .skeleton__bar { height: var(--spacing-10); }
 /* A bar in the height of the line it stands for, so the block keeps its real height. */
@@ -372,9 +378,9 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* End of a paged list: spinner or retry line. */
 .load-more { display: flex; align-items: center; justify-content: center; gap: var(--spacing-8); min-height: var(--size-control-sm); }
 .load-more .text-btn { align-self: auto; font: var(--font-x-small-semibold); }
-.spinner { width: var(--size-icon-sm); height: var(--size-icon-sm); border-radius: var(--radius-pill); border: var(--spacing-2) solid var(--ui-stroke-soft); border-top-color: var(--accent-surface-brand); animation: spinner-turn 0.8s linear infinite; }
+.spinner { width: var(--size-icon-sm); height: var(--size-icon-sm); border-radius: var(--radius-pill); border: var(--spacing-2) solid var(--ui-stroke-soft); border-top-color: var(--accent-surface-brand); animation: spinner-turn var(--spinner-turn) linear infinite; }
 @keyframes spinner-turn { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .skeleton__bar, .skeleton__dot { animation: none; } .spinner { animation-duration: 2.4s; } }
+@media (prefers-reduced-motion: reduce) { .skeleton__bar, .skeleton__dot { animation: none; } .spinner { animation-duration: var(--spinner-turn-reduced); } }
 
 /* Text button: a quiet link-style button, e.g. "Terms & Conditions" under the rules. */
 .text-btn .icon { width: var(--size-tick); height: var(--size-tick); }
@@ -451,7 +457,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .nav__hot {
   position: absolute; top: calc(var(--spacing-8) * -1); left: calc(100% - var(--spacing-8));
   width: auto; height: var(--size-icon-sm); max-width: none;
-  animation: nav-hot-float 2.4s ease-in-out infinite;
+  animation: nav-hot-float var(--nav-hot-float) ease-in-out infinite;
 }
 /* Unselected tab that draws attention: every 6.5 s its red version fades in over the icon while the icon grows, holds
    for about a second, then both go back. Timing: 0.5 s in, 0.9 s hold, 0.6 s out. */
@@ -471,7 +477,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 [data-premium] .nav__image--brand { display: none; }
 
 /* ---- Recent activity on Home and Earn (spec §50): flat sunk strip: icon, message (two lines at most), time. ---- */
-.activity { display: flex; padding: var(--spacing-8) var(--spacing-12); border-radius: var(--radius-box); transition: background-color 0.4s ease; }
+.activity { display: flex; padding: var(--spacing-8) var(--spacing-12); border-radius: var(--radius-box); transition: background-color var(--hsb-loyalty-gift-entry-fade-ms) ease; }
 /* A reward entry takes the brand tint for as long as it is on screen. */
 .activity--gift { background: var(--activity-gift); }
 /* The row keeps the height of two lines of text whatever the message, so the card does not jump; a one-line message
@@ -481,7 +487,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* At most two lines. */
 .activity__text { flex: 1; min-width: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: var(--font-role-label); color: var(--ui-text-secondary); }
 .activity__time { flex: none; font: var(--font-role-meta); color: var(--ui-text-tertiary); white-space: nowrap; }
-.activity__in { animation: activity-in 0.4s ease-out; }
+.activity__in { animation: activity-in var(--hsb-loyalty-gift-entry-fade-ms) ease-out; }
 @media (prefers-reduced-motion: reduce) { .activity__in { animation: none; } }
 
 @keyframes activity-in { from { opacity: 0; transform: translateY(var(--spacing-4)); } }
@@ -497,7 +503,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .join__step { position: relative; display: flex; align-items: flex-start; gap: var(--spacing-8); font: var(--font-role-label); color: var(--ui-text-secondary); }
 .join__step > span:last-child { padding-top: calc((var(--size-icon-lg) - 1lh) / 2); }
 /* The track between two steps. */
-.join__step:not(:last-child)::before { content: ""; position: absolute; left: calc(var(--size-icon-lg) / 2 - var(--size-stroke)); top: var(--spacing-24); height: var(--spacing-12); width: var(--spacing-2); background: var(--track); }
+.join__step:not(:last-child)::before { content: ""; position: absolute; left: calc((var(--size-icon-lg) - var(--spacing-2)) / 2); top: var(--size-icon-lg); height: var(--spacing-12); width: var(--spacing-2); background: var(--track); }
 .join__mark { flex: none; display: grid; place-items: center; width: var(--size-icon-lg); height: var(--size-icon-lg); border-radius: var(--radius-pill); background: var(--control-fill); font: var(--font-role-small); color: var(--ui-text-secondary); }
 /* The step to do now: brand fill, primary text. */
 .join__step--current { font: var(--font-role-label-em); color: var(--ui-text-primary); }
@@ -518,7 +524,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .join__finger {
   position: absolute; left: calc(50% - var(--size-control-lg) * 0.9); top: calc(100% + var(--spacing-2)); width: var(--size-control-lg); height: auto;
   pointer-events: none; opacity: 0; transform-origin: 90% 3%;
-  animation: tour-finger-in 0.8s ease-out var(--nudge-after) forwards, join-tap 4.65s ease-in-out var(--tap-start) infinite;
+  animation: tour-finger-in var(--tour-finger-in) ease-out var(--nudge-after) forwards, join-tap 4.65s ease-in-out var(--tap-start) infinite;
 }
 /* The finger: two taps (up onto the button), then during the wait it floats down away from the button and back, twice.
    The button itself stands still while waiting. */
@@ -563,16 +569,16 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* Step 2 artwork: candles -> coin (+). Each part appears in turn, once, then stays. */
 .tour__flow { align-self: center; display: flex; align-items: center; gap: var(--spacing-8); padding-block: var(--spacing-4); }
 .tour__flow-item { display: block; width: calc(var(--size-avatar-lg) * 0.7); height: calc(var(--size-avatar-lg) * 0.7); object-fit: contain; }
-.tour__flow-item--1 { animation: tour-flow-in 0.45s ease-out 0.15s backwards; }
-.tour__flow-arrow { display: grid; color: var(--ui-icon-tertiary); animation: tour-flow-slide 0.4s ease-out 0.75s backwards; }
+.tour__flow-item--1 { animation: tour-flow-in var(--tour-flow-in) ease-out var(--tour-flow-in-delay) backwards; }
+.tour__flow-arrow { display: grid; color: var(--ui-icon-tertiary); animation: tour-flow-slide var(--tour-flow-slide) ease-out 0.75s backwards; }
 .tour__flow-coin { position: relative; display: block; }
-.tour__flow-item--2 { animation: tour-flow-pop 0.5s cubic-bezier(0.3, 1.5, 0.5, 1) 1.25s backwards; }
+.tour__flow-item--2 { animation: tour-flow-pop var(--tour-flow-pop) var(--tour-flow-pop-ease) 1.25s backwards; }
 .tour__flow-plus {
   position: absolute; top: calc(var(--spacing-6) * -1); right: calc(var(--spacing-8) * -1);
-  font: var(--font-large-semibold); color: var(--ui-text-green); animation: tour-flow-pop 0.45s cubic-bezier(0.3, 1.8, 0.5, 1) 1.75s backwards;
+  font: var(--font-large-semibold); color: var(--ui-text-green); animation: tour-flow-pop var(--tour-coin-pop) var(--tour-coin-pop-ease) 1.75s backwards;
 }
 /* Two small plus signs float up and vanish as the coin lands. */
-.tour__flow-spark { position: absolute; font: var(--font-small-semibold); font-style: normal; color: var(--ui-text-green); opacity: 0; animation: tour-flow-spark 0.9s ease-out 1.85s both; }
+.tour__flow-spark { position: absolute; font: var(--font-small-semibold); font-style: normal; color: var(--ui-text-green); opacity: 0; animation: tour-flow-spark var(--tour-spark) ease-out 1.85s both; }
 .tour__flow-spark--1 { top: var(--spacing-4); left: calc(var(--spacing-8) * -1); }
 .tour__flow-spark--2 { top: calc(var(--spacing-16) * -1); left: 40%; animation-delay: 2.05s; }
 @keyframes tour-flow-in { from { opacity: 0; transform: translateY(var(--spacing-8)) scale(0.9); } }
@@ -602,17 +608,17 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .tour__finger {
   position: fixed; z-index: 1; width: var(--size-control-lg); height: auto; pointer-events: none; opacity: 0; /* above sparkles and other pops */
   transform-origin: 90% 3%;
-  animation: tour-finger-in 0.8s ease-out var(--finger-after) forwards, tour-finger-tap 1.2s ease-in-out calc(var(--finger-after) + 0.8s) infinite;
+  animation: tour-finger-in var(--tour-finger-in) ease-out var(--finger-after) forwards, tour-finger-tap var(--tour-finger-tap) ease-in-out calc(var(--finger-after) + var(--tour-finger-in)) infinite;
 }
 @keyframes tour-finger-in { from { opacity: 0; transform: scale(0.5); } 60% { opacity: 1; } to { opacity: 1; transform: scale(1); } }
 @keyframes tour-finger-tap { 50% { transform: translateY(calc(var(--spacing-6) * -1)); } }
 @media (prefers-reduced-motion: reduce) { .tour__finger { animation: tour-finger-in 0.01s linear var(--finger-after) forwards; } }
 /* Step 1: gold sparkles pop around the main button, then vanish. */
-.tour__sparkle { position: absolute; width: var(--size-icon); height: var(--size-icon); opacity: 0; animation: tour-sparkle 0.9s ease-out both; }
+.tour__sparkle { position: absolute; width: var(--size-icon); height: var(--size-icon); opacity: 0; animation: tour-sparkle var(--tour-spark) ease-out both; }
 @keyframes tour-sparkle { 0% { opacity: 0; transform: scale(0.2) rotate(-30deg); } 35% { opacity: 1; transform: scale(1.15) rotate(0deg); } 70% { opacity: 1; transform: scale(0.95) rotate(10deg); } 100% { opacity: 0; transform: scale(0.4) rotate(25deg); } }
 /* Step 3: plus signs and small coins pop up around the balance. */
 .tour__burst { position: fixed; pointer-events: none; }
-.tour__pop { position: absolute; width: var(--size-icon-sm); height: var(--size-icon-sm); opacity: 0; animation: tour-pop 1.2s ease-out both; }
+.tour__pop { position: absolute; width: var(--size-icon-sm); height: var(--size-icon-sm); opacity: 0; animation: tour-pop var(--tour-pop) ease-out both; }
 .tour__pop--gift { width: var(--size-icon-lg); height: var(--size-icon-lg); }
 .tour__pop--plus { width: auto; height: auto; font: var(--font-medium-semibold); color: var(--ui-text-green); }
 @keyframes tour-pop { 0% { opacity: 0; transform: translateY(var(--spacing-8)) scale(0.6); } 25% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(calc(var(--spacing-32) * -1)) scale(1); } }

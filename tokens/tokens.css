@@ -1,766 +1,381 @@
-/* Loyalty design tokens — generated from tokens.json by build.py. Do not edit by hand.
-   Version 4.0 (2026-11-02). Values follow hsb_app/docs/redesign/TOKENS.md, the HSB design system. That file is the source of truth; Loyalty-only tokens were ruled by UI Designer 1. */
+/* Loyalty variables, generated from tokens.json by build.py. Do not edit by hand.
+   Version 5.0 (2026-11-04). Values come from tokens/hsb-tokens.css (R3); see tokens.json $source. */
 
-:root, [data-theme="light"] {
-  /* Color — primitives */
-  --color-brand-50: #eff4ff;
-  --color-brand-500: #2970ff;
-  --color-brand-700: #004eeb;
-  --color-neutral-0: #ffffff;
-  --color-neutral-100: #f8fafb;
-  --color-neutral-200: #eaedf2;
-  --color-neutral-300: #ccd2dd;
-  --color-neutral-400: #888e9e;
-  --color-neutral-500: #555f75;
-  --color-neutral-600: #323741;
-  --color-neutral-700: #1d2025;
-  --color-neutral-800: #0e1218;
-  --color-neutral-900: #0f0f10;
-  --color-purple-main: #6438f5;
-  --color-purple-light: #f0ebfe;
-  --color-purple-light-hover: #e8e1fe;
-  --color-purple-light-active: #cfc1fc;
-  --color-purple-darker-hover: #4b2ab8;
-  --color-purple-darker-active: #2d196e;
-  --color-purple-darker: #231456;
-  --color-orange-100: #fef2ea;
-  --color-orange-200: #fdebdf;
-  --color-orange-300: #fbd6be;
-  --color-orange-400: #f17b2c;
-  --color-orange-500: #b65c21;
-  --color-orange-600: #6d3714;
-  --color-orange-darker: #552b0f;
-  --color-green-100: #ebf8f4;
-  --color-green-200: #e1f4ef;
-  --color-green-300: #c1e9de;
-  --color-green-400: #37b793;
-  --color-green-500: #29896e;
-  --color-green-600: #216e58;
-  --color-red-100: #fceaec;
-  --color-red-200: #fadfe3;
-  --color-red-300: #f5bec4;
-  --color-red-400: #de2c41;
-  --color-red-500: #a72131;
-  --color-yellow-100: #fef7ec;
-  --color-yellow-200: #fdf3e2;
-  --color-yellow-400: #f1ae40;
-  --color-yellow-500: #b58330;
-  --color-blue-200: #e0ebfc;
-  --color-blue-300: #bfd5fa;
-  --color-blue-500: #235ab3;
-  --color-shades-brand-10: #1b39e61a;
-  --color-shades-brand-20: #1b39e633;
-  --color-shades-brand-40: #1b39e666;
-  --color-shades-brand-80: #1b39e6cc;
-  --color-shades-blue-10: #2f78ee1a;
-  --color-shades-blue-20: #2f78ee33;
-  --color-shades-green-10: #37b7931a;
-  --color-shades-green-80: #37b793cc;
-  --color-shades-yellow-10: #f1ae401a;
-  --color-shades-orange-10: #f27b2c1a;
-  --color-shades-red-10: #de2c411a;
-  --color-shades-teal-80: #36b9e9cc;
-
-  /* Color — semantic (light) */
-  --accent-surface-brand: #D1F801;
-  --accent-text-brand: #527200;
-  --accent-success: #0E9F5C;
-  --accent-pending: #B76E00;
-  --accent-warning: #B76E00;
-  --accent-destructive: #D93F4C;
-  --accent-information: #2563EB;
-  --accent-verified: #2563EB;
-  --ui-text-primary: #0A0A0B;
-  --ui-text-secondary: #5E5E62;
-  --ui-text-tertiary: #929296;
-  --ui-text-brand: var(--accent-text-brand);
-  --ui-text-dark: #FFFFFF;
-  --ui-text-disabled: #929296;
-  --ui-text-red: #B92C38;
-  --ui-text-green: #067040;
-  --ui-text-yellow: #8F5600;
-  --ui-icon-primary: #0A0A0B;
-  --ui-icon-secondary: #5E5E62;
-  --ui-icon-tertiary: #929296;
-  --ui-icon-brand: var(--accent-text-brand);
-  --ui-icon-dark: #FFFFFF;
-  --ui-icon-disabled: #929296;
-  --ui-icon-surface: #ECECED;
-  --ui-icon-green: #0E9F5C;
-  --ui-icon-yellow: #B76E00;
-  --ui-icon-orange: #B76E00;
-  --ui-icon-teal: #2563EB;
-  --ui-icon-red: #D93F4C;
-  --ui-surface-pure: #EFEFF1;
-  --ui-surface-weak: #FFFFFF;
-  --ui-surface-soft: rgba(146,146,150,.14);
-  --ui-line-pure: rgba(10,11,12,.07);
-  --ui-line-weak: rgba(10,11,12,.07);
-  --ui-line-soft: rgba(10,11,12,.07);
-  --ui-line-dark: rgba(10,11,12,.14);
-  --ui-line-border-box: rgba(10,11,12,.07);
-  --ui-stroke-soft: rgba(10,11,12,.07);
-  --ui-stroke-weak: rgba(10,11,12,.07);
-  --ui-stroke-brand: #B3D400;
-  --ui-stroke-disabled: rgba(10,11,12,.07);
-  --ui-tab-surface-active: #ffffff;
-  --ui-tab-surface-default: #eaedf2;
-  --ui-tab-surface-blue: #f5f8ff;
-  --ui-tab-stroke-blue: #b2ccff;
-  --ui-badge-blue: var(--accent-soft);
-  --ui-badge-yellow: rgba(183,110,0,.10);
-  --ui-badge-green: rgba(14,159,92,.10);
-  --ui-badge-red: rgba(217,63,76,.10);
-  --ui-badge-teal: rgba(37,99,235,.10);
-  --ui-chart-chart: rgba(146,146,150,.14);
-  --ui-chart-in-process: #f1ae40;
-  --ui-chart-blue-bg: var(--accent-soft);
-  --on-brand: #ffffff;
-  --on-destructive: #ffffff;
-  --ui-switch-knob: #FFFFFF;
-  --bg-blend: #74A200;
-  --surface-brand-soft: #eff4ff;
-  --stroke-brand-soft: #d1e0ff;
-  --glass-tint: #ffffff;
-  --vivid-shade: #000000;
-  --tag-surface: #f1ae40;
-  --tag-text: #0f0f10;
-  --card-surface: #EFEFF1;
-  --card-stroke: rgba(10,11,12,.07);
-  --ui-stroke-error: #D93F4C;
-  --ui-chip-surface-selected: #e0ebff;
-  --ui-chip-stroke-selected: #b2ccff;
-  --ui-field-surface: #ECECED;
-  --ui-field-surface-locked: #ffffff;
-  --ui-stroke-success: #0E9F5C;
-  --ui-button-primary-pressed: #003bb3;
-  --ui-button-dark-pressed: #323741;
-  --ui-button-tint-pressed: #c9dbfa;
-  --ui-button-destructive-pressed: #b82235;
-  --ui-overlay-scrim: rgba(0,0,0,.55);
-  --ui-nav-surface: rgba(234,235,238,.86);
-  --ui-nav-stroke: transparent;
-  --ui-nav-tab-active: rgba(255,255,255,.85);
-  --ui-tier-micro-surface: #d4d7dc;
-  --ui-tier-micro-text: #4d566a;
-  --ui-tier-standard-surface: #c5d8ff;
-  --ui-tier-standard-text: #1e51b8;
-  --ui-tier-vip-surface: #dbd1fd;
-  --ui-tier-vip-text: #5932da;
-  --ui-tier-platinum-surface: #e6d5b9;
-  --ui-tier-platinum-text: #70511e;
-  --ui-hot-deep: #b81400;
-  --ui-hot-red: #d21e00;
-  --ui-hot-orange: #f96304;
-  --ui-hot-amber: #fda60b;
-  --ui-hot-glow: #fde83c;
-  --ui-hot-gloss: #fdb192;
-  --ui-progress-done: #0E9F5C;
-  --ui-tab-surface-active: rgba(255,255,255,.85);
-  --ui-tab-surface-default: rgba(146,146,150,.14);
-  --ui-tab-surface-blue: var(--accent-soft);
-  --ui-tab-stroke-blue: var(--ui-stroke-brand);
-  --ui-chart-in-process: #B76E00;
-  --on-brand: #0D0F11;
-  --on-destructive: #FFFFFF;
-  --surface-brand-soft: var(--accent-soft);
-  --stroke-brand-soft: rgba(10,11,12,.14);
-  --ui-chip-surface-selected: var(--accent-soft);
-  --ui-chip-stroke-selected: var(--ui-stroke-brand);
-  --ui-field-surface-locked: #EFEFF1;
-  --ui-button-primary-pressed: #B3D400;
-  --ui-button-dark-pressed: #26262A;
-  --ui-button-tint-pressed: var(--accent-soft);
-  --ui-button-destructive-pressed: #C8323F;
-  --ui-tier-micro-surface: rgba(146,146,150,.14);
-  --ui-tier-micro-text: #5E5E62;
-  --ui-tier-standard-surface: rgba(37,99,235,.10);
-  --ui-tier-standard-text: #1F55D6;
-  --ui-tier-vip-surface: rgba(106,43,214,.10);
-  --ui-tier-vip-text: #5B2BC0;
-  --ui-tier-platinum-surface: rgba(168,129,30,.14);
-  --ui-tier-platinum-text: #75590F;
+:root, [data-mode="light"] {
+  /* alias */
   --ui-nav-exit-glow: transparent;
-  --accent-soft: rgba(116,162,0,.15);
-  --accent-mark: #74A200;
-  --brand-gradient: linear-gradient(297deg, #B3D400 0%, #C3E31D 54%, #B1D200 100%);
-  --brand-mark: var(--brand-gradient);
-  --brand-rim: linear-gradient(126deg, #D6FF00 0%, rgba(213,243,60,.85) 16%, rgba(194,225,36,.2) 38%, rgba(194,225,36,.2) 62%, rgba(215,235,109,.85) 84%, #D5F33C 100%);
-  --brand-rim-width: 1px;
-  --button-rim: #FFFFFF;
-  --brand-ink: #0D0F11;
-  --brand-ink-soft: rgba(13,15,17,.66);
-  --brand-button: #0D0F11;
-  --brand-button-text: #FFFFFF;
-  --brand-button-rim: rgba(255,255,255,.35);
-  --warn-text: #8F5600;
-  --warn: #B76E00;
-  --warn-soft: rgba(183,110,0,.10);
+  /* tokGap */
+  --ui-tier-micro-surface: rgba(146,146,150,.14); /* TOK-GAP: tier Micro soft rgba(146,146,150,.14) (§51 §55) */
+  --ui-tier-micro-text: #5E5E62; /* TOK-GAP: tier Micro text #5E5E62 (§51 §55) */
+  --ui-tier-standard-surface: rgba(37,99,235,.10); /* TOK-GAP: tier Standard soft rgba(37,99,235,.10) (§51 §55) */
+  --ui-tier-standard-text: #1F55D6; /* TOK-GAP: tier Standard text #1F55D6 (§51 §55) */
+  --upgrade-row: rgba(116,162,0,.15); /* TOK-GAP: upgrade row tint rgba(116,162,0,.15) (specs/loyalty Earn) */
+  /* exception */
+  --lens-backing: #ECEDEF; /* EX-4.0-04 */
+  --lens-fill: radial-gradient(120% 70% at 50% 0%, rgba(255,255,255,.35), transparent 60%), rgba(255,255,255,.06); /* EX-4.0-04 */
+  --lens-fringe-opacity: 52.5%; /* EX-4.0-04 */
+  --lens-hole: 0 0 0 400px rgba(10,11,12,.12); /* EX-4.0-04 */
+  --lens-rim-opacity: 100%; /* EX-4.0-04 */
+  --lens-shadow: 0 8px 22px rgba(10,11,12,.12), inset 0 -1px 2px rgba(255,255,255,.5); /* EX-4.0-04 */
+  --glass-rim: linear-gradient(126deg, var(--hsb-color-glass-edge) 0%, color-mix(in srgb, var(--hsb-color-glass-edge) 75%, var(--hsb-color-glass-hi)) 22%, var(--hsb-color-glass-hi) 36%, var(--hsb-color-glass-hi) 64%, color-mix(in srgb, var(--hsb-color-glass-edge) 75%, var(--hsb-color-glass-hi)) 80%, color-mix(in srgb, var(--hsb-color-glass-edge) 85%, transparent) 100%); /* EX-4.0-04 tab bar and Close rim */
+  /* layout */
+  /* legacy */
+  --bg-blend: #74A200;
+  --blend-theme-bg: radial-gradient(90% 80% at 100% 105%, color-mix(in srgb, #D1F801 45%, #fff) 0%, transparent 70%), radial-gradient(70% 70% at 90% -10%, #05060d 0%, transparent 70%), linear-gradient(160deg, color-mix(in srgb, #D1F801 78%, #05060d), #D1F801);
+  --blend-theme-ink: #527200;
+  --card-stroke: rgba(10,11,12,.07);
   --info-text: #1F55D6;
-  --tab-inactive: #5E5E62;
-  --glass-bg: #EFEFF1;
-  --glass-edge: #FFFFFF;
-  --glass-hi: rgba(255,255,255,.12);
-  --glass-inner: rgba(60,60,67,.075);
-  --control-fill: #EFEFF1;
-  --press-mix: 8%;
-  --sunk-page: #EFEFF1;
-  --sunk-inset: #FFFFFF;
-  --sunk-page-strong: #EFEFF1;
-  --sunk-inset-strong: #FFFFFF;
-  --track: rgba(10,10,11,.12);
-  --neutral-fill: rgba(146,146,150,.14);
-  --shimmer-fill: rgba(146,146,150,.14);
-  --shimmer-sweep: rgba(146,146,150,.05);
-  --row-press: rgba(10,10,11,.04);
-  --hot-fill: #D93F4C;
-  --hot-text: #FFFFFF;
-  --grip: color-mix(in srgb, var(--ui-text-tertiary) 70%, transparent);
-  --tour-ring: #D1F801;
-  --tour-scrim: rgba(0,0,0,.5);
-  --header-fade: var(--ui-surface-weak);
-  --shadow-glass: none;
-  --shadow-solid: none;
-  --shadow-control: none;
-  --shadow-secondary: none;
-  --shadow-primary: 0 3px 10px rgba(10,11,12,.08);
-  --shadow-tab-bar: 0 -10px 42px rgba(10,11,12,.12), 0 -2px 12px rgba(10,11,12,.045);
-  --shadow-sheet: none;
-  --shadow-coach: 0 10px 40px rgba(10,11,12,.16);
-  --shadow-brand-card: none;
-  --glass-rim: linear-gradient(126deg, var(--glass-edge) 0%, color-mix(in srgb, var(--glass-edge) 75%, var(--glass-hi)) 22%, var(--glass-hi) 36%, var(--glass-hi) 64%, color-mix(in srgb, var(--glass-edge) 75%, var(--glass-hi)) 80%, color-mix(in srgb, var(--glass-edge) 85%, transparent) 100%);
-  --tile: #F2F2F3;
-  --pill-rim-opacity: 0%;
-  --accent-tag-text: #4C6A00;
-  --control-fill-on-card: #FFFFFF;
-  --lens-fill: radial-gradient(120% 70% at 50% 0%, rgba(255,255,255,.35), transparent 60%), rgba(255,255,255,.06);
-  --lens-shadow: 0 8px 22px rgba(10,11,12,.12), inset 0 -1px 2px rgba(255,255,255,.5);
-  --lens-backing: #ECEDEF;
-  --lens-hole: 0 0 0 400px rgba(10,11,12,.12);
-  --lens-rim-opacity: 100%;
-  --lens-fringe-opacity: 52.5%;
-  --earn-plus: #3CCB7F;
-  --earn-plus-halo: rgba(255,255,255,.35);
-  --earn-card: linear-gradient(297deg, #17181B 0%, #23242A 54%, #141518 100%);
-  --earn-card-text: #FFFFFF;
-  --earn-card-text-soft: rgba(255,255,255,.72);
-  --earn-card-button: #FFFFFF;
-  --earn-card-button-text: #0D0F11;
-  --activity-gift: var(--accent-soft);
-  --strip-pill: #EFEFF1;
-  --strip-pill-on-card: #FFFFFF;
-  --strip-pill-shadow: none;
-  --strip-pill-shadow-on-card: 0 1px 3px rgba(10,11,12,.08);
-  --strip-track: #EFEFF1;
-  --strip-track-on-card: #FFFFFF;
-  --capsule-pill: #FFFFFF;
-  --capsule-pill-on-card: #EFEFF1;
-  --capsule-pill-shadow: 0 1px 3px rgba(10,11,12,.08);
-  --separator: linear-gradient(90deg, transparent, rgba(10,11,12,.09) 18%, rgba(10,11,12,.05) 55%, rgba(10,11,12,.08) 82%, transparent) 0 0 / 100% 1px no-repeat, linear-gradient(90deg, transparent, #FFFFFF 18%, rgba(255,255,255,.6) 55%, rgba(255,255,255,.85) 82%, transparent) 0 1px / 100% 1px no-repeat;
-  --separator-height: 2px;
-  --upgrade-row: var(--accent-soft);
-  --selected-rim: 1.5px;
-  --sky-base: #0E0E10;
-  --sky-pill: #222225;
   --logo-stop-1: #94BE00;
   --logo-stop-2: #6E9A00;
   --logo-stop-3: #86B000;
-  --wait-dim: rgba(10,11,12,.12);
+  --surface-vivid: radial-gradient(120% 80% at 50% 110%, color-mix(in srgb, #ffffff 25%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, #D1F801 86%, #000000), #D1F801 55%);
+  --ui-badge-red: rgba(217,63,76,.10);
+  --ui-badge-teal: rgba(37,99,235,.10);
+  --ui-badge-yellow: rgba(183,110,0,.10);
+  --ui-button-dark-pressed: #26262A;
+  --ui-chip-stroke-selected: #B3D400;
+  --ui-chip-surface-selected: rgba(116,162,0,.15);
+  --ui-icon-brand: #527200;
+  --ui-icon-green: #0E9F5C;
+  --ui-progress-done: #0E9F5C;
+  --ui-surface-pure: #EFEFF1;
+  --ui-surface-soft: rgba(146,146,150,.14);
+  --ui-text-dark: #FFFFFF;
+  --ui-text-red: #B92C38;
+  --ui-text-yellow: #8F5600;
   --wait-chip: rgba(255,255,255,.92);
   --wait-chip-shadow: 0 14px 36px rgba(10,11,12,.14);
-  --upgrade-row-pressed: rgba(116,162,0,.26);
-
-  /* Effect strengths (light) */
-  --bg-blend-strength: 16%;
-  --glass-fill-opacity: 16%;
-  --glass-stroke-opacity: 30%;
-  --vivid-glow-opacity: 25%;
-  --blend-stroke-opacity: 14%;
-  --glass-dark-fill-opacity: 24%;
-  --glass-blur: 12px;
-  --scrim-blur: 8px;
-  --glass-blur-large: 30px;
-
-  /* Spacing */
-  --spacing-0: 0px;
-  --spacing-2: 2px;
-  --spacing-4: 4px;
-  --spacing-6: 6px;
-  --spacing-8: 8px;
-  --spacing-10: 10px;
-  --spacing-12: 12px;
-  --spacing-14: 14px;
-  --spacing-16: 16px;
-  --spacing-20: 20px;
-  --spacing-24: 24px;
-  --spacing-32: 32px;
-  --spacing-40: 40px;
-  --spacing-gutter: 20px;
-  --spacing-card: 16px;
-  --spacing-section: 32px;
-  --spacing-stack: 12px;
-
-  /* Radius */
-  --radius-0: 0px;
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
-  --radius-xl: 12px;
-  --radius-full: 360px;
-  --radius-2xl: 16px;
-  --radius-3xl: 24px;
-  --radius-card: 24px;
-  --radius-card-inner: 16px;
-  --radius-sheet: 24px;
-  --radius-control: 12px;
-  --radius-control-inner: 10px;
-  --radius-tag: 6px;
-  --radius-pill: 360px;
-  --radius-card-section: 30px;
-  --radius-card-row: 26px;
-  --radius-tile: 18px;
-  --radius-box: 16px;
-  --radius-inner: 12px;
-
-  /* Component sizes */
-  --size-control-sm: 36px;
-  --size-control-md: 44px;
-  --size-control-lg: 52px;
-  --size-field: 48px;
-  --size-icon-button: 44px;
-  --size-tile: 40px;
-  --size-icon-sm: 16px;
-  --size-icon: 20px;
-  --size-icon-lg: 24px;
-  --size-avatar-sm: 36px;
-  --size-avatar: 40px;
-  --size-avatar-lg: 76px;
-  --size-check: 20px;
-  --size-switch-width: 40px;
-  --size-switch-height: 24px;
-  --size-tap-target-min: 44px;
-  --size-frame: 375px;
-  --size-stroke: 1px;
-  --size-reward-width: 240px;
-  --size-reward-height: 180px;
-  --size-sheet-max-height: 82vh;
-  --size-rewards-height: 264px;
-  --size-control-xs: 28px;
-  --size-button: 46px;
-  --size-header-button: 40px;
-  --size-tab-bar: 58px;
-  --size-orb: 64px;
-  --size-chip: 28px;
-  --size-tag: 22px;
-  --size-icon-tab: 22px;
-  --size-header-fade: 82px;
-  --size-sheet-foot: 34px;
-  --size-grip-width: 27px;
-  --size-grip-height: 9px;
-  --size-rim-selected: 1.5px;
-  --size-empty-icon: 28px;
-  --size-tick: 14px;
-  --size-hot: 16px;
-  --size-strip: 34px;
-  --size-pick-field: 60px;
-  --size-skeleton-tier: 68px;
-  --size-skeleton-price: 69px;
-  --size-tag-pad: 9px;
-  --size-hit: 44px;
-  --size-loader-chip: 72px;
-  --size-loader: 40px;
-  --size-cal-day: 36px;
-
-  /* Typography — use with the `font` shorthand */
-  --font-heading-h1: 400 44px/56px "Stolzl", sans-serif;
-  --font-heading-h2: 400 40px/50px "Stolzl", sans-serif;
-  --font-heading-h3: 400 36px/46px "Stolzl", sans-serif;
-  --font-heading-h4: 400 32px/42px "Stolzl", sans-serif;
-  --font-heading-h5: 400 24px/34px "Stolzl", sans-serif;
-  --font-large-regular: 350 18px/24px "Stolzl", sans-serif;
-  --font-large-medium: 400 18px/24px "Stolzl", sans-serif;
-  --font-large-semibold: 400 18px/24px "Stolzl", sans-serif;
-  --font-medium-regular: 350 16px/22px "Stolzl", sans-serif;
-  --font-medium-medium: 400 16px/22px "Stolzl", sans-serif;
-  --font-medium-semibold: 400 16px/22px "Stolzl", sans-serif;
-  --font-small-regular: 350 14px/20px "Stolzl", sans-serif;
-  --font-small-medium: 400 14px/20px "Stolzl", sans-serif;
-  --font-small-semibold: 400 14px/20px "Stolzl", sans-serif;
-  --font-x-small-regular: 350 12px/16px "Stolzl", sans-serif;
-  --font-x-small-medium: 400 12px/16px "Stolzl", sans-serif;
-  --font-x-small-semibold: 400 12px/16px "Stolzl", sans-serif;
-  --font-label-medium: 400 16px/22px "Stolzl", sans-serif;
-  --letter-spacing-label-medium: -0.011em;
-  --font-label-small: 400 14px/20px "Stolzl", sans-serif;
-  --letter-spacing-label-small: -0.006em;
-  --font-label-x-small: 400 12px/16px "Stolzl", sans-serif;
-  --font-paragraph-x-small: 350 12px/16px "Stolzl", sans-serif;
-  --font-subheading-2x-small: 400 11px/14px "Stolzl", sans-serif;
-  --letter-spacing-subheading-2x-small: 0.02em;
-  --font-body-l-medium: 400 20px/26px "Stolzl", sans-serif;
-  --letter-spacing-body-l-medium: -0.012em;
-  --font-body-l-semi-bold: 400 20px/26px "Stolzl", sans-serif;
-  --letter-spacing-body-l-semi-bold: -0.012em;
-  --font-caption-l-regular: 350 14px/20px "Stolzl", sans-serif;
-  --letter-spacing-caption-l-regular: -0.005em;
-  --font-display-m: 400 30px/36px "Stolzl", sans-serif;
-  --font-title-l: 400 22px/28px "Stolzl", sans-serif;
-  --font-title-m: 400 20px/26px "Stolzl", sans-serif;
-  --font-caption-2x-small: 400 11px/14px "Stolzl", sans-serif;
-  --font-role-page: 400 20px/26px "Stolzl", sans-serif;
-  --letter-spacing-role-page: -0.015em;
-  --font-role-section: 500 20px/26px "Stolzl", sans-serif;
-  --letter-spacing-role-section: -0.02em;
-  --font-role-card: 400 16px/22px "Stolzl", sans-serif;
-  --font-role-row: 400 15px/20px "Stolzl", sans-serif;
-  --font-role-menu: 350 15px/20px "Stolzl", sans-serif;
-  --font-role-body: 350 14px/20px "Stolzl", sans-serif;
-  --font-role-body-em: 400 14px/20px "Stolzl", sans-serif;
-  --font-role-label: 350 13px/18px "Stolzl", sans-serif;
-  --font-role-label-em: 400 13px/18px "Stolzl", sans-serif;
-  --font-role-small: 350 12px/16px "Stolzl", sans-serif;
-  --font-role-small-em: 400 12px/16px "Stolzl", sans-serif;
-  --font-role-meta: 350 11px/14px "Stolzl", sans-serif;
-  --font-role-meta-em: 400 11px/14px "Stolzl", sans-serif;
-  --font-role-tab: 350 10px/12px "Stolzl", sans-serif;
-  --font-role-tab-on: 400 10px/12px "Stolzl", sans-serif;
-  --font-role-figure: 400 30px/36px "Stolzl", sans-serif;
-  --letter-spacing-role-figure: -0.01em;
-  --font-role-hot: 400 9px/16px "Stolzl", sans-serif;
-
-  /* Shadow */
-  --shadow-regular-shadow-x-small: 0 1px 2px 0 #E4E5E73D;
-  --shadow-regular-shadow-small: 0 2px 4px 0 #1B1C1D0A;
-  --shadow-button-shadow-stroke-primary: 0 1px 2px 0 #375DFB14;
-  --shadow-button-shadow-stroke-important: 0 1px 2px 0 #5258660F;
-  --shadow-button-shadow-fancy-important: 0 0 0 1px #242628, 0 1px 2px 0 #1B1C1D7A;
-  --shadow-xs: 0 1px 2px 0 #1823220D;
-  --shadow: -15px 20px 40px 0 #1A202C1F;
-  --shadow-1: 0 2px 4px 0 #D0D0D03D;
-  --shadow-switch-knob: 0 1px 2px 0 #0000003D;
-
-  /* Blend cards — gradient colour stops. Same in light and dark. */
-  --blend-theme-shade: #05060d;
-  --blend-red-base-from: #e23a1d;
-  --blend-red-base-to: #f0562a;
-  --blend-red-blob-1: #23040a;
-  --blend-red-blob-2: #ff9a3d;
-  --blend-yellow-base-from: #ffd43a;
-  --blend-yellow-base-to: #ffc21a;
-  --blend-yellow-blob-1: #ff8f1f;
-  --blend-yellow-blob-2: #fff3a0;
-  --blend-lime-base: #c3ee3c;
-  --blend-lime-blob-1: #5b2df2;
-  --blend-lime-blob-1-mid: #7a4cf5;
-  --blend-lime-blob-2: #f4ea52;
-  --blend-green-base-from: #0f5a2c;
-  --blend-green-base-to: #1f7d42;
-  --blend-green-blob-1: #04180b;
-  --blend-green-blob-2: #9af0a6;
-  --blend-cyan-base: #8fdcf5;
-  --blend-cyan-blob-1: #f472dc;
-  --blend-cyan-blob-2: #08352a;
-  --blend-cyan-blob-3: #f7a2e8;
-  --blend-pink-base: #1a0a2c;
-  --blend-pink-blob-1: #f58ae6;
-  --blend-pink-blob-2: #7b35e0;
-  --blend-indigo-base: #0b0d3d;
-  --blend-indigo-blob-1: #b5d0ff;
-  --blend-indigo-blob-1-mid: #4f6dff;
-  --blend-indigo-blob-2: #2a30c8;
+  --wait-dim: rgba(10,11,12,.12);
 }
 
-/* Color — semantic (dark) */
-[data-theme="dark"] {
-  --accent-surface-brand: #D1F801;
-  --accent-text-brand: #D1F801;
-  --ui-text-primary: #FAFAFA;
-  --ui-text-secondary: #B3B3B8;
-  --ui-text-tertiary: #8E8E93;
-  --ui-text-brand: var(--accent-text-brand);
-  --ui-text-dark: #0B0B0D;
-  --ui-text-disabled: #8E8E93;
-  --ui-icon-primary: #FAFAFA;
-  --ui-icon-secondary: #B3B3B8;
-  --ui-icon-tertiary: #8E8E93;
-  --ui-icon-brand: var(--accent-text-brand);
-  --ui-icon-dark: #0B0B0D;
-  --ui-icon-disabled: #8E8E93;
-  --ui-icon-green: #3CCB7F;
-  --ui-icon-orange: #E8A23B;
-  --ui-icon-teal: #6EA8FE;
-  --ui-icon-red: #F0616D;
-  --ui-surface-pure: rgba(38,38,42,.82);
-  --ui-surface-weak: #0E0E10;
-  --ui-line-pure: rgba(255,255,255,.06);
-  --ui-line-weak: rgba(255,255,255,.06);
-  --ui-line-soft: rgba(255,255,255,.06);
-  --ui-line-dark: rgba(255,255,255,.12);
-  --ui-line-border-box: rgba(255,255,255,.06);
-  --ui-stroke-soft: rgba(255,255,255,.06);
-  --ui-stroke-brand: #C3E31D;
-  --ui-stroke-disabled: rgba(255,255,255,.06);
-  --ui-tab-surface-blue: #0e1218;
-  --ui-tab-stroke-blue: #00359e;
-  --ui-badge-blue: var(--accent-soft);
-  --ui-badge-yellow: rgba(232,162,59,.10);
-  --ui-badge-green: rgba(60,203,127,.10);
-  --ui-badge-red: rgba(240,97,109,.10);
-  --ui-badge-teal: rgba(110,168,254,.14);
-  --ui-chart-chart: rgba(142,142,147,.14);
-  --ui-chart-in-process: #f1ae40;
-  --ui-text-red: #F0616D;
-  --ui-text-green: #3CCB7F;
-  --ui-text-yellow: #E8A23B;
-  --ui-icon-surface: #0C0C0E;
-  --ui-icon-yellow: #E8A23B;
-  --ui-surface-soft: rgba(142,142,147,.14);
-  --ui-stroke-weak: rgba(255,255,255,.06);
-  --ui-tab-surface-active: #1d2025;
-  --ui-tab-surface-default: #0e1218;
-  --ui-chart-blue-bg: var(--accent-soft);
+[data-mode="dark"] {
+  /* alias */
+  --ui-nav-exit-glow: var(--hsb-loyalty-close-sheen-dark);
+  /* tokGap */
+  --ui-tier-micro-surface: rgba(142,142,147,.14); /* TOK-GAP: tier Micro soft rgba(142,142,147,.14) (§51 §55) */
+  --ui-tier-micro-text: #B3B3B8; /* TOK-GAP: tier Micro text #B3B3B8 (§51 §55) */
+  --ui-tier-standard-surface: rgba(110,168,254,.14); /* TOK-GAP: tier Standard soft rgba(110,168,254,.14) (§51 §55) */
+  --ui-tier-standard-text: #6EA8FE; /* TOK-GAP: tier Standard text #6EA8FE (§51 §55) */
+  --upgrade-row: rgba(209,248,1,.12); /* TOK-GAP: upgrade row tint rgba(209,248,1,.12) (specs/loyalty Earn) */
+  /* exception */
+  --lens-backing: #19191B; /* EX-4.0-04 */
+  --lens-fill: radial-gradient(120% 70% at 50% 0%, rgba(255,255,255,.16), transparent 60%), rgba(255,255,255,.05); /* EX-4.0-04 */
+  --lens-fringe-opacity: 45.5%; /* EX-4.0-04 */
+  --lens-hole: none; /* EX-4.0-04 */
+  --lens-rim-opacity: 50%; /* EX-4.0-04 */
+  --lens-shadow: 0 8px 22px rgba(0,0,0,.28), inset 0 -1px 2px rgba(255,255,255,.08); /* EX-4.0-04 */
+  --glass-rim: linear-gradient(126deg, color-mix(in srgb, var(--hsb-color-glass-edge) 85%, transparent) 0%, color-mix(in srgb, var(--hsb-color-glass-edge) 35%, var(--hsb-color-glass-hi)) 8%, var(--hsb-color-glass-hi) 26%, var(--hsb-color-glass-hi) 60%, color-mix(in srgb, var(--hsb-color-glass-edge) 62%, transparent) 100%); /* EX-4.0-04 tab bar and Close rim */
+  /* layout */
+  /* legacy */
   --bg-blend: #D1F801;
-  --surface-brand-soft: #121b2f;
-  --stroke-brand-soft: #223a6b;
-  --card-surface: #222225;
+  --blend-theme-bg: radial-gradient(90% 80% at 100% 105%, color-mix(in srgb, #D1F801 45%, #fff) 0%, transparent 70%), radial-gradient(70% 70% at 90% -10%, #05060d 0%, transparent 70%), linear-gradient(160deg, color-mix(in srgb, #D1F801 78%, #05060d), #D1F801);
+  --blend-theme-ink: #D1F801;
   --card-stroke: rgba(255,255,255,.06);
-  --ui-stroke-error: #F0616D;
-  --ui-chip-surface-selected: #2970ff47;
-  --ui-chip-stroke-selected: #3d7dff;
-  --ui-field-surface: #0C0C0E;
-  --ui-field-surface-locked: #1d2025;
-  --ui-stroke-success: #3CCB7F;
-  --ui-button-primary-pressed: #1f5ad6;
-  --ui-button-dark-pressed: #ccd2dd;
-  --ui-button-tint-pressed: #2f78ee55;
-  --ui-overlay-scrim: rgba(0,0,0,.55);
-  --ui-nav-surface: rgba(22,22,24,.74);
-  --ui-nav-stroke: transparent;
-  --ui-nav-tab-active: rgba(255,255,255,.10);
-  --ui-tier-micro-surface: #3b404a;
-  --ui-tier-micro-text: #b1b5c0;
-  --ui-tier-standard-surface: #293f6b;
-  --ui-tier-standard-text: #90b5ff;
-  --ui-tier-vip-surface: #423870;
-  --ui-tier-vip-text: #bca9fb;
-  --ui-tier-platinum-surface: #493e2c;
-  --ui-tier-platinum-text: #f1ae40;
-  --ui-hot-deep: #b81400;
-  --ui-hot-red: #d21e00;
-  --ui-hot-orange: #f96304;
-  --ui-hot-amber: #fda60b;
-  --ui-hot-glow: #fde83c;
-  --ui-hot-gloss: #fdb192;
-  --ui-progress-done: #3CCB7F;
-  --accent-success: #3CCB7F;
-  --accent-pending: #E8A23B;
-  --accent-warning: #E8A23B;
-  --accent-destructive: #F0616D;
-  --accent-information: #6EA8FE;
-  --accent-verified: #6EA8FE;
-  --ui-tab-surface-active: rgba(255,255,255,.10);
-  --ui-tab-surface-default: rgba(142,142,147,.14);
-  --ui-tab-surface-blue: var(--accent-soft);
-  --ui-tab-stroke-blue: var(--ui-stroke-brand);
-  --ui-chart-in-process: #E8A23B;
-  --on-brand: #0B0B0D;
-  --on-destructive: #0D0F11;
-  --ui-switch-knob: #FFFFFF;
-  --surface-brand-soft: var(--accent-soft);
-  --stroke-brand-soft: rgba(255,255,255,.12);
-  --ui-chip-surface-selected: var(--accent-soft);
-  --ui-chip-stroke-selected: var(--ui-stroke-brand);
-  --ui-field-surface-locked: #222225;
-  --ui-button-primary-pressed: #B3D400;
-  --ui-button-dark-pressed: #D8D8DA;
-  --ui-button-tint-pressed: var(--accent-soft);
-  --ui-button-destructive-pressed: #F0616D;
-  --ui-tier-micro-surface: rgba(142,142,147,.14);
-  --ui-tier-micro-text: #B3B3B8;
-  --ui-tier-standard-surface: rgba(110,168,254,.14);
-  --ui-tier-standard-text: #6EA8FE;
-  --ui-tier-vip-surface: rgba(167,139,250,.14);
-  --ui-tier-vip-text: #B9A3FB;
-  --ui-tier-platinum-surface: rgba(217,180,81,.10);
-  --ui-tier-platinum-text: #D9B451;
-  --ui-nav-exit-glow: rgba(240,97,109,.11);
-  --accent-soft: rgba(209,248,1,.08);
-  --accent-mark: #D1F801;
-  --brand-gradient: linear-gradient(297deg, #B3D400 0%, #C3E31D 54%, #B1D200 100%);
-  --brand-mark: #D1F801;
-  --brand-rim: linear-gradient(126deg, #D6FF00 0%, rgba(213,243,60,.85) 16%, rgba(194,225,36,.2) 38%, rgba(194,225,36,.2) 62%, rgba(215,235,109,.85) 84%, #D5F33C 100%);
-  --brand-rim-width: 1.5px;
-  --button-rim: #E4F582;
-  --brand-ink: #0D0F11;
-  --brand-ink-soft: rgba(13,15,17,.66);
-  --brand-button: #0D0F11;
-  --brand-button-text: #FFFFFF;
-  --brand-button-rim: rgba(255,255,255,.35);
-  --warn-text: #E8A23B;
-  --warn: #E8A23B;
-  --warn-soft: rgba(232,162,59,.10);
   --info-text: #6EA8FE;
-  --tab-inactive: #878F9B;
-  --glass-bg: #222225;
-  --glass-edge: rgba(255,255,255,.10);
-  --glass-hi: rgba(255,255,255,.015);
-  --glass-inner: rgba(255,255,255,.03);
-  --control-fill: #222225;
-  --press-mix: 8%;
-  --sunk-page: #222225;
-  --sunk-inset: #0E0E10;
-  --sunk-page-strong: #222225;
-  --sunk-inset-strong: #0E0E10;
-  --track: rgba(250,250,250,.12);
-  --neutral-fill: rgba(142,142,147,.14);
-  --shimmer-fill: rgba(142,142,147,.16);
-  --shimmer-sweep: rgba(142,142,147,.30);
-  --row-press: rgba(250,250,250,.04);
-  --hot-fill: #F0616D;
-  --hot-text: #FFFFFF;
-  --grip: color-mix(in srgb, var(--ui-text-tertiary) 70%, transparent);
-  --tour-ring: #D1F801;
-  --tour-scrim: rgba(0,0,0,.5);
-  --header-fade: var(--ui-surface-weak);
-  --shadow-glass: none;
-  --shadow-solid: none;
-  --shadow-control: none;
-  --shadow-secondary: none;
-  --shadow-primary: none;
-  --shadow-tab-bar: 0 24px 60px rgba(0,0,0,.55);
-  --shadow-sheet: none;
-  --shadow-coach: 0 10px 40px rgba(0,0,0,.5);
-  --shadow-brand-card: none;
-  --glass-rim: linear-gradient(126deg, color-mix(in srgb, var(--glass-edge) 85%, transparent) 0%, color-mix(in srgb, var(--glass-edge) 35%, var(--glass-hi)) 8%, var(--glass-hi) 26%, var(--glass-hi) 60%, color-mix(in srgb, var(--glass-edge) 62%, transparent) 100%);
-  --tile: #232326;
-  --pill-rim-opacity: 100%;
-  --accent-tag-text: #D1F801;
-  --control-fill-on-card: #0E0E10;
-  --lens-fill: radial-gradient(120% 70% at 50% 0%, rgba(255,255,255,.16), transparent 60%), rgba(255,255,255,.05);
-  --lens-shadow: 0 8px 22px rgba(0,0,0,.28), inset 0 -1px 2px rgba(255,255,255,.08);
-  --lens-backing: #19191B;
-  --lens-hole: none;
-  --lens-rim-opacity: 50%;
-  --lens-fringe-opacity: 45.5%;
-  --earn-plus: #3CCB7F;
-  --earn-plus-halo: rgba(255,255,255,.35);
-  --earn-card: linear-gradient(297deg, #17181B 0%, #23242A 54%, #141518 100%);
-  --earn-card-text: #FFFFFF;
-  --earn-card-text-soft: rgba(255,255,255,.72);
-  --earn-card-button: #FFFFFF;
-  --earn-card-button-text: #0D0F11;
-  --activity-gift: rgba(209,248,1,.20);
-  --strip-pill: #2E2E32;
-  --strip-pill-on-card: #2E2E32;
-  --strip-pill-shadow: none;
-  --strip-pill-shadow-on-card: none;
-  --strip-track: #222225;
-  --strip-track-on-card: #0E0E10;
-  --capsule-pill: #2E2E32;
-  --capsule-pill-on-card: #2E2E32;
-  --capsule-pill-shadow: none;
-  --separator: linear-gradient(90deg, transparent, color-mix(in srgb, rgba(255,255,255,.10) 42%, rgba(255,255,255,.015)) 18%, rgba(255,255,255,.03) 55%, rgba(255,255,255,.038) 82%, transparent);
-  --separator-height: 1px;
-  --upgrade-row: rgba(209,248,1,.12);
-  --selected-rim: 1px;
-  --sky-base: #0E0E10;
-  --sky-pill: #222225;
   --logo-stop-1: #E4FF5A;
   --logo-stop-2: #D1F801;
   --logo-stop-3: #C3E31D;
-  --wait-dim: rgba(0,0,0,.28);
+  --surface-vivid: radial-gradient(120% 80% at 50% 110%, color-mix(in srgb, #ffffff 25%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, #D1F801 86%, #000000), #D1F801 55%);
+  --ui-badge-red: rgba(240,97,109,.10);
+  --ui-badge-teal: rgba(110,168,254,.14);
+  --ui-badge-yellow: rgba(232,162,59,.10);
+  --ui-button-dark-pressed: #D8D8DA;
+  --ui-chip-stroke-selected: #C3E31D;
+  --ui-chip-surface-selected: rgba(209,248,1,.08);
+  --ui-icon-brand: #D1F801;
+  --ui-icon-green: #3CCB7F;
+  --ui-progress-done: #3CCB7F;
+  --ui-surface-pure: rgba(38,38,42,.82);
+  --ui-surface-soft: rgba(142,142,147,.14);
+  --ui-text-dark: #0B0B0D;
+  --ui-text-red: #F0616D;
+  --ui-text-yellow: #E8A23B;
   --wait-chip: rgba(38,38,42,.9);
   --wait-chip-shadow: 0 14px 36px rgba(0,0,0,.5);
-  --upgrade-row-pressed: rgba(209,248,1,.20);
-
-  /* Effect strengths (dark) */
-  --bg-blend-strength: 30%;
+  --wait-dim: rgba(0,0,0,.28);
 }
 
-/* Premium: the brand turns gold, light then dark */
 [data-premium] {
-  --accent-surface-brand: #CDA333;
-  --accent-text-brand: #866514;
-  --accent-soft: rgba(168,129,30,.14);
-  --accent-mark: #A8811E;
-  --brand-gradient: linear-gradient(297deg, #B98F22 0%, #D6B04A 54%, #B88E20 100%);
-  --brand-rim: linear-gradient(126deg, #FFE39A 0%, rgba(255,227,154,.85) 16%, rgba(255,227,154,.2) 38%, rgba(243,216,138,.2) 62%, rgba(243,216,138,.85) 84%, #F3D88A 100%);
-  --ui-stroke-brand: #B98F22;
-  --tour-ring: #CDA333;
+  /* alias */
+  /* tokGap */
+  --upgrade-row: rgba(168,129,30,.14); /* TOK-GAP: upgrade row tint rgba(168,129,30,.14) (specs/loyalty Earn) */
+  /* exception */
+  /* layout */
+  /* legacy */
   --bg-blend: #A8811E;
-  --accent-tag-text: #75590F;
+  --blend-theme-bg: radial-gradient(90% 80% at 100% 105%, color-mix(in srgb, #CDA333 45%, #fff) 0%, transparent 70%), radial-gradient(70% 70% at 90% -10%, #05060d 0%, transparent 70%), linear-gradient(160deg, color-mix(in srgb, #CDA333 78%, #05060d), #CDA333);
+  --blend-theme-ink: #866514;
   --logo-stop-1: #C89B2C;
   --logo-stop-2: #9C7418;
   --logo-stop-3: #B98F22;
-  --upgrade-row-pressed: rgba(168,129,30,.24);
+  --surface-vivid: radial-gradient(120% 80% at 50% 110%, color-mix(in srgb, #ffffff 25%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, #CDA333 86%, #000000), #CDA333 55%);
+  --ui-chip-stroke-selected: #B98F22;
+  --ui-chip-surface-selected: rgba(168,129,30,.14);
+  --ui-icon-brand: #866514;
 }
-[data-premium][data-theme="dark"], [data-premium] [data-theme="dark"] {
-  --accent-surface-brand: #CDA333;
-  --accent-text-brand: #D9B451;
-  --accent-soft: rgba(217,180,81,.10);
-  --accent-mark: #D9B451;
-  --brand-gradient: linear-gradient(297deg, #B98F22 0%, #D6B04A 54%, #B88E20 100%);
-  --brand-rim: linear-gradient(126deg, #FFE39A 0%, rgba(255,227,154,.85) 16%, rgba(255,227,154,.2) 38%, rgba(243,216,138,.2) 62%, rgba(243,216,138,.85) 84%, #F3D88A 100%);
-  --ui-stroke-brand: #D6B04A;
-  --tour-ring: #CDA333;
+
+[data-premium][data-mode="dark"], [data-premium] [data-mode="dark"] {
+  /* alias */
+  /* tokGap */
+  --upgrade-row: rgba(217,180,81,.14); /* TOK-GAP: upgrade row tint rgba(217,180,81,.14) (specs/loyalty Earn) */
+  /* exception */
+  /* layout */
+  /* legacy */
   --bg-blend: #D9B451;
-  --accent-tag-text: #D9B451;
-  --brand-mark: #CDA333;
-  --button-rim: #F2D98C;
-  --activity-gift: rgba(217,180,81,.22);
-  --upgrade-row: rgba(217,180,81,.14);
+  --blend-theme-bg: radial-gradient(90% 80% at 100% 105%, color-mix(in srgb, #CDA333 45%, #fff) 0%, transparent 70%), radial-gradient(70% 70% at 90% -10%, #05060d 0%, transparent 70%), linear-gradient(160deg, color-mix(in srgb, #CDA333 78%, #05060d), #CDA333);
+  --blend-theme-ink: #D9B451;
   --logo-stop-1: #F2D78A;
   --logo-stop-2: #CDA333;
   --logo-stop-3: #E3C46B;
-  --upgrade-row-pressed: rgba(217,180,81,.22);
+  --surface-vivid: radial-gradient(120% 80% at 50% 110%, color-mix(in srgb, #ffffff 25%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, #CDA333 86%, #000000), #CDA333 55%);
+  --ui-chip-stroke-selected: #D6B04A;
+  --ui-chip-surface-selected: rgba(217,180,81,.10);
+  --ui-icon-brand: #D9B451;
 }
 
-/* Composed tokens — built from the variables above. Declared on every theme scope so they
-   re-resolve when data-theme is set on a nested element. */
-:root, [data-theme="light"], [data-theme="dark"] {
-  --surface-page: var(--ui-surface-weak);
-  --surface-vivid: radial-gradient(120% 80% at 50% 110%, color-mix(in srgb, var(--glass-tint) var(--vivid-glow-opacity), transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, var(--accent-surface-brand) 86%, var(--vivid-shade)), var(--accent-surface-brand) 55%);
-  --glass-surface: color-mix(in srgb, var(--glass-tint) var(--glass-fill-opacity), transparent);
-  --glass-border: color-mix(in srgb, var(--glass-tint) var(--glass-stroke-opacity), transparent);
-  --blend-stroke: inset 0 0 0 1px color-mix(in srgb, var(--glass-tint) var(--blend-stroke-opacity), transparent);
-  --surface-streak: var(--glass-bg);
-  --card-shadow: var(--shadow-glass);
-  --ui-button-destructive-tint-pressed: color-mix(in srgb, var(--accent-destructive) 28%, transparent);
-  --glass-surface-dark: color-mix(in srgb, var(--vivid-shade) var(--glass-dark-fill-opacity), transparent);
-  --ui-button-glass-surface: var(--glass-surface);
-  --ui-button-glass-pressed: color-mix(in srgb, var(--glass-tint) calc(var(--glass-fill-opacity) * 2), transparent);
-  --ui-button-glass-blur: blur(var(--glass-blur));
-  --nav-exit-surface: radial-gradient(60% 60% at 50% 50%, var(--ui-nav-exit-glow), color-mix(in srgb, var(--ui-nav-exit-glow) 82%, transparent) 15%, color-mix(in srgb, var(--ui-nav-exit-glow) 55%, transparent) 32%, color-mix(in srgb, var(--ui-nav-exit-glow) 30%, transparent) 50%, color-mix(in srgb, var(--ui-nav-exit-glow) 13%, transparent) 68%, color-mix(in srgb, var(--ui-nav-exit-glow) 4%, transparent) 85%, transparent), var(--ui-nav-surface);
-  --grain: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27160%27%3E%3Cfilter%20id%3D%27n%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%271.9%27%20numOctaves%3D%271%27%20stitchTiles%3D%27stitch%27%20result%3D%27t%27/%3E%3CfeColorMatrix%20type%3D%27matrix%27%20values%3D%27.33%20.33%20.33%200%200%20%20.33%20.33%20.33%200%200%20%20.33%20.33%20.33%200%200%20%200%200%200%200%201%27/%3E%3CfeComponentTransfer%3E%3CfeFuncR%20type%3D%27linear%27%20slope%3D%272.4%27%20intercept%3D%27-.9%27/%3E%3CfeFuncG%20type%3D%27linear%27%20slope%3D%272.4%27%20intercept%3D%27-.9%27/%3E%3CfeFuncB%20type%3D%27linear%27%20slope%3D%272.4%27%20intercept%3D%27-.9%27/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20filter%3D%27url%28%23n%29%27/%3E%3C/svg%3E");
-  --primary-rim: linear-gradient(var(--ang), var(--button-rim) 0%, color-mix(in srgb, var(--button-rim) 55%, transparent) 14%, transparent 34%, transparent 62%, color-mix(in srgb, var(--button-rim) 70%, transparent) 100%);
-  --lens-rim: linear-gradient(126deg, #FFFFFF 0%, rgba(255,255,255,.55) 16%, rgba(255,255,255,.12) 34%, rgba(255,255,255,.12) 66%, rgba(255,255,255,.6) 100%);
-  --lens-fringe: conic-gradient(from var(--swirl), rgba(255,80,150,.55), rgba(255,80,150,.85) 8%, rgba(255,200,80,.6) 17%, rgba(150,225,120,.45) 28%, rgba(80,205,255,.55) 42%, rgba(90,150,255,.65) 56%, rgba(160,110,255,.6) 70%, rgba(230,100,220,.55) 85%, rgba(255,80,150,.55)), conic-gradient(from var(--swirl2), rgba(110,230,160,0), rgba(110,230,160,.3) 12%, rgba(80,200,255,0) 30%, rgba(0,0,0,0) 62%, rgba(255,140,200,.3) 74%, rgba(255,140,200,0) 88%);
-  --lens-ring: radial-gradient(closest-side, transparent 82%, rgba(0,0,0,.4) 90%, rgba(0,0,0,.85) 96%, #000 100%);
-  --lens-ring-idle: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3));
-  --bar-blur: blur(var(--glass-blur-large)) saturate(125%);
-  --blend-theme-bg: radial-gradient(90% 80% at 100% 105%, color-mix(in srgb, var(--accent-surface-brand) 45%, #fff) 0%, transparent 70%), radial-gradient(70% 70% at 90% -10%, var(--blend-theme-shade) 0%, transparent 70%), linear-gradient(160deg, color-mix(in srgb, var(--accent-surface-brand) 78%, var(--blend-theme-shade)), var(--accent-surface-brand));
-  --blend-theme-fg: #ffffff;
-  --blend-theme-ink: var(--accent-text-brand);
-  --blend-red-bg: radial-gradient(80% 70% at 85% -5%, var(--blend-red-blob-1) 0%, transparent 70%), radial-gradient(90% 70% at 100% 110%, var(--blend-red-blob-2) 0%, transparent 70%), linear-gradient(170deg, var(--blend-red-base-from), var(--blend-red-base-to));
-  --blend-red-fg: #ffffff;
-  --blend-red-ink: #d3321a;
-  --blend-yellow-bg: radial-gradient(85% 70% at 100% 108%, var(--blend-yellow-blob-1) 0%, transparent 70%), radial-gradient(70% 60% at 15% 0%, var(--blend-yellow-blob-2) 0%, transparent 70%), linear-gradient(170deg, var(--blend-yellow-base-from), var(--blend-yellow-base-to));
-  --blend-yellow-fg: #0f0f10;
-  --blend-yellow-ink: #ffd43a;
-  --blend-lime-bg: radial-gradient(75% 65% at 98% 88%, var(--blend-lime-blob-1) 0%, var(--blend-lime-blob-1-mid) 25%, transparent 70%), radial-gradient(70% 60% at 20% 0%, var(--blend-lime-blob-2) 0%, transparent 70%), var(--blend-lime-base);
-  --blend-lime-fg: #0f0f10;
-  --blend-lime-ink: #c3ee3c;
-  --blend-green-bg: radial-gradient(100% 70% at 80% -10%, var(--blend-green-blob-1) 0%, transparent 70%), radial-gradient(90% 80% at 100% 112%, var(--blend-green-blob-2) 0%, transparent 70%), linear-gradient(170deg, var(--blend-green-base-from), var(--blend-green-base-to));
-  --blend-green-fg: #ffffff;
-  --blend-green-ink: #17753a;
-  --blend-cyan-bg: radial-gradient(60% 55% at 100% 0%, var(--blend-cyan-blob-1) 0%, transparent 70%), radial-gradient(75% 60% at 98% 100%, var(--blend-cyan-blob-2) 0%, transparent 70%), radial-gradient(50% 45% at 0% 100%, var(--blend-cyan-blob-3) 0%, transparent 70%), var(--blend-cyan-base);
+:root, [data-mode], [data-premium] {
+  /* alias */
+  --accent-mark: var(--hsb-color-accent-mark);
+  --accent-soft: var(--hsb-color-accent-soft);
+  --accent-success: var(--hsb-color-up);
+  --accent-surface-brand: var(--hsb-color-accent);
+  --accent-tag-text: var(--hsb-color-accent-tag-text);
+  --activity-gift: var(--hsb-loyalty-gift-entry-fill);
+  --brand-button: var(--hsb-button-primary-on-brand-card-fill);
+  --brand-button-rim: var(--hsb-button-primary-on-brand-card-rim);
+  --brand-button-text: var(--hsb-button-primary-on-brand-card-text);
+  --brand-gradient: var(--hsb-gradient-brand);
+  --brand-ink: var(--hsb-color-on-brand-card);
+  --brand-mark: var(--hsb-tag-solid-fill);
+  --brand-rim: var(--hsb-gradient-brand-rim);
+  --brand-rim-width: var(--hsb-gradient-brand-rim-width);
+  --capsule-pill: var(--hsb-category-bar-capsule-on-page-pill);
+  --capsule-pill-on-card: var(--hsb-category-bar-capsule-in-sheet-pill);
+  --capsule-pill-shadow: var(--hsb-category-bar-capsule-on-page-pill-shadow);
+  --card-surface: var(--hsb-color-box-bg);
+  --color-neutral-0: var(--hsb-color-switch-thumb);
+  --control-fill: var(--hsb-color-box-bg);
+  --control-fill-on-card: var(--hsb-color-bg);
+  --font-medium-semibold: var(--hsb-type-card-title);
+  --font-role-body-em: var(--hsb-type-body-em);
+  --font-role-card: var(--hsb-type-card-title);
+  --font-role-label: var(--hsb-type-label);
+  --font-role-label-em: var(--hsb-type-label-em);
+  --font-role-meta: var(--hsb-type-meta);
+  --font-role-meta-em: var(--hsb-type-meta-em);
+  --font-role-row: var(--hsb-type-list-row);
+  --font-role-section: var(--hsb-type-h-sec);
+  --font-role-small: var(--hsb-type-small);
+  --font-role-small-em: var(--hsb-type-small-em);
+  --font-role-tab: var(--hsb-type-tab);
+  --font-role-tab-on: var(--hsb-type-tab-on);
+  --font-small-medium: var(--hsb-type-body-em);
+  --font-small-regular: var(--hsb-type-body);
+  --font-small-semibold: var(--hsb-type-body-em);
+  --font-x-small-medium: var(--hsb-type-small-em);
+  --font-x-small-regular: var(--hsb-type-small);
+  --glass-bg: var(--hsb-color-box-bg);
+  --grip: var(--hsb-sheet-grip-color);
+  --header-fade: var(--hsb-color-bg);
+  --letter-spacing-role-section: var(--hsb-type-h-sec-ls);
+  --neutral-fill: var(--hsb-tag-neutral-fill);
+  --on-brand: var(--hsb-color-on-accent);
+  --radius-box: var(--hsb-radius-box);
+  --radius-card-inner: var(--hsb-radius-box);
+  --radius-card-row: var(--hsb-radius-row-card);
+  --radius-card-section: var(--hsb-radius-section-card);
+  --radius-inner: var(--hsb-radius-small);
+  --radius-pill: var(--hsb-radius-pill);
+  --radius-tile: var(--hsb-radius-tile);
+  --radius-xs: var(--hsb-radius-inline);
+  --scrim-blur: var(--hsb-sheet-scrim-blur);
+  --selected-rim: var(--hsb-option-selected-rim-width);
+  --separator: var(--hsb-separator-line);
+  --separator-height: var(--hsb-separator-width);
+  --shadow-primary: var(--hsb-shadow-primary);
+  --shadow-secondary: var(--hsb-button-secondary-shadow);
+  --shadow-sheet: var(--hsb-sheet-shadow);
+  --shadow-tab-bar: var(--hsb-shadow-tab-bar);
+  --shimmer-fill: var(--hsb-shimmer-fill);
+  --shimmer-sweep: var(--hsb-shimmer-sweep);
+  --size-button: var(--hsb-button-primary-height);
+  --size-cal-day: var(--hsb-date-sheet-day-circle);
+  --size-chip: var(--hsb-button-xs-height);
+  --size-control-sm: var(--hsb-button-sm-height);
+  --size-control-xs: var(--hsb-button-xs-height);
+  --size-empty-icon: var(--hsb-empty-state-icon);
+  --size-header-button: var(--hsb-button-round-size);
+  --size-header-fade: var(--hsb-one-line-header-fade-height);
+  --size-icon: var(--hsb-icon-size);
+  --size-icon-sm: var(--hsb-icon-small);
+  --size-icon-tab: var(--hsb-icon-tab-bar);
+  --size-orb: var(--hsb-empty-state-orb);
+  --size-pick-field: var(--hsb-field-pick-min-height);
+  --size-rim-selected: var(--hsb-option-selected-rim-width);
+  --size-sheet-foot: var(--hsb-sheet-padding-bottom);
+  --size-strip: var(--hsb-category-bar-item-height);
+  --size-tag: var(--hsb-tag-height);
+  --size-tag-pad: var(--hsb-tag-pad-x);
+  --size-tap-target-min: var(--hsb-button-round-hit);
+  --size-tick: var(--hsb-icon-tick);
+  --sky-base: var(--hsb-loyalty-earn-hero-sky-base);
+  --sky-pill: var(--hsb-loyalty-earn-hero-sky-pill);
+  --spacing-10: var(--hsb-space-component-only-10);
+  --spacing-12: var(--hsb-space-s12);
+  --spacing-16: var(--hsb-space-s16);
+  --spacing-2: var(--hsb-space-s2);
+  --spacing-20: var(--hsb-space-s20);
+  --spacing-32: var(--hsb-space-s32);
+  --spacing-4: var(--hsb-space-s4);
+  --spacing-6: var(--hsb-space-component-only-6);
+  --spacing-8: var(--hsb-space-s8);
+  --spacing-card: var(--hsb-space-card-pad);
+  --spacing-gutter: var(--hsb-space-gutter);
+  --spacing-section: var(--hsb-space-section);
+  --spacing-stack: var(--hsb-space-in-card);
+  --strip-pill: var(--hsb-category-bar-bare-on-page-pill);
+  --strip-pill-on-card: var(--hsb-category-bar-bare-on-box-pill);
+  --strip-pill-shadow: var(--hsb-category-bar-bare-on-page-pill-shadow);
+  --strip-pill-shadow-on-card: var(--hsb-category-bar-bare-on-box-pill-shadow);
+  --strip-track: var(--hsb-category-bar-capsule-on-page-track);
+  --strip-track-on-card: var(--hsb-category-bar-capsule-in-sheet-track);
+  --sunk-inset: var(--hsb-color-bg);
+  --sunk-page: var(--hsb-color-box-bg);
+  --surface-page: var(--hsb-color-bg);
+  --tab-inactive: var(--hsb-color-tab-inactive);
+  --tour-ring: var(--hsb-color-accent);
+  --track: color-mix(in srgb, var(--hsb-color-t1) 12%, transparent);
+  --ui-badge-blue: var(--hsb-tag-brand-fill);
+  --ui-badge-green: var(--hsb-tag-up-fill);
+  --ui-icon-red: var(--hsb-color-down);
+  --ui-icon-secondary: var(--hsb-color-t2);
+  --ui-icon-tertiary: var(--hsb-color-t3);
+  --ui-line-soft: var(--hsb-color-line);
+  --ui-nav-surface: var(--hsb-color-bar-bg);
+  --ui-nav-tab-active: var(--hsb-color-glass-sel);
+  --ui-overlay-scrim: var(--hsb-color-scrim);
+  --ui-stroke-brand: var(--hsb-color-selected-rim);
+  --ui-stroke-soft: var(--hsb-color-line);
+  --ui-surface-weak: var(--hsb-color-bg);
+  --ui-text-brand: var(--hsb-color-accent-text);
+  --ui-text-disabled: var(--hsb-color-t3);
+  --ui-text-green: var(--hsb-color-up-text);
+  --ui-text-primary: var(--hsb-color-t1);
+  --ui-text-secondary: var(--hsb-color-t2);
+  --ui-text-tertiary: var(--hsb-color-t3);
+  --ui-tier-platinum-surface: var(--hsb-color-tier-plat-soft);
+  --ui-tier-platinum-text: var(--hsb-color-tier-plat-text);
+  --ui-tier-vip-surface: var(--hsb-color-tier-vip-soft);
+  --ui-tier-vip-text: var(--hsb-color-tier-vip-text);
+  --warn: var(--hsb-color-warn);
+  --warn-soft: var(--hsb-color-warn-soft);
+  --warn-text: var(--hsb-color-warn-text);
+  --primary-rim: linear-gradient(var(--ang), var(--hsb-button-primary-rim) 0%, color-mix(in srgb, var(--hsb-button-primary-rim) 55%, transparent) 14%, transparent 34%, transparent 62%, color-mix(in srgb, var(--hsb-button-primary-rim) 70%, transparent) 100%);
+  /* tokGap */
+  --font-title-l: 400 22px/28px var(--hsb-font); /* TOK-GAP: title 22/28 400 22px/28px var(--hsb-font) (specs/loyalty) */
+  --size-avatar: 40px; /* TOK-GAP: upgrade art 40 40px (specs/loyalty Earn) */
+  --size-control-lg: 52px; /* TOK-GAP: coin and gift art 52, option min height 52 52px (specs/loyalty Home) */
+  --size-hit: 44px; /* TOK-GAP: touch target 44 44px (§12) */
+  --size-icon-lg: 24px; /* TOK-GAP: icon 24 (activity, small coin, steps) 24px (specs/loyalty Home) */
+  --size-stroke: 1px; /* TOK-GAP: table hairline 1 1px (specs/loyalty Earn tier table) */
+  --tour-scrim: rgba(0,0,0,.5); /* TOK-GAP: tour scrim rgba(0,0,0,.5) (§7.29) */
+  --tour-ring-width: 2px; /* TOK-GAP: tour ring width 2px (§7.29) */
+  --hero-header-turn: 200ms; /* TOK-GAP: Earn header pill turn 200ms (specs/loyalty Earn Header) */
+  --hero-header-flip-at: 100ms; /* TOK-GAP: Earn header title flip, halfway 100ms (specs/loyalty Earn Header) */
+  --hero-rays-spread-ease: cubic-bezier(0.2, 0.8, 0.3, 1); /* TOK-GAP: Earn rays spread curve cubic-bezier(0.2, 0.8, 0.3, 1) (specs/loyalty Earn hero (drawn, not stated)) */
+  --spinner-turn: 800ms; /* TOK-GAP: load-more spinner turn 800ms (spec §44 (paged lists)) */
+  --spinner-turn-reduced: 2400ms; /* TOK-GAP: load-more spinner turn, reduced motion 2400ms (spec §44) */
+  --nav-hot-float: 2400ms; /* TOK-GAP: Earn tab HOT float 2400ms (specs/loyalty Bottom bar) */
+  --tour-finger-in: 800ms; /* TOK-GAP: tour and How-to-start finger fade-in 800ms (spec §53 tour) */
+  --tour-flow-in: 450ms; /* TOK-GAP: tour step 2 first item in 450ms (spec §53 tour) */
+  --tour-flow-in-delay: 150ms; /* TOK-GAP: tour step 2 first item delay 150ms (spec §53 tour) */
+  --tour-flow-slide: 400ms; /* TOK-GAP: tour step 2 arrow slide 400ms (spec §53 tour) */
+  --tour-flow-pop: 500ms; /* TOK-GAP: tour step 2 second item pop 500ms (spec §53 tour) */
+  --tour-flow-pop-ease: cubic-bezier(0.3, 1.5, 0.5, 1); /* TOK-GAP: tour step 2 pop curve cubic-bezier(0.3, 1.5, 0.5, 1) (spec §53 tour) */
+  --tour-coin-pop: 450ms; /* TOK-GAP: tour step 2 coin pop 450ms (spec §53 tour) */
+  --tour-coin-pop-ease: cubic-bezier(0.3, 1.8, 0.5, 1); /* TOK-GAP: tour step 2 coin pop curve cubic-bezier(0.3, 1.8, 0.5, 1) (spec §53 tour) */
+  --tour-spark: 900ms; /* TOK-GAP: tour sparkle 900ms (spec §53 tour) */
+  --tour-finger-tap: 1200ms; /* TOK-GAP: tour finger tap loop 1200ms (spec §53 tour) */
+  --tour-pop: 1200ms; /* TOK-GAP: tour coin pop 1200ms (spec §53 tour) */
+  /* exception */
+  --bar-blur: blur(30px) saturate(125%); /* EX-4.0-04 */
+  --earn-card: linear-gradient(297deg, #17181B 0%, #23242A 54%, #141518 100%); /* EX-4.4-01 */
+  --earn-card-button: #FFFFFF; /* EX-4.4-01 */
+  --earn-card-button-text: #0D0F11; /* EX-4.4-01 */
+  --earn-card-text: #FFFFFF; /* EX-4.4-01 */
+  --earn-card-text-soft: rgba(255,255,255,.72); /* EX-4.4-01 */
+  --earn-plus: #3CCB7F; /* EX-4.4-01 */
+  --earn-plus-halo: rgba(255,255,255,.35); /* EX-4.4-01 */
+  --grain: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27160%27%3E%3Cfilter%20id%3D%27n%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%271.9%27%20numOctaves%3D%271%27%20stitchTiles%3D%27stitch%27%20result%3D%27t%27/%3E%3CfeColorMatrix%20type%3D%27matrix%27%20values%3D%27.33%20.33%20.33%200%200%20%20.33%20.33%20.33%200%200%20%20.33%20.33%20.33%200%200%20%200%200%200%200%201%27/%3E%3CfeComponentTransfer%3E%3CfeFuncR%20type%3D%27linear%27%20slope%3D%272.4%27%20intercept%3D%27-.9%27/%3E%3CfeFuncG%20type%3D%27linear%27%20slope%3D%272.4%27%20intercept%3D%27-.9%27/%3E%3CfeFuncB%20type%3D%27linear%27%20slope%3D%272.4%27%20intercept%3D%27-.9%27/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20filter%3D%27url%28%23n%29%27/%3E%3C/svg%3E"); /* EX-4.4-01 */
+  --lens-fringe: conic-gradient(from var(--swirl), rgba(255,80,150,.55), rgba(255,80,150,.85) 8%, rgba(255,200,80,.6) 17%, rgba(150,225,120,.45) 28%, rgba(80,205,255,.55) 42%, rgba(90,150,255,.65) 56%, rgba(160,110,255,.6) 70%, rgba(230,100,220,.55) 85%, rgba(255,80,150,.55)), conic-gradient(from var(--swirl2), rgba(110,230,160,0), rgba(110,230,160,.3) 12%, rgba(80,200,255,0) 30%, rgba(0,0,0,0) 62%, rgba(255,140,200,.3) 74%, rgba(255,140,200,0) 88%); /* EX-4.0-04 */
+  --lens-rim: linear-gradient(126deg, #FFFFFF 0%, rgba(255,255,255,.55) 16%, rgba(255,255,255,.12) 34%, rgba(255,255,255,.12) 66%, rgba(255,255,255,.6) 100%); /* EX-4.0-04 */
+  --lens-ring: radial-gradient(closest-side, transparent 82%, rgba(0,0,0,.4) 90%, rgba(0,0,0,.85) 96%, #000 100%); /* EX-4.0-04 */
+  --lens-ring-idle: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3)); /* EX-4.0-04 */
+  --size-tab-bar: 58px; /* EX-4.0-04 */
+  --nav-exit-surface: radial-gradient(60% 60% at 50% 50%, var(--ui-nav-exit-glow), color-mix(in srgb, var(--ui-nav-exit-glow) 82%, transparent) 15%, color-mix(in srgb, var(--ui-nav-exit-glow) 55%, transparent) 32%, color-mix(in srgb, var(--ui-nav-exit-glow) 30%, transparent) 50%, color-mix(in srgb, var(--ui-nav-exit-glow) 13%, transparent) 68%, color-mix(in srgb, var(--ui-nav-exit-glow) 4%, transparent) 85%, transparent), var(--ui-nav-surface); /* §7.32 Close sheen falloff (stops only; colour is loyalty-close-sheen-dark) */
+  --bar-rim-width: 1px; /* EX-4.0-04 tab bar rim width */
+  /* layout */
+  --font-role-figure: 400 30px/36px "Stolzl", sans-serif;
+  --letter-spacing-role-figure: -0.01em;
+  --size-avatar-lg: 76px;
+  --size-frame: 375px;
+  --size-reward-width: 240px;
+  --size-skeleton-price: 69px;
+  --size-skeleton-tier: 68px;
+  --spacing-40: 40px;
+  --size-skeleton-redeem: 76px;
+  --size-guest-art: 100px;
+  /* legacy */
+  --blend-cyan-bg: radial-gradient(60% 55% at 100% 0%, #f472dc 0%, transparent 70%), radial-gradient(75% 60% at 98% 100%, #08352a 0%, transparent 70%), radial-gradient(50% 45% at 0% 100%, #f7a2e8 0%, transparent 70%), #8fdcf5;
   --blend-cyan-fg: #0f0f10;
   --blend-cyan-ink: #8fdcf5;
-  --blend-pink-bg: radial-gradient(90% 80% at 100% 105%, var(--blend-pink-blob-1) 0%, transparent 65%), radial-gradient(70% 60% at 0% 0%, var(--blend-pink-blob-2) 0%, transparent 70%), var(--blend-pink-base);
-  --blend-pink-fg: #ffffff;
-  --blend-pink-ink: #8b2bbf;
-  --blend-indigo-bg: radial-gradient(75% 26% at 78% 80%, var(--blend-indigo-blob-1) 0%, var(--blend-indigo-blob-1-mid) 45%, transparent 100%), radial-gradient(90% 80% at 50% 50%, var(--blend-indigo-blob-2) 0%, transparent 80%), var(--blend-indigo-base);
+  --blend-green-bg: radial-gradient(100% 70% at 80% -10%, #04180b 0%, transparent 70%), radial-gradient(90% 80% at 100% 112%, #9af0a6 0%, transparent 70%), linear-gradient(170deg, #0f5a2c, #1f7d42);
+  --blend-green-fg: #ffffff;
+  --blend-green-ink: #17753a;
+  --blend-indigo-bg: radial-gradient(75% 26% at 78% 80%, #b5d0ff 0%, #4f6dff 45%, transparent 100%), radial-gradient(90% 80% at 50% 50%, #2a30c8 0%, transparent 80%), #0b0d3d;
   --blend-indigo-fg: #ffffff;
   --blend-indigo-ink: #2a30c8;
+  --blend-lime-bg: radial-gradient(75% 65% at 98% 88%, #5b2df2 0%, #7a4cf5 25%, transparent 70%), radial-gradient(70% 60% at 20% 0%, #f4ea52 0%, transparent 70%), #c3ee3c;
+  --blend-lime-fg: #0f0f10;
+  --blend-lime-ink: #c3ee3c;
+  --blend-pink-bg: radial-gradient(90% 80% at 100% 105%, #f58ae6 0%, transparent 65%), radial-gradient(70% 60% at 0% 0%, #7b35e0 0%, transparent 70%), #1a0a2c;
+  --blend-pink-fg: #ffffff;
+  --blend-pink-ink: #8b2bbf;
+  --blend-red-bg: radial-gradient(80% 70% at 85% -5%, #23040a 0%, transparent 70%), radial-gradient(90% 70% at 100% 110%, #ff9a3d 0%, transparent 70%), linear-gradient(170deg, #e23a1d, #f0562a);
+  --blend-red-fg: #ffffff;
+  --blend-red-ink: #d3321a;
+  --blend-stroke: inset 0 0 0 1px color-mix(in srgb, #ffffff 14%, transparent);
+  --blend-theme-fg: #ffffff;
+  --blend-yellow-bg: radial-gradient(85% 70% at 100% 108%, #ff8f1f 0%, transparent 70%), radial-gradient(70% 60% at 15% 0%, #fff3a0 0%, transparent 70%), linear-gradient(170deg, #ffd43a, #ffc21a);
+  --blend-yellow-fg: #0f0f10;
+  --blend-yellow-ink: #ffd43a;
+  --card-shadow: none;
+  --color-blue-500: #235ab3;
+  --color-neutral-200: #eaedf2;
+  --color-purple-darker: #231456;
+  --color-purple-light-active: #cfc1fc;
+  --color-purple-main: #6438f5;
+  --color-yellow-400: #f1ae40;
+  --font-display-m: 400 30px/36px "Stolzl", sans-serif;
+  --font-large-semibold: 400 18px/24px "Stolzl", sans-serif;
+  --font-title-m: 400 20px/26px "Stolzl", sans-serif;
+  --font-x-small-semibold: 400 12px/16px "Stolzl", sans-serif;
+  --glass-surface: color-mix(in srgb, #ffffff 16%, transparent);
+  --glass-surface-dark: color-mix(in srgb, #000000 24%, transparent);
+  --radius-3xl: 24px;
+  --radius-card: 24px;
+  --radius-control: 12px;
+  --size-icon-button: 44px;
+  --size-loader: 40px;
+  --size-loader-chip: 72px;
+  --size-tile: 40px;
+  --ui-hot-amber: #fda60b;
+  --ui-hot-deep: #b81400;
+  --ui-hot-gloss: #fdb192;
+  --ui-hot-glow: #fde83c;
+  --ui-hot-orange: #f96304;
+  --ui-hot-red: #d21e00;
+  --ui-button-glass-blur: blur(12px);
+  --spacing-24: 24px;
+  --glass-border: color-mix(in srgb, #ffffff 30%, transparent);
 }

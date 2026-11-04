@@ -3,18 +3,19 @@
 // Down, the sheet follows the finger; let go past a third of its height or on a flick (over 900 px/s) it slides away,
 // else it springs back. Up, it stretches from the bottom on a rubber band, max about 64px, and springs back with the
 // bubble's release spring. A sheet whose content scrolls drags from its grip and head only.
-const REBOUND = { w: 15.6, z: 0.36 };
-const SLIDE_MS = 280;
+import { tok, tokMs, tokNum } from './tokens.js';
+const REBOUND = { w: tokNum('sheet-release-omega'), z: tokNum('sheet-release-zeta') };
+const SLIDE_MS = tokMs('sheet-exit-dur');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 let drag = null; let frame = 0;
 
 const scrolls = (sheet) => sheet.scrollHeight > sheet.clientHeight + 1;
 // A sheet at its height cap grows no band at the foot: the whole sheet rises and its content takes the room.
-const capped = (sheet) => sheet.offsetHeight >= innerHeight * 0.82 - 1;
+const capped = (sheet) => sheet.offsetHeight >= innerHeight * tokNum('sheet-height-cap') - 1;
 function place(sheet, dy, foot) {
   if (dy < 0) {
-    const up = (64 * (1 - Math.exp(dy / 140))).toFixed(1);
-    if (capped(sheet) || sheet.style.maxHeight) sheet.style.maxHeight = `calc(var(--size-sheet-max-height) + ${up}px)`;
+    const up = (tokNum('sheet-rubber-max') * (1 - Math.exp(dy / tokNum('sheet-rubber-k')))).toFixed(1);
+    if (capped(sheet) || sheet.style.maxHeight) sheet.style.maxHeight = `calc(var(--hsb-sheet-height-cap) * 100vh + ${up}px)`;
     else sheet.style.paddingBottom = `calc(${foot}px + ${up}px)`;
     sheet.style.transform = '';
     return;
@@ -25,7 +26,7 @@ function place(sheet, dy, foot) {
 // The page's own handler closes on a click on the scrim: send that click once the slide has played.
 function slideAway(scrim, sheet, click) {
   sheet.style.animation = 'none';
-  sheet.style.transition = `transform ${SLIDE_MS}ms cubic-bezier(.4, 0, 1, 1)`;
+  sheet.style.transition = `transform ${SLIDE_MS}ms ${tok('sheet-exit-ease')}`;
   sheet.style.transform = 'translateY(105%)';
   scrim.classList.add('is-closing');
   scrim.dataset.closing = '';
@@ -62,7 +63,7 @@ document.addEventListener('pointermove', (event) => {
   const { sheet, dy, t0, foot } = drag;
   drag = null;
   const speed = (dy / Math.max(1, performance.now() - t0)) * 1000;
-  if (dy > sheet.offsetHeight / 3 || (dy > 24 && speed > 900)) {
+  if (dy > sheet.offsetHeight * tokNum('sheet-dismiss-fraction') || (dy > 24 && speed > tokNum('sheet-dismiss-flick'))) {
     const scrim = sheet.parentElement;
     slideAway(scrim, sheet, () => scrim.click());
     return;

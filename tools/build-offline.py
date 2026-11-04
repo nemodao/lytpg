@@ -22,6 +22,7 @@ MOCK_OF = {'reward': 'store'}
 EXTRA_CSS = {'reward': ['pages/store.css']}
 # Shared modules in dependency order, with the variable each one is bound to in the bundle.
 MODULES = {
+    '../shared/tokens.js': '__tokens',
     '../shared/nav-lens.js': '__navLens',
     '../shared/bubble.js': '__bubble',
     '../shared/sheet.js': '__sheet',
@@ -56,7 +57,7 @@ def css_bundle(page):
     base = read('shared/base.css')
     # Fonts must be inline: browsers refuse font files from file:// pages.
     base = re.sub(r'url\("\.\./(assets/fonts/[^"]+\.woff2)"\)', lambda m: f'url("{data_uri(m.group(1), "font/woff2")}")', base)
-    parts = [read('tokens/tokens.css'), base, read('shared/components.css'), *(read(f) for f in EXTRA_CSS.get(page, [])), read(f'pages/{page}.css')]
+    parts = [read('tokens/hsb-tokens.css'), read('tokens/tokens.css'), base, read('shared/components.css'), *(read(f) for f in EXTRA_CSS.get(page, [])), read(f'pages/{page}.css')]
     return assets_to_local('\n'.join(parts))
 
 

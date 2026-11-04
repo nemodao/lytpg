@@ -35,7 +35,7 @@ let tab = TABS.includes(new URLSearchParams(location.search).get('tab')) ? new U
 // the next page when the end row comes into view, until the rows shown reach `total`. In this demo the full list is
 // already in memory, so "loading" a page is a short wait (DEMO delay) and then more rows.
 const PAGE_SIZE = 15;
-const LOAD_DELAY_MS = 700; // DEMO: stands in for the request
+const LOAD_DELAY_MS = 700; // DEMO: stands in for the request. LOGIC-TIMING: demo page load 700ms
 const shown = { available: PAGE_SIZE, expired: PAGE_SIZE, history: PAGE_SIZE };
 let loadFailed = Boolean(page.loadMoreError); // PREVIEW ONLY: the `more-error` state shows the failed-to-load row
 // API: send this when a request for the next page fails (error_scope 'more'), as the preview does here.

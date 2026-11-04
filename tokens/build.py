@@ -1,67 +1,70 @@
 #!/usr/bin/env python3
-"""Generate tokens.css from tokens.json. Run: python3 build.py"""
-import json, re, pathlib
+"""Write tokens.css from tokens.json. Run: python3 tokens/build.py
+
+Since R3 (4 Nov 2026) every design value lives in hsb_app/docs/redesign/qa/tokens.json and reaches Loyalty through
+tokens/hsb-tokens.css, a byte-equal copy (sh tools/check-tokens.sh). tokens.json here only names Loyalty's older
+variables: aliases to R3 tokens, TOK-GAPs (QA1 §2b rule 3), stated exceptions, layout sizes and the legacy block read
+by pages not yet redesigned. Pages load hsb-tokens.css first, then tokens.css.
+"""
+import json
+import pathlib
 
 here = pathlib.Path(__file__).parent
-d = json.loads((here / "tokens.json").read_text())
+d = json.loads((here / "tokens.json").read_text(encoding="utf-8"))
+
+# Scopes. R3 switches on data-mode (light by default) and data-premium. Declaring the single-value lines on every scope
+# makes them re-resolve on a nested element that carries its own data-mode (the Earn sky, the Terms page).
+EVERY = ":root, [data-mode], [data-premium]"
+SCOPES = [
+    ("light", ':root, [data-mode="light"]'),
+    ("dark", '[data-mode="dark"]'),
+    ("premiumLight", "[data-premium]"),
+    ("premiumDark", '[data-premium][data-mode="dark"], [data-premium] [data-mode="dark"]'),
+]
+MODE_KEYS = {"all", "light", "dark", "premiumLight", "premiumDark"}
 
 
-def v(name):
-    name = name.replace("%", "").replace(":", "")
-    return "--" + re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+def value_of(entry):
+    """An alias entry: 'name' of an R3 token, {'expr': ...}, or per-mode values."""
+    if isinstance(entry, str):
+        return {"all": f"var(--hsb-{entry})"}
+    if "expr" in entry:
+        return {"all": entry["expr"]}
+    return {k: v for k, v in entry.items() if k in MODE_KEYS}
 
 
-def decl(name, value, prefix=""):
-    return f"  {v(prefix + name)}: {value};"
+def note(block, entry, value):
+    if block == "tokGap":
+        return f" /* TOK-GAP: {entry['role']} {value} ({entry['source']}) */"
+    if block == "exception":
+        return f" /* {entry['ex']} */"
+    return ""
 
 
-sem = d["color"]["semantic"]
-fx = d["effect"]
+every, per_mode = [], {k: [] for k, _ in SCOPES}
+for block in ("alias", "tokGap", "exception", "layout", "legacy"):
+    every.append(f"  /* {block} */")
+    for k in per_mode:
+        per_mode[k].append(f"  /* {block} */")
+    for name, entry in d[block].items():
+        vals = value_of(entry) if block == "alias" else {k: v for k, v in entry.items() if k in MODE_KEYS}
+        # [data-premium] comes after [data-mode="dark"] with the same weight, so a Premium light value needs its dark one.
+        if "premiumLight" in vals and "premiumDark" not in vals:
+            vals["premiumDark"] = vals["dark"]
+        if "all" in vals:
+            every.append(f"  --{name}: {vals['all']};{note(block, entry, vals['all'])}")
+            continue
+        for k in per_mode:
+            if k in vals:
+                per_mode[k].append(f"  --{name}: {vals[k]};{note(block, entry, vals[k])}")
+
 o = [
-    "/* Loyalty design tokens — generated from tokens.json by build.py. Do not edit by hand.",
-    f"   Version {d['$version']}. {d['$source']['note']} */",
+    "/* Loyalty variables, generated from tokens.json by build.py. Do not edit by hand.",
+    f"   Version {d['$version']}. Values come from tokens/hsb-tokens.css (R3); see tokens.json $source. */",
     "",
-    ':root, [data-theme="light"] {',
-    "  /* Color — primitives */",
 ]
-o += [decl(k, x, "color/") for k, x in d["color"]["primitive"].items()]
-o += ["", "  /* Color — semantic (light) */"] + [decl(k, x) for k, x in sem["light"].items()]
-o += ["", "  /* Effect strengths (light) */"] + [decl(k, x) for k, x in fx["light"].items()]
-o += ["", "  /* Spacing */"] + [decl(k, f"{x}px") for k, x in d["spacing"].items()]
-o += ["", "  /* Radius */"] + [decl(k, f"{x}px") for k, x in d["radius"].items()]
-# A size is a number of px, or a string written as is (e.g. "80vh" for a share of the screen).
-o += ["", "  /* Component sizes */"] + [decl(k, x if isinstance(x, str) else f"{x}px") for k, x in d["size"].items()]
-o += ["", "  /* Typography — use with the `font` shorthand */"]
-for k, t in d["typography"].items():
-    o.append(decl(k, f"{t['fontWeight']} {t['fontSize']}px/{t['lineHeight']}px \"{t['fontFamily']}\", sans-serif", "font/"))
-    if t["letterSpacingPercent"]:
-        o.append(decl(k, f"{round(t['letterSpacingPercent'] / 100, 4)}em", "letter-spacing/"))
-o += ["", "  /* Shadow */"]
-o += [decl(k, x, "" if k.lower().startswith("shadow") else "shadow/") for k, x in d["shadow"].items()]
-o += ["", "  /* Blend cards — gradient colour stops. Same in light and dark. */"]
-for name, b in d["blend"].items():
-    for k, x in b["stops"].items():
-        o.append(f"  --blend-{name}-{k}: {x};")
-o += ["}", "", "/* Color — semantic (dark) */", '[data-theme="dark"] {']
-o += [decl(k, x) for k, x in sem["dark"].items()]
-o += ["", "  /* Effect strengths (dark) */"] + [decl(k, x) for k, x in fx["dark"].items()]
-o += ["}", ""]
-# Premium accounts swap the brand from lime to gold; everything else stays (TOKENS 1.3). data-premium sits on <html>.
-o += ["/* Premium: the brand turns gold, light then dark */", "[data-premium] {"]
-o += [decl(k, x) for k, x in sem["premiumLight"].items()]
-o += ["}", '[data-premium][data-theme="dark"], [data-premium] [data-theme="dark"] {']
-o += [decl(k, x) for k, x in sem["premiumDark"].items()]
-o += ["}", ""]
-o += [
-    "/* Composed tokens — built from the variables above. Declared on every theme scope so they",
-    "   re-resolve when data-theme is set on a nested element. */",
-    ':root, [data-theme="light"], [data-theme="dark"] {',
-]
-o += [f"  --{k}: {x};" for k, x in d["composed"].items()]
-for name, b in d["blend"].items():
-    o.append(f"  --blend-{name}-bg: {b['bg']};")
-    o.append(f"  --blend-{name}-fg: {b['fg']};")
-    o.append(f"  --blend-{name}-ink: {b['ink']};")
-o += ["}", ""]
-(here / "tokens.css").write_text("\n".join(o))
-print("wrote tokens.css:", sum(1 for l in o if l.startswith("  --")), "declarations")
+for k, sel in SCOPES:
+    o += [f"{sel} {{"] + per_mode[k] + ["}", ""]
+o += [f"{EVERY} {{"] + every + ["}", ""]
+(here / "tokens.css").write_text("\n".join(o), encoding="utf-8")
+print("wrote tokens.css:", sum(1 for line in o if line.startswith("  --")), "declarations")

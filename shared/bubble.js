@@ -3,13 +3,15 @@
 // after 100ms the press begins; lifted sooner, the press plays at once and lets go. A press that turns into a scroll
 // within 180ms fades out with no bounce. Only the shape stretches: children are counter-scaled, so text keeps its
 // proportions. Because of that, a child of a pressable must not rely on its own transform for layout.
+import { tokMs, tokNum, tokSpring } from './tokens.js';
 const SELECTOR = 'button.btn, a.btn, .header-action, .nav__exit, .nav__tabs button, .text-btn, a.badge, .reward-card, .card-link, .upgrade-row, button.select, .option, .chip, .cal-nav, button.cal__day';
-const SWELL = [['.header-action, .nav__exit', 0.12], ['.reward-card, .balance, .upgrade-row, .option, .balance-history', 0.03], ['button.select', 0.02], ['a.badge, .chip', 0.05], ['.cal-nav, button.cal__day', 0.12]];
-const PRESS = { w: 26, z: 0.62 };
-const RELEASE = { w: 15.6, z: 0.36 };
-const CANCEL = { w: 20, z: 1 };
-const PRESS_DELAY = 100; const SCROLL_SLOP = 8; const HOLD_OWN = 180;
-const FOLLOW = 0.13; const FOLLOW_CAP = 8 * FOLLOW; const DEAD_ZONE = 4;
+// Swell by role (9.1): round buttons, cards, the account field, chips; anything else the standard swell.
+const SWELL = [['.header-action, .nav__exit', 'round'], ['.reward-card, .balance, .upgrade-row, .option, .balance-history', 'card'], ['button.select', 'list-row'], ['a.badge, .chip', 'glass-chip'], ['.cal-nav, button.cal__day', 'round']];
+const PRESS = tokSpring('bubble-press');
+const RELEASE = tokSpring('bubble-release');
+const CANCEL = tokSpring('press-soft-cancel');
+const PRESS_DELAY = tokMs('motion-tap-delay-dur'); const SCROLL_SLOP = tokNum('bubble-scroll-slop'); const HOLD_OWN = tokMs('motion-hold-owns-drag-dur');
+const FOLLOW = tokNum('bubble-drag-factor'); const FOLLOW_CAP = tokNum('bubble-drag-cap'); const DEAD_ZONE = tokNum('bubble-drag-dead-zone'); const FOLLOW_DIVISOR = tokNum('bubble-drag-divisor');
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const live = new Map(); // element -> spring state
@@ -21,7 +23,7 @@ const pressable = (target) => {
   if (!found || found.disabled) return null;
   return found.matches('.card-link') ? found.parentElement : found;
 };
-const swellOf = (el) => SWELL.find(([selector]) => el.matches(selector))?.[1] ?? 0.06;
+const swellOf = (el) => tokNum(`swell-${SWELL.find(([selector]) => el.matches(selector))?.[1] ?? 'standard'}`);
 const spring = (el) => {
   if (!live.has(el)) live.set(el, { s: 1, vs: 0, x: 0, vx: 0, y: 0, vy: 0, ts: 1, tx: 0, ty: 0, k: RELEASE, last: 0 });
   return live.get(el);
@@ -87,7 +89,7 @@ document.addEventListener('pointermove', (event) => {
   if (!pressed) return;
   if (far && performance.now() - downAt < HOLD_OWN) { end(CANCEL); return; }
   if (reduced.matches) return;
-  const follow = (d) => Math.sign(d) * Math.min(FOLLOW_CAP, (Math.max(0, Math.abs(d) - DEAD_ZONE) * FOLLOW) / 6);
+  const follow = (d) => Math.sign(d) * Math.min(FOLLOW_CAP, (Math.max(0, Math.abs(d) - DEAD_ZONE) * FOLLOW) / FOLLOW_DIVISOR);
   const st = spring(pressed);
   st.tx = follow(event.clientX - startX); st.ty = follow(event.clientY - startY);
   run();

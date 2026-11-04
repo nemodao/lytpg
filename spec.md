@@ -926,7 +926,7 @@ Also: in the tier sheet, the amount deposited rounds **down** to whole dollars a
 
 Loyalty moves from tokens v3.13 (Figma base, blue) to the app's design system, `hsb_app/docs/redesign/TOKENS.md`. Visual only: data, events, intents, tour targets, states and copy stay. This section replaces the visual parts of earlier sections; their behaviour stands.
 
-- **§13, §34:** cards stay flat, no shadow, no rim, on the system's two surfaces: each surface takes the opposite colour of what is under it, at any depth.
+- **§13, §34:** cards have no shadow and sit on the system's two surfaces, light tone R3 (page `#F8F8FA`, box `#E8E8EB`; dark `#0E0E10` / `#222225`): each surface takes the opposite colour of what is under it, at any depth. Every neutral surface carries the TOKENS §4.0b rim (Modern; UI Designer 1's ruling, TOKENS §7.32, 4 Nov); the earn card keeps its own §4.4 rim instead. Was "flat, no rim" on the 2 Nov set.
 - **§49 heading:** the description under "Redeem coins for rewards" is not shown; a section heading stands alone. The copy key stays.
 - **§19, §56:** Close is a 58 circle beside the bar, in the bar's fill. Its X stays red and heavy, and dark mode keeps a faint red sheen inside the button (the user, 2 Nov). The Earn tab keeps its HOT image, its red flash every 6.5 s and the badge's float (the user, 2 Nov). Bottom bar: tab bar material with the app's glass lens (the user, 2 Nov). A tab's art stays an image, so the app's icon select animation does not apply.
 - **§48:** no glow behind the balance coin.

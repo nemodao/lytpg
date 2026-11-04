@@ -1,4 +1,4 @@
-// Sets data-theme before first paint. Follows the device setting; ?theme=dark|light overrides it.
+// Sets data-theme and data-mode before first paint. Follows the device setting; ?theme=dark|light overrides it.
 // PREVIEW ONLY: ?premium=1 sets data-premium (the gold brand). API: the app sends `isPremium` through initWebview.
 (function () {
   var params = new URLSearchParams(location.search);
@@ -8,6 +8,7 @@
   function apply() {
     var theme = forced === 'dark' || forced === 'light' ? forced : (media.matches ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-mode', theme); // the R3 tokens (tokens/hsb-tokens.css) read data-mode
   }
   apply();
   media.addEventListener('change', apply);

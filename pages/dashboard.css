@@ -20,7 +20,6 @@
 .checkin__day--done { background: var(--ui-badge-green); color: var(--ui-text-green); }
 .checkin__day--done b { color: var(--ui-text-green); }
 .checkin__day--today { background: var(--control-fill); box-shadow: inset 0 0 0 var(--size-rim-selected) var(--ui-stroke-brand); }
-[data-theme="dark"] .checkin__day--today { box-shadow: inset 0 0 0 var(--size-stroke) var(--ui-stroke-brand); }
 
 /* ---- Rewards grid (spec §49): two cards per row; the 3rd cell is the "earn coins" card ---- */
 .reward-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-12); }
@@ -65,11 +64,11 @@
   width: 100%; height: calc(var(--plus) * 0.3);
 }
 .earn-plus i::after { width: calc(var(--plus) * 0.3); height: 100%; }
-.earn-plus i:nth-child(1) { --plus: var(--spacing-24); top: 8%; left: 6%; animation-delay: 0s; }
-.earn-plus i:nth-child(2) { --plus: var(--spacing-14); top: 0; right: 14%; animation-delay: 0.5s; }
-.earn-plus i:nth-child(3) { --plus: var(--spacing-20); top: 44%; right: 0; animation-delay: 1s; }
-.earn-plus i:nth-child(4) { --plus: var(--spacing-14); bottom: 4%; left: 2%; animation-delay: 1.5s; }
-.earn-plus i:nth-child(5) { --plus: var(--spacing-10); top: 2%; left: 34%; animation-delay: 2s; }
+.earn-plus i:nth-child(1) { --plus: 24px; top: 8%; left: 6%; animation-delay: 0s; }
+.earn-plus i:nth-child(2) { --plus: 14px; top: 0; right: 14%; animation-delay: 0.5s; }
+.earn-plus i:nth-child(3) { --plus: 20px; top: 44%; right: 0; animation-delay: 1s; }
+.earn-plus i:nth-child(4) { --plus: 14px; bottom: 4%; left: 2%; animation-delay: 1.5s; }
+.earn-plus i:nth-child(5) { --plus: 10px; top: 2%; left: 34%; animation-delay: 2s; }
 @keyframes earn-plus { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
 @media (prefers-reduced-motion: reduce) { .earn-plus i { animation: none; } }
 /* "Looking for something else?" card under the grid: the gift box, then the text with a small button under it. */
@@ -83,7 +82,7 @@
 .skeleton--home .reward-card { cursor: default; }
 /* Bars cut to the real words and pills. The price comes with the data: its widest value. */
 .skeleton__fit { overflow: hidden; color: transparent; white-space: nowrap; }
-.skeleton__action { height: var(--size-control-sm); padding: 0 var(--spacing-14); border-radius: var(--radius-pill); font: var(--font-role-label-em); }
+.skeleton__action { height: var(--hsb-button-sm-height); padding: 0 var(--hsb-button-sm-pad-x); border-radius: var(--radius-pill); font: var(--font-role-label-em); }
 .skeleton__redeem { flex: none; height: var(--size-control-xs); margin-left: auto; padding: 0 var(--spacing-6); border-radius: var(--radius-pill); font: var(--font-role-small-em); }
 .skeleton--home .reward-card__price { flex: none; width: var(--size-skeleton-price); }
 .skeleton--home .reward-card__art.skeleton__bar { height: auto; border-radius: var(--radius-tile); }
