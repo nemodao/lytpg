@@ -567,7 +567,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .tour__spot--none { left: 50%; top: 50%; width: 0; height: 0; }
 .tour__card {
   position: fixed; display: flex; flex-direction: column; gap: var(--spacing-4); max-height: calc(100% - var(--spacing-32)); overflow-y: auto;
-  padding: var(--spacing-card); border-radius: var(--radius-card-row); background: var(--card-surface); box-shadow: var(--shadow-coach);
+  padding: var(--spacing-card); border-radius: var(--radius-card-row); background: var(--card-surface);
 }
 /* Animation above the title: a fixed-height box, so the pop-up's height is known before the images load. */
 .tour__art { --path: calc(var(--size-reward-width) * 0.96); position: relative; width: 100%; height: calc(var(--path) / 1.5); overflow: hidden; }

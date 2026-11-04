@@ -46,7 +46,11 @@ def read(rel):
 
 
 def data_uri(rel, mime):
-    return f'data:{mime};base64,' + base64.b64encode((ROOT / rel).read_bytes()).decode()
+    path = ROOT / rel
+    if not path.exists():  # Stolzl is git-ignored: a fresh clone has no font files, so the page falls back
+        print(f'warning: {rel} is missing; the bundle uses the fallback font')
+        return ''
+    return f'data:{mime};base64,' + base64.b64encode(path.read_bytes()).decode()
 
 
 def assets_to_local(text):

@@ -103,6 +103,7 @@ function makeUi(copy, common) {
       if (carried.length) query.set('state', carried.join(','));
       if (params.get('theme')) query.set('theme', params.get('theme'));
       if (params.get('lang')) query.set('lang', params.get('lang'));
+      if (params.get('premium')) query.set('premium', params.get('premium')); // PREVIEW ONLY: keeps the gold brand across pages
       const qs = query.toString().replace(/%2C/g, ',');
       return qs ? `${file}?${qs}` : file;
     },

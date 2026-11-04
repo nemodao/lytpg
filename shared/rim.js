@@ -11,7 +11,7 @@ import { tok } from './tokens.js';
 const RIM_SELECTOR = [
   '.card:not(.card--brand):not(.card--blend):not(.reward-card--earn):not([data-mode="dark"] .reward-sheet)', '.sheet', '.tour__card',
   '.header-action', '.app-header__pill', '.btn--glass:not(:disabled)', '.btn--stroke:not(:disabled)',
-  '.option:not(:has(.radio--on))', '.select', '.upgrade-row--top', '.rates-frame', '.activity:not(.activity--gift)',
+  '.option', '.select', '.upgrade-row--top', '.rates-frame', '.activity:not(.activity--gift)',
   '.tabs', '.checkin__day--later', '.reward-card:not(.reward-card--earn) .reward-card__art:not(.skeleton__bar)', '.page-error__icon', '.hero-message__icon',
   '.list-none__orb', '.join__mark',
   // The store header's balance: a solid box fill in light; in dark it is glass over the gradient, not a neutral surface.
@@ -21,7 +21,12 @@ const RIM_SELECTOR = [
 let data = null;
 const DATA_URL = new URL('../tokens/hsb-rim.g.json', import.meta.url);
 // The offline review bundle inlines the file as window.__HSB_RIM__ (tools/build-offline.py).
-const loadData = async () => window.__HSB_RIM__ ?? (await fetch(DATA_URL)).json();
+const loadData = async () => {
+  if (window.__HSB_RIM__) return window.__HSB_RIM__;
+  const response = await fetch(DATA_URL);
+  if (!response.ok) throw new Error(`hsb-rim.g.json: ${response.status}`);
+  return response.json();
+};
 
 // Ramp colour for a value 0..100: DK + (255 - DK) * value / 100 per sRGB channel, not rounded.
 const ramp = (dk, value) => dk.map((c) => c + ((255 - c) * value) / 100);
@@ -73,7 +78,12 @@ const painted = new WeakMap(); // element -> "w x h mode" last painted
 
 function paint(el) {
   const w = Math.round(el.offsetWidth); const h = Math.round(el.offsetHeight);
-  if (w < data.neutralSurface.minW || h < data.neutralSurface.minH) { el.classList.remove('rim'); return; }
+  // Too small (or hidden), or a selected option: no rim. Touch the class only when it changes, or the mutation
+  // observer below would see a change every frame.
+  if (w < data.neutralSurface.minW || h < data.neutralSurface.minH || (el.matches('.option') && el.querySelector('.radio--on'))) {
+    if (el.classList.contains('rim')) { el.classList.remove('rim'); painted.delete(el); }
+    return;
+  }
   const mode = modeOf(el);
   const key = `${w}x${h}${mode}`;
   if (painted.get(el) === key) return;
@@ -96,7 +106,7 @@ function scan(root = document) {
 
 export async function startRim() {
   if (!tok('rim-shared-width')) return; // the R3 tokens are not loaded
-  data = await loadData();
+  try { data = await loadData(); } catch (error) { console.warn('4.0b rim off:', error.message); return; } // the page works without it
   scan();
   let queued = false;
   new MutationObserver(() => {
