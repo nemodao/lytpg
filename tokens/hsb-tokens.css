@@ -736,6 +736,11 @@
   --hsb-flow-progress-fill: var(--hsb-color-flow-progress);
   --hsb-customize-screen-shadow: 0 4px 16px rgba(10,11,12,.1);
   --hsb-customize-screen-hairline: rgba(255,255,255,0.72);
+  --hsb-loyalty-kit-tier-micro-surface: rgba(146,146,150,0.14);
+  --hsb-loyalty-kit-tier-standard-surface: rgba(37,99,235,0.1);
+  --hsb-loyalty-kit-tier-standard-text: #1F55D6;
+  --hsb-loyalty-kit-upgrade-row: var(--hsb-color-accent-soft);
+  --hsb-loyalty-kit-upgrade-row-premium: var(--hsb-color-accent-soft);
 }
 
 :is([data-mode="dark"], .dark) {
@@ -870,6 +875,11 @@
   --hsb-flow-progress-fill: var(--hsb-color-accent);
   --hsb-customize-screen-shadow: 0 4px 16px rgba(0,0,0,.5);
   --hsb-customize-screen-hairline: rgba(255,255,255,0.05);
+  --hsb-loyalty-kit-tier-micro-surface: rgba(142,142,147,0.14);
+  --hsb-loyalty-kit-tier-standard-surface: rgba(110,168,254,0.14);
+  --hsb-loyalty-kit-tier-standard-text: #6EA8FE;
+  --hsb-loyalty-kit-upgrade-row: rgba(209,248,1,0.12);
+  --hsb-loyalty-kit-upgrade-row-premium: rgba(217,180,81,0.14);
 }
 
 :is([data-prem], [data-premium], .premium) {
@@ -935,6 +945,12 @@
   --hsb-flow-progress-fill: var(--hsb-color-flow-progress);
   --hsb-customize-screen-shadow: 0 4px 16px rgba(10,11,12,.1);
   --hsb-customize-screen-hairline: rgba(255,255,255,0.72);
+  --hsb-loyalty-kit-tier-micro-surface: rgba(146,146,150,0.14);
+  --hsb-loyalty-kit-tier-standard-surface: rgba(37,99,235,0.1);
+  --hsb-loyalty-kit-tier-standard-text: #1F55D6;
+  --hsb-loyalty-kit-upgrade-row: var(--hsb-color-accent-soft);
+  --hsb-loyalty-kit-upgrade-row-premium: var(--hsb-color-accent-soft);
+  --hsb-loyalty-kit-upgrade-row: var(--hsb-color-accent-soft);
 }
 
 :is([data-mode="dark"], .dark):is([data-prem], [data-premium], .premium), :is([data-mode="dark"], .dark) :is([data-prem], [data-premium], .premium), :is([data-prem], [data-premium], .premium) :is([data-mode="dark"], .dark) {
@@ -1001,6 +1017,12 @@
   --hsb-flow-progress-fill: var(--hsb-color-accent);
   --hsb-customize-screen-shadow: 0 4px 16px rgba(0,0,0,.5);
   --hsb-customize-screen-hairline: rgba(255,255,255,0.05);
+  --hsb-loyalty-kit-tier-micro-surface: rgba(142,142,147,0.14);
+  --hsb-loyalty-kit-tier-standard-surface: rgba(110,168,254,0.14);
+  --hsb-loyalty-kit-tier-standard-text: #6EA8FE;
+  --hsb-loyalty-kit-upgrade-row: rgba(209,248,1,0.12);
+  --hsb-loyalty-kit-upgrade-row-premium: rgba(217,180,81,0.14);
+  --hsb-loyalty-kit-upgrade-row: rgba(217,180,81,0.14);
 }
 
 /* Unsplit references re-declared on every scope so their var() picks up that scope's colours. */
@@ -3692,6 +3714,23 @@
   --hsb-named-guide-hint-dot-dim-alpha: 0.25;
   --hsb-named-guide-badge-locked-fill-alpha: 0.18;
   --hsb-customize-screen-hairline-width: 1px;
+  --hsb-loyalty-kit-tier-micro-text: var(--hsb-color-t2);
+  --hsb-loyalty-kit-title-size: 22px;
+  --hsb-loyalty-kit-title-line: 28px;
+  --hsb-loyalty-kit-upgrade-art: 40px;
+  --hsb-loyalty-kit-coin-art: 52px;
+  --hsb-loyalty-kit-hit: 44px;
+  --hsb-loyalty-kit-icon: 24px;
+  --hsb-loyalty-kit-table-hairline: 1px;
+  --hsb-loyalty-kit-tour-scrim: rgba(0,0,0,0.5);
+  --hsb-loyalty-kit-tour-ring-width: 2px;
+  --hsb-loyalty-kit-header-turn-ms: 200ms;
+  --hsb-loyalty-kit-header-flip-at-ms: 100ms;
+  --hsb-loyalty-kit-rays-spread-ease: cubic-bezier(.2,.8,.3,1);
+  --hsb-loyalty-kit-lens-fallback-ms: 700ms;
+  --hsb-loyalty-kit-close-sheen-falloff: 82% 55% 30% 13% 4%;
+  --hsb-loyalty-kit-close-sheen-at: 15% 32% 50% 68% 85%;
+  --hsb-loyalty-kit-close-sheen-shape: ellipse 60% 60% at 50% 50%;
   --hsb-web-side-w-width: 264px;
   --hsb-web-side-w-inset: 12px;
   --hsb-web-side-w-radius: 30px;

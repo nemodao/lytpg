@@ -36,13 +36,15 @@ def value_of(entry):
 def note(block, entry, value):
     if block == "tokGap":
         return f" /* TOK-GAP: {entry['role']} {value} ({entry['source']}) */"
+    if block == "logicTiming":
+        return f" /* LOGIC-TIMING: {entry['role']} {value} ({entry['source']}) */"
     if block == "exception":
         return f" /* {entry['ex']} */"
     return ""
 
 
 every, per_mode = [], {k: [] for k, _ in SCOPES}
-for block in ("alias", "tokGap", "exception", "layout", "legacy"):
+for block in ("alias", "tokGap", "logicTiming", "exception", "layout", "legacy"):
     every.append(f"  /* {block} */")
     for k in per_mode:
         per_mode[k].append(f"  /* {block} */")

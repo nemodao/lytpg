@@ -64,11 +64,11 @@
   width: 100%; height: calc(var(--plus) * 0.3);
 }
 .earn-plus i::after { width: calc(var(--plus) * 0.3); height: 100%; }
-.earn-plus i:nth-child(1) { --plus: 24px; top: 8%; left: 6%; animation-delay: 0s; } /* TOK-GAP: Earn plus sign 24px (EX-4.4-01, specs/loyalty Home) */
-.earn-plus i:nth-child(2) { --plus: 14px; top: 0; right: 14%; animation-delay: 0.5s; } /* TOK-GAP: Earn plus sign 14px (EX-4.4-01, specs/loyalty Home) */
-.earn-plus i:nth-child(3) { --plus: 20px; top: 44%; right: 0; animation-delay: 1s; } /* TOK-GAP: Earn plus sign 20px (EX-4.4-01, specs/loyalty Home) */
-.earn-plus i:nth-child(4) { --plus: 14px; bottom: 4%; left: 2%; animation-delay: 1.5s; } /* TOK-GAP: Earn plus sign 14px (EX-4.4-01, specs/loyalty Home) */
-.earn-plus i:nth-child(5) { --plus: 10px; top: 2%; left: 34%; animation-delay: 2s; } /* TOK-GAP: Earn plus sign 10px (EX-4.4-01, specs/loyalty Home) */
+.earn-plus i:nth-child(1) { --plus: 24px; top: 8%; left: 6%; animation-delay: 0s; }
+.earn-plus i:nth-child(2) { --plus: 14px; top: 0; right: 14%; animation-delay: 0.5s; }
+.earn-plus i:nth-child(3) { --plus: 20px; top: 44%; right: 0; animation-delay: 1s; }
+.earn-plus i:nth-child(4) { --plus: 14px; bottom: 4%; left: 2%; animation-delay: 1.5s; }
+.earn-plus i:nth-child(5) { --plus: 10px; top: 2%; left: 34%; animation-delay: 2s; }
 @keyframes earn-plus { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
 @media (prefers-reduced-motion: reduce) { .earn-plus i { animation: none; } }
 /* "Looking for something else?" card under the grid: the gift box, then the text with a small button under it. */

@@ -14,7 +14,7 @@ const HOLD_MS = tokMs('tab-bar-hold-full-dur'); const DEAD_ZONE = 4; // the lens
 const RIM_POINTS = 16; const RIM_IDLE = 0.3;
 // The fringe is fainter towards the top-right and bottom-left, down to 40%.
 const RIM_TILT = Array.from({ length: RIM_POINTS }, (_, k) => 1 - 0.6 * Math.max(0, Math.cos(2 * ((k * 2 * Math.PI) / RIM_POINTS - Math.PI / 4))));
-const LANDED_BY = 700; // LOGIC-TIMING: page change fallback 700ms (the page changes by then even if animation frames stall)
+const LANDED_BY = tokMs('loyalty-kit-lens-fallback-ms'); // the page changes by then even if animation frames stall
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
 // The lens picks the tab, so a pointer's own click on a bar is dropped. Only a click that follows a pointer: a screen

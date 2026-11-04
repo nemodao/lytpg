@@ -12,6 +12,7 @@
 // API: the Exit button and other buttons that leave these pages carry data-intent; the host app attaches the real
 // deeplinks (table in spec.md §30 and HANDOFF.md). No handler is wired here.
 import { mountLens, pointerClick } from './nav-lens.js';
+import { tok } from './tokens.js';
 
 const TABS = [
   { id: 'home', label: 'nav.home', file: 'dashboard.html' },
@@ -27,6 +28,15 @@ const selected = (id) => art(id, 'on', 'nav__image--brand') + art(id, 'on-gold',
 
 // `active` is the id of the current page's tab. Tabs marked `needsTask` are left out when the programme runs no
 // trading task (`program.tradingTask: false`, the `no-task-trading` state).
+// Close's dark sheen (7.32): the glow at the centre fading out through loyalty-kit-close-sheen-falloff at
+// -close-sheen-at, in -close-sheen-shape, over the bar's fill. Light: the glow is transparent.
+function closeSheen() {
+  const at = tok('loyalty-kit-close-sheen-at').split(/\s+/);
+  const stops = tok('loyalty-kit-close-sheen-falloff').split(/\s+/)
+    .map((share, i) => `color-mix(in srgb, var(--ui-nav-exit-glow) ${share}, transparent) ${at[i]}`);
+  return `radial-gradient(${tok('loyalty-kit-close-sheen-shape')}, var(--ui-nav-exit-glow), ${stops.join(', ')}, transparent), var(--ui-nav-surface)`;
+}
+
 export function mountNav(ui, common, active) {
   const tabs = TABS.filter((item) => !(item.needsTask && common.program.tradingTask === false));
   const tab = (item) => `
@@ -50,6 +60,7 @@ export function mountNav(ui, common, active) {
     </div>`;
   document.body.appendChild(nav);
   document.body.classList.add('has-nav');
+  nav.querySelector('.nav__exit').style.setProperty('--nav-exit-surface', closeSheen());
 
   // A tap or a drag picks the tab through the lens, so a tab's own click is replaced: the pointer's click is dropped
   // and the chosen tab is clicked once (tracked as before) when the finger lifts; the page changes once the lens has

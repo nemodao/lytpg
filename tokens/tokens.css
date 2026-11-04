@@ -5,11 +5,7 @@
   /* alias */
   --ui-nav-exit-glow: transparent;
   /* tokGap */
-  --ui-tier-micro-surface: rgba(146,146,150,.14); /* TOK-GAP: tier Micro soft rgba(146,146,150,.14) (§51 §55) */
-  --ui-tier-micro-text: #5E5E62; /* TOK-GAP: tier Micro text #5E5E62 (§51 §55) */
-  --ui-tier-standard-surface: rgba(37,99,235,.10); /* TOK-GAP: tier Standard soft rgba(37,99,235,.10) (§51 §55) */
-  --ui-tier-standard-text: #1F55D6; /* TOK-GAP: tier Standard text #1F55D6 (§51 §55) */
-  --upgrade-row: rgba(116,162,0,.15); /* TOK-GAP: upgrade row tint rgba(116,162,0,.15) (specs/loyalty Earn) */
+  /* logicTiming */
   /* exception */
   --lens-backing: #ECEDEF; /* EX-4.0-04 */
   --lens-fill: radial-gradient(120% 70% at 50% 0%, rgba(255,255,255,.35), transparent 60%), rgba(255,255,255,.06); /* EX-4.0-04 */
@@ -52,11 +48,7 @@
   /* alias */
   --ui-nav-exit-glow: var(--hsb-loyalty-close-sheen-dark);
   /* tokGap */
-  --ui-tier-micro-surface: rgba(142,142,147,.14); /* TOK-GAP: tier Micro soft rgba(142,142,147,.14) (§51 §55) */
-  --ui-tier-micro-text: #B3B3B8; /* TOK-GAP: tier Micro text #B3B3B8 (§51 §55) */
-  --ui-tier-standard-surface: rgba(110,168,254,.14); /* TOK-GAP: tier Standard soft rgba(110,168,254,.14) (§51 §55) */
-  --ui-tier-standard-text: #6EA8FE; /* TOK-GAP: tier Standard text #6EA8FE (§51 §55) */
-  --upgrade-row: rgba(209,248,1,.12); /* TOK-GAP: upgrade row tint rgba(209,248,1,.12) (specs/loyalty Earn) */
+  /* logicTiming */
   /* exception */
   --lens-backing: #19191B; /* EX-4.0-04 */
   --lens-fill: radial-gradient(120% 70% at 50% 0%, rgba(255,255,255,.16), transparent 60%), rgba(255,255,255,.05); /* EX-4.0-04 */
@@ -98,7 +90,7 @@
 [data-premium] {
   /* alias */
   /* tokGap */
-  --upgrade-row: rgba(168,129,30,.14); /* TOK-GAP: upgrade row tint rgba(168,129,30,.14) (specs/loyalty Earn) */
+  /* logicTiming */
   /* exception */
   /* layout */
   /* legacy */
@@ -117,7 +109,7 @@
 [data-premium][data-mode="dark"], [data-premium] [data-mode="dark"] {
   /* alias */
   /* tokGap */
-  --upgrade-row: rgba(217,180,81,.14); /* TOK-GAP: upgrade row tint rgba(217,180,81,.14) (specs/loyalty Earn) */
+  /* logicTiming */
   /* exception */
   /* layout */
   /* legacy */
@@ -271,33 +263,38 @@
   --warn-soft: var(--hsb-color-warn-soft);
   --warn-text: var(--hsb-color-warn-text);
   --primary-rim: linear-gradient(var(--ang), var(--hsb-button-primary-rim) 0%, color-mix(in srgb, var(--hsb-button-primary-rim) 55%, transparent) 14%, transparent 34%, transparent 62%, color-mix(in srgb, var(--hsb-button-primary-rim) 70%, transparent) 100%);
+  --ui-tier-micro-surface: var(--hsb-loyalty-kit-tier-micro-surface);
+  --ui-tier-micro-text: var(--hsb-loyalty-kit-tier-micro-text);
+  --ui-tier-standard-surface: var(--hsb-loyalty-kit-tier-standard-surface);
+  --ui-tier-standard-text: var(--hsb-loyalty-kit-tier-standard-text);
+  --upgrade-row: var(--hsb-loyalty-kit-upgrade-row);
+  --size-avatar: var(--hsb-loyalty-kit-upgrade-art);
+  --size-control-lg: var(--hsb-loyalty-kit-coin-art);
+  --size-hit: var(--hsb-loyalty-kit-hit);
+  --size-icon-lg: var(--hsb-loyalty-kit-icon);
+  --size-stroke: var(--hsb-loyalty-kit-table-hairline);
+  --tour-scrim: var(--hsb-loyalty-kit-tour-scrim);
+  --tour-ring-width: var(--hsb-loyalty-kit-tour-ring-width);
+  --hero-header-turn: var(--hsb-loyalty-kit-header-turn-ms);
+  --hero-header-flip-at: var(--hsb-loyalty-kit-header-flip-at-ms);
+  --hero-rays-spread-ease: var(--hsb-loyalty-kit-rays-spread-ease);
+  --font-title-l: 400 var(--hsb-loyalty-kit-title-size)/var(--hsb-loyalty-kit-title-line) var(--hsb-font);
   /* tokGap */
-  --font-title-l: 400 22px/28px var(--hsb-font); /* TOK-GAP: title 22/28 400 22px/28px var(--hsb-font) (specs/loyalty) */
-  --size-avatar: 40px; /* TOK-GAP: upgrade art 40 40px (specs/loyalty Earn) */
-  --size-control-lg: 52px; /* TOK-GAP: coin and gift art 52, option min height 52 52px (specs/loyalty Home) */
-  --size-hit: 44px; /* TOK-GAP: touch target 44 44px (§12) */
-  --size-icon-lg: 24px; /* TOK-GAP: icon 24 (activity, small coin, steps) 24px (specs/loyalty Home) */
-  --size-stroke: 1px; /* TOK-GAP: table hairline 1 1px (specs/loyalty Earn tier table) */
-  --tour-scrim: rgba(0,0,0,.5); /* TOK-GAP: tour scrim rgba(0,0,0,.5) (§7.29) */
-  --tour-ring-width: 2px; /* TOK-GAP: tour ring width 2px (§7.29) */
-  --hero-header-turn: 200ms; /* TOK-GAP: Earn header pill turn 200ms (specs/loyalty Earn Header) */
-  --hero-header-flip-at: 100ms; /* TOK-GAP: Earn header title flip, halfway 100ms (specs/loyalty Earn Header) */
-  --hero-rays-spread-ease: cubic-bezier(0.2, 0.8, 0.3, 1); /* TOK-GAP: Earn rays spread curve cubic-bezier(0.2, 0.8, 0.3, 1) (specs/loyalty Earn hero (drawn, not stated)) */
-  --spinner-turn: 800ms; /* TOK-GAP: load-more spinner turn 800ms (spec §44 (paged lists)) */
-  --spinner-turn-reduced: 2400ms; /* TOK-GAP: load-more spinner turn, reduced motion 2400ms (spec §44) */
-  --nav-hot-float: 2400ms; /* TOK-GAP: Earn tab HOT float 2400ms (specs/loyalty Bottom bar) */
-  --tour-finger-in: 800ms; /* TOK-GAP: tour and How-to-start finger fade-in 800ms (spec §53 tour) */
-  --tour-flow-in: 450ms; /* TOK-GAP: tour step 2 first item in 450ms (spec §53 tour) */
-  --tour-flow-in-delay: 150ms; /* TOK-GAP: tour step 2 first item delay 150ms (spec §53 tour) */
-  --tour-flow-slide: 400ms; /* TOK-GAP: tour step 2 arrow slide 400ms (spec §53 tour) */
-  --tour-flow-pop: 500ms; /* TOK-GAP: tour step 2 second item pop 500ms (spec §53 tour) */
-  --tour-flow-pop-ease: cubic-bezier(0.3, 1.5, 0.5, 1); /* TOK-GAP: tour step 2 pop curve cubic-bezier(0.3, 1.5, 0.5, 1) (spec §53 tour) */
-  --tour-coin-pop: 450ms; /* TOK-GAP: tour step 2 coin pop 450ms (spec §53 tour) */
-  --tour-coin-pop-ease: cubic-bezier(0.3, 1.8, 0.5, 1); /* TOK-GAP: tour step 2 coin pop curve cubic-bezier(0.3, 1.8, 0.5, 1) (spec §53 tour) */
-  --tour-spark: 900ms; /* TOK-GAP: tour sparkle 900ms (spec §53 tour) */
-  --tour-finger-tap: 1200ms; /* TOK-GAP: tour finger tap loop 1200ms (spec §53 tour) */
-  --tour-pop: 1200ms; /* TOK-GAP: tour coin pop 1200ms (spec §53 tour) */
-  --nav-exit-surface: radial-gradient(60% 60% at 50% 50%, var(--ui-nav-exit-glow), color-mix(in srgb, var(--ui-nav-exit-glow) 82%, transparent) 15%, color-mix(in srgb, var(--ui-nav-exit-glow) 55%, transparent) 32%, color-mix(in srgb, var(--ui-nav-exit-glow) 30%, transparent) 50%, color-mix(in srgb, var(--ui-nav-exit-glow) 13%, transparent) 68%, color-mix(in srgb, var(--ui-nav-exit-glow) 4%, transparent) 85%, transparent), var(--ui-nav-surface); /* TOK-GAP: Close sheen falloff, stops at 82% 55% 30% 13% 4% of loyalty-close-sheen-dark: radial-gradient(60% 60% at 50% 50%, var(--ui-nav-exit-glow), color-mix(in srgb, var(--ui-nav-exit-glow) 82%, transparent) 15%, color-mix(in srgb, var(--ui-nav-exit-glow) 55%, transparent) 32%, color-mix(in srgb, var(--ui-nav-exit-glow) 30%, transparent) 50%, color-mix(in srgb, var(--ui-nav-exit-glow) 13%, transparent) 68%, color-mix(in srgb, var(--ui-nav-exit-glow) 4%, transparent) 85%, transparent), var(--ui-nav-surface) (§7.32 Close) */
+  /* logicTiming */
+  --spinner-turn: 800ms; /* LOGIC-TIMING: load-more spinner turn 800ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --spinner-turn-reduced: 2400ms; /* LOGIC-TIMING: load-more spinner turn, reduced motion 2400ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --nav-hot-float: 2400ms; /* LOGIC-TIMING: Earn tab HOT float 2400ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-finger-in: 800ms; /* LOGIC-TIMING: tour and How-to-start finger fade-in 800ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-flow-in: 450ms; /* LOGIC-TIMING: tour step 2 first item in 450ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-flow-in-delay: 150ms; /* LOGIC-TIMING: tour step 2 first item delay 150ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-flow-slide: 400ms; /* LOGIC-TIMING: tour step 2 arrow slide 400ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-flow-pop: 500ms; /* LOGIC-TIMING: tour step 2 second item pop 500ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-flow-pop-ease: cubic-bezier(0.3, 1.5, 0.5, 1); /* LOGIC-TIMING: tour step 2 pop curve cubic-bezier(0.3, 1.5, 0.5, 1) (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-coin-pop: 450ms; /* LOGIC-TIMING: tour step 2 coin pop 450ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-coin-pop-ease: cubic-bezier(0.3, 1.8, 0.5, 1); /* LOGIC-TIMING: tour step 2 coin pop curve cubic-bezier(0.3, 1.8, 0.5, 1) (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-spark: 900ms; /* LOGIC-TIMING: tour sparkle 900ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-finger-tap: 1200ms; /* LOGIC-TIMING: tour finger tap loop 1200ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
+  --tour-pop: 1200ms; /* LOGIC-TIMING: tour coin pop 1200ms (EX-0-11, in lytpg before the redesign (9c0ae17)) */
   /* exception */
   --bar-blur: blur(30px) saturate(125%); /* EX-4.0-04 */
   --earn-card: linear-gradient(297deg, #17181B 0%, #23242A 54%, #141518 100%); /* EX-4.4-01 */

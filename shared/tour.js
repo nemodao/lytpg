@@ -27,7 +27,7 @@ const STEPS = [
 // API: "tour already seen" is remembered in this browser only. If the app or the API should remember it per user,
 // replace `seen` / `markSeen` below; nothing else depends on localStorage.
 const SEEN_KEY = 'hsb-loyalty-tour-seen';
-const COUNT_MS = 1500; // TOK-GAP: tour coin count-up 1500ms (spec §53 tour)
+const COUNT_MS = 1500; // LOGIC-TIMING: tour coin count-up 1500ms (EX-0-11)
 // A finger appears under the pop-up's main (blue) button to nudge the user on: after FINGER_AFTER seconds, or the
 // step's own `fingerAfter`. Its tip sits at FINGER_TIP (fractions of the image's width and height).
 const FINGER_AFTER = 4;

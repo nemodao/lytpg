@@ -9,11 +9,13 @@
 import { tok } from './tokens.js';
 
 const RIM_SELECTOR = [
-  '.card:not(.card--brand):not(.card--blend):not(.reward-card--earn)', '.sheet', '.tour__card',
+  '.card:not(.card--brand):not(.card--blend):not(.reward-card--earn):not([data-mode="dark"] .reward-sheet)', '.sheet', '.tour__card',
   '.header-action', '.app-header__pill', '.btn--glass:not(:disabled)', '.btn--stroke:not(:disabled)',
   '.option:not(:has(.radio--on))', '.select', '.upgrade-row--top', '.rates-frame', '.activity:not(.activity--gift)',
-  '.tabs', '.checkin__day--later', '.reward-card__art:not(.skeleton__bar)', '.page-error__icon', '.hero-message__icon',
+  '.tabs', '.checkin__day--later', '.reward-card:not(.reward-card--earn) .reward-card__art:not(.skeleton__bar)', '.page-error__icon', '.hero-message__icon',
   '.list-none__orb', '.join__mark',
+  // The store header's balance: a solid box fill in light; in dark it is glass over the gradient, not a neutral surface.
+  '[data-mode="light"] .store-head__balance',
 ].join(', ');
 
 let data = null;
