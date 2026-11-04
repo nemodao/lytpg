@@ -297,6 +297,7 @@
   --tour-spark: 900ms; /* TOK-GAP: tour sparkle 900ms (spec §53 tour) */
   --tour-finger-tap: 1200ms; /* TOK-GAP: tour finger tap loop 1200ms (spec §53 tour) */
   --tour-pop: 1200ms; /* TOK-GAP: tour coin pop 1200ms (spec §53 tour) */
+  --nav-exit-surface: radial-gradient(60% 60% at 50% 50%, var(--ui-nav-exit-glow), color-mix(in srgb, var(--ui-nav-exit-glow) 82%, transparent) 15%, color-mix(in srgb, var(--ui-nav-exit-glow) 55%, transparent) 32%, color-mix(in srgb, var(--ui-nav-exit-glow) 30%, transparent) 50%, color-mix(in srgb, var(--ui-nav-exit-glow) 13%, transparent) 68%, color-mix(in srgb, var(--ui-nav-exit-glow) 4%, transparent) 85%, transparent), var(--ui-nav-surface); /* TOK-GAP: Close sheen falloff, stops at 82% 55% 30% 13% 4% of loyalty-close-sheen-dark: radial-gradient(60% 60% at 50% 50%, var(--ui-nav-exit-glow), color-mix(in srgb, var(--ui-nav-exit-glow) 82%, transparent) 15%, color-mix(in srgb, var(--ui-nav-exit-glow) 55%, transparent) 32%, color-mix(in srgb, var(--ui-nav-exit-glow) 30%, transparent) 50%, color-mix(in srgb, var(--ui-nav-exit-glow) 13%, transparent) 68%, color-mix(in srgb, var(--ui-nav-exit-glow) 4%, transparent) 85%, transparent), var(--ui-nav-surface) (§7.32 Close) */
   /* exception */
   --bar-blur: blur(30px) saturate(125%); /* EX-4.0-04 */
   --earn-card: linear-gradient(297deg, #17181B 0%, #23242A 54%, #141518 100%); /* EX-4.4-01 */
@@ -312,7 +313,6 @@
   --lens-ring: radial-gradient(closest-side, transparent 82%, rgba(0,0,0,.4) 90%, rgba(0,0,0,.85) 96%, #000 100%); /* EX-4.0-04 */
   --lens-ring-idle: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3)); /* EX-4.0-04 */
   --size-tab-bar: 58px; /* EX-4.0-04 */
-  --nav-exit-surface: radial-gradient(60% 60% at 50% 50%, var(--ui-nav-exit-glow), color-mix(in srgb, var(--ui-nav-exit-glow) 82%, transparent) 15%, color-mix(in srgb, var(--ui-nav-exit-glow) 55%, transparent) 32%, color-mix(in srgb, var(--ui-nav-exit-glow) 30%, transparent) 50%, color-mix(in srgb, var(--ui-nav-exit-glow) 13%, transparent) 68%, color-mix(in srgb, var(--ui-nav-exit-glow) 4%, transparent) 85%, transparent), var(--ui-nav-surface); /* §7.32 Close sheen falloff (stops only; colour is loyalty-close-sheen-dark) */
   --bar-rim-width: 1px; /* EX-4.0-04 tab bar rim width */
   /* layout */
   --font-role-figure: 400 30px/36px "Stolzl", sans-serif;
