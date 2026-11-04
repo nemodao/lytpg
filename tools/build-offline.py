@@ -23,6 +23,7 @@ EXTRA_CSS = {'reward': ['pages/store.css']}
 # Shared modules in dependency order, with the variable each one is bound to in the bundle.
 MODULES = {
     '../shared/tokens.js': '__tokens',
+    '../shared/rim.js': '__rim',
     '../shared/nav-lens.js': '__navLens',
     '../shared/bubble.js': '__bubble',
     '../shared/sheet.js': '__sheet',
@@ -98,6 +99,8 @@ def data_bundle(page):
     data = {f: json.loads(assets_to_local(read(f))) for f in files}
     return (
         'window.__DATA = ' + json.dumps(data, ensure_ascii=False) + ';\n'
+        # The 4.0b rim's anchors (shared/rim.js reads them from here offline).
+        + 'window.__HSB_RIM__ = ' + read('tokens/hsb-rim.g.json').strip() + ';\n'
         # Serve the inlined JSON to the pages' fetch() calls.
         "const __fetch = window.fetch;\n"
         "window.fetch = (path) => {\n"

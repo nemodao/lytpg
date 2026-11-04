@@ -2,6 +2,7 @@ import { track, trackView } from './tracking.js';
 import { TIERS, chosenAccountId, tierIndex } from './tiers.js';
 import './bubble.js';
 import './sheet.js';
+import './rim.js';
 
 // Markup for components used on more than one page. Styles live in components.css.
 

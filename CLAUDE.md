@@ -16,7 +16,7 @@ Giao diện mobile cho chương trình loyalty/promotion của đối tác IB. C
 
 ## Design token
 
-- Nguồn chuẩn (từ 4/11/2026, người dùng duyệt): hệ token R3 của app, `hsb_app/docs/redesign/qa/tokens.json`, chỉ UI Designer 1 sửa. Loyalty dùng file sinh ra từ đó, `tokens/hsb-tokens.css`: **chép nguyên từ `hsb_app/docs/redesign/qa/tokens.css`, không sửa tay**; kiểm bằng `sh tools/check-tokens.sh` (so `cmp`).
+- Nguồn chuẩn (từ 4/11/2026, người dùng duyệt): hệ token R3 của app, `hsb_app/docs/redesign/qa/tokens.json`, chỉ UI Designer 1 sửa. Loyalty dùng các file sinh ra từ đó: **chép nguyên các file token sinh tự động (`tokens.css`, `hsb-rim.g.json`)** từ `hsb_app/docs/redesign/qa/` thành `tokens/hsb-tokens.css` và `tokens/hsb-rim.g.json`, không sửa tay; kiểm bằng `sh tools/check-tokens.sh` (so `cmp`). Viền §4.0b do `shared/rim.js` vẽ từ `hsb-rim.g.json`.
 - `tokens/tokens.json` chỉ còn là lớp alias: mỗi tên cũ của Loyalty trỏ tới đúng một token `--hsb-*` cùng vai trò, không có giá trị số hay màu. `tokens/tokens.css` sinh từ đó bằng `python3 tokens/build.py`, không sửa tay. Code mới gọi thẳng `--hsb-*`.
 - Light là mặc định trên `:root`; dark bật bằng `data-theme="dark"` kèm `data-mode="dark"` (R3 đọc `data-mode`). Premium là `data-premium`. Mỗi trang phải đúng ở light, dark và Premium.
 - Kiểm theo `hsb_app/docs/redesign/qa/QA1.md` (G1–G5, `tokscan.py --strict` trên mọi file đã sửa) và các quy tắc developer ở QA1 §2b.
