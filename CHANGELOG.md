@@ -9,7 +9,7 @@ and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
 - Visual only: data, API calls, events, intents, tour targets, states, copy and navigation are unchanged.
 - Home, Earn and Coins follow their approved designs on the app's R3 tokens: the two surfaces (light page `#F8F8FA`,
-  box `#E8E8EB`), the sweep rim on every neutral surface, one pressed model, Stolzl, the glass tab bar and lens, the
+  box `#ECECEF`), the sweep rim on every neutral surface, one pressed model, Stolzl, the glass tab bar and lens, the
   centred page header, Earn's sky with the cup, rays and rewards, Coins' capsule tabs and history row.
 - Reward detail and Redemption history keep their layout with the R3 surfaces and rim.
 - Files: `tokens/` (new `hsb-tokens.css`, `hsb-rim.g.json`; `tokens.json` is now an alias layer), new

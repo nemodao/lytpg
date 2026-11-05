@@ -35,7 +35,7 @@ model, Stolzl, the glass tab bar), and every other page picks up the R3 surfaces
   Earn sky and the Terms frame carry their own `data-mode` (`pages/trading-task.js`). In yours: set
   `data-mode="dark|light"` wherever you set the theme (next-themes' `.dark` class also works with `hsb-tokens.css`).
   Premium: `data-premium` on `<html>` (see "Premium wiring" in §4).
-- **Values that changed for the user:** light page `#F8F8FA` (was white), box `#E8E8EB` (was `#EFEFF1`), tertiary
+- **Values that changed for the user:** light page `#F8F8FA` (was white), box `#ECECEF` (was `#EFEFF1`), tertiary
   text `#848488`, small button side padding 16 (was 14), header buttons' touch area 48, the sheet's scrim fades in
   200ms (was 280ms). Cards, fields and secondary buttons have no shadow.
 

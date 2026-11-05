@@ -634,7 +634,7 @@
   --hsb-color-tier-plat-soft: rgba(168,129,30,0.14);
   --hsb-color-tier-plat-text: #75590F;
   --hsb-color-tab-inactive: #5E5E62;
-  --hsb-color-box-bg: #E8E8EB;
+  --hsb-color-box-bg: #ECECEF;
   --hsb-color-hot-badge: #D83B48;
   --hsb-color-flow-progress: #709D00;
   --hsb-color-glass-edge: #FFFFFF;
@@ -651,7 +651,7 @@
   --hsb-color-toast-fill: rgba(255,255,255,0.97);
   --hsb-color-scrim: rgba(0,0,0,0.55);
   --hsb-color-pressed-on-box: #F3F3F5;
-  --hsb-color-pressed-on-page: #E4E4E7;
+  --hsb-color-pressed-on-page: #E7E7EA;
   --hsb-color-focus-ring: #527200;
   --hsb-color-flow-dim: rgba(10,11,12,0.12);
   --hsb-color-switch-thumb: #FFFFFF;
@@ -723,7 +723,7 @@
   --hsb-trust-card-logo-tint: rgba(0,0,0,0.5);
   --hsb-market-row-spark-glow-opacity: 0.36;
   --hsb-go-real-steps-current-fill: var(--hsb-gradient-brand);
-  --hsb-market-quote-row-glow-opacity: 0.14;
+  --hsb-market-quote-row-glow-opacity: 0.112;
   --hsb-trust-card-web-logo-filter: brightness(0) opacity(.5);
   --hsb-step-field-keypad-flash-shadow: 0 6px 16px rgba(10,11,12,.16);
   --hsb-date-sheet-end-fill: var(--hsb-gradient-brand);
@@ -932,7 +932,7 @@
   --hsb-trust-card-logo-tint: rgba(0,0,0,0.5);
   --hsb-market-row-spark-glow-opacity: 0.36;
   --hsb-go-real-steps-current-fill: var(--hsb-gradient-brand);
-  --hsb-market-quote-row-glow-opacity: 0.14;
+  --hsb-market-quote-row-glow-opacity: 0.112;
   --hsb-trust-card-web-logo-filter: brightness(0) opacity(.5);
   --hsb-step-field-keypad-flash-shadow: 0 6px 16px rgba(10,11,12,.16);
   --hsb-date-sheet-end-fill: var(--hsb-gradient-brand);
@@ -1592,8 +1592,8 @@
   --hsb-portal-app-banner-radius: var(--hsb-radius-strip);
   --hsb-portal-app-banner-min-height: 56px;
   --hsb-portal-app-banner-grid: 32px 1fr auto;
-  --hsb-portal-app-banner-gap: 12px;
-  --hsb-portal-app-banner-padding: 8px 36px 8px 12px;
+  --hsb-portal-app-banner-gap: 8px;
+  --hsb-portal-app-banner-padding: 8px 32px 8px 12px;
   --hsb-portal-app-banner-mark: 32px;
   --hsb-portal-app-banner-mark-radius: var(--hsb-radius-small);
   --hsb-portal-app-banner-text: var(--hsb-type-small);
@@ -1601,6 +1601,8 @@
   --hsb-portal-app-banner-text-color: var(--hsb-color-t2);
   --hsb-portal-app-banner-close: 16px;
   --hsb-portal-app-banner-close-color: var(--hsb-color-t3);
+  --hsb-portal-app-banner-close-slot: 32px;
+  --hsb-portal-app-banner-close-top: 2px;
   --hsb-portal-qr-popover-width: 280px;
   --hsb-portal-qr-popover-padding: 16px;
   --hsb-portal-qr-popover-radius: var(--hsb-radius-row-card);
@@ -2983,7 +2985,6 @@
   --hsb-status-row-verified-text: var(--hsb-color-up-text);
   --hsb-status-row-unverified-fill: var(--hsb-color-down-soft);
   --hsb-status-row-unverified-text: var(--hsb-color-down-text);
-  --hsb-status-row-premium-logo: 16px;
   --hsb-status-row-uid: var(--hsb-type-small);
   --hsb-status-row-uid-ls: var(--hsb-type-small-ls);
   --hsb-status-row-uid-color: var(--hsb-color-t2);
@@ -3717,6 +3718,14 @@
   --hsb-named-home-message-image-height: 96px;
   --hsb-named-home-message-marquee-gap: 32px;
   --hsb-named-home-message-title-min-contrast: 3px;
+  --hsb-named-webview-slow-page-ms: 15000ms;
+  --hsb-named-webview-show-first-delay-ms: 300ms;
+  --hsb-named-webview-no-background-fill: #FFFFFF;
+  --hsb-named-market-sparkline-min-width: 32px;
+  --hsb-named-portal-shell-orb-icon: 32px;
+  --hsb-named-portal-empty-compact-padding: 56px 16px 24px;
+  --hsb-named-wp-watch-video-plate: #000000;
+  --hsb-named-signup-success-draw-ms: 620ms;
   --hsb-customize-screen-hairline-width: 1px;
   --hsb-loyalty-kit-tier-micro-text: var(--hsb-color-t2);
   --hsb-loyalty-kit-title-size: 22px;
@@ -3735,6 +3744,9 @@
   --hsb-loyalty-kit-close-sheen-falloff: 82% 55% 30% 13% 4%;
   --hsb-loyalty-kit-close-sheen-at: 15% 32% 50% 68% 85%;
   --hsb-loyalty-kit-close-sheen-shape: ellipse 60% 60% at 50% 50%;
+  --hsb-deposit-example-image-max-height: min(420px, 60vh);
+  --hsb-deposit-example-image-radius: 8px;
+  --hsb-dialog-sides: var(--hsb-space-gutter);
   --hsb-web-side-w-width: 264px;
   --hsb-web-side-w-inset: 12px;
   --hsb-web-side-w-radius: 30px;
