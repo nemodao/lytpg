@@ -49,8 +49,9 @@ function sweep(w, h, mode, set = 'shared') {
       let d = t - at[name];
       d = ((((d + P / 2) % P) + P) % P) - P / 2; // wrap to +-P/2
       const [pct, u] = d >= 0 ? a.cw : a.ccw;
-      const spread = (pct / 100) * unit[u];
-      if (!spread) continue;
+      // A spread of 0 (its unit may then be null) gives no weight on that side (4.0b).
+      const spread = pct > 0 ? (pct / 100) * unit[u] : 0;
+      if (!(spread > 0)) continue;
       const k = Math.max(0, 1 - Math.abs(d) / spread);
       const v = k * k * (3 - 2 * k);
       if (!v) continue;

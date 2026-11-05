@@ -1321,7 +1321,7 @@
   --hsb-category-bar-type-on-ls: var(--hsb-type-category-item-on-ls);
   --hsb-category-bar-text-off: var(--hsb-color-tab-inactive);
   --hsb-category-bar-text-on: var(--hsb-color-accent-text);
-  --hsb-category-bar-end-fade: 18px;
+  --hsb-category-bar-end-fade: 54px;
   --hsb-category-bar-radius: var(--hsb-radius-pill);
   --hsb-category-bar-capsule-on-page-track: var(--hsb-color-box-bg);
   --hsb-category-bar-capsule-in-sheet-track: var(--hsb-color-bg);
