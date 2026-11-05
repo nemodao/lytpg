@@ -1,6 +1,6 @@
 // The 4.0b sweep rim (TOKENS 4.0b, R3): one conic sweep around every neutral surface, painted on ::before as a ring
 // that takes no room. Anchors, ramp and spreads come from tokens/hsb-rim.g.json (a byte-equal copy of hsb_app's
-// generated file); the width from --hsb-rim-shared-width. Each surface gets its own sweep for its size and mode, set
+// generated file); the width from --hsb-rim-shared-width (switch bars: switchBar and its width). Each surface gets its own sweep for its size and mode, set
 // as --rim on the element; components.css draws the ring.
 //
 // What takes the rim: the neutral surfaces in RIM_SELECTOR. Not: selected, focused, error and disabled states, tags,
@@ -32,8 +32,8 @@ const loadData = async () => {
 const ramp = (dk, value) => dk.map((c) => c + ((255 - c) * value) / 100);
 
 // The sweep for a w x h box in a mode, as a conic-gradient (4.0b, "How the sweep is built").
-function sweep(w, h, mode) {
-  const spec = data.shared[mode];
+function sweep(w, h, mode, set = 'shared') {
+  const spec = data[set][mode];
   const dk = data.rampDK[mode];
   const P = 2 * (w + h);
   const at = { N: 0, NE: w / 2, E: w / 2 + h / 2, SE: w / 2 + h, S: w + h, SW: 1.5 * w + h, W: 1.5 * w + 1.5 * h, NW: 1.5 * w + 2 * h };
@@ -73,6 +73,10 @@ function sweep(w, h, mode) {
   return `conic-gradient(from 0deg at 50% 50%, ${stops.join(', ')})`;
 }
 
+// Which anchor set: switch bars (the capsule tab tracks) take switchBar, everything else shared (TOKENS 4.0b).
+const SWITCH_BAR = '.tabs';
+const setOf = (el) => (el.matches(SWITCH_BAR) ? 'switchBar' : 'shared');
+
 const modeOf = (el) => (el.closest('[data-mode]')?.getAttribute('data-mode') === 'dark' ? 'dark' : 'light');
 const painted = new WeakMap(); // element -> "w x h mode" last painted
 
@@ -85,10 +89,12 @@ function paint(el) {
     return;
   }
   const mode = modeOf(el);
-  const key = `${w}x${h}${mode}`;
+  const set = setOf(el);
+  const key = `${w}x${h}${mode}${set}`;
   if (painted.get(el) === key) return;
   painted.set(el, key);
-  el.style.setProperty('--rim', sweep(w, h, mode));
+  el.style.setProperty('--rim', sweep(w, h, mode, set));
+  el.style.setProperty('--rim-width', `var(--hsb-rim-${set === 'switchBar' ? 'switch-bar' : 'shared'}-width)`);
   if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
   el.classList.add('rim');
 }

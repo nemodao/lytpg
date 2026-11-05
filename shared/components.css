@@ -13,7 +13,7 @@
 /* The 4.0b sweep rim on every neutral surface (shared/rim.js sets --rim and .rim): a ring over the box's edge that
    takes no room. Dark: the same ring, its own sweep. */
 .rim::before {
-  content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; padding: var(--hsb-rim-shared-width); pointer-events: none;
+  content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; padding: var(--rim-width, var(--hsb-rim-shared-width)); pointer-events: none;
   background: var(--rim);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
