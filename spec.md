@@ -942,3 +942,10 @@ Loyalty moves from tokens v3.13 (Figma base, blue) to the app's design system, `
 - **§16, §36, §52, Coins:** the tabs are the capsule with the glass lens, as on Earn. "Redemption history" is the balance card's last row, across the card under a line, in place of the small link under Redeem, so the balance keeps its room on narrow screens; the tier tag still hangs on the card's top edge. "Coins expiring soonest are used first." is a quiet line over the list, not a box. Empty tabs show the same empty line as Earn's history. The tab's blocks sit closer together than the page's sections.
 - **§53, Coins paging:** Retry on a failed page turns to the spinner at once: the next page is asked for before the list redraws (`loadMore()` before `render()`); one request, as before (UI Designer 1, 5 Nov).
 - **Tab and nav taps:** a pointer's own click on the bottom bar or a capsule tab bar is dropped once per gesture, however long the press or drag, so `loyalty_nav_click` / `loyalty_tab_click` fire exactly once (UI Designer 1, 5 Nov).
+
+## 81. Numbers read the same in every language (decided 9 Nov 2026)
+
+The user: Indonesian shows numbers like English, a comma for thousands and a point for decimals: `3,100` coins,
+`11.02` lots, `$1,000`. This replaces §75's Indonesian number format (`3.100`, `11,02`). Dates and words stay
+Indonesian ("19 Okt 2026"). `copy/id.json` `locale` is `en-GB`, the same as English; Chinese already read this way.
+

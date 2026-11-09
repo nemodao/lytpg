@@ -57,7 +57,8 @@ function makeUi(copy, common) {
     return copy[key];
   };
 
-  // Numbers follow the language (spec §75): en and zh 3,100 and 3.5 (spec §2); id 3.100 and 3,5.
+  // Numbers read the same in every language (spec §81): 3,100 and 3.5 (spec §2). `locale` in each copy file sets it;
+  // Indonesian takes en-GB too.
   const integer = new Intl.NumberFormat(copy.locale);
   // Lots: up to 2 decimals, the size of the smallest MT5 order (0.01), and no trailing zeros: 11.02, 1.5, 10 (spec §79).
   const lotNumber = new Intl.NumberFormat(copy.locale, { maximumFractionDigits: 2 });

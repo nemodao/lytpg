@@ -106,6 +106,9 @@ behind when the page redraws the bar, and the rim stops watching surfaces that l
 **Later cleanup (no effect now):** the `card--soft` class is still emitted (`shared/components.js`,
 `pages/point-balance.js`) but has no CSS since the redesign. Leave it or drop it in your code.
 
+**Numbers in Indonesian (spec §81, the user, 9 Nov; sent to you ahead of this handoff):** numbers read like English in
+every language, `3,100`, `11.02`. `copy/id.json` `locale` is `en-GB` (was `id-ID`); dates and words stay Indonesian.
+
 ## 6. Checks
 
 - `sh tools/check-tokens.sh ../hsb_app`: both token files byte-equal.
