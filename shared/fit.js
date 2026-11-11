@@ -354,6 +354,15 @@ fitter('.store-head', (head) => {
     pillWidth = pill.offsetWidth;
   }
   head.style.setProperty('--store-reserve', `${lead + pillWidth + gapOf(head)}px`);
+  if (large()) {
+    // Large text: the header title wraps to 2 lines, then "…" (§3.4); the balance drops onto its own line only when the
+    // title's longest word has no room beside it, and the title takes the mirror column when its centred one is too narrow.
+    const extra = natural(brand) - natural(title); // icon, gap and padding around the title
+    if (natural(title, 'min-content') + extra <= titleRoom(pillWidth)) return;
+    head.classList.add('store-head--split');
+    if (natural(title, 'min-content') > title.clientWidth) head.classList.add('store-head--split-wide');
+    return;
+  }
   if (natural(brand) <= titleRoom(pillWidth)) return;
   // "…" by whole words; the full title stays readable to screen readers.
   title.setAttribute('aria-label', title.dataset.full);
