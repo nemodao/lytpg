@@ -74,6 +74,9 @@
 /* "Looking for something else?" card under the grid: the gift box, then the text with a small button under it. */
 .rewards-more__head { display: flex; align-items: flex-start; gap: var(--spacing-12); }
 .rewards-more__cta { align-self: flex-start; margin-top: var(--spacing-8); }
+/* The button's longest word has no room in the text column (fit.js): the column goes under the gift. */
+.rewards-more--stacked .rewards-more__head { flex-wrap: wrap; }
+.rewards-more--stacked .rewards-more__head > .stack { flex-basis: 100%; }
 .rewards-more__art { flex: none; width: var(--size-control-lg); height: var(--size-control-lg); object-fit: contain; }
 
 /* ---- Loading ---- */

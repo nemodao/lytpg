@@ -38,6 +38,7 @@
 .lots--stacked .amount { justify-content: flex-start; }
 /* History: the label keeps its narrowest width, so the time never runs onto the figure; the figure shrinks (fit.js). */
 .list__row > .hist-label { min-width: min-content; }
+.fit-break > .list__row > .hist-label { min-width: 0; overflow-wrap: anywhere; }
 
 /* Lots expiring within the warning window: the same amber as the balance card's expiry warning (TOKENS 7.23b). */
 .expiring-soon { display: flex; align-items: center; gap: var(--spacing-4); color: var(--warn-text); font: var(--font-x-small-medium); }

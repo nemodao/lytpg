@@ -49,7 +49,7 @@ function probe() {
 
 // Chrome text in large text: at most cap x its size. The font tokens already carry the OS scale, so the label is set
 // back to (cap / scale) of what it draws at. Kept per element, so a re-run never compounds.
-const CHROME = '.btn, .badge, .tab, .chip, .nav__tab';
+const CHROME = '.btn, .badge, .tab, .chip'; // not .nav__tab: nav-lens.js measures it (L-28, a later round)
 function capChrome(scope) {
   const k = large() ? Math.min(1, cap() / scale) : 1;
   scope.querySelectorAll(CHROME).forEach((el) => {
@@ -102,6 +102,10 @@ function breakable(el, at = SEP) {
     node.replaceWith(frag);
   });
 }
+const keepUnit = (el) => {
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) if (node.data.includes('/ ')) node.data = node.data.replace(/\/ /g, '/\u00a0');
+};
 const wrapMoney = (els, on) => els.forEach((el) => { if (!el) return; if (on) breakable(el); el.classList.toggle('fit-wrap', on); });
 
 // One element of money: shrink to the floor, then wrap (normal); large text: wrap only if it misses.
@@ -125,7 +129,7 @@ fitter('.balance-row', (row) => {
   const col = row.querySelector('.grow');
   const figure = row.querySelector('.balance-number');
   const label = row.querySelector('.balance-label');
-  card.classList.remove('balance--stacked', 'balance--stacked-redeem');
+  card.classList.remove('balance--stacked', 'balance--stacked-redeem', 'balance--stacked-label');
   unzoom([figure, label]); figure.classList.remove('fit-wrap');
   const r = ratio(col.clientWidth, natural(figure));
   if (r === 1 || (!large() && r >= floor())) { zoom([figure, label], r); fitTier(label, r); return; }
@@ -133,6 +137,8 @@ fitter('.balance-row', (row) => {
   if (inner(row) < natural(row.querySelector('.coin--lg')) + gapOf(row) * 2 + natural(label, 'min-content') + natural(row.querySelector('.balance-side'))) {
     card.classList.add('balance--stacked-redeem');
   }
+  // Narrower still, "Coin Balance" and its tier have no room beside the coin: they take their own line too.
+  if (inner(row) < natural(row.querySelector('.coin--lg')) + gapOf(row) + natural(label, 'min-content')) card.classList.add('balance--stacked-label');
   money(figure, inner(row));
   fitTier(label, 1);
 });
@@ -170,8 +176,10 @@ fitter('.reward-grid', (grid) => {
 // A pair shares one ratio; a pair that misses at the floor, or at its real size in large text, stacks (primary on top).
 function labelRatio(btn, room) {
   const cs = getComputedStyle(btn);
-  const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
-  return ratio(room - pad, natural(btn) - pad);
+  // Only the label's text shrinks: padding, icons and the gaps between them keep their size.
+  const fixed = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+    + [...btn.children].reduce((sum, el) => sum + el.getBoundingClientRect().width + gapOf(btn), 0);
+  return ratio(room - fixed, natural(btn) - fixed);
 }
 function shrinkLabel(btn, r) {
   btn.style.removeProperty('font-size');
@@ -179,12 +187,22 @@ function shrinkLabel(btn, r) {
   btn.style.fontSize = `${parseFloat(getComputedStyle(btn).fontSize) * r}px`;
 }
 fitter('.rewards-more__cta', (btn) => {
+  const card = btn.closest('.rewards-more');
+  card?.classList.remove('rewards-more--stacked');
   btn.style.removeProperty('font-size'); btn.classList.remove('fit-wrap-label');
   delete btn.dataset.fitCap; capChrome(btn.parentElement);
-  const r = labelRatio(btn, inner(btn.parentElement));
-  if (large()) { btn.classList.toggle('fit-wrap-label', r < 1); return; }
+  let r = labelRatio(btn, inner(btn.parentElement));
+  if (large()) {
+    btn.classList.toggle('fit-wrap-label', r < 1); // large text: the label wraps, the control grows
+    // Even wrapped, its longest word has no room in the text column: the column goes under the gift.
+    if (card && natural(btn, 'min-content') > inner(btn.parentElement) + 1) card.classList.add('rewards-more--stacked');
+    return;
+  }
+  // A button label never wraps at normal size (§3.4): when it misses at its floor the card gives way first, the text
+  // column going under the gift so the button has the card's width; only past that does the label wrap.
+  if (r < floor() && card) { card.classList.add('rewards-more--stacked'); r = labelRatio(btn, inner(btn.parentElement)); }
   shrinkLabel(btn, Math.max(r, floor()));
-  btn.classList.toggle('fit-wrap-label', r < floor()); // still too wide at the floor: the label wraps (§3.4)
+  btn.classList.toggle('fit-wrap-label', r < floor());
 });
 fitter('.reward-soon__pair', (pair) => {
   const btns = [...pair.querySelectorAll('.btn')];
@@ -227,6 +245,8 @@ fitter('.rates-frame', (frame) => {
   const miss = large() ? r2 < 1 : r2 < floor();
   frame.classList.toggle('fit-break', miss);
   if (miss) parts.filter((el) => el.matches('.grow')).forEach((el) => breakable(el, DOT));
+  // "/ lot" stays together, so a rate that must wrap breaks before the slash, never after it.
+  if (miss) parts.filter((el) => el.matches('.rate')).forEach(keepUnit);
   wrapMoney(parts.filter((el) => el.matches('.rate')), miss);
 });
 
@@ -271,6 +291,8 @@ fitter('.list', (list) => {
   const rows = histRows(list);
   const figures = rows.map((row) => row.lastElementChild);
   unzoom(figures); wrapMoney(figures, false);
+  // A label whose one word takes more than half the row may break inside that word (the figure keeps its room).
+  list.classList.toggle('fit-break', rows.some((row) => natural(row.firstElementChild, 'min-content') > row.clientWidth / 2));
   const r = Math.min(...rows.map((row) => ratio(row.clientWidth - gapOf(row) - natural(row.firstElementChild, 'min-content'), natural(row.lastElementChild))));
   if (large()) { wrapMoney(figures, r < 1); return; }
   zoom(figures, Math.max(r, floor()));
@@ -283,15 +305,18 @@ const orderRows = (list) => [...list.children].filter((row) => row.matches('.ord
 fitter('.list', (list) => {
   const rows = orderRows(list);
   const parts = rows.flatMap((row) => [...row.querySelector(':scope > .grow').children, row.querySelector('.order-row__side')]);
+  const coins = rows.map((row) => row.querySelector('.order-coins')).filter(Boolean);
   list.classList.remove('orders--stacked', 'fit-break');
-  unzoom(parts);
+  unzoom(parts); wrapMoney(coins, false);
   const mainNeed = (row) => Math.max(...[...row.querySelector(':scope > .grow').children].map((el) => natural(el, el.matches('.order-row__name') ? 'min-content' : 'max-content')));
   const r = Math.min(...rows.map((row) => ratio(row.clientWidth, mainNeed(row) + gapOf(row) + natural(row.querySelector('.order-row__side')))));
   if (r === 1 || (!large() && r >= floor())) { zoom(parts, r); return; }
   list.classList.add('orders--stacked');
   const r2 = Math.min(...rows.map((row) => ratio(row.clientWidth, Math.max(mainNeed(row), natural(row.querySelector('.order-row__side'))))));
   if (!large()) zoom(parts, Math.max(r2, floor()));
-  list.classList.toggle('fit-break', large() ? r2 < 1 : r2 < floor());
+  const miss = large() ? r2 < 1 : r2 < floor();
+  list.classList.toggle('fit-break', miss);
+  wrapMoney(coins, miss);
 }, (list) => orderRows(list).length > 0);
 
 // L-21: the reward's price on its page: shrink to the floor, then wrap.

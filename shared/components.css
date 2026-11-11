@@ -128,7 +128,7 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 
 /* ---- Fit (TOKENS §3.4, fit.js) ---- */
 /* Money past its floor wraps, at the break points fit.js puts after its separators (never inside a digit group). */
-.fit-wrap { white-space: normal; min-width: 0; }
+html .fit-wrap { white-space: normal; min-width: 0; } /* above the pages' own nowrap (.rate, .reward-card__price) */
 /* A button label past its floor, or in large text: the label wraps and the control grows from its height. */
 .btn.fit-wrap-label { height: auto; white-space: normal; text-align: center; padding-block: var(--spacing-4); }
 .btn--sm.fit-wrap-label { min-height: var(--hsb-button-sm-height); }
@@ -137,6 +137,8 @@ html[data-large-text] .btn:not(.btn--block) { height: auto; min-height: var(--si
 html[data-large-text] .btn--sm:not(.btn--block) { min-height: var(--hsb-button-sm-height); }
 html[data-large-text] .btn--xs { min-height: var(--size-chip); }
 html[data-large-text] .badge { height: auto; min-height: var(--size-tag); white-space: normal; }
+/* A row already switched to its alternate layout whose tag still has no room at the floor: the tag wraps (§3.4). */
+:is(.lots--stacked, .orders--stacked, .account-lines--stacked) .badge { height: auto; min-height: var(--size-tag); white-space: normal; }
 
 /* ---- Tag (TOKENS 6) ---- */
 .badge { display: inline-flex; align-items: center; height: var(--size-tag); padding: 0 var(--size-tag-pad); border-radius: var(--radius-pill); font: var(--font-role-meta-em); white-space: nowrap; }
@@ -315,6 +317,9 @@ html[data-large-text] .badge { height: auto; min-height: var(--size-tag); white-
 .balance--stacked .balance-side { grid-column: 3; grid-row: 1; }
 .balance--stacked-redeem .balance-side { grid-column: 1 / -1; grid-row: 3; align-items: flex-start; }
 .balance--stacked-redeem .balance-label { grid-column: 2 / -1; }
+.balance--stacked-label .balance-label { grid-column: 1 / -1; grid-row: 2; }
+.balance--stacked-label .balance-number { grid-row: 3; }
+.balance--stacked-label .balance-side { grid-row: 4; }
 
 /* Empty line in place of a list (Earn's history, Coins' tabs): an icon in a sunk orb over the text. */
 .list-none { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-12); padding: var(--spacing-16) 0; text-align: center; }
