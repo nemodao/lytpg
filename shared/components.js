@@ -3,6 +3,7 @@ import { TIERS, chosenAccountId, tierIndex } from './tiers.js';
 import './bubble.js';
 import './sheet.js';
 import './rim.js';
+import { refit } from './fit.js';
 
 // Markup for components used on more than one page. Styles live in components.css.
 
@@ -292,80 +293,15 @@ function balanceTier(ui, common, edge = false) {
   const at = tierIndex(accounts.find((item) => item.id === id));
   if (at < 0) return '';
   const { key } = TIERS[at];
-  if (!edge) requestAnimationFrame(() => document.querySelectorAll('.balance-label').forEach(watchBalanceTier));
   const href = ui.href('trading-task.html');
   return `<a class="badge tier tier--${key} balance-tier ${edge ? 'balance-tier--edge' : 'above'}" href="${href}${href.includes('?') ? '&' : '?'}focus=account" aria-label="${ui.t('balance.tierLink', { tier: ui.t(`tier.${key}`) })}" data-track="loyalty_tier_badge_click" data-track-tier="${key}">${ui.t(`tier.${key}`)}</a>`;
 }
 
-// The tier badge stays on the "Coin Balance" line: when the room left there is narrower than the badge, the whole
-// badge (text, padding, pill) shrinks by the same ratio, down to TIER_MIN_FIT; narrower still, it goes under the label
-// (flex-wrap). Measured again when the column or the label changes size (screen rotation, web font loaded).
-const TIER_MIN_FIT = 0.9;
-const tierObserver = typeof ResizeObserver === 'function' ? new ResizeObserver((entries) => {
-  new Set(entries.map((entry) => entry.target.closest('.balance-label'))).forEach(fitBalanceTier);
-}) : null;
-function watchBalanceTier(label) {
-  if (!label.querySelector('.balance-tier')) return;
-  fitBalanceTier(label);
-  tierObserver?.observe(label);
-  tierObserver?.observe(label.firstElementChild);
-}
-function fitBalanceTier(label) {
-  const badge = label.querySelector('.balance-tier');
-  if (!badge) return;
-  badge.style.removeProperty('--tier-fit');
-  const room = label.getBoundingClientRect().width - label.firstElementChild.getBoundingClientRect().width
-    - parseFloat(getComputedStyle(label).columnGap || 0) - 1; // 1px: sub-pixel rounding of the scaled badge
-  const fit = Math.floor((room / badge.getBoundingClientRect().width) * 100) / 100;
-  if (fit < 1 && fit >= TIER_MIN_FIT) badge.style.setProperty('--tier-fit', fit);
-}
-
-// The tags stay on the account's line by the same rule: both shrink by one ratio, down to ACCOUNT_TAGS_MIN_FIT, which
-// keeps Standard and "Memenuhi syarat" together at 390; narrower still, the eligible tag goes under the number.
-const ACCOUNT_TAGS_MIN_FIT = 0.86;
-const accountObserver = typeof ResizeObserver === 'function' ? new ResizeObserver((entries) => new Set(entries.map((entry) => entry.target.closest('.account-lines'))).forEach(fitAccountTags)) : null;
+// Fitting (the balance figure and its tier tag, the account field's number and tags, and the other §3.4 families) lives
+// in fit.js (TOKENS §3.4): one ratio per element down to fit.floorRatio, then the element's alternate layout.
+// Kept for the pages that call it: fit.js watches the page by itself, so this only fits again at once.
 export function watchAccountTags(root) {
-  root.querySelectorAll('.account-lines').forEach((lines) => {
-    fitAccountTags(lines);
-    accountObserver?.observe(lines);
-    accountObserver?.observe(lines.querySelector('.num'));
-  });
-}
-const tagFit = (lines) => {
-  const tags = [...lines.querySelectorAll('.badge')];
-  const room = lines.getBoundingClientRect().width - lines.querySelector('.num').getBoundingClientRect().width - parseFloat(getComputedStyle(lines).columnGap) * tags.length - 1; // 1px as above
-  return Math.floor((room / tags.reduce((sum, tag) => sum + tag.getBoundingClientRect().width, 0)) * 100) / 100;
-};
-// The gaps give way before the tags, and a sheet's rows all take the same size. If one row must wrap anyway, none shrinks.
-function fitAccountTags(lines) {
-  const group = [...(lines.closest('.sheet') ?? lines.parentElement).querySelectorAll('.account-lines')];
-  group.forEach((item) => { item.style.removeProperty('--tag-fit'); item.parentElement.style.removeProperty('--tag-gap'); });
-  if (group.every((item) => tagFit(item) >= 1)) return;
-  group.forEach((item) => item.parentElement.style.setProperty('--tag-gap', 'var(--spacing-4)'));
-  const fits = group.map(tagFit);
-  if (fits.every((value) => value >= ACCOUNT_TAGS_MIN_FIT)) group.forEach((item) => item.style.setProperty('--tag-fit', Math.min(...fits, 1)));
-}
-
-// The balance number stays on one line in the room its column leaves (spec §71): when it is wider, it shrinks as a whole
-// by the ratio that makes it fit (CSS zoom, --balance-fit), with no lower limit; it never wraps or is cut. Measured
-// again when the column changes size (screen rotation), once the web font has loaded, and whenever the number changes
-// (the guided tour counts it up).
-const balanceObserver = typeof ResizeObserver === 'function'
-  ? new ResizeObserver((entries) => entries.forEach((entry) => fitBalanceNumber(entry.target.querySelector('.balance-number'))))
-  : null;
-function watchBalanceNumber(number) {
-  if (number.dataset.fitWatched) return;
-  number.dataset.fitWatched = '';
-  fitBalanceNumber(number);
-  balanceObserver?.observe(number.parentElement);
-  if (typeof MutationObserver === 'function') new MutationObserver(() => fitBalanceNumber(number)).observe(number, { childList: true, characterData: true, subtree: true });
-  document.fonts?.ready.then(() => fitBalanceNumber(number));
-}
-function fitBalanceNumber(number) {
-  if (!number?.isConnected) return;
-  number.style.removeProperty('--balance-fit');
-  const fit = Math.floor((number.clientWidth / number.scrollWidth) * 100) / 100;
-  if (fit < 1) number.style.setProperty('--balance-fit', fit);
+  root.querySelectorAll('.account-lines').forEach((lines) => refit(lines));
 }
 
 // Balance block: coin, label, number, Redeem button and the expiry warning. Coins that are not credited yet are never
@@ -377,7 +313,6 @@ export function balanceBlock(ui, common, { href = '', card = false, history = ''
   const { available, expiring } = common.balance;
   if (expiring) trackView('loyalty_expiring_notice_view');
   const tier = balanceTier(ui, common, card);
-  requestAnimationFrame(() => document.querySelectorAll('.balance-number').forEach(watchBalanceNumber));
   return `
   <section class="balance card ${card ? 'card--soft' : ''}" data-tour="balance">
     ${card ? tier : ''}

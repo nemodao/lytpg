@@ -56,7 +56,8 @@ let tab = new URLSearchParams(location.search).get('tab') === 'history' ? 'histo
 
 const account = (id) => accounts.find((item) => item.id === id) || accounts[0];
 // One account in the field and in the sheet: number and tier on the left, eligible on the right, on one line as handoff
-// 10. Long labels shrink to fit (watchAccountTags); past that the eligible tag wraps under the number, still on the right.
+// 10. Number, tier and eligible tag shrink by one ratio to the floor (fit.js, TOKENS §3.4); past that the number takes line 1
+//     and the tags line 2.
 const accountLines = (item) => `<span class="grow account-lines"><span class="account-name"><span class="num">${ui.esc(item.id)}</span>${tierBadge(item)}</span>${eligibleBadge(item)}</span>`;
 const eligibleBadge = (item) =>
   item.eligible ? badge('green', ui.t('badge.eligible')) : badge('neutral', ui.t('badge.notEligible'));

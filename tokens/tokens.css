@@ -322,6 +322,8 @@
   --spacing-40: 40px;
   --size-skeleton-redeem: 76px;
   --size-guest-art: 100px;
+  --fit-probe-font: 400 100px/100px "Stolzl", sans-serif;
+  --fit-probe-size: 100px;
   /* legacy */
   --blend-cyan-bg: radial-gradient(60% 55% at 100% 0%, #f472dc 0%, transparent 70%), radial-gradient(75% 60% at 98% 100%, #08352a 0%, transparent 70%), radial-gradient(50% 45% at 0% 100%, #f7a2e8 0%, transparent 70%), #8fdcf5;
   --blend-cyan-fg: #0f0f10;

@@ -29,6 +29,15 @@
 
 .amount { display: flex; align-items: center; justify-content: flex-end; gap: var(--spacing-4); }
 .amount-label { font: var(--font-small-regular); }
+/* The figures miss beside the source line at the floor (fit.js): on every row they go under the source line, the
+   expiry after them. */
+.lots--stacked > .list__row { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--spacing-4); }
+.lots--stacked > .list__row > .grow { display: contents; }
+.lots--stacked > .list__row > .list__end { grid-row: 2; align-items: flex-start; text-align: left; }
+.lots--stacked > .list__row > .grow > :nth-child(2) { grid-row: 3; }
+.lots--stacked .amount { justify-content: flex-start; }
+/* History: the label keeps its narrowest width, so the time never runs onto the figure; the figure shrinks (fit.js). */
+.list__row > .hist-label { min-width: min-content; }
 
 /* Lots expiring within the warning window: the same amber as the balance card's expiry warning (TOKENS 7.23b). */
 .expiring-soon { display: flex; align-items: center; gap: var(--spacing-4); color: var(--warn-text); font: var(--font-x-small-medium); }

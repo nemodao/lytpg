@@ -6,6 +6,7 @@ import { mountTour } from '../shared/tour.js';
 import { createActivityFeed } from '../shared/activity-feed.js';
 import { initTracking, priceRange, trackView } from '../shared/tracking.js';
 import { appHeader, balanceBlock, coin, mountJoinSheet, mountStoreLinks, redeemAttrs, showStatus, tourButton } from '../shared/components.js';
+import { refit } from '../shared/fit.js';
 
 const { common, page, ui } = await load('dashboard');
 // `no-task-trading` state: the programme runs no trading task, so the "earn coins" card (and the Earn tab) are hidden.
@@ -113,15 +114,12 @@ function watchRewards() {
 }
 
 // A price too long to share its row with Redeem pushes Redeem onto its own line. When that happens on one card, every
-// card gets the same layout (price, then Redeem under it), so the grid stays even (spec §49). Measured after render,
-// once the font has loaded, and when the width changes.
+// card gets the same layout (price, then Redeem under it), so the grid stays even (spec §49). Then the prices share one
+// ratio down to their floor, and wrap (TOKENS §3.4). fit.js does both, watching the grid's width and the web font;
+// this fits again at once after a render.
 function fitPrices() {
   const grid = app.querySelector('.reward-grid');
-  if (!grid) return;
-  grid.classList.remove('reward-grid--stacked');
-  const wrapped = [...grid.querySelectorAll('.reward-card__foot')]
-    .some((foot) => foot.lastElementChild.offsetTop > foot.firstElementChild.offsetTop + foot.firstElementChild.offsetHeight / 2);
-  grid.classList.toggle('reward-grid--stacked', wrapped);
+  if (grid) refit(grid);
 }
 
 const app = document.getElementById('app');
@@ -160,9 +158,6 @@ if (showStatus(ui, common, app, header, 'page', homeSkeleton)) {
   feed.start(app);
   watchRewards();
   fitPrices();
-  document.fonts.ready.then(fitPrices);
-  let width = innerWidth;
-  addEventListener('resize', () => { if (innerWidth !== width) { width = innerWidth; fitPrices(); } });
   mountNav(ui, common, 'home');
   mountJoinSheet(ui, common, app);
   mountStoreLinks(ui, app);

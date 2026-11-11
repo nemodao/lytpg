@@ -133,7 +133,7 @@ function historyLabel(entry) {
 function historyRow(entry) {
   return `
     <div class="list__row">
-      <p class="t-label grow">${historyLabel(entry)}<span class="hist-time num">${ui.time(entry.happenedAt)}</span></p>
+      <p class="t-label grow hist-label">${historyLabel(entry)}<span class="hist-time num">${ui.time(entry.happenedAt)}</span></p>
       <p class="t-label num ${entry.points > 0 ? 'points--plus' : ''}">${ui.signed(entry.points)}</p>
     </div>`;
 }

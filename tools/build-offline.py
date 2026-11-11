@@ -24,6 +24,7 @@ EXTRA_CSS = {'reward': ['pages/store.css']}
 MODULES = {
     '../shared/tokens.js': '__tokens',
     '../shared/rim.js': '__rim',
+    '../shared/fit.js': '__fit',
     '../shared/nav-lens.js': '__navLens',
     '../shared/bubble.js': '__bubble',
     '../shared/sheet.js': '__sheet',

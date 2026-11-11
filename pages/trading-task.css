@@ -164,19 +164,30 @@
 /* Rate value: number, coin, "/ lot" on one line. */
 .rate { display: inline-flex; align-items: center; gap: var(--spacing-4); white-space: nowrap; font: var(--font-role-body-em); }
 .rates-frame { padding: var(--spacing-12) var(--spacing-16); border-radius: var(--radius-box); background: var(--sunk-inset); }
+/* Label and rate miss on one line at the floor (fit.js): every rate goes under its label. The symbol is never cut: past
+   its floor it breaks after its suffix dot, or anywhere only when one code is longer than the line. */
+.rates-frame--stacked .list__row { flex-direction: column; align-items: flex-start; gap: var(--spacing-4); }
+.rates-frame--stacked .list__row > .grow { flex: none; max-width: 100%; }
+.rates-frame.fit-break .list__row > .grow { overflow-wrap: anywhere; }
 
 /* Account selector, a pick field (7.22) inside a card: it opens the bottom sheet. */
 .select {
-  display: flex; align-items: center; gap: var(--tag-gap, var(--spacing-8)); width: 100%;
+  display: flex; align-items: center; gap: var(--spacing-8); width: 100%;
   min-height: var(--size-pick-field); padding: var(--spacing-8) var(--spacing-12) var(--spacing-8) var(--spacing-16);
   border-radius: var(--radius-tile); background: var(--sunk-inset); font: var(--font-role-row);
 }
 .select--static { padding-right: var(--spacing-16); }
 .select__chevron { flex: none; display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--ui-text-brand); }
 /* Account number with its tier right after it, eligible on the right, on a second line where nothing else helps. */
-.account-lines { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-4) var(--tag-gap, var(--spacing-8)); min-width: 0; }
+.account-lines { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-4) var(--spacing-8); min-width: 0; }
 .account-lines > .badge, .account-lines > .skeleton__tier { margin-left: auto; }
-.account-name { flex: 1 0 auto; display: inline-flex; align-items: center; gap: var(--tag-gap, var(--spacing-8)); }
+.account-name { flex: 1 0 auto; display: inline-flex; align-items: center; gap: var(--spacing-8); }
+/* Number, tier and eligible tag miss on one line at the floor (fit.js): the number on line 1, both tags on line 2. The
+   number is never cut: at its floor it breaks (.fit-break). */
+.account-lines--stacked .account-name { display: contents; }
+.account-lines--stacked .num { flex-basis: 100%; }
+.account-lines--stacked > .badge { margin-left: 0; }
+.account-lines.fit-break .num { min-width: 0; overflow-wrap: anywhere; }
 
 /* History: one row per day. Lots and points sit in fixed columns so they line up from row to row. */
 .day__head { display: flex; align-items: center; gap: var(--spacing-8); }

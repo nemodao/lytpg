@@ -44,8 +44,9 @@
 .store-head__brand, .store-head__balance, .store-head__back { transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, padding 0.3s ease, color 0.3s ease; }
 .store-head__brand {
   flex: none; min-width: 0; display: flex; align-items: center; gap: var(--spacing-10); transform-origin: left center;
-  /* Room for the balance (out of the flow, on the right), measured after the shrink so the title is not cut early. */
-  max-width: calc((100% - var(--size-icon-button) * 2.5) / var(--header-scale));
+  /* Room for the back button and the balance (out of the flow, on the right): --store-reserve is measured by fit.js;
+     divided by the shrink so the title is not cut early. */
+  max-width: calc((100% - var(--store-reserve, var(--size-icon-button) * 2.5)) / var(--header-scale));
   padding: var(--spacing-2) 0; border-radius: var(--radius-pill); border: var(--size-stroke) solid transparent;
 }
 .store-head.is-stuck .store-head__brand {
@@ -80,6 +81,12 @@
 .store-head__coin { display: grid; place-items: center; padding: 0 var(--spacing-8) 0 var(--spacing-10); border-right: var(--size-stroke) solid var(--ui-stroke-soft); }
 .store-head__balance .num { display: grid; place-items: center; padding: 0 var(--spacing-12) 0 var(--spacing-8); }
 @media (prefers-reduced-motion: reduce) { .store-head__brand, .store-head__balance, .store-head__back { transition: none; } }
+/* The balance at its floor and the title's first word still miss (fit.js, UI Designer 1, 11 Nov): the balance takes its
+   own line under the back + title row; the title is centred on its row. */
+.store-head--split { display: grid; grid-template-columns: var(--size-icon-button) minmax(0, 1fr) var(--size-icon-button); row-gap: var(--spacing-8); }
+.store-head--split .store-head__back { grid-column: 1; grid-row: 1; }
+.store-head--split .store-head__brand { grid-column: 2; grid-row: 1; justify-self: stretch; justify-content: center; max-width: 100%; transform-origin: center; }
+.store-head--split .store-head__balance { position: static; grid-column: 1 / -1; grid-row: 2; justify-self: center; transform: scale(var(--header-scale)); transform-origin: center top; }
 
 /* ---- Banner: decoration only ---- */
 .store-banner { position: relative; overflow: hidden; border-radius: var(--radius-card); aspect-ratio: 1080 / 480; }

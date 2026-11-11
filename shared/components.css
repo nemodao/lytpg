@@ -126,6 +126,18 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* On a brand card: black with white text, no shadow (4.4). */
 .btn--onbrand { background: var(--brand-button); color: var(--brand-button-text); box-shadow: inset 0 0 0 var(--hsb-button-primary-rim-width) var(--brand-button-rim); }
 
+/* ---- Fit (TOKENS §3.4, fit.js) ---- */
+/* Money past its floor wraps, at the break points fit.js puts after its separators (never inside a digit group). */
+.fit-wrap { white-space: normal; min-width: 0; }
+/* A button label past its floor, or in large text: the label wraps and the control grows from its height. */
+.btn.fit-wrap-label { height: auto; white-space: normal; text-align: center; padding-block: var(--spacing-4); }
+.btn--sm.fit-wrap-label { min-height: var(--hsb-button-sm-height); }
+/* Large text (html[data-large-text], set by fit.js): fixed heights are minimums (§12); labels wrap; no line clamps. */
+html[data-large-text] .btn:not(.btn--block) { height: auto; min-height: var(--size-button); padding-block: var(--spacing-4); white-space: normal; text-align: center; }
+html[data-large-text] .btn--sm:not(.btn--block) { min-height: var(--hsb-button-sm-height); }
+html[data-large-text] .btn--xs { min-height: var(--size-chip); }
+html[data-large-text] .badge { height: auto; min-height: var(--size-tag); white-space: normal; }
+
 /* ---- Tag (TOKENS 6) ---- */
 .badge { display: inline-flex; align-items: center; height: var(--size-tag); padding: 0 var(--size-tag-pad); border-radius: var(--radius-pill); font: var(--font-role-meta-em); white-space: nowrap; }
 .badge--green { background: var(--ui-badge-green); color: var(--ui-text-green); }
@@ -180,7 +192,8 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .list__end { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-4); text-align: right; }
 /* Compact list (Coins history: many short rows a day): tighter rows; the time sits after the label, quieter. */
 .list--compact .list__row { padding: var(--spacing-10) 0; }
-.hist-time { margin-left: var(--spacing-8); font: var(--font-x-small-regular); color: var(--ui-text-tertiary); }
+/* An atomic inline, so the label may wrap before the time (the figure keeps its room, FIT_AUDIT L-17). */
+.hist-time { display: inline-block; margin-left: var(--spacing-8); font: var(--font-x-small-regular); color: var(--ui-text-tertiary); }
 .cal-hint { text-align: center; }
 .group-title { font: var(--font-x-small-medium); color: var(--ui-text-tertiary); padding-top: var(--spacing-4); }
 
@@ -259,6 +272,8 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .today__stats { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: var(--spacing-12); padding: var(--spacing-12); }
 .today__value { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--spacing-4); margin-top: var(--spacing-4); font: var(--font-title-l); }
 .today__value small { font: var(--font-role-label); color: var(--ui-text-secondary); }
+/* The two figures miss side by side (fit.js): "You traded" over "Coins earned". */
+.today__stats--stacked { grid-template-columns: minmax(0, 1fr); }
 .today__foot { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-8); padding: var(--spacing-12); font: var(--font-role-small); color: var(--ui-text-primary); }
 
 .today__foot--icon { flex-wrap: nowrap; align-items: flex-start; }
@@ -272,16 +287,15 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .balance { position: relative; }
 .balance-row { display: flex; align-items: center; gap: var(--spacing-12); }
 .coin--lg { position: relative; width: var(--size-control-lg); height: var(--size-control-lg); }
-/* One line, shrunk as a whole to fit its column when too wide: --balance-fit is set by fitBalanceNumber() in
-   components.js (spec §71). */
-.balance-number { font: var(--font-role-figure); letter-spacing: var(--letter-spacing-role-figure); white-space: nowrap; zoom: var(--balance-fit, 1); }
+/* One line; label, tier and figure shrink by one ratio to the floor (fit.js, TOKENS §3.4). Below that the figure takes
+   its own line across the card (.balance--stacked) and wraps at its separators. */
+.balance-number { font: var(--font-role-figure); letter-spacing: var(--letter-spacing-role-figure); white-space: nowrap; }
 /* Tier of the chosen trading account next to "Coin Balance" (spec §55); tapping it opens Earn on the account field. */
 .balance-label { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-6); min-height: var(--size-tag); font: var(--font-role-label); color: var(--ui-text-secondary); }
 .balance-label > span { white-space: nowrap; } /* "Coin Balance" never breaks */
-/* The badge shrinks as a whole (text, padding, pill) to stay on the line: --tier-fit is set by fitBalanceTier() in
-   components.js. Below the smallest scale it goes under "Coin Balance" instead. */
-.balance-tier { text-decoration: none; zoom: var(--tier-fit, 1); }
-.account-lines .badge { zoom: var(--tag-fit, 1); }
+/* The badge shrinks as a whole (text, padding, pill) to stay on the line, to the floor (fit.js); narrower, it goes under
+   "Coin Balance" instead. */
+.balance-tier { text-decoration: none; }
 /* Coins: on the card's top edge, middle on the border, at the card's left padding (above the coin). */
 .balance-tier--edge { position: absolute; z-index: 3; top: calc(var(--size-tag) / -2); left: var(--spacing-card); }
 /* Tier tag (spec §51, §55): grey, blue, violet, gold, in that order. Platinum never swaps on Premium. */
@@ -291,6 +305,16 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 .tier--platinum { background: var(--ui-tier-platinum-surface); color: var(--ui-tier-platinum-text); }
 .balance-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-8); }
 .balance.card { margin-block: 0; }
+/* The balance block's alternate layout (S4, UI Designer 1, 11 Nov): line 1 the coin, "Coin Balance" with its tier and
+   Redeem; line 2 the figure across the card. Where line 1 still has no room, Redeem goes under the figure. */
+.balance--stacked .balance-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; column-gap: var(--spacing-12); row-gap: var(--spacing-8); }
+.balance--stacked .balance-row > .grow { display: contents; }
+.balance--stacked .balance-label { grid-column: 2; grid-row: 1; }
+.balance--stacked .balance-label > span { white-space: normal; }
+.balance--stacked .balance-number { grid-column: 1 / -1; grid-row: 2; }
+.balance--stacked .balance-side { grid-column: 3; grid-row: 1; }
+.balance--stacked-redeem .balance-side { grid-column: 1 / -1; grid-row: 3; align-items: flex-start; }
+.balance--stacked-redeem .balance-label { grid-column: 2 / -1; }
 
 /* Empty line in place of a list (Earn's history, Coins' tabs): an icon in a sunk orb over the text. */
 .list-none { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-12); padding: var(--spacing-16) 0; text-align: center; }
