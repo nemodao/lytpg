@@ -280,6 +280,8 @@
   --hsb-motion-auth-keyboard-return-ease: cubic-bezier(0.2,0.8,0.3,1);
   --hsb-motion-sheet-page-slide-dur: 360ms;
   --hsb-motion-sheet-page-slide-ease: cubic-bezier(0.2,0.8,0.3,1);
+  --hsb-motion-header-pill-hold-dur: 200ms;
+  --hsb-motion-header-pill-hold-ease: cubic-bezier(0.25,0.1,0.25,1);
   --hsb-motion-option-pick-close-dur: 180ms;
   --hsb-motion-option-pick-close-ease: ease;
   --hsb-motion-radio-tick-dur: 300ms;
@@ -517,6 +519,8 @@
   --hsb-motion-customize-glide-ease: cubic-bezier(0.32,0.72,0,1);
   --hsb-motion-customize-check-pop-dur: 280ms;
   --hsb-motion-customize-check-pop-ease: cubic-bezier(0.3,1.3,0.5,1);
+  --hsb-motion-switch-track-fade-dur: 240ms;
+  --hsb-motion-switch-track-fade-ease: cubic-bezier(0.25,0.1,0.25,1);
   --hsb-spring-bubble-press-omega: 26;
   --hsb-spring-bubble-press-zeta: 0.62;
   --hsb-spring-bubble-release-omega: 15.6;
@@ -537,10 +541,10 @@
   --hsb-spring-lens-sink-zeta: 0.9;
   --hsb-spring-lens-squash-omega: 23;
   --hsb-spring-lens-squash-zeta: 0.42;
-  --hsb-spring-keypad-press-omega: 30;
-  --hsb-spring-keypad-press-zeta: 0.5;
-  --hsb-spring-keypad-release-omega: 15.6;
-  --hsb-spring-keypad-release-zeta: 0.28;
+  --hsb-spring-keypad-press-omega: 62.8;
+  --hsb-spring-keypad-press-zeta: 1;
+  --hsb-spring-keypad-release-omega: 31.4;
+  --hsb-spring-keypad-release-zeta: 0.9;
   --hsb-spring-auth-zone-bounce-omega: 12;
   --hsb-spring-auth-zone-bounce-zeta: 0.4;
   --hsb-spring-auth-zone-glide-omega: 9;
@@ -570,6 +574,8 @@
   --hsb-bubble-drag-cap: 1.04px;
   --hsb-bubble-drag-cap-small: 0.52px;
   --hsb-rate-marquee-px-per-s: 22; /* px per second */
+  --hsb-fit-floor-ratio: 0.8; /* §3.4: a text shrinks to this share of its size */
+  --hsb-fit-chrome-cap: 1.3; /* §12: buttons, tags, tab labels, pills */
   --hsb-pressed-neutral-filter: brightness(1.04);
   --hsb-pressed-brand-filter: brightness(1.04) saturate(1.06);
   --hsb-pressed-image-filter: brightness(1.06);
@@ -742,6 +748,10 @@
   --hsb-loyalty-kit-tier-standard-text: #1F55D6;
   --hsb-loyalty-kit-upgrade-row: var(--hsb-color-accent-soft);
   --hsb-loyalty-kit-upgrade-row-premium: var(--hsb-color-accent-soft);
+  --hsb-keypad-panel: #DDDDE1;
+  --hsb-keypad-key: #F8F8FA;
+  --hsb-keypad-key-pressed: #FFFFFF;
+  --hsb-keypad-key-pressed-shadow: 0 1px 3px rgba(10,11,12,.10);
 }
 
 :is([data-mode="dark"], .dark) {
@@ -874,7 +884,7 @@
   --hsb-symbol-page-sell-buy-shadow: none;
   --hsb-chart-island-handle-color: var(--hsb-color-t2);
   --hsb-indicator-badge-fill: var(--hsb-color-accent);
-  --hsb-flow-progress-fill: var(--hsb-color-accent);
+  --hsb-flow-progress-fill: var(--hsb-color-flow-progress);
   --hsb-customize-screen-shadow: 0 4px 16px rgba(0,0,0,.5);
   --hsb-customize-screen-hairline: rgba(255,255,255,0.05);
   --hsb-loyalty-kit-tier-micro-surface: rgba(142,142,147,0.14);
@@ -882,6 +892,10 @@
   --hsb-loyalty-kit-tier-standard-text: #6EA8FE;
   --hsb-loyalty-kit-upgrade-row: rgba(209,248,1,0.12);
   --hsb-loyalty-kit-upgrade-row-premium: rgba(217,180,81,0.14);
+  --hsb-keypad-panel: #222225;
+  --hsb-keypad-key: #0E0E10;
+  --hsb-keypad-key-pressed: #3A3A3F;
+  --hsb-keypad-key-pressed-shadow: none;
 }
 
 :is([data-prem], [data-premium], .premium) {
@@ -953,6 +967,10 @@
   --hsb-loyalty-kit-upgrade-row: var(--hsb-color-accent-soft);
   --hsb-loyalty-kit-upgrade-row-premium: var(--hsb-color-accent-soft);
   --hsb-loyalty-kit-upgrade-row: var(--hsb-color-accent-soft);
+  --hsb-keypad-panel: #DDDDE1;
+  --hsb-keypad-key: #F8F8FA;
+  --hsb-keypad-key-pressed: #FFFFFF;
+  --hsb-keypad-key-pressed-shadow: 0 1px 3px rgba(10,11,12,.10);
 }
 
 :is([data-mode="dark"], .dark):is([data-prem], [data-premium], .premium), :is([data-mode="dark"], .dark) :is([data-prem], [data-premium], .premium), :is([data-prem], [data-premium], .premium) :is([data-mode="dark"], .dark) {
@@ -1016,7 +1034,7 @@
   --hsb-symbol-page-sell-buy-shadow: none;
   --hsb-chart-island-handle-color: var(--hsb-color-t2);
   --hsb-indicator-badge-fill: var(--hsb-color-accent);
-  --hsb-flow-progress-fill: var(--hsb-color-accent);
+  --hsb-flow-progress-fill: var(--hsb-color-flow-progress);
   --hsb-customize-screen-shadow: 0 4px 16px rgba(0,0,0,.5);
   --hsb-customize-screen-hairline: rgba(255,255,255,0.05);
   --hsb-loyalty-kit-tier-micro-surface: rgba(142,142,147,0.14);
@@ -1025,6 +1043,10 @@
   --hsb-loyalty-kit-upgrade-row: rgba(209,248,1,0.12);
   --hsb-loyalty-kit-upgrade-row-premium: rgba(217,180,81,0.14);
   --hsb-loyalty-kit-upgrade-row: rgba(217,180,81,0.14);
+  --hsb-keypad-panel: #222225;
+  --hsb-keypad-key: #0E0E10;
+  --hsb-keypad-key-pressed: #3A3A3F;
+  --hsb-keypad-key-pressed-shadow: none;
 }
 
 /* Unsplit references re-declared on every scope so their var() picks up that scope's colours. */
@@ -1326,7 +1348,7 @@
   --hsb-category-bar-capsule-on-page-track: var(--hsb-color-box-bg);
   --hsb-category-bar-capsule-in-sheet-track: var(--hsb-color-bg);
   --hsb-category-bar-bare-on-page-pill-shadow: none;
-  --hsb-category-bar-track-rim: var(--hsb-rim-shared-width);
+  --hsb-category-bar-track-rim: var(--hsb-rim-switch-bar-width);
   --hsb-tab-bar-bottom-pad: var(--hsb-space-tab-bar-bottom-pad);
   --hsb-tab-bar-bottom-pad-device: var(--hsb-space-tab-bar-bottom-pad-device);
   --hsb-tab-bar-shadow: var(--hsb-shadow-tab-bar);
@@ -2169,7 +2191,7 @@
   --hsb-market-row-spark-glow-width: 4px;
   --hsb-market-row-spark-dot: 1.1px;
   --hsb-market-row-spark-dot-step: 3.5px;
-  --hsb-market-row-heading-height: 44px;
+  --hsb-market-row-heading-height: 42px;
   --hsb-market-row-reveal-shift: -6px;
   --hsb-market-row-reveal-text-opacity: 0.4;
   --hsb-market-row-speed-px-per-s: 22;
@@ -2726,15 +2748,15 @@
   --hsb-step-field-keypad-press-spring-zeta: var(--hsb-spring-keypad-press-zeta);
   --hsb-step-field-keypad-release-spring-omega: var(--hsb-spring-keypad-release-omega);
   --hsb-step-field-keypad-release-spring-zeta: var(--hsb-spring-keypad-release-zeta);
-  --hsb-step-field-keypad-press-scale: 1.18;
-  --hsb-step-field-keypad-kick-scale: 4;
+  --hsb-step-field-keypad-press-scale: 0.96;
+  --hsb-step-field-keypad-kick-scale: 0;
   --hsb-step-field-keypad-flash: var(--hsb-gradient-brand);
   --hsb-step-field-keypad-flash-text: var(--hsb-color-on-brand-card);
   --hsb-step-field-keypad-flash-off-dur: var(--hsb-motion-keypad-flash-off-dur);
   --hsb-step-field-keypad-flash-off-ease: var(--hsb-motion-keypad-flash-off-ease);
   --hsb-step-field-keypad-value-pop-dur: var(--hsb-motion-keypad-value-pop-dur);
   --hsb-step-field-keypad-value-pop-ease: var(--hsb-motion-keypad-value-pop-ease);
-  --hsb-step-field-keypad-pop-scale-from: 1.14;
+  --hsb-step-field-keypad-pop-scale-from: 1;
   --hsb-step-field-keypad-key-text-size: 18px;
   --hsb-step-field-keypad-key-text-line: 24px;
   --hsb-step-field-keypad-key-text-weight: 400;
@@ -3749,6 +3771,11 @@
   --hsb-deposit-example-image-max-height: min(420px, 60vh);
   --hsb-deposit-example-image-radius: 8px;
   --hsb-dialog-sides: var(--hsb-space-gutter);
+  --hsb-keypad-press-fade-ms: 150ms;
+  --hsb-keypad-repeat-delay-ms: 400ms;
+  --hsb-keypad-repeat-start-ms: 110ms;
+  --hsb-keypad-repeat-half-life-ms: 700ms;
+  --hsb-keypad-repeat-floor-ms: 35ms;
   --hsb-web-side-w-width: 264px;
   --hsb-web-side-w-inset: 12px;
   --hsb-web-side-w-radius: 30px;
@@ -3905,6 +3932,7 @@
     --hsb-motion-auth-keyboard-keep-dur: 0ms;
     --hsb-motion-auth-keyboard-return-dur: 0ms;
     --hsb-motion-sheet-page-slide-dur: 150ms;
+    --hsb-motion-header-pill-hold-dur: 0ms;
     --hsb-motion-radio-tick-dur: 0ms;
     --hsb-motion-switch-move-dur: 0ms;
     --hsb-motion-press-in-dur: 150ms;
@@ -4007,6 +4035,7 @@
     --hsb-motion-chart-island-jiggle-play: paused;
     --hsb-motion-customize-glide-dur: 0ms;
     --hsb-motion-customize-check-pop-dur: 150ms;
+    --hsb-motion-switch-track-fade-dur: 0ms;
     --hsb-swell-round: 0;
     --hsb-swell-hot-pill: 0;
     --hsb-swell-pl-button: 0;
