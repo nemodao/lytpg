@@ -286,7 +286,8 @@ fitter('.rates-frame', (frame) => {
   const parts = rows.flatMap((row) => [row.querySelector('.grow'), row.querySelector('.rate')]);
   frame.classList.remove('rates-frame--stacked', 'fit-break');
   unzoom(parts); wrapMoney(parts.filter((el) => el.matches('.rate')), false);
-  const r = Math.min(...rows.map((row) => ratio(row.clientWidth, natural(row.querySelector('.grow')) + gapOf(row) + natural(row.querySelector('.rate')))));
+  // The row's gap is not zoomed: it comes off the room, not into the need.
+  const r = Math.min(...rows.map((row) => ratio(row.clientWidth - gapOf(row), natural(row.querySelector('.grow')) + natural(row.querySelector('.rate')))));
   if (r === 1 || (!large() && r >= floor())) { zoom(parts, r); return; }
   frame.classList.add('rates-frame--stacked');
   const r2 = Math.min(...parts.map((el) => ratio(el.parentElement.clientWidth, natural(el))));
@@ -330,8 +331,8 @@ fitter('.list', (list) => {
   const parts = rows.flatMap((row) => [...row.querySelector(':scope > .grow').children, row.querySelector(':scope > .list__end')]);
   const figures = rows.flatMap((row) => [...row.querySelectorAll('.amount')]);
   unzoom(parts); wrapMoney(figures, false);
-  const need = (row) => natural(row.querySelector(':scope > .grow > :first-child')) + gapOf(row) + natural(row.querySelector(':scope > .list__end'));
-  const r = Math.min(...rows.map((row) => ratio(row.clientWidth, need(row))));
+  const need = (row) => natural(row.querySelector(':scope > .grow > :first-child')) + natural(row.querySelector(':scope > .list__end')); // the row gap comes off the room
+  const r = Math.min(...rows.map((row) => ratio(row.clientWidth - gapOf(row), need(row))));
   if (r === 1 || (!large() && r >= floor())) { zoom(parts, r); return; }
   list.classList.add('lots--stacked');
   const r2 = Math.min(...figures.map((el) => ratio(el.closest('.list__row').clientWidth, natural(el))));
@@ -368,7 +369,7 @@ fitter('.list', (list) => {
   list.classList.remove('orders--stacked', 'fit-break');
   unzoom(parts); wrapMoney(coins, false);
   const mainNeed = (row) => Math.max(...[...row.querySelector(':scope > .grow').children].map((el) => natural(el, el.matches('.order-row__name') ? 'min-content' : 'max-content')));
-  const r = Math.min(...rows.map((row) => ratio(row.clientWidth, mainNeed(row) + gapOf(row) + natural(row.querySelector('.order-row__side')))));
+  const r = Math.min(...rows.map((row) => ratio(row.clientWidth - gapOf(row), mainNeed(row) + natural(row.querySelector('.order-row__side'))))); // the gap is not zoomed
   if (r === 1 || (!large() && r >= floor())) { zoom(parts, r); return; }
   list.classList.add('orders--stacked');
   const r2 = Math.min(...rows.map((row) => ratio(row.clientWidth, Math.max(mainNeed(row), natural(row.querySelector('.order-row__side'))))));
