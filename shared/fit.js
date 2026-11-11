@@ -291,9 +291,12 @@ fitter('.list', (list) => {
   const rows = histRows(list);
   const figures = rows.map((row) => row.lastElementChild);
   unzoom(figures); wrapMoney(figures, false);
-  // A label whose one word takes more than half the row may break inside that word (the figure keeps its room).
-  list.classList.toggle('fit-break', rows.some((row) => natural(row.firstElementChild, 'min-content') > row.clientWidth / 2));
-  const r = Math.min(...rows.map((row) => ratio(row.clientWidth - gapOf(row) - natural(row.firstElementChild, 'min-content'), natural(row.lastElementChild))));
+  // A label whose one word takes more than half the row: on every row the figure goes under the label (the row wraps,
+  // §3.4), and the label may break inside that word.
+  const tight = rows.some((row) => natural(row.firstElementChild, 'min-content') > row.clientWidth / 2);
+  list.classList.toggle('fit-break', tight);
+  const room = (row) => (tight ? row.clientWidth : row.clientWidth - gapOf(row) - natural(row.firstElementChild, 'min-content'));
+  const r = Math.min(...rows.map((row) => ratio(room(row), natural(row.lastElementChild))));
   if (large()) { wrapMoney(figures, r < 1); return; }
   zoom(figures, Math.max(r, floor()));
   wrapMoney(figures, r < floor());
