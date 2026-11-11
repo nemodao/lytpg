@@ -308,7 +308,7 @@ fitter('.store-head', (head) => {
   const back = head.querySelector('.store-head__back');
   title.dataset.full ??= title.textContent;
   title.textContent = title.dataset.full;
-  head.classList.remove('store-head--split');
+  head.classList.remove('store-head--split', 'store-head--split-wide');
   if (figure) figure.style.removeProperty('font-size');
   head.style.removeProperty('--store-reserve');
   if (!pill) return;
@@ -335,7 +335,16 @@ fitter('.store-head', (head) => {
   title.textContent = title.dataset.full;
   if (figure) figure.style.removeProperty('font-size');
   head.classList.add('store-head--split');
-  wordsFit(title, () => title.scrollWidth <= title.clientWidth);
+  const fitsRow = () => title.scrollWidth <= title.clientWidth;
+  if (wordsFit(title, fitsRow)) return;
+  // A title row never shows an empty pill (UI Designer 1, 11 Nov): when the centred column cannot hold even "…", the
+  // title also takes the empty mirror column, starting after Back, centred in that wider room. The only off-centre case.
+  title.textContent = '…';
+  const ellipsis = natural(title);
+  title.textContent = title.dataset.full;
+  if (title.clientWidth >= ellipsis) return;
+  head.classList.add('store-head--split-wide');
+  wordsFit(title, fitsRow);
 });
 function wordsFit(title, fits) {
   const words = title.dataset.full.split(' ');
