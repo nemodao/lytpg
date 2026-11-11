@@ -166,6 +166,9 @@ html[data-large-text] .badge { height: auto; min-height: var(--size-tag); white-
 .notice--warning { padding: var(--spacing-12) var(--spacing-16); border-radius: var(--radius-tile); background: var(--warn-soft); box-shadow: inset 0 0 0 var(--size-stroke) color-mix(in srgb, var(--warn) 40%, transparent); color: var(--warn-text); }
 .notice--warning .icon { color: var(--warn); }
 .notice--warning p { text-wrap: pretty; } /* no lone "days" on the second line at 320 */
+/* The expiring figure would take 3+ lines beside the icon (fit.js, §3.4): the sentence goes under the icon, full width. */
+.notice--stacked { flex-wrap: wrap; }
+.notice--stacked > p { flex-basis: 100%; }
 .notice--danger { background: var(--ui-badge-red); }
 .notice--danger .icon { color: var(--ui-icon-red); }
 .notice--glass { background: var(--glass-surface); border: var(--size-stroke) solid var(--glass-border); color: var(--blend-fg); }

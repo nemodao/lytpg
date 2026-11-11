@@ -116,13 +116,22 @@ const wrapMoney = (els, on) => els.forEach((el) => {
 
 // TOKENS §3.4 "A small miss wraps, a big miss moves" (UI Designer 1, 11 Nov): wrapped money that needs more than 2 lines
 // beside a neighbour takes its own line at full width instead. Run after each fitter on the money it wrapped.
+// Lines the money itself takes: its longest run of digits and separators (the words of a sentence around it do not count).
+const MONEY_CHAR = /[0-9,.+\u2212-]/;
 const linesOf = (el) => {
-  const tops = [];
+  let run = []; let best = [];
   const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
   for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-    const range = document.createRange(); range.selectNodeContents(node);
-    [...range.getClientRects()].forEach((r) => { if (r.width > 1 && !tops.some((t) => Math.abs(t - r.top) <= 3)) tops.push(r.top); });
+    for (let i = 0; i < node.data.length; i += 1) {
+      if (!MONEY_CHAR.test(node.data[i])) { if (run.length > best.length) best = run; run = []; continue; }
+      const range = document.createRange(); range.setStart(node, i); range.setEnd(node, i + 1);
+      const rect = range.getClientRects()[0];
+      if (rect) run.push(rect.top);
+    }
   }
+  if (run.length > best.length) best = run;
+  const tops = [];
+  best.forEach((top) => { if (!tops.some((t) => Math.abs(t - top) <= 3)) tops.push(top); });
   return tops.length;
 };
 const besideOf = (el) => {
@@ -189,7 +198,12 @@ function fitTier(label, outer) {
 }
 
 // L-03: the expiring figure in the warning sentence breaks at its separators when it is wider than the line.
-fitter('.notice--warning .num', (p) => wrapMoney([p], p.scrollWidth > p.clientWidth + 1 || natural(p, 'min-content') > inner(p.parentElement)));
+fitter('.notice--warning .num', (p) => {
+  p.parentElement.classList.remove('notice--stacked');
+  wrapMoney([p], p.scrollWidth > p.clientWidth + 1 || natural(p, 'min-content') > inner(p.parentElement));
+  // A big miss moves (§3.4): the figure would take 3+ lines beside the icon, so the sentence takes the full width under it.
+  if (linesOf(p) > 2) p.parentElement.classList.add('notice--stacked');
+});
 
 // L-07: reward card prices, one ratio across the grid; then wrap. Runs after dashboard.js's fitPrices has put Redeem
 // under the price where needed.
