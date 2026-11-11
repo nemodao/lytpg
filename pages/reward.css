@@ -1,7 +1,9 @@
 /* Reward Store · one reward (spec §59). The top bar and the badge come from store.css. */
 
 /* Room under the content for the Checkout bar. */
-.app { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--size-control-lg) + var(--spacing-40)); }
+/* Room under the content for the Checkout bar: its real height (--pinned-foot, measured by fit.js), never less than the
+   designed room. */
+.app { padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + var(--size-control-lg) + var(--spacing-40)), var(--pinned-foot, 0px)); }
 
 /* One card: the picture at the top (inside the card's padding, inner rounding, like the store's reward cards), then
    the parts, each after a thin line. */

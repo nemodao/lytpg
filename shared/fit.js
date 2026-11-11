@@ -478,6 +478,25 @@ function wordsFit(title, fits) {
   return false;
 }
 
+// L-S2 (UI Designer 1, 11 Nov): the store banner's text never leaves the banner. When it is taller than the picture's
+// box (narrow widths, large text), the banner grows to hold it, so nothing above or below it is overlapped.
+fitter('.store-banner', (banner) => {
+  banner.style.removeProperty('min-height');
+  const text = banner.querySelector('.store-banner__text');
+  const kids = [...text.children];
+  if (!kids.length) return;
+  const cs = getComputedStyle(text);
+  const need = kids[kids.length - 1].getBoundingClientRect().bottom - kids[0].getBoundingClientRect().top + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+  if (need > banner.clientHeight + 1) banner.style.minHeight = `${Math.ceil(need)}px`;
+});
+
+// L-22 (UI Designer 1, 11 Nov): the room under the content is the pinned foot's real height, measured at load, on resize
+// and whenever the bar grows (large text), so the bar never covers the last block. reward.css keeps its designed room as
+// the minimum.
+fitter('.reward-cta', (bar) => {
+  bar.closest('.app')?.style.setProperty('--pinned-foot', `${Math.ceil(bar.getBoundingClientRect().height)}px`);
+});
+
 // ---- Watching the page ----
 const state = new WeakMap(); // element -> "width|text|large" last fitted
 const watched = new Set();
@@ -485,11 +504,12 @@ const sizes = typeof ResizeObserver === 'function' ? new ResizeObserver((entries
 const runsOf = (el) => FITTERS.filter((f) => el.matches(f.selector) && f.accept(el));
 function run(el, force = false) {
   if (!el.isConnected) return;
-  const key = `${Math.round(el.getBoundingClientRect().width)}|${el.textContent}|${large()}|${scale}`;
+  const size = () => { const r = el.getBoundingClientRect(); return `${Math.round(r.width)}x${Math.round(r.height)}`; };
+  const key = `${size()}|${el.textContent}|${large()}|${scale}`;
   if (!force && state.get(el) === key) return;
   runsOf(el).forEach((f) => f.run(el));
   bigMiss(el);
-  state.set(el, `${Math.round(el.getBoundingClientRect().width)}|${el.textContent}|${large()}|${scale}`);
+  state.set(el, `${size()}|${el.textContent}|${large()}|${scale}`);
 }
 function scan() {
   watched.forEach((el) => { if (!el.isConnected) { sizes?.unobserve(el); watched.delete(el); } });
