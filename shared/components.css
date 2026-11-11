@@ -129,6 +129,9 @@ button.card-link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* ---- Fit (TOKENS §3.4, fit.js) ---- */
 /* Money past its floor wraps, at the break points fit.js puts after its separators (never inside a digit group). */
 html .fit-wrap { white-space: normal; min-width: 0; } /* above the pages' own nowrap (.rate, .reward-card__price) */
+/* A big miss moves (§3.4): money that would need 3+ lines beside a neighbour takes its own line at full width. */
+.fit-own-line-parent { flex-wrap: wrap; }
+html .fit-own-line { flex: 0 0 100%; max-width: 100%; }
 /* A button label past its floor, or in large text: the label wraps and the control grows from its height. */
 .btn.fit-wrap-label { height: auto; white-space: normal; text-align: center; padding-block: var(--spacing-4); }
 .btn--sm.fit-wrap-label { min-height: var(--hsb-button-sm-height); }

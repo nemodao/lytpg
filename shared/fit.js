@@ -106,7 +106,41 @@ const keepUnit = (el) => {
   const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
   for (let node = walker.nextNode(); node; node = walker.nextNode()) if (node.data.includes('/ ')) node.data = node.data.replace(/\/ /g, '/\u00a0');
 };
-const wrapMoney = (els, on) => els.forEach((el) => { if (!el) return; if (on) breakable(el); el.classList.toggle('fit-wrap', on); });
+const wrapMoney = (els, on) => els.forEach((el) => {
+  if (!el) return;
+  if (on) breakable(el);
+  el.classList.toggle('fit-wrap', on);
+  if (!on) ownLine(el, false);
+});
+
+// TOKENS §3.4 "A small miss wraps, a big miss moves" (UI Designer 1, 11 Nov): wrapped money that needs more than 2 lines
+// beside a neighbour takes its own line at full width instead. Run after each fitter on the money it wrapped.
+const linesOf = (el) => {
+  const tops = [];
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const range = document.createRange(); range.selectNodeContents(node);
+    [...range.getClientRects()].forEach((r) => { if (r.width > 1 && !tops.some((t) => Math.abs(t - r.top) <= 3)) tops.push(r.top); });
+  }
+  return tops.length;
+};
+const besideOf = (el) => {
+  const r = el.getBoundingClientRect();
+  return [...el.parentElement.children].some((o) => {
+    if (o === el) return false;
+    const q = o.getBoundingClientRect();
+    return q.width > 1 && q.bottom > r.top + 2 && q.top < r.bottom - 2 && (q.right <= r.left + 1 || q.left >= r.right - 1);
+  });
+};
+function ownLine(el, on) {
+  el.classList.toggle('fit-own-line', on);
+  if (on) el.parentElement.classList.add('fit-own-line-parent');
+  else if (!el.parentElement.querySelector(':scope > .fit-own-line')) el.parentElement.classList.remove('fit-own-line-parent');
+}
+function bigMiss(scope) {
+  const money = scope.matches('.fit-wrap') ? [scope] : [...scope.querySelectorAll('.fit-wrap')];
+  money.forEach((el) => { if (!el.classList.contains('fit-own-line') && linesOf(el) > 2 && besideOf(el)) ownLine(el, true); });
+}
 
 // One element of money: shrink to the floor, then wrap (normal); large text: wrap only if it misses.
 function money(el, room) {
@@ -403,6 +437,7 @@ function run(el, force = false) {
   const key = `${Math.round(el.getBoundingClientRect().width)}|${el.textContent}|${large()}|${scale}`;
   if (!force && state.get(el) === key) return;
   runsOf(el).forEach((f) => f.run(el));
+  bigMiss(el);
   state.set(el, `${Math.round(el.getBoundingClientRect().width)}|${el.textContent}|${large()}|${scale}`);
 }
 function scan() {
