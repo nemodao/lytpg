@@ -188,6 +188,10 @@
 .account-lines--stacked .num { flex-basis: 100%; }
 .account-lines--stacked > .badge { margin-left: 0; }
 .account-lines.fit-break .num { min-width: 0; overflow-wrap: anywhere; }
+/* A big miss moves (§3.4): number and tags take the field's full width, the chevron or radio under them on the right. */
+.select--wrap { flex-wrap: wrap; row-gap: var(--spacing-4); }
+.select--wrap > .account-lines { flex-basis: 100%; }
+.select--wrap > .select__chevron, .select--wrap > .radio { margin-left: auto; }
 
 /* History: one row per day. Lots and points sit in fixed columns so they line up from row to row. */
 .day__head { display: flex; align-items: center; gap: var(--spacing-8); }

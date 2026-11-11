@@ -91,6 +91,9 @@ html[data-large-text] .store-head__title { white-space: normal; display: -webkit
 html[data-large-text] .store-head.is-stuck .store-head__brand { height: auto; min-height: var(--size-control-sm); }
 /* Large text: the balance pill grows with its text (fixed heights are minimums, §12). */
 html[data-large-text] .store-head__balance { height: auto; min-height: var(--size-control-sm); }
+/* The bars would take more than half the screen (fit.js, §3.4): the balance leaves the pinned bar and scrolls with
+   the content, centred under it. */
+.store-head__balance.store-head__balance--flow { position: relative; top: auto; right: auto; transform: none; display: flex; width: fit-content; margin: 0 auto var(--spacing-8); }
 /* Not even "…" fits the centred column: the title takes the mirror column too, centred in that room. */
 .store-head--split-wide .store-head__brand { grid-column: 2 / -1; }
 .store-head--split .store-head__balance { position: relative; top: auto; right: auto; grid-column: 1 / -1; grid-row: 2; justify-self: center; transform: scale(var(--header-scale)); transform-origin: center top; }

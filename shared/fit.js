@@ -78,7 +78,8 @@ function natural(el, kind = 'max-content') {
 }
 const inner = (el) => { const cs = getComputedStyle(el); return el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); };
 const gapOf = (el) => parseFloat(getComputedStyle(el).columnGap) || 0;
-const ratio = (room, need) => (need > 0 ? Math.min(1, Math.floor((room / need) * 1000) / 1000) : 1);
+// Half a pixel kept back: clientWidth rounds, and a run that fits to the last sub-pixel would still break.
+const ratio = (room, need) => (need > 0 ? Math.min(1, Math.floor(((room - 0.5) / need) * 1000) / 1000) : 1);
 
 // Shrink a group by one ratio (CSS zoom: text, icon and padding together).
 const zoom = (els, r) => els.forEach((el) => { if (el) el.style.zoom = r < 1 ? String(r) : ''; });
@@ -290,11 +291,18 @@ const accountNeed = (lines) => natural(lines.querySelector('.account-name')) + g
 fitter('.account-lines', (lines) => {
   const group = [...(lines.closest('.sheet') ?? lines.parentElement).querySelectorAll('.account-lines')];
   if (lines !== group[0]) return; // the group runs once, from its first field
-  group.forEach((item) => { item.classList.remove('account-lines--stacked', 'fit-break'); unzoom([item]); });
+  group.forEach((item) => { item.classList.remove('account-lines--stacked', 'fit-break'); item.parentElement.classList.remove('select--wrap'); unzoom([item]); });
   const r = Math.min(...group.map((item) => ratio(item.clientWidth, accountNeed(item))));
   if (r === 1 || (!large() && r >= floor())) { zoom(group, r); return; }
   group.forEach((item) => item.classList.add('account-lines--stacked'));
-  const r2 = Math.min(...group.map((item) => ratio(item.clientWidth, Math.max(natural(item.querySelector('.num')), ...[...item.querySelectorAll('.badge')].map((b) => natural(b))))));
+  const need2 = (item) => Math.max(natural(item.querySelector('.num')), ...[...item.querySelectorAll('.badge')].map((b) => natural(b)));
+  let r2 = Math.min(...group.map((item) => ratio(item.clientWidth, need2(item))));
+  // A big miss moves (§3.4): the number would still break beside the chevron or radio, so the field wraps: number and
+  // tags across its full width, the chevron or radio under them on the right.
+  if (large() ? r2 < 1 : r2 < floor()) {
+    group.forEach((item) => item.parentElement.classList.add('select--wrap'));
+    r2 = Math.min(...group.map((item) => ratio(item.clientWidth, need2(item))));
+  }
   if (!large()) zoom(group, Math.max(r2, floor()));
   group.forEach((item) => item.classList.toggle('fit-break', large() ? r2 < 1 : r2 < floor()));
 }, (lines) => !lines.querySelector('.skeleton__bar'));
@@ -362,7 +370,30 @@ fitter('.reward-info__price', (price) => money(price, inner(price.parentElement)
 // L-20, L-S1 (S5): the store's top bar. The balance takes its real room: first it shrinks to its floor, then the
 // title ends in "…" by whole words; if even the first word does not fit, the balance takes its own line under the
 // back + title row and the title is centred on its row.
+// TOKENS §3.4 "Pinned areas take at most half the screen" (UI Designer 1, 11 Nov): the page's pinned bars together.
+const PINNED = '.app-header, .store-head, .store-filters, .nav, .reward-cta';
+function pinnedShare() {
+  const spans = [...document.querySelectorAll(PINNED)].filter((el) => !el.parentElement.closest(PINNED) && el.offsetHeight)
+    .map((el) => { const r = el.getBoundingClientRect(); return [Math.max(0, r.top), Math.min(innerHeight, r.bottom)]; })
+    .filter(([a, b]) => b > a).sort((a, b) => a[0] - b[0]);
+  let total = 0; let cur = null;
+  spans.forEach((s) => { if (!cur || s[0] > cur[1]) { if (cur) total += cur[1] - cur[0]; cur = [...s]; } else cur[1] = Math.max(cur[1], s[1]); });
+  if (cur) total += cur[1] - cur[0];
+  return total / innerHeight;
+}
+// The balance is information, not the primary action: when the bars would take more than half the screen, it leaves the
+// pinned bar and scrolls with the content, right under it; Checkout stays pinned.
 fitter('.store-head', (head) => {
+  const away = head.nextElementSibling?.classList.contains('store-head__balance--flow') ? head.nextElementSibling : null;
+  if (away) { away.classList.remove('store-head__balance--flow'); head.append(away); }
+  layoutHead(head);
+  const pill = head.querySelector('.store-head__balance');
+  if (!pill || pinnedShare() <= 0.5) return;
+  pill.classList.add('store-head__balance--flow');
+  head.after(pill);
+  layoutHead(head);
+});
+function layoutHead(head) {
   const title = head.querySelector('.store-head__title');
   const pill = head.querySelector('.store-head__balance');
   const figure = pill?.querySelector('.num');
@@ -373,8 +404,13 @@ fitter('.store-head', (head) => {
   head.classList.remove('store-head--split', 'store-head--split-wide');
   if (figure) figure.style.removeProperty('font-size');
   head.style.removeProperty('--store-reserve');
-  if (!pill) return;
   const lead = back ? back.getBoundingClientRect().width + gapOf(head) : 0;
+  if (!pill) {
+    // No balance in the bar (it scrolls with the content): the title has the row, "…" by whole words.
+    head.style.setProperty('--store-reserve', `${lead}px`);
+    if (!large() && natural(brand) > head.clientWidth - lead) { title.setAttribute('aria-label', title.dataset.full); wordsFit(title, () => natural(brand) <= head.clientWidth - lead); }
+    return;
+  }
   const titleRoom = (pillWidth) => head.clientWidth - lead - pillWidth - gapOf(head);
   const brandNeed = natural(brand);
   const pillNeed = pill.offsetWidth;
@@ -416,7 +452,7 @@ fitter('.store-head', (head) => {
   if (title.clientWidth >= ellipsis) return;
   head.classList.add('store-head--split-wide');
   wordsFit(title, fitsRow);
-});
+}
 function wordsFit(title, fits) {
   const words = title.dataset.full.split(' ');
   for (let n = words.length - 1; n >= 1; n -= 1) {
