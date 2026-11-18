@@ -949,3 +949,35 @@ The user: Indonesian shows numbers like English, a comma for thousands and a poi
 `11.02` lots, `$1,000`. This replaces §75's Indonesian number format (`3.100`, `11,02`). Dates and words stay
 Indonesian ("19 Okt 2026"). `copy/id.json` `locale` is `en-GB`, the same as English; Chinese already read this way.
 
+
+## 82. Small screens and large text (UI Designer 1's fit review, 11 Nov 2026, handoff 11)
+
+Every page keeps its content inside its boxes at any width down to 160 CSS px (320 at 200% page zoom) and at any phone
+text size, by the app's rules (TOKENS §3.4, §12). Layout only: copy, values and number formats stay.
+
+- A text block shrinks as one (one ratio per element) to 80% of its size at most; past that it takes its alternate
+  layout (the figure on its own line, the rate under its label, the tags under the number, the side column under the
+  name). The rows of one list change together.
+- Large text (the phone's text size above 1) never shrinks text: it wraps or moves. Buttons, tags and tabs grow at most
+  1.3 times. Page zoom is not large text.
+- Money, account numbers and order numbers are never cut. Money wraps only between digit groups; a figure that would
+  take 3+ lines beside something takes its own line ("a small miss wraps, a big miss moves").
+- Pinned bars together take at most half the screen; past that, information (the store's balance) scrolls with the
+  content and the primary action (Checkout) stays pinned.
+- The store and reward top bar: the balance shrinks to its floor first, then the title ends in "…" by whole words; when
+  not even a word fits, the balance takes its own line and the title is centred. A title row never shows an empty pill.
+- The store banner grows to hold its text. The reward page leaves room under its content equal to the Checkout bar's
+  real height.
+- Content lying under a pinned bar before the user scrolls is accepted, as long as it is reachable by scrolling.
+
+## 83. No zoom, the tax line, the order time (the user, 18 Nov 2026, handoff 11)
+
+- **No zoom:** the pages do not zoom (no pinch, no double tap), so they feel like the app, not a browser. The phone's
+  text size still applies (§82).
+- **Tax line (temporary):** under the price of every reward card on Home, a small line in a quiet colour: EN "Prices
+  exclude taxes and fees.", ID "Harga belum termasuk pajak dan biaya.", ZH "价格不含税费。". One line, shrunk to the
+  card's width with no lower limit (very small text is accepted); in large text it wraps instead. It must be easy to
+  turn off: one switch in code.
+- **Order time:** the backend's `order/detail` sends `orderTime` (17 Nov). The order detail's row shows the date and time
+  from it (the list's date when it is missing) and is labelled "Order time" / "Waktu pesanan" / "下单时间" (was "Order
+  date"). One row, not a second one: the time was already shown.

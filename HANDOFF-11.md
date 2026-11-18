@@ -1,12 +1,14 @@
 # Handoff 11 — the Loyalty redesign on the app's design system (R3)
 
 **Who this is for:** developers (and their AI assistants) who have applied handoff 10. Everything not named here is
-unchanged. **This handoff is visual only:** data, API calls, events, intents, tour targets, states, copy keys and
-navigation (Redeem included) are the same as handoff 10. Behaviour: `spec.md` §80. Exact line changes:
-`CHANGES-since-handoff-10.diff` in the package.
+unchanged. **Mostly visual:** events, intents, tour targets, states and navigation (Redeem included) are the same as
+handoff 10. Data: one more field read (`orderTime`, §9). Copy: one new key and one changed text (§8, §9).
+Behaviour: `spec.md` §80–§83. Exact line changes: `CHANGES-since-handoff-10.diff` in the package.
 
 **In one line:** Home, Earn and Coins move to the app's R3 design system (surfaces, the sweep rim, the one pressed
-model, Stolzl, the glass tab bar), and every other page picks up the R3 surfaces and rim with its layout unchanged.
+model, Stolzl, the glass tab bar), every other page picks up the R3 surfaces and rim with its layout unchanged, and
+every page now fits small screens and large text (`shared/fit.js`); plus no zoom in the webview, a temporary tax line
+on Home's reward cards and the order time from `order/detail`.
 
 | § | What | You |
 |---|---|---|
@@ -15,7 +17,11 @@ model, Stolzl, the glass tab bar), and every other page picks up the R3 surfaces
 | 3 | Pressed, springs and timings read from tokens | Shared hooks |
 | 4 | Home, Earn, Coins, bottom bar, header (approved designs) | Per page |
 | 5 | Reward detail, Redemption history: R3 surfaces only | Small |
-| 6 | Checks | Before you call it done |
+| 6 | Fit: small screens and large text (`shared/fit.js`) | One shared module + CSS classes |
+| 7 | No zoom in the webview | Small; tell the app team |
+| 8 | Home: temporary "Prices exclude taxes and fees." line, one switch | Small |
+| 9 | Redemption history: order time from `order/detail` | One adapter line, one copy text |
+| 10 | Checks | Before you call it done |
 
 ---
 
@@ -109,9 +115,106 @@ behind when the page redraws the bar, and the rim stops watching surfaces that l
 **Numbers in Indonesian (spec §81, the user, 9 Nov; sent to you ahead of this handoff):** numbers read like English in
 every language, `3,100`, `11.02`. `copy/id.json` `locale` is `en-GB` (was `id-ID`); dates and words stay Indonesian.
 
-## 6. Checks
+## 6. Fit: small screens and large text (TOKENS §3.4, §12; spec §82)
+
+Every page keeps its content inside its boxes at any width (down to 160 CSS px, what 320 at 200% page zoom gives) and
+at any phone text size. Nothing about the data or the copy changes: only how text shrinks, wraps or moves.
+
+- **One module:** `shared/fit.js` (imported by `shared/components.js`, starts itself). Port it as one hook or module
+  that runs once per page. It watches the page (a `MutationObserver`, batched per animation frame, and a
+  `ResizeObserver` per element) and runs one **fitter** per element family when an element appears, its size or text
+  changes, the web font loads (`document.fonts` `ready` and `loadingdone`) or large text switches. Each run is keyed on
+  size, text and mode, stored after the run, so a fitter's own changes never loop.
+- **Large text:** a hidden probe in `--fit-probe-font` (100px/100px) is compared with the same text measured on a
+  canvas at `--fit-probe-size`, which the OS text size never touches. Above 1, `data-large-text` is set on `<html>`.
+  Page zoom (a narrow viewport at 1.0) is not large text. In large text nothing shrinks: text wraps or moves instead,
+  and chrome text (`.btn`, `.badge`, `.tab`, `.chip`; not the bottom bar) is capped at `--hsb-fit-chrome-cap` (1.3) times
+  its size.
+- **The rules (TOKENS §3.4):**
+  - *One ratio per element:* everything in one element (a row, a card's figures, a list's rows) shrinks by one factor
+    (CSS `zoom`), down to `--hsb-fit-floor-ratio` (0.8). The rows of one list switch together.
+  - *Then the alternate layout:* at 1.0 only when the element misses at its floor; in large text when it misses at its
+    real size.
+  - *Money is never cut:* past the floor it wraps at its separators only (a `<wbr>` after "," "." or a space between
+    digits; no regex lookbehind, older iOS webviews cannot parse it). "/ lot" keeps its slash with its unit.
+  - *A small miss wraps, a big miss moves:* money, a symbol or an id that would need 3+ lines beside a neighbour, or
+    would break inside a part, takes its own line at full width (`.fit-own-line`).
+  - *Pinned areas take at most half the screen:* past half, information leaves the pinned bar and scrolls (the store
+    balance); the primary action (Checkout) stays pinned.
+  - Ids (account numbers, order numbers) are never cut: they shrink with their row, then wrap.
+- **The fitters and the classes they set** (each one's comment in `fit.js` says exactly what it measures):
+  | Element | Alternate layout |
+  |---|---|
+  | `.balance-row` (Home, Coins) | `balance--stacked` (figure on its own line), `-redeem`, `-label` |
+  | `.notice--warning .num` (expiring coins) | wraps; `notice--stacked` on a big miss |
+  | `.reward-grid` (Home prices; tax line, §8) | `reward-grid--stacked` (Redeem under the price) |
+  | `.rewards-more__cta` (Explore all rewards) | label shrinks; `rewards-more--stacked`; large text `fit-wrap-label` |
+  | `.reward-soon__pair` (guest sheet) | `reward-soon__pair--stacked` (Sign up on top) |
+  | `.today__stats` (Earn) | `today__stats--stacked` |
+  | `.rates-frame` (Earn rates) | `rates-frame--stacked` (rate under its label) |
+  | `.account-lines` (account field, sheet options) | `account-lines--stacked`; `select--wrap` on a big miss |
+  | `.list` lots / history (Coins), orders (Redemption history) | `lots--stacked`, `fit-break`, `orders--stacked` |
+  | `.reward-info__price` (reward page) | wraps |
+  | `.store-head` (store and reward top bar) | title "…" by whole words; `store-head--split`, `-split-wide`; `store-head__balance--flow` |
+  | `.store-banner` | grows to hold its text |
+  | `.reward-cta` (Checkout) | sets `--pinned-foot` on `.app`: the room under the content is the bar's measured height |
+- **Shared classes** (`shared/components.css`): `html .fit-wrap` (lets wrapped money break; above the pages' own
+  `nowrap`), `.fit-own-line` / `.fit-own-line-parent`, `.btn.fit-wrap-label`, large-text minimum heights for `.btn` and
+  `.badge`. Page CSS holds each page's stacked layouts.
+- **Removed:** `fitBalanceNumber`, `fitBalanceTier` and `fitAccountTags` in `shared/components.js` (fit.js does their
+  work); `watchAccountTags` stays and now calls `refit`. `pages/dashboard.js`' `fitPrices` calls `refit(grid)` and no
+  longer listens to resize and fonts itself.
+- **Tokens:** `--hsb-fit-floor-ratio` and `--hsb-fit-chrome-cap` (in `hsb-tokens.css`), `--fit-probe-font` and
+  `--fit-probe-size` (Loyalty's `tokens.json`, `layout` block).
+- **At 402 with normal values nothing moves:** the before and after shots are pixel-identical there, apart from
+  animations. The Reward Store parts apply only while you still ship the store.
+
+## 7. No zoom in the webview (spec §83)
+
+The pages no longer zoom: pinch and double-tap do nothing, so the page feels like the app, not a browser. The phone's
+text size still applies (§6).
+
+- **Viewport meta** on every page: `width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no,
+  viewport-fit=cover`. In Next.js: `export const viewport = { width: 'device-width', initialScale: 1, maximumScale: 1,
+  userScalable: false, viewportFit: 'cover' }` in the root layout.
+- **Double tap:** `html { touch-action: manipulation; }` (`shared/base.css`). Elements with their own `touch-action`
+  (sheets, tab bars) keep theirs.
+- **App side (please pass on to the app team):** iOS WKWebView honours the meta by default. Android WebView honours it
+  too; to be sure, turn zoom off in the webview settings (`setSupportZoom(false)`, `setBuiltInZoomControls(false)`; in
+  `webview_flutter`, `enableZoom(false)`). Safari outside the app ignores `user-scalable=no`; that is expected.
+
+## 8. Home: "Prices exclude taxes and fees." (temporary; spec §83)
+
+A small, quiet line under the price row of every reward card on Home (not on the earn card).
+
+- **One switch:** `PRICE_TAX_NOTE` at the top of `pages/dashboard.js`. `false` removes the line from every card; nothing
+  else depends on it. Keep it as one constant (or one feature flag) in your code too: the line may only run for a short
+  time.
+- **Markup:** `<span class="reward-card__tax">` after `.reward-card__foot`, inside the card. Copy key `rewards.taxNote`
+  (EN "Prices exclude taxes and fees.", ID "Harga belum termasuk pajak dan biaya.", ZH "价格不含税费。").
+- **Style** (`pages/dashboard.css`): `--font-role-meta` (11/14), `--ui-text-tertiary`, one line (`nowrap`), 4 under the
+  price row.
+- **Fit** (the `.reward-grid` fitter): one line, shrunk to the card's inner width by one ratio across the grid (every
+  card the same size), **with no floor** (the user accepts very small text: about 10px in EN at 402, 6px in ID at 320).
+  In large text it keeps its size and wraps (`fit-wrap`).
+
+## 9. Redemption history: order time from `order/detail` (spec §83)
+
+- **API:** `POST /app/point/order/detail` now sends `orderTime`, ISO 8601 UTC (`"2026-11-16T01:37:00Z"`), when the
+  order was placed (on UAT since 17 Nov; checked 18 Nov: it equals the list's `orderDate`, to the second).
+- **Adapter** (`toOrder`, `shared/api-adapter.js`): `orderDate: apiTime(order.orderTime ?? summary?.orderDate ??
+  order.orderDate)`. Without `orderTime` the list's row gives the date, as before. The coins and the status still come
+  from the list's row. Add `orderTime?: string | null` to your answer type. The sample
+  `mock/api/loyalty-orders-detail.json` carries it.
+- **Page:** the detail's row label is now "Order time" (it always showed the date and the time): key `orders.date`
+  (unchanged key), EN "Order time", ID "Waktu pesanan", ZH "下单时间". `DATA.md` is unchanged.
+
+## 10. Checks
 
 - `sh tools/check-tokens.sh ../hsb_app`: both token files byte-equal.
 - The app's QA gate on every file you change: `hsb_app/docs/redesign/qa/QA1.md` (G1–G5;
   `tokscan.py --strict`, 0 blocking). Shots at 402 × 874, light, dark and Premium.
-- Unchanged and still to run: `node mock/api/check.mjs`, `python3 tools/check-copy.py`, `node tools/check-tracking.mjs`.
+- Still to run: `node mock/api/check.mjs` (the sample now has `orderTime`), `python3 tools/check-copy.py` (one new
+  key), `node tools/check-tracking.mjs` (no event changed).
+- Fit: check each page at 320 × 568, at 160 × 284 (320 at 200% page zoom) and with the phone's largest text size;
+  nothing leaves its box and no money is cut.

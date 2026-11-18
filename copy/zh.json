@@ -234,7 +234,7 @@
   "orders.updated": "更新于 {date} {time}",
   "orders.dateTime": "{date} {time}",
   "orders.number": "订单号",
-  "orders.date": "下单日期",
+  "orders.date": "下单时间",
   "orders.coins": "消耗金币",
   "orders.refunded": "{points} 金币已退回您的余额。",
   "orders.items": "商品",

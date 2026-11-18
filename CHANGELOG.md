@@ -3,11 +3,12 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
-## Handoff 11 — The redesign on the app's design system, R3 (5 Nov 2026)
+## Handoff 11 — The redesign on the app's design system, R3, and fit (18 Nov 2026)
 
-**Full description for developers: `HANDOFF-11.md`.** Spec §80.
+**Full description for developers: `HANDOFF-11.md`.** Spec §80–§83.
 
-- Visual only: data, API calls, events, intents, tour targets, states, copy and navigation are unchanged.
+- Events, intents, tour targets, states and navigation are unchanged. Data: `order/detail`'s `orderTime` is read.
+  Copy: new key `rewards.taxNote`; `orders.date` reads "Order time".
 - Home, Earn and Coins follow their approved designs on the app's R3 tokens: the two surfaces (light page `#F8F8FA`,
   box `#ECECEF`), the sweep rim on every neutral surface, one pressed model, Stolzl, the glass tab bar and lens, the
   centred page header, Earn's sky with the cup, rays and rewards, Coins' capsule tabs and history row.
@@ -17,6 +18,13 @@ and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
   `shared/components.css`, `components.js`, `nav.js`, `theme.js`, `tour.js`, the Home, Earn and Coins page files,
   `pages/*.html` (load `hsb-tokens.css`), new images under `assets/images/`, `tools/check-tokens.sh`,
   `tools/build-offline.py`. `DATA.md` unchanged; `STATES.md` unchanged.
+- Fit (spec §82): every page fits widths down to 160 and the phone's large text; money and ids are never cut. New
+  `shared/fit.js`; `shared/components.css` / `.js`, page CSS, `tokens/tokens.json` (probe tokens).
+- No zoom in the webview (spec §83): `pages/*.html` viewport meta, `shared/base.css`.
+- Home (spec §83): temporary "Prices exclude taxes and fees." under each reward card's price, one switch
+  (`PRICE_TAX_NOTE`, `pages/dashboard.js`); `pages/dashboard.css`, `shared/fit.js`, `copy/*.json`.
+- Redemption history (spec §83): the order time comes from `order/detail`'s `orderTime`; the row reads "Order time".
+  `shared/api-adapter.js`, `mock/api/loyalty-orders-detail.json`, `copy/*.json`.
 
 ## Handoff 10 — Lots as traded, fixes from the review of handoffs 8 and 9 (28 Oct 2026)
 

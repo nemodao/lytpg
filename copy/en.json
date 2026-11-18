@@ -234,7 +234,7 @@
   "orders.updated": "Updated {date}, {time}",
   "orders.dateTime": "{date}, {time}",
   "orders.number": "Order number",
-  "orders.date": "Order date",
+  "orders.date": "Order time",
   "orders.coins": "Coins spent",
   "orders.refunded": "{points} coins were returned to your balance.",
   "orders.items": "Items",

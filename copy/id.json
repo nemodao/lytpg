@@ -234,7 +234,7 @@
   "orders.updated": "Diperbarui {date}, {time}",
   "orders.dateTime": "{date}, {time}",
   "orders.number": "Nomor pesanan",
-  "orders.date": "Tanggal pesanan",
+  "orders.date": "Waktu pesanan",
   "orders.coins": "Koin terpakai",
   "orders.refunded": "{points} koin sudah dikembalikan ke saldomu.",
   "orders.items": "Item",
