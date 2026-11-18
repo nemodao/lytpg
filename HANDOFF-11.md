@@ -29,9 +29,11 @@ on Home's reward cards and the order time from `order/detail`.
 
 - **Source:** the app's design system, `hsb_app/docs/redesign/qa/tokens.json`, owned by UI Designer 1. Loyalty uses
   two generated files from it, copied **byte-equal**: `tokens/hsb-tokens.css` (every value, `--hsb-*`) and
-  `tokens/hsb-rim.g.json` (the rim's anchors). `sh tools/check-tokens.sh ../hsb_app` compares them. In
-  `hsb-loyalty`, add the same two files from this package to `styles/` and import `hsb-tokens.css` before your own
-  `tokens.css`; never edit them. When UI Designer 1 changes a value, a new byte-equal copy is the whole update.
+  `tokens/hsb-rim.g.json` (the rim's anchors). **You do not need `hsb_app`** (the design team's repository, not
+  shared): this package is your source. In `hsb-loyalty`, add the same two files from this package to `styles/` and
+  import `hsb-tokens.css` before your own `tokens.css`; never edit them. When UI Designer 1 changes a value, a new
+  byte-equal copy in a handoff is the whole update. (`tools/check-tokens.sh` is the reference repository's own check
+  against `hsb_app`; you compare with `cmp`, see §10.)
 - **Pages load `hsb-tokens.css` first, then `tokens/tokens.css`.** `tokens/tokens.json` (and the generated
   `tokens.css`) is now only an alias layer: Loyalty's older variable names point at the R3 token of the same role, so
   page CSS kept its names. New code calls `--hsb-*` directly. Blocks: `alias`, `tokGap` (empty now: UI Designer 1
@@ -211,9 +213,12 @@ A small, quiet line under the price row of every reward card on Home (not on the
 
 ## 10. Checks
 
-- `sh tools/check-tokens.sh ../hsb_app`: both token files byte-equal.
-- The app's QA gate on every file you change: `hsb_app/docs/redesign/qa/QA1.md` (G1–G5;
-  `tokscan.py --strict`, 0 blocking). Shots at 402 × 874, light, dark and Premium.
+- Token files byte-equal to this package: `cmp tokens/hsb-tokens.css <hsb-loyalty>/styles/hsb-tokens.css` and the same
+  for `hsb-rim.g.json` (no output = equal).
+- No hard-coded colours, sizes, radii, shadows or timings in the code you change: read the `--hsb-*` tokens or
+  Loyalty's alias tokens (`tokens/tokens.css`), as the reference does. (The design team's own QA gate, `hsb_app` QA1
+  and `tokscan.py`, was run on the reference: 0 blocking. You do not need it.)
+- Shots at 402 × 874, light, dark and Premium, side by side with the reference pages (`python3 serve.py 8000`).
 - Still to run: `node mock/api/check.mjs` (the sample now has `orderTime`), `python3 tools/check-copy.py` (one new
   key), `node tools/check-tracking.mjs` (no event changed).
 - Fit: check each page at 320 × 568, at 160 × 284 (320 at 200% page zoom) and with the phone's largest text size;
