@@ -7,7 +7,7 @@
   /* tokGap */
   /* logicTiming */
   /* exception */
-  --lens-backing: #F0F0E7; /* EX-4.0-04 */
+  --lens-backing: #ECEDEF; /* EX-4.0-04 */
   --lens-fill: radial-gradient(120% 70% at 50% 0%, rgba(255,255,255,.35), transparent 60%), rgba(255,255,255,.06); /* EX-4.0-04 */
   --lens-fringe-opacity: 52.5%; /* EX-4.0-04 */
   --lens-hole: 0 0 0 400px rgba(10,11,12,.12); /* EX-4.0-04 */
@@ -19,26 +19,26 @@
   --bg-blend: #546300;
   --blend-theme-bg: radial-gradient(90% 80% at 100% 105%, color-mix(in srgb, #D1F801 45%, #fff) 0%, transparent 70%), radial-gradient(70% 70% at 90% -10%, #05060d 0%, transparent 70%), linear-gradient(160deg, color-mix(in srgb, #D1F801 78%, #05060d), #D1F801);
   --blend-theme-ink: #546300;
-  --card-stroke: #E0E2D6;
-  --info-text: #1D64D8;
+  --card-stroke: rgba(10,11,12,.07);
+  --info-text: #1F55D6;
   --logo-stop-1: #A7C601;
   --logo-stop-2: #7D9501;
   --logo-stop-3: #A7C601;
   --surface-vivid: radial-gradient(120% 80% at 50% 110%, color-mix(in srgb, #ffffff 25%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, #D1F801 86%, #000000), #D1F801 55%);
-  --ui-badge-red: #FDECEA;
-  --ui-badge-teal: #E8F0FD;
-  --ui-badge-yellow: #FEF3E2;
+  --ui-badge-red: rgba(217,63,76,.10);
+  --ui-badge-teal: rgba(37,99,235,.10);
+  --ui-badge-yellow: rgba(183,110,0,.10);
   --ui-button-dark-pressed: #26262A;
   --ui-chip-stroke-selected: #A7C601;
   --ui-chip-surface-selected: #F6FECC;
   --ui-icon-brand: #546300;
-  --ui-icon-green: #15803D;
-  --ui-progress-done: #15803D;
-  --ui-surface-pure: #F0F0E7;
-  --ui-surface-soft: rgba(138,142,126,.14);
+  --ui-icon-green: #0E9F5C;
+  --ui-progress-done: #0E9F5C;
+  --ui-surface-pure: #EFEFF1;
+  --ui-surface-soft: rgba(146,146,150,.14);
   --ui-text-dark: #FFFFFF;
-  --ui-text-red: #D92D20;
-  --ui-text-yellow: #B45309;
+  --ui-text-red: #B92C38;
+  --ui-text-yellow: #8F5600;
   --wait-chip: rgba(255,255,255,.92);
   --wait-chip-shadow: 0 14px 36px rgba(10,11,12,.14);
   --wait-dim: rgba(10,11,12,.12);
@@ -50,7 +50,7 @@
   /* tokGap */
   /* logicTiming */
   /* exception */
-  --lens-backing: #161617; /* EX-4.0-04 */
+  --lens-backing: #19191B; /* EX-4.0-04 */
   --lens-fill: radial-gradient(120% 70% at 50% 0%, rgba(255,255,255,.16), transparent 60%), rgba(255,255,255,.05); /* EX-4.0-04 */
   --lens-fringe-opacity: 45.5%; /* EX-4.0-04 */
   --lens-hole: none; /* EX-4.0-04 */
@@ -62,27 +62,27 @@
   --bg-blend: #D1F801;
   --blend-theme-bg: radial-gradient(90% 80% at 100% 105%, color-mix(in srgb, #D1F801 45%, #fff) 0%, transparent 70%), radial-gradient(70% 70% at 90% -10%, #05060d 0%, transparent 70%), linear-gradient(160deg, color-mix(in srgb, #D1F801 78%, #05060d), #D1F801);
   --blend-theme-ink: #D1F801;
-  --card-stroke: #29292B;
-  --info-text: #5AA2FF;
+  --card-stroke: rgba(255,255,255,.06);
+  --info-text: #6EA8FE;
   --logo-stop-1: #D1F801;
   --logo-stop-2: #D1F801;
   --logo-stop-3: #D1F801;
   --surface-vivid: radial-gradient(120% 80% at 50% 110%, color-mix(in srgb, #ffffff 25%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, #D1F801 86%, #000000), #D1F801 55%);
-  --ui-badge-red: #331616;
-  --ui-badge-teal: #102238;
-  --ui-badge-yellow: #33260A;
+  --ui-badge-red: rgba(240,97,109,.10);
+  --ui-badge-teal: rgba(110,168,254,.14);
+  --ui-badge-yellow: rgba(232,162,59,.10);
   --ui-button-dark-pressed: #D8D8DA;
   --ui-chip-stroke-selected: #DAF934;
   --ui-chip-surface-selected: #1F2600;
   --ui-icon-brand: #D1F801;
-  --ui-icon-green: #2FD27A;
-  --ui-progress-done: #2FD27A;
-  --ui-surface-pure: rgba(41,41,43,.82);
-  --ui-surface-soft: rgba(138,138,143,.14);
-  --ui-text-dark: #0E0E0E;
-  --ui-text-red: #FF5A52;
-  --ui-text-yellow: #FFB020;
-  --wait-chip: rgba(41,41,43,.9);
+  --ui-icon-green: #3CCB7F;
+  --ui-progress-done: #3CCB7F;
+  --ui-surface-pure: rgba(38,38,42,.82);
+  --ui-surface-soft: rgba(142,142,147,.14);
+  --ui-text-dark: #0B0B0D;
+  --ui-text-red: #F0616D;
+  --ui-text-yellow: #E8A23B;
+  --wait-chip: rgba(38,38,42,.9);
   --wait-chip-shadow: 0 14px 36px rgba(0,0,0,.5);
   --wait-dim: rgba(0,0,0,.28);
 }
@@ -302,7 +302,7 @@
   --earn-card-button-text: #1C1717; /* EX-4.4-01 */
   --earn-card-text: #FFFFFF; /* EX-4.4-01 */
   --earn-card-text-soft: rgba(255,255,255,.72); /* EX-4.4-01 */
-  --earn-plus: #2FD27A; /* EX-4.4-01 */
+  --earn-plus: #3CCB7F; /* EX-4.4-01 */
   --earn-plus-halo: rgba(255,255,255,.35); /* EX-4.4-01 */
   --grain: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27160%27%20height%3D%27160%27%3E%3Cfilter%20id%3D%27n%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%271.9%27%20numOctaves%3D%271%27%20stitchTiles%3D%27stitch%27%20result%3D%27t%27/%3E%3CfeColorMatrix%20type%3D%27matrix%27%20values%3D%27.33%20.33%20.33%200%200%20%20.33%20.33%20.33%200%200%20%20.33%20.33%20.33%200%200%20%200%200%200%200%201%27/%3E%3CfeComponentTransfer%3E%3CfeFuncR%20type%3D%27linear%27%20slope%3D%272.4%27%20intercept%3D%27-.9%27/%3E%3CfeFuncG%20type%3D%27linear%27%20slope%3D%272.4%27%20intercept%3D%27-.9%27/%3E%3CfeFuncB%20type%3D%27linear%27%20slope%3D%272.4%27%20intercept%3D%27-.9%27/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20filter%3D%27url%28%23n%29%27/%3E%3C/svg%3E"); /* EX-4.4-01 */
   --lens-fringe: conic-gradient(from var(--swirl), rgba(255,80,150,.55), rgba(255,80,150,.85) 8%, rgba(255,200,80,.6) 17%, rgba(150,225,120,.45) 28%, rgba(80,205,255,.55) 42%, rgba(90,150,255,.65) 56%, rgba(160,110,255,.6) 70%, rgba(230,100,220,.55) 85%, rgba(255,80,150,.55)), conic-gradient(from var(--swirl2), rgba(110,230,160,0), rgba(110,230,160,.3) 12%, rgba(80,200,255,0) 30%, rgba(0,0,0,0) 62%, rgba(255,140,200,.3) 74%, rgba(255,140,200,0) 88%); /* EX-4.0-04 */
@@ -350,7 +350,7 @@
   --blend-yellow-ink: #ffd43a;
   --card-shadow: none;
   --color-blue-500: #235ab3;
-  --color-neutral-200: #F0F0E7;
+  --color-neutral-200: #eaedf2;
   --color-purple-darker: #231456;
   --color-purple-light-active: #cfc1fc;
   --color-purple-main: #6438f5;
