@@ -3,6 +3,17 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
+## Handoff 12 — Brand 2026 colours, brand only (18 Nov 2026)
+
+**Full description for developers: `HANDOFF-12.md`.** Spec §84.
+
+- Token files only: `tokens/hsb-tokens.css` (the app's R3 file, hsb_app 01408f66), `tokens/tokens.json` and
+  `tokens/tokens.css` (version 5.1). `tokens/hsb-rim.g.json` is unchanged. No markup, CSS, JS, copy or data change.
+- What users see: the new brand gradient on primary buttons (flat Volt in dark), a quiet neutral soft brand tint (the
+  Redeem chip, selected chips), brand text `#546300`, and the new selected rim, focus ring and logo gradient. Surfaces,
+  text, lines, status colours and Premium are unchanged.
+- `DATA.md` unchanged; `STATES.md` unchanged.
+
 ## Handoff 11 — The redesign on the app's design system, R3, and fit (18 Nov 2026)
 
 **Full description for developers: `HANDOFF-11.md`.** Spec §80–§83.

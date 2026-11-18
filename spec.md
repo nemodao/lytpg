@@ -981,3 +981,14 @@ text size, by the app's rules (TOKENS §3.4, §12). Layout only: copy, values an
 - **Order time:** the backend's `order/detail` sends `orderTime` (17 Nov). The order detail's row shows the date and time
   from it (the list's date when it is missing) and is labelled "Order time" / "Waktu pesanan" / "下单时间" (was "Order
   date"). One row, not a second one: the time was already shown.
+
+## 84. Brand 2026 colours, brand only (the owner, 18 Nov 2026, handoff 12)
+
+- The brand colours follow the Brand 2026 palette, the same as the HSB app and the payments web: brand text and marks
+  `#546300` in light, the selected rim `#A7C601` / `#DAF934`, the soft brand tint `#E0E2D6` / `#29292B`, the
+  primary-button gradient `#A7C601 → #C2E600 → #A7C601` in light and flat Volt `#D1F801` in dark, and the logo gradient
+  `#A7C601 → #7D9501 → #A7C601` in light and flat Volt in dark.
+- Everything else stays as it was: page and box surfaces, text, lines, status colours, badges, tiers and the Premium
+  gold. The designers' warm neutrals and new status colours were tried and turned down.
+- Source: the app's R3 token file (hsb_app commit 01408f66). Loyalty changes token files only.
+
