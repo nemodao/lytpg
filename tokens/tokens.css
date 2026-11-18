@@ -30,7 +30,7 @@
   --ui-badge-yellow: rgba(183,110,0,.10);
   --ui-button-dark-pressed: #26262A;
   --ui-chip-stroke-selected: #A7C601;
-  --ui-chip-surface-selected: #F6FECC;
+  --ui-chip-surface-selected: #E0E2D6;
   --ui-icon-brand: #546300;
   --ui-icon-green: #0E9F5C;
   --ui-progress-done: #0E9F5C;
@@ -73,7 +73,7 @@
   --ui-badge-yellow: rgba(232,162,59,.10);
   --ui-button-dark-pressed: #D8D8DA;
   --ui-chip-stroke-selected: #DAF934;
-  --ui-chip-surface-selected: #1F2600;
+  --ui-chip-surface-selected: #29292B;
   --ui-icon-brand: #D1F801;
   --ui-icon-green: #3CCB7F;
   --ui-progress-done: #3CCB7F;
