@@ -7,7 +7,7 @@
    "#FFFFFF"
   ],
   "dark": [
-   "#0E0E10",
+   "#0E0E0E",
    "#FFFFFF"
   ]
  },
@@ -20,7 +20,7 @@
   "dark": [
    14,
    14,
-   16
+   14
   ]
  },
  "neutralSurface": {
