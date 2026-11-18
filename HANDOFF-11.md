@@ -60,8 +60,8 @@ edge that takes no room: brightest along the top in light, a faint lift in dark.
 - **Not on:** selected, disabled and tinted surfaces, tags, images, the tab bar and lens (their own rim), the brand
   card and the Earn cell, primary buttons, shimmer; the reward detail's sheet in dark (glass over the gradient).
 - **Yours:** port `rim.js` as one hook or component that reads `hsb-rim.g.json` and sets `--rim`, plus the
-  `.rim::before` rule, and apply it to the same list. The math must match TOKENS §4.0b exactly (the comments in
-  `rim.js` follow it step by step).
+  `.rim::before` rule, and apply it to the same list. The math must match `rim.js` exactly: it is the reference, and its
+  comments walk through the design system's rule (TOKENS §4.0b, in `hsb_app`, which you do not need) step by step.
 
 ## 3. Pressed, springs and timings come from tokens
 
