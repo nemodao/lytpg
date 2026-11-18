@@ -38,6 +38,8 @@
    its own line, at the right. The number is never cut or shortened. */
 .reward-card__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-4); margin-top: auto; }
 .reward-card__foot .btn { margin-left: auto; }
+/* Tax note (spec §82): small and quiet, one line; shared/fit.js shrinks it to the card's width (large text: it wraps). */
+.reward-card__tax { display: block; margin-top: calc(var(--spacing-4) * -1); font: var(--font-role-meta); color: var(--ui-text-tertiary); white-space: nowrap; }
 /* One card's price did not fit: every card puts Redeem under its price (fit.js, through fitPrices in dashboard.js). */
 .reward-grid--stacked .reward-card__price { flex-basis: 100%; }
 /* Earn card: charcoal in both themes, so the lime coins and the cup stand out; the brand rim and grain stay. It takes

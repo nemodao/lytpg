@@ -11,6 +11,9 @@ html { -webkit-text-size-adjust: 100%; }
    dragging. Fields stay selectable. The host app should also turn off link previews in its webview. */
 html { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 input, textarea, [contenteditable] { -webkit-user-select: text; user-select: text; }
+/* No zoom (spec §82): the viewport meta of every page turns off pinch zoom (maximum-scale=1, user-scalable=no); this
+   turns off double-tap zoom. The phone's text size still applies (large text, shared/fit.js). */
+html { touch-action: manipulation; }
 img { -webkit-user-drag: none; }
 html[data-theme="dark"] { color-scheme: dark; }
 

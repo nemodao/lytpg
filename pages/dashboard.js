@@ -47,6 +47,9 @@ function checkInCard() {
 // the `reward` intent (data-reward): HSB's own key, not a Tada link. Until Tada gives a link per reward, the app
 // treats `reward` like `redeem` (the Tada catalog).
 const GRID_CELLS = 10;
+// TEMPORARY (spec §82): the "Prices exclude taxes and fees." line under each reward card's price. One switch: false
+// removes the line from every card (copy key rewards.taxNote can stay). Nothing else depends on it.
+const PRICE_TAX_NOTE = true;
 const EARN_CELL = 3; // the "earn coins" card is the 3rd cell
 // Tracking (loyalty_reward_click): `position` is the reward's rank among the rewards (1–10; the "earn coins" card is
 // not counted), `reward_id` and `reward_name` as HSB sends them, `affordable` whether the balance covers the price (no
@@ -60,6 +63,7 @@ const rewardCard = (item, position) => `
       <span class="reward-card__price num">${coin('coin--xs')}${ui.num(item.points)}</span>
       <span class="btn btn--xs btn--soft">${ui.t('balance.redeem')}</span>
     </span>
+    ${PRICE_TAX_NOTE ? `<span class="reward-card__tax">${ui.t('rewards.taxNote')}</span>` : ''}
   </button>`;
 
 // The "earn coins" card: opens Earn. A brand card (TOKENS 4.4), so it stands out among the rewards. Hidden without a

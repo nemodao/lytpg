@@ -127,6 +127,7 @@
   "rewards.more.body": "您有 {points} 金币可用。在奖励商城浏览所有代金券、数码产品和旅行。",
   "rewards.more.bodyNoCoins": "在奖励商城浏览所有代金券、数码产品和旅行。",
   "rewards.more.button": "浏览全部奖励",
+  "rewards.taxNote": "价格不含税费。",
   "activity.gift": "交易者 {client} 刚刚兑换了 {reward}",
   "activity.coin": "交易者 {client} 刚刚获得 {points} 金币",
   "activity.coin.one": "交易者 {client} 刚刚获得 1 金币",

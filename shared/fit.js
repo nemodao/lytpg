@@ -208,6 +208,15 @@ fitter('.notice--warning .num', (p) => {
 // L-07: reward card prices, one ratio across the grid; then wrap. Runs after dashboard.js's fitPrices has put Redeem
 // under the price where needed.
 fitter('.reward-grid', (grid) => {
+  // Tax note under the prices (spec §82): one line, one ratio across the grid, no floor (the user accepts very small
+  // text). Large text: the note keeps its size and wraps.
+  const notes = [...grid.querySelectorAll('.reward-card__tax')];
+  unzoom(notes); notes.forEach((note) => note.classList.remove('fit-wrap'));
+  if (notes.length) {
+    const rn = Math.min(...notes.map((note) => ratio(inner(note.parentElement), natural(note))));
+    if (large()) notes.forEach((note) => note.classList.toggle('fit-wrap', rn < 1));
+    else zoom(notes, rn);
+  }
   const prices = [...grid.querySelectorAll('.reward-card:not(.reward-card--earn) .reward-card__price')];
   unzoom(prices); wrapMoney(prices, false);
   // A price too long to share its row with Redeem pushes Redeem under it, on every card (spec §49; was fitPrices).

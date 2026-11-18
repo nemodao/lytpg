@@ -127,6 +127,7 @@
   "rewards.more.body": "You have {points} coins to spend. Browse every voucher, gadget and trip in the rewards store.",
   "rewards.more.bodyNoCoins": "Browse every voucher, gadget and trip in the rewards store.",
   "rewards.more.button": "Explore all rewards",
+  "rewards.taxNote": "Prices exclude taxes and fees.",
   "activity.gift": "Trader {client} just redeemed {reward}",
   "activity.coin": "Trader {client} just earned {points} coins",
   "activity.coin.one": "Trader {client} just earned 1 coin",

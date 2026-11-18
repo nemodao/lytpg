@@ -127,6 +127,7 @@
   "rewards.more.body": "Kamu punya {points} koin untuk ditukar. Lihat semua voucher, gadget, dan perjalanan di toko hadiah.",
   "rewards.more.bodyNoCoins": "Lihat semua voucher, gadget, dan perjalanan di toko hadiah.",
   "rewards.more.button": "Lihat semua hadiah",
+  "rewards.taxNote": "Harga belum termasuk pajak dan biaya.",
   "activity.gift": "Trader {client} baru saja menukar {reward}",
   "activity.coin": "Trader {client} baru saja mendapat {points} koin",
   "activity.coin.one": "Trader {client} baru saja mendapat 1 koin",
