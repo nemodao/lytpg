@@ -171,9 +171,11 @@ export const toOrders = (list) =>
     .sort((a, b) => Date.parse(b.orderDate) - Date.parse(a.orderDate));
 
 // POST /app/point/order/detail { clientId, orderReference } -> one order. HSB reads it live from Tada and passes Tada's
-// JSON through: { status, orderReference, orderNumber, recipient, orderItems, payment, fees } (backend code, 23 Oct
-// 2026; field names to be checked against a real Tada order). The coins, the order date and the status of the list
-// come from that order's row of /app/point/orders (`summary`, joined in shared/data-source.js; decided 23 Oct 2026).
+// JSON through: { status, orderReference, orderNumber, orderTime, recipient, orderItems, payment, fees } (backend code, 23 Oct
+// 2026; field names to be checked against a real Tada order). `orderTime` (ISO 8601 UTC, when the order was placed; the
+// backend added it on 17 Nov 2026, checked on UAT 18 Nov) gives the order date; without it the date of the list's row is
+// used. The coins and the status come from that order's row of /app/point/orders (`summary`, joined in
+// shared/data-source.js; decided 23 Oct 2026).
 // No money values on the page (spec §52): items' `price`, `fees` and `payment` are IDR and are never read.
 // Not sent by any endpoint for now: `lastStatusAt` (the "Updated …" line is then hidden) and `refunded` (no green
 // note). Each item carries at most one of egiftDetail (e-vouchers), vendorDetail (PLN token, mobile credit, e-wallet)
@@ -205,7 +207,7 @@ export const toOrder = (order, summary = null) => ({
   orderReference: String(order.orderReference ?? summary?.orderReference ?? ''),
   orderNumber: order.orderNumber ?? summary?.orderNumber ?? '',
   status: orderStatus(order.status ?? summary?.status),
-  orderDate: apiTime(summary?.orderDate ?? order.orderDate) ?? null,
+  orderDate: apiTime(order.orderTime ?? summary?.orderDate ?? order.orderDate) ?? null, // orderTime: on UAT since 17 Nov 2026
   lastStatusAt: order.lastStatusAt ? apiTime(order.lastStatusAt) : null,
   coinSpent: summary?.coinSpent ?? order.coinSpent ?? null,
   refunded: order.refunded === true,
