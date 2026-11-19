@@ -1004,3 +1004,5 @@ text size, by the app's rules (TOKENS §3.4, §12). Layout only: copy, values an
   blur.
 - **The pages must not stutter** on scroll, on the bottom bar or in the tour. The bottom bar's lens refracts only while
   it shows, and no animation reads the page's layout in every frame.
+- **The tax line goes** (§83): "Prices exclude taxes and fees." no longer shows under the reward cards' prices. The
+  switch is off; the copy key stays in case it comes back.

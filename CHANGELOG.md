@@ -15,9 +15,11 @@ and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 - Part B, from the review of the UAT build: Earn's and Coins' tabs drop the lens; their selected pill takes the capsule
   token and slides (in the developer's build HeroUI's list fill was greying the pill). Glass only on the bottom bar: no
   blur on the header fade, the Today panel or the store's chips and dark cards. The bottom bar's lens refracts only while
-  it shows and reads no layout per frame; the tour carousel and the rim stop redoing work. Files:
+  it shows and reads no layout per frame; the tour carousel and the rim stop redoing work. The tax line under reward prices is off (`PRICE_TAX_NOTE`;
+  the developer's build: `NEXT_PUBLIC_PRICE_TAX_NOTE=false`). Files:
   `shared/components.css`, `shared/components.js` (new `mountTabs`), `shared/nav-lens.js` (`mountBarLens` removed),
-  `shared/rim.js`, `shared/tour.js`, `pages/point-balance.js`, `pages/trading-task.js`, `pages/store.css`.
+  `shared/rim.js`, `shared/tour.js`, `pages/dashboard.js`, `pages/point-balance.js`, `pages/trading-task.js`,
+  `pages/store.css`.
 - `DATA.md` unchanged; `STATES.md` unchanged. Copy, events and states unchanged.
 
 ## Handoff 11 — The redesign on the app's design system, R3, and fit (18 Nov 2026)

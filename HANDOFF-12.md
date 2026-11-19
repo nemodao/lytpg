@@ -145,12 +145,17 @@ The lens looks and moves as before. Three changes in `shared/nav-lens.js` and `c
 - **Rim** (`shared/rim.js`; your `core/r3/rim.ts`): one sweep per size, mode and set, kept in a `Map`. A redraw (a tab
   change, a sheet) builds surfaces of the same sizes again; the conic gradient is not recomputed.
 
+- **The tax line is off** (spec §85, the user, 19 Nov): no "Prices exclude taxes and fees." under the reward cards'
+  prices. Handoff: `PRICE_TAX_NOTE = false` in `pages/dashboard.js`. Your build: set `NEXT_PUBLIC_PRICE_TAX_NOTE=false`
+  in the UAT and production environments (and in `.env.example`); no code change. The copy key `rewards.taxNote` stays.
+
 ## 10. Checks for Part B
 
-1. Coins and Earn, light and dark: the selected pill is `--capsule-pill` (light `#F8F8FA` with its small shadow), no grey
+1. Home: no tax line under any reward card's price.
+2. Coins and Earn, light and dark: the selected pill is `--capsule-pill` (light `#F8F8FA` with its small shadow), no grey
    veil; tapping a tab slides the pill, no lens appears.
-2. `getComputedStyle` of every element: `backdrop-filter` only on the bottom bar (and on the scrim while a sheet is open);
+3. `getComputedStyle` of every element: `backdrop-filter` only on the bottom bar (and on the scrim while a sheet is open);
    `.nav__lens` shows `none` at rest and `url("#lensBD")` while held.
-3. Hold and drag on the bottom bar: the lens, its fringe and the refraction (Android) as in handoff 11.
-4. On a real Android phone (chrome://inspect → Performance, or the GPU rendering bars): scroll Home, Earn, Coins and the
+4. Hold and drag on the bottom bar: the lens, its fringe and the refraction (Android) as in handoff 11.
+5. On a real Android phone (chrome://inspect → Performance, or the GPU rendering bars): scroll Home, Earn, Coins and the
    store, change tabs, run the tour. No long frames. We could not test on a device; please tell us what you see.
