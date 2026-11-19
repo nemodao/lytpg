@@ -26,8 +26,8 @@ export const pointerClick = (event) => event.isTrusted && event.detail > 0 && Bo
 // Lenses still mounted; a page that redraws its bar mounts a new one, and the old one's listeners go (none build up).
 const lenses = new Set();
 
-// `bar` is the row and `item` its tabs. The bottom bar takes the defaults; a category bar (TOKENS 8.3) runs at 70% of the
-// speed.
+// `bar` is the row and `item` its tabs. Only the bottom bar has a lens since 19 Nov 2026 (the user: glass only on the
+// bottom bar); Earn's and Coins' tabs slide a plain pill (components.js mountTabs). `speed` stays for a slower bar.
 export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item = '.nav__tab', inset = 4, speed = 1 } = {}) {
   if (!document.getElementById('lensBD')) document.body.insertAdjacentHTML('beforeend', FILTERS);
   const bar = box.querySelector(barSelector);
@@ -40,28 +40,44 @@ export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item
   for (const old of lenses) if (!old.bar.isConnected) { old.stop.abort(); lenses.delete(old); }
   const stop = new AbortController();
   lenses.add({ bar, stop });
-  const local = (event) => event.clientX - bar.getBoundingClientRect().left;
-  const nearest = (cx) => items.reduce((best, tab, i) => (Math.abs(tab.offsetLeft + tab.offsetWidth / 2 - cx) < Math.abs(items[best].offsetLeft + items[best].offsetWidth / 2 - cx) ? i : best), 0);
+  // Geometry is read once (on rest, resize and each new touch), never inside a frame: a read after the frame's style
+  // writes forces a layout on every frame (19 Nov 2026, the jank review).
+  const G = { w: 0, left: [], barW: 0, barH: 0, rect: null, marks: [] };
+  const measure = () => {
+    G.w = items[0].offsetWidth; G.left = items.map((tab) => tab.offsetLeft);
+    G.barW = bar.clientWidth; G.barH = bar.clientHeight; G.rect = bar.getBoundingClientRect();
+    G.marks = items.flatMap((tab) => [...tab.querySelectorAll('img, span:last-child')].filter((el) => el.offsetWidth).map((el) => el.getBoundingClientRect()));
+  };
+  const local = (event) => event.clientX - G.rect.left;
+  const nearest = (cx) => G.left.reduce((best, x, i) => (Math.abs(x + G.w / 2 - cx) < Math.abs(G.left[best] + G.w / 2 - cx) ? i : best), 0);
+  const filterSize = { w: 0, h: 0 };
 
   function draw() {
-    const w = items[0].offsetWidth; const p = Math.max(0, S.p);
+    const w = G.w; const p = Math.max(0, S.p);
     const stretch = 12 * S.q * p; const squash = 4.5 * S.q * p;
     // A tap caps the size: no taller than the bar, 8 wider each side. A hold or drag opens the cap (k 0 to 1).
     const grow = Math.min(15 * p, 8 + 7 * S.k); const lift = Math.min(11 * p, 4 + 7 * S.k);
     pill.style.width = `${w}px`; pill.style.transform = `translateX(${S.x}px)`; pill.style.opacity = String(Math.max(0, 1 - p * 1.6));
     const lw = w + 2 * grow + stretch; const lx = S.x - grow - stretch / 2; const liftE = lift - squash;
-    const barW = bar.clientWidth; const barH = bar.clientHeight; const radius = barH / 2;
+    const barW = G.barW; const barH = G.barH; const radius = barH / 2;
     Object.entries({ '--lx': `${lx}px`, '--lift': `${liftE}px`, '--barw': `${barW}px`, '--barh': `${barH}px`, '--cl': `${Math.max(0, -lx)}px`, '--cr': `${Math.max(0, lx + lw - barW)}px`, '--rl': `${lx < radius ? radius : 0}px`, '--rr': `${lx + lw > barW - radius ? radius : 0}px`, '--ox': `${lx + lw / 2}px`, '--mag': String(1 + 0.18 * p), '--swirl': `${S.ang - PINK_AT}deg`, '--swirl2': `${S.ang + 150}deg` }).forEach(([name, value]) => lens.style.setProperty(name, value));
     lens.style.width = `${lw}px`; lens.style.transform = `translateX(${lx}px)`; lens.style.top = `${inset - liftE}px`; lens.style.bottom = `${inset - liftE}px`;
     lens.style.opacity = String(Math.min(1, p * 1.4));
     box.style.transform = p > 0.001 ? `scale(${1 + 0.025 * Math.min(p, 0.4 + 0.6 * S.k)})` : '';
-    if (p > 0.01) { // the backdrop filter is sized to the lens; the pull is half its width
-      const lh = Math.max(1, barH - inset * 2 + 2 * liftE);
-      filter.setAttribute('width', lw); filter.setAttribute('height', lh);
-      filter.querySelectorAll('.lbd').forEach((image) => { image.setAttribute('width', lw); image.setAttribute('height', lh); });
-      map.setAttribute('scale', (lw * 0.5).toFixed(1));
+    S.geo = { lx, lw, liftE };
+    if (p > 0.01) { // the backdrop filter is sized to the lens; the pull is half its width. Whole pixels, and only when
+      // they change: each change redraws the filter.
+      const fw = Math.round(lw); const fh = Math.max(1, Math.round(barH - inset * 2 + 2 * liftE));
+      if (fw !== filterSize.w || fh !== filterSize.h) {
+        filterSize.w = fw; filterSize.h = fh;
+        filter.setAttribute('width', fw); filter.setAttribute('height', fh);
+        filter.querySelectorAll('.lbd').forEach((image) => { image.setAttribute('width', fw); image.setAttribute('height', fh); });
+        map.setAttribute('scale', (fw * 0.5).toFixed(1));
+      }
     }
-    box.classList.toggle('is-lensing', p > 0.4);
+    // The refraction filters run only while the lens shows (components.css .is-lens-up).
+    if (box.classList.contains('is-lens-up') !== p > 0.001) box.classList.toggle('is-lens-up', p > 0.001);
+    if (box.classList.contains('is-lensing') !== p > 0.4) box.classList.toggle('is-lensing', p > 0.4);
   }
 
   // What the rim touches lights the fringe: an icon or label, the bar's edge, or content on the screen behind.
@@ -74,10 +90,12 @@ export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item
     return 0;
   };
   function fringe(dt) {
-    if (S.p < 0.02) return;
-    const r = lens.getBoundingClientRect(); const b = bar.getBoundingClientRect(); const rad = b.height / 2;
+    if (S.p < 0.02 || !S.geo) return;
+    // From the cached geometry and the last frame's lens, not from layout reads.
+    const b = G.rect; const rad = b.height / 2;
+    const r = { left: b.left + S.geo.lx, width: S.geo.lw, top: b.top + inset - S.geo.liftE, height: G.barH - inset * 2 + 2 * S.geo.liftE };
     const cx = r.left + r.width / 2; const cy = r.top + r.height / 2;
-    const marks = items.flatMap((tab) => [...tab.querySelectorAll('img, span:last-child')].filter((el) => el.offsetWidth).map((el) => el.getBoundingClientRect()));
+    const marks = G.marks;
     const inBar = (x, y) => x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
     const edge = (x, y) => Math.abs(Math.hypot(Math.max(Math.abs(x - (b.left + b.width / 2)) - (b.width / 2 - rad), 0), Math.abs(y - (b.top + rad))) - rad);
     const stops = [];
@@ -108,16 +126,16 @@ export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item
       const tq = Math.min(1, Math.abs(S.vx) / 500);
       S.vq += (-(SQUASH.w * SQUASH.w) * (S.q - tq) - 2 * SQUASH.z * SQUASH.w * S.vq) * h; S.q += S.vq * h;
     }
-    const lo = items[0].offsetLeft - 24; const hi = items.at(-1).offsetLeft + 24;
+    const lo = G.left[0] - 24; const hi = G.left.at(-1) + 24;
     if (S.x < lo || S.x > hi) { S.x = Math.max(lo, Math.min(hi, S.x)); S.vx = 0; }
     S.q = Math.max(-0.45, Math.min(1.3, S.q));
     if (!S.down && S.tp === 1 && now > S.release) S.tp = 0; // hold over the tab a moment, then sink
     S.k += ((S.full ? 1 : 0) - S.k) * Math.min(1, dt * 14);
     const target = 315 + Math.max(-25, Math.min(25, S.vx * 0.05)); // the pink patch sways, it never spins
     S.ang += (target - S.ang) * Math.min(1, dt * 10);
-    draw();
     S.fAcc += dt;
-    if (S.fAcc >= 0.033) { fringe(S.fAcc); S.fAcc = 0; }
+    if (S.fAcc >= 0.033) { fringe(S.fAcc); S.fAcc = 0; } // its hit tests read layout: before this frame's writes
+    draw();
     if (S.done && S.tp === 0 && S.p < 0.08) S.done();
     const still = Math.abs(S.x - S.tx) < 0.2 && Math.abs(S.vx) < 2 && Math.abs(S.p - S.tp) < 0.003 && Math.abs(S.vp) < 0.01 && Math.abs(S.q) < 0.003 && Math.abs(S.vq) < 0.01;
     if (still && !S.down && S.tp === 0) { S.x = S.tx; S.p = 0; draw(); S.raf = 0; S.last = 0; return; }
@@ -128,7 +146,8 @@ export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item
   function rest() {
     if (!bar.isConnected) return; // the page redrew this bar
     S.sel = Math.max(0, items.findIndex((tab) => tab.hasAttribute('aria-current') || tab.getAttribute('aria-selected') === 'true'));
-    S.x = S.tx = items[S.sel].offsetLeft; S.vx = S.p = S.vp = S.tp = 0; S.down = false;
+    box.style.transform = ''; measure();
+    S.x = S.tx = G.left[S.sel]; S.vx = S.p = S.vp = S.tp = 0; S.down = false;
     draw();
   }
   rest();
@@ -141,10 +160,11 @@ export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item
     gestureBar = bar;
     clearTimeout(S.stall); S.done = null; // a new touch replaces a tab still waiting to land
     S.down = true; S.tp = 1; S.id = event.pointerId; S.full = false;
+    if (S.p < 0.01) measure(); // the page may have scrolled or reflowed since the last touch
     try { bar.setPointerCapture(event.pointerId); } catch { /* the pointer has already gone */ }
     clearTimeout(S.hold);
     S.hold = setTimeout(() => { if (S.down) { S.full = true; run(); } }, HOLD_MS);
-    S.tx = items[nearest(local(event))].offsetLeft;
+    S.tx = G.left[nearest(local(event))];
     S.from = local(event);
     if (reduced.matches) { S.x = S.tx; S.p = 1; draw(); return; }
     run();
@@ -154,13 +174,12 @@ export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item
     const cx = local(event);
     if (Math.abs(cx - S.from) < DEAD_ZONE) return;
     if (!S.full) { S.full = true; run(); }
-    const w = items[0].offsetWidth;
-    S.tx = Math.max(items[0].offsetLeft - 6, Math.min(items.at(-1).offsetLeft + 6, cx - w / 2));
+    S.tx = Math.max(G.left[0] - 6, Math.min(G.left.at(-1) + 6, cx - G.w / 2));
   });
   ['pointerup', 'pointercancel'].forEach((type) => bar.addEventListener(type, (event) => {
     if (!S.down || event.pointerId !== S.id) return;
     S.down = false; clearTimeout(S.hold);
-    const chosen = nearest(S.tx + items[0].offsetWidth / 2);
+    const chosen = nearest(S.tx + G.w / 2);
     if (type === 'pointerup') {
       S.sel = chosen;
       const landed = () => { if (S.done === landed) S.done = null; else if (!S.done) return; clearTimeout(S.stall); onChoose(items[chosen], 'landed'); };
@@ -168,24 +187,10 @@ export function mountLens(box, onChoose, { bar: barSelector = '.nav__tabs', item
       S.stall = setTimeout(landed, LANDED_BY);
       onChoose(items[chosen], 'chosen');
     }
-    S.tx = items[S.sel].offsetLeft;
+    S.tx = G.left[S.sel];
     S.release = performance.now() + tokMs(S.full ? 'motion-lens-release-hold-dur' : 'motion-lens-tap-drop-dur'); // a tap drops in sooner
     if (reduced.matches) { S.x = S.tx; S.p = 0; S.tp = 0; draw(); S.done?.(); return; }
     run();
   }));
   return { rest };
-}
-
-// A category bar (TOKENS 8.3) whose tab change redraws the page: the lens picks the tab, and the tab's own click runs
-// once it has dropped in, so the change lands as the lens does. Keyboard clicks go straight through.
-let dropsClicks = false;
-export function mountBarLens(box) {
-  if (!box) return;
-  if (!dropsClicks) {
-    dropsClicks = true;
-    addEventListener('click', (event) => {
-      if (pointerClick(event) && event.target.closest?.('.tabs')) { event.preventDefault(); event.stopImmediatePropagation(); }
-    }, true);
-  }
-  mountLens(box, (tab, moment) => { if (moment === 'landed') tab.click(); }, { bar: '.tabs', item: '.tab', speed: 0.7 });
 }

@@ -65,10 +65,14 @@ function runCarousel(node, reducedMotion) {
     }
     return 0;
   };
+  // The path's width (the node is wider, leaving room at the sides), read once and on resize: a read inside the frame,
+  // after the last frame's writes, forced a layout on every frame (19 Nov 2026).
+  let width = node.clientHeight * 1.5;
+  const remeasure = () => { width = node.clientHeight * 1.5; };
+  addEventListener('resize', remeasure);
   const frame = (now) => {
-    if (!node.isConnected) return; // the step was closed
+    if (!node.isConnected) { removeEventListener('resize', remeasure); return; } // the step was closed
     const turn = turnAt(((now - started) / 1000) % total);
-    const width = node.clientHeight * 1.5; // the path's width; the node is wider, leaving room at the sides
     images.forEach((image, place) => {
       const awaySigned = ((place - turn + count / 2) % count + count) % count - count / 2; // 0 front, +1 right, -1 left
       const away = Math.abs(awaySigned);

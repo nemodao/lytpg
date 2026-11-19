@@ -213,15 +213,15 @@ html[data-large-text] .badge { height: auto; min-height: var(--size-tag); white-
 .chips { --fade-start: 0px; --fade-end: 0px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent); mask-image: linear-gradient(90deg, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent); }
 .chip { position: relative; flex: 1 0 auto; height: var(--size-strip); white-space: nowrap; padding: 0 var(--spacing-8); border-radius: var(--radius-pill); font: var(--font-role-small); color: var(--tab-inactive); }
 .chip[aria-pressed="true"] { background: var(--strip-pill); box-shadow: var(--strip-pill-shadow); font: var(--font-role-small-em); color: var(--ui-text-brand); }
-.tabs-box { position: relative; --lens-backing: var(--strip-track); }
+/* Capsule tabs (Earn, Coins; TOKENS 8.3 on the page): no lens and no glass (the user, 19 Nov 2026: glass only on the
+   bottom bar). The selected pill slides to the new tab with the "% / Price" switch motion (TOKENS 9.1, Menus);
+   components.js mountTabs places it. */
+.tabs-box { position: relative; }
 .tabs { position: relative; display: flex; gap: var(--spacing-2); padding: var(--spacing-4); border-radius: var(--radius-pill); background: var(--strip-track); touch-action: pan-y; }
 .tab { position: relative; flex: 1; height: var(--size-strip); padding: 0 var(--spacing-8); border-radius: var(--radius-pill); font: var(--font-role-small); color: var(--tab-inactive); text-align: center; }
 .tab[aria-selected="true"] { background: var(--capsule-pill); box-shadow: var(--capsule-pill-shadow); font: var(--font-role-small-em); color: var(--ui-text-brand); }
 .tabs-box .tab[aria-selected="true"] { background: none; box-shadow: none; }
-.tabs .nav__sel { background: var(--capsule-pill); box-shadow: var(--capsule-pill-shadow); }
-.tabs-box.is-lensing .tab[aria-selected="true"] { font: var(--font-role-small); color: var(--tab-inactive); }
-.tabs-box .nav__lrow .tab { display: grid; place-items: center; font: var(--font-role-small-em); color: var(--ui-text-brand); }
-.tabs-box .nav__lens::after { opacity: calc(var(--lens-fringe-opacity) * 0.7); }
+.tabs .nav__sel { background: var(--capsule-pill); box-shadow: var(--capsule-pill-shadow); transition: transform var(--hsb-motion-switch-move-dur) var(--hsb-motion-switch-move-ease), width var(--hsb-motion-switch-move-dur) var(--hsb-motion-switch-move-ease); }
 
 /* ---- App header: Loyalty's own (the user, 3 Nov), the app's 7.26b pill on scroll but always centred ---- */
 /* The title is centred on the page whatever the sides hold: the back button (left) and the page's button (right) take
@@ -243,12 +243,13 @@ html[data-large-text] .badge { height: auto; min-height: var(--size-tag); white-
 .app-header > [data-back] { grid-column: 1; justify-self: start; }
 .app-header > h1 { grid-column: 2; }
 .app-header > h1 ~ * { grid-column: 3; justify-self: end; }
-.app-header::before, .app-header::after {
+/* The fade under the status bar: a gradient only, no blur (the user, 19 Nov 2026: glass only on the bottom bar; a blur
+   over scrolling content is redrawn every frame). */
+.app-header::before {
   content: ""; position: fixed; z-index: -1; top: 0; left: calc(50% - var(--app-width) / 2); width: var(--app-width);
   height: calc(env(safe-area-inset-top, 0px) + var(--size-header-fade)); opacity: var(--f); pointer-events: none;
 }
 .app-header::before { background: linear-gradient(180deg, color-mix(in srgb, var(--header-fade) 92%, transparent) 0%, color-mix(in srgb, var(--header-fade) 78%, transparent) 40%, color-mix(in srgb, var(--header-fade) 38%, transparent) 70%, transparent 100%); }
-.app-header::after { -webkit-backdrop-filter: blur(var(--spacing-6)); backdrop-filter: blur(var(--spacing-6)); -webkit-mask-image: linear-gradient(#000 60%, transparent); mask-image: linear-gradient(#000 60%, transparent); }
 .app-header h1 { position: relative; display: flex; align-items: center; min-width: 0; height: var(--size-header-button); padding: 0 var(--spacing-16); border-radius: var(--radius-pill); color: var(--ui-text-primary); }
 /* Narrow screens: a little less padding, so the longest titles ("Redemption history") still fit beside the back button. */
 @media (max-width: 359px) { .app-header h1 { padding-inline: var(--spacing-12); } }
@@ -270,11 +271,10 @@ html[data-large-text] .badge { height: auto; min-height: var(--size-tag); white-
 /* ---- Today panel (Dashboard task card, Trading Task progress card); sits on a blend card ---- */
 .coin--xs { width: var(--size-icon-sm); height: var(--size-icon-sm); }
 .coin--sm { width: var(--size-icon-lg); height: var(--size-icon-lg); align-self: center; }
-/* Today panel: the glass card from Partner Plus. */
+/* Today panel: the glass card from Partner Plus, without the blur (19 Nov 2026). */
 .today {
   display: flex; flex-direction: column; overflow: hidden;
   border-radius: var(--radius-card-inner); background: var(--blend-glass); border: var(--size-stroke) solid var(--glass-border);
-  -webkit-backdrop-filter: var(--ui-button-glass-blur); backdrop-filter: var(--ui-button-glass-blur);
 }
 .today__label { display: flex; align-items: baseline; gap: var(--spacing-8); padding: var(--spacing-12) var(--spacing-12) 0; }
 .today__stats { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: var(--spacing-12); padding: var(--spacing-12); }
@@ -286,7 +286,7 @@ html[data-large-text] .badge { height: auto; min-height: var(--size-tag); white-
 
 .today__foot--icon { flex-wrap: nowrap; align-items: flex-start; }
 /* Flat variant: the blend card itself is the panel, so no glass, border or inner padding. */
-.today--flat { overflow: visible; border: 0; border-radius: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.today--flat { overflow: visible; border: 0; border-radius: 0; background: none; }
 .today--flat .today__label { padding: 0; }
 .today--flat .today__stats { padding-inline: 0; }
 .today--flat .today__foot { padding-inline: 0; padding-bottom: 0; }
@@ -478,9 +478,13 @@ html[data-large-text] .badge { height: auto; min-height: var(--size-tag); white-
    on the bar's colour, cut to the bar's shape; behind it the screen is refracted (Chromium only). */
 .nav__lens {
   position: absolute; z-index: 3; left: 0; top: var(--spacing-4); bottom: var(--spacing-4); overflow: hidden; opacity: 0; pointer-events: none; border-radius: var(--radius-pill);
-  -webkit-backdrop-filter: url(#lensBD); backdrop-filter: url(#lensBD); background: var(--lens-fill); box-shadow: var(--lens-shadow);
+  background: var(--lens-fill); box-shadow: var(--lens-shadow);
 }
-.nav__mag { position: absolute; z-index: 0; left: 0; right: 0; top: calc(var(--lift, 0px) - var(--spacing-4)); height: var(--barh, 0px); overflow: hidden; background: var(--lens-backing); font-style: normal; clip-path: inset(0 var(--cr, 0px) 0 var(--cl, 0px) round var(--rl, 0px) var(--rr, 0px) var(--rr, 0px) var(--rl, 0px)); filter: url(#lensRow); }
+/* The refraction runs only while the lens is up (.is-lens-up, nav-lens.js): at rest the lens is clear and the filters cost
+   a redraw on every scrolled frame (19 Nov 2026). */
+.nav__box.is-lens-up .nav__lens { -webkit-backdrop-filter: url(#lensBD); backdrop-filter: url(#lensBD); }
+.nav__mag { position: absolute; z-index: 0; left: 0; right: 0; top: calc(var(--lift, 0px) - var(--spacing-4)); height: var(--barh, 0px); overflow: hidden; background: var(--lens-backing); font-style: normal; clip-path: inset(0 var(--cr, 0px) 0 var(--cl, 0px) round var(--rl, 0px) var(--rr, 0px) var(--rr, 0px) var(--rl, 0px)); }
+.nav__box.is-lens-up .nav__mag { filter: url(#lensRow); }
 .nav__lrow { position: absolute; top: 0; left: calc(-1 * var(--lx, 0px)); width: var(--barw, 0px); height: 100%; padding: var(--spacing-4); display: grid; grid-template-columns: repeat(var(--tabs), 1fr); gap: var(--spacing-2); transform-origin: var(--ox, 50%) 50%; transform: scale(var(--mag, 1)); }
 .nav__lrow .nav__tab { color: var(--ui-text-brand); font: var(--font-role-tab-on); }
 /* Light: the screen behind the lens is shaded a little, so the bar keeps its colour and stands out. */

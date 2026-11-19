@@ -3,16 +3,22 @@
 One entry per handoff to developers, newest first. Each entry says what changed for the user, which files changed,
 and whether the data contract (`DATA.md`) or the states (`STATES.md`) changed.
 
-## Handoff 12 — Brand 2026 colours, brand only (18 Nov 2026)
+## Handoff 12 — Brand 2026 colours; glass only on the bottom bar; smoother pages (19 Nov 2026)
 
-**Full description for developers: `HANDOFF-12.md`.** Spec §84.
+**Full description for developers: `HANDOFF-12.md`.** Spec §84, §85.
 
-- Token files only: `tokens/hsb-tokens.css` (the app's R3 file, hsb_app 01408f66), `tokens/tokens.json` and
-  `tokens/tokens.css` (version 5.1). `tokens/hsb-rim.g.json` is unchanged. No markup, CSS, JS, copy or data change.
-- What users see: the new brand gradient on primary buttons (flat Volt in dark), a quiet neutral soft brand tint (the
-  Redeem chip, selected chips), brand text `#546300`, and the new selected rim, focus ring and logo gradient. Surfaces,
-  text, lines, status colours and Premium are unchanged.
-- `DATA.md` unchanged; `STATES.md` unchanged.
+- Part A, token files only: `tokens/hsb-tokens.css` (the app's R3 file, hsb_app 01408f66), `tokens/tokens.json` and
+  `tokens/tokens.css` (version 5.1). `tokens/hsb-rim.g.json` is unchanged. What users see: the new brand gradient on
+  primary buttons (flat Volt in dark), a quiet neutral soft brand tint (the Redeem chip, selected chips), brand text
+  `#546300`, and the new selected rim, focus ring and logo gradient. Surfaces, text, lines, status colours and Premium
+  are unchanged.
+- Part B, from the review of the UAT build: Earn's and Coins' tabs drop the lens; their selected pill takes the capsule
+  token and slides (in the developer's build HeroUI's list fill was greying the pill). Glass only on the bottom bar: no
+  blur on the header fade, the Today panel or the store's chips and dark cards. The bottom bar's lens refracts only while
+  it shows and reads no layout per frame; the tour carousel and the rim stop redoing work. Files:
+  `shared/components.css`, `shared/components.js` (new `mountTabs`), `shared/nav-lens.js` (`mountBarLens` removed),
+  `shared/rim.js`, `shared/tour.js`, `pages/point-balance.js`, `pages/trading-task.js`, `pages/store.css`.
+- `DATA.md` unchanged; `STATES.md` unchanged. Copy, events and states unchanged.
 
 ## Handoff 11 — The redesign on the app's design system, R3, and fit (18 Nov 2026)
 

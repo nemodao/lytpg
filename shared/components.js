@@ -67,6 +67,28 @@ addEventListener('scroll', () => {
   if (!headerFrame) headerFrame = requestAnimationFrame(() => { headerFrame = 0; watchHeader(); });
 }, { passive: true });
 
+// Capsule tabs (Earn, Coins; TOKENS 8.3): a plain pill under the selected tab, no lens (the user, 19 Nov 2026: glass only
+// on the bottom bar). The pages redraw on a tab change, so the pill is drawn first where the last selected tab was and
+// then slides to the new one ("% / Price" switch motion, TOKENS 9.1 Menus; the curve is in components.css). A page that
+// keeps its bar mounted only needs to move the pill. Measured on render and on resize only, never per frame.
+const tabsLastAt = new Map(); // the bar's tabs (by data-tab) -> the index last selected
+export function mountTabs(box) {
+  const bar = box?.querySelector('.tabs');
+  const pill = bar?.querySelector('.nav__sel');
+  if (!pill) return;
+  const tabs = [...bar.querySelectorAll('.tab')];
+  const key = tabs.map((tab) => tab.dataset.tab).join();
+  const at = Math.max(0, tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true'));
+  const place = (index) => { pill.style.width = `${tabs[index].offsetWidth}px`; pill.style.transform = `translateX(${tabs[index].offsetLeft}px)`; };
+  const from = tabsLastAt.get(key) ?? at;
+  pill.style.transition = 'none';
+  place(from);
+  if (from !== at) { pill.getBoundingClientRect(); pill.style.transition = ''; place(at); } else pill.style.transition = '';
+  tabsLastAt.set(key, at);
+}
+addEventListener('resize', () => document.querySelectorAll('.tabs-box').forEach((box) => mountTabs(box)));
+document.fonts?.ready.then(() => document.querySelectorAll('.tabs-box').forEach((box) => mountTabs(box)));
+
 // The logo loader in its chip (TOKENS 9.4): an action the user started and must wait for.
 // API: the app is switching the trading account (`switchAccount`, the `trade-account` intent). Replaces the spinner in
 // components/atoms/Button for that wait; presses are blocked by the dim.

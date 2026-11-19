@@ -4,8 +4,7 @@ import { mountNav } from '../shared/nav.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { mountTour } from '../shared/tour.js';
 import { initTracking, trackView } from '../shared/tracking.js';
-import { appHeader, badge, balanceBlock, coin, loadMoreRow, mountJoinSheet, mountStoreLinks, notice, showStatus } from '../shared/components.js';
-import { mountBarLens } from '../shared/nav-lens.js';
+import { appHeader, badge, balanceBlock, coin, loadMoreRow, mountJoinSheet, mountStoreLinks, mountTabs, notice, showStatus } from '../shared/components.js';
 
 const { common, page, ui } = await load('point-balance');
 // Preview states can empty one tab (`page.empty.available|expired|history`) without touching the others.
@@ -161,7 +160,6 @@ function body() {
   return `
     <div class="tabs-box">
       <div class="tabs" role="tablist" data-tour="tabs"><i class="nav__sel"></i>${tabButton('available', 'pb.tab.available')}${tabButton('expired', 'pb.tab.expired')}${tabButton('history', 'pb.tab.history')}</div>
-      <div class="nav__lens" aria-hidden="true"><i class="nav__mag"><span class="nav__lrow" style="--tabs:3"><span class="tab">${ui.t('pb.tab.available')}</span><span class="tab">${ui.t('pb.tab.expired')}</span><span class="tab">${ui.t('pb.tab.history')}</span></span></i><i class="nav__hole"></i></div>
     </div>
     ${{ available: availableTab, expired: expiredTab, history: historyTab }[tab]()}`;
 }
@@ -184,8 +182,8 @@ function render() {
     ${appHeader(ui, { title: ui.t('pb.title') })}
     ${balanceBlock(ui, common, { card: true, history: ui.href('redemptions.html') })}
     ${common.guest ? guestCard() : `${body()}${filters.expired.sheet()}${filters.history.sheet()}`}`;
-  // The tabs are a capsule with the glass lens, as on Earn (TOKENS 8.3).
-  mountBarLens(app.querySelector('.tabs-box'));
+  // The tabs: a capsule whose pill slides to the selected tab, as on Earn (TOKENS 8.3; no lens since 19 Nov 2026).
+  mountTabs(app.querySelector('.tabs-box'));
   // The selected date chip scrolls into view, and the row's ends fade, as on Earn.
   if (!common.guest) filters[tab]?.watchChips(app);
   watchEnd();

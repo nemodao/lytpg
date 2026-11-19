@@ -5,8 +5,7 @@ import { createActivityFeed } from '../shared/activity-feed.js';
 import { createDateFilter } from '../shared/date-filter.js';
 import { initTracking, trackView } from '../shared/tracking.js';
 import { TIERS, chosenAccountId, rememberAccount, sameGroup } from '../shared/tiers.js';
-import { appHeader, badge, coin, joinPanel, notice, rateRangeLine, rulesList, showStatus, waitChip, watchAccountTags } from '../shared/components.js';
-import { mountBarLens } from '../shared/nav-lens.js';
+import { appHeader, badge, coin, joinPanel, mountTabs, notice, rateRangeLine, rulesList, showStatus, waitChip, watchAccountTags } from '../shared/components.js';
 import { tokMs, tokNum } from '../shared/tokens.js';
 
 const { common, page, ui } = await load('trading-task');
@@ -366,7 +365,6 @@ function infoCard() {
     <section class="card">
       <div class="tabs-box">
         <div class="tabs" role="tablist"><i class="nav__sel"></i>${tabButton('rules', 'tt.rules')}${tabButton('history', 'tt.history')}</div>
-        <div class="nav__lens" aria-hidden="true"><i class="nav__mag"><span class="nav__lrow" style="--tabs:2"><span class="tab">${ui.t('tt.rules')}</span><span class="tab">${ui.t('tt.history')}</span></span></i><i class="nav__hole"></i></div>
       </div>
       ${tab === 'rules' ? rulesList(ui, common) + termsButton() : historyList()}
     </section>`;
@@ -437,7 +435,7 @@ function render() {
   feed.start(app);
   nudged = true;
   heroPlayed = true;
-  mountBarLens(app.querySelector('.tabs-box'));
+  mountTabs(app.querySelector('.tabs-box'));
   watchAccountTags(app);
   // API: `waitChip()` while the app switches the account. PREVIEW ONLY: ?pending=1 shows it.
   if (new URLSearchParams(location.search).get('pending') === '1' && !document.querySelector('.wait')) document.body.insertAdjacentHTML('beforeend', waitChip(ui));

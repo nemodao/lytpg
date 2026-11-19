@@ -80,6 +80,7 @@ const setOf = (el) => (el.matches(SWITCH_BAR) ? 'switchBar' : 'shared');
 
 const modeOf = (el) => (el.closest('[data-mode]')?.getAttribute('data-mode') === 'dark' ? 'dark' : 'light');
 const painted = new WeakMap(); // element -> "w x h mode" last painted
+const sweeps = new Map(); // "w x h mode set" -> its conic-gradient
 
 function paint(el) {
   const w = Math.round(el.offsetWidth); const h = Math.round(el.offsetHeight);
@@ -94,7 +95,9 @@ function paint(el) {
   const key = `${w}x${h}${mode}${set}`;
   if (painted.get(el) === key) return;
   painted.set(el, key);
-  el.style.setProperty('--rim', sweep(w, h, mode, set));
+  // One sweep per size and mode, kept: a page redraw (a tab change) rebuilds every surface at the same sizes.
+  if (!sweeps.has(key)) sweeps.set(key, sweep(w, h, mode, set));
+  el.style.setProperty('--rim', sweeps.get(key));
   el.style.setProperty('--rim-width', `var(--hsb-rim-${set === 'switchBar' ? 'switch-bar' : 'shared'}-width)`);
   if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
   el.classList.add('rim');

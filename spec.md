@@ -992,3 +992,15 @@ text size, by the app's rules (TOKENS §3.4, §12). Layout only: copy, values an
   gold. The designers' warm neutrals and new status colours were tried and turned down.
 - Source: the app's R3 token file (hsb_app commit 01408f66). Loyalty changes token files only.
 
+
+## 85. Glass only on the bottom bar; smoother pages (the user, 19 Nov 2026, handoff 12)
+
+- **Earn's and Coins' tabs** ("How it works / History", "Available / Expired / History") have no lens and no glass. They
+  are the plain capsule of the app's category bar (TOKENS 8.3): the track, and under the selected tab a pill in the
+  page colour (light) or `#2E2E32` (dark) that slides to the tab the user picks, with the app's switch motion. The tab
+  changes at once.
+- **Glass (a blur of what is behind) only on the bottom bar**, with its lens. The header's fade, the Today panel and the
+  store's chips, stuck chip band and dark cards keep their tint without the blur. The scrim behind a sheet keeps its
+  blur.
+- **The pages must not stutter** on scroll, on the bottom bar or in the tour. The bottom bar's lens refracts only while
+  it shows, and no animation reads the page's layout in every frame.
